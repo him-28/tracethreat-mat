@@ -1,2 +1,0 @@
-/usr/bin/ar cr libthreadsync.a  CMakeFiles/threadsync.dir/thread_sync.cpp.o
-/usr/bin/ranlib libthreadsync.a
