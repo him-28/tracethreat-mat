@@ -4,7 +4,7 @@
 project ("syncocl")
 cmake_minimum_required(VERSION 2.8) # Requires 2.8 
 
-add_definitions("-g -Wall -Werror -O2")
+add_definitions("-Wall -Werror")
 
 set(CMAKE_INSTALL_PREFIX "/home/chatsiri/workspacecpp/techniquecpp/pthread_sync_ocl/build")
 

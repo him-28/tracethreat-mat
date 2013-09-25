@@ -1,4 +1,3 @@
-#include "pthread.h"
 
 template<typename StackThread>
 class thread_sync

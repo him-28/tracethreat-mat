@@ -1,14 +1,14 @@
-add_library(threadsync thread_controller.cpp thread_sync.cpp)
+add_library(thread_sync thread_sync.cpp)
 
-set(LIBS thread_sync oclcontroller gtest boost_filesystem boost_system boost_options pthread)
+set(LIBS thread_sync ocl_controller gtest boost_filesystem boost_system pthread)
 
-add_executable(thread_sync_test thread_sync.cpp)
+add_executable(thread_sync_test thread_sync_test.cpp)
 target_link_libraries(thread_sync_test gtest_main ${LIBS})
 
-add_executable(thread_controller_test thread_controller.cpp)
-target_link_libraries(thread_controller_test gtest_main ${LIBS})
+#add_executable(thread_controller_test thread_controller.cpp)
+#target_link_libraries(thread_controller_test gtest_main ${LIBS})
 
-include(TARGETS thread_sync  DESTINATION  lib/threadsyncocl)
-FILE(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR"/.hpp}")
+install(TARGETS thread_sync DESTINATION lib/threadsyncocl)
+FILE(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR/.hpp}")
 
 add_subdirectory(tsyncocl_demo)

@@ -1,0 +1,2 @@
+/usr/bin/ar cr liboclcontroller.a  CMakeFiles/oclcontroller.dir/ocl_controller.cpp.o
+/usr/bin/ranlib liboclcontroller.a

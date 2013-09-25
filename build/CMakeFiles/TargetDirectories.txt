@@ -1,0 +1,4 @@
+/home/chatsiri/workspacecpp/techniquecpp/pthread_sync_ocl/build/src/ocl/CMakeFiles/ocl_controller.dir
+/home/chatsiri/workspacecpp/techniquecpp/pthread_sync_ocl/build/src/ocl/CMakeFiles/ocl_controller_test.dir
+/home/chatsiri/workspacecpp/techniquecpp/pthread_sync_ocl/build/src/thread/CMakeFiles/thread_sync.dir
+/home/chatsiri/workspacecpp/techniquecpp/pthread_sync_ocl/build/src/thread/CMakeFiles/thread_sync_test.dir
