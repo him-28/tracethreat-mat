@@ -1,21 +1,13 @@
-
+//#include "exception_handler.hpp"
+//#include "thread_sync.hpp"
+/*
 template<typename StackThread>
-class thread_sync
+void thread_sync<StackThread>::getdata()
 {
-public:
+   
+	//ASSERT_EQ(std::string("sdf").size(), std::string("valuew")) <<" Number unequal";
+
+}
+*/
 
 
-private:
-	
-
-};
-
-template<typename FileBuffer>
-class thread_runner
-{
-public:
-
-private:
-
-
-}; 

@@ -1,5 +1,9 @@
-#ifndef EXCEPTION_HANDLER_HPP
-#define EXCEPTION_HANDLER_HPP
+#ifndef ERROR_HANDLER_EXCEPTION_HANDLER_HPP
+#define ERROR_HANDLER_EXCEPTION_HANDLER_HPP
+
+#include <boost/system/error_code.hpp>
+#include <boost/cerrno.hpp>
+#include <string>
 
 namespace error_handler
 {
@@ -9,32 +13,36 @@ namespace error_handler
     {
         public:
             virtual void error_code(ErrorControl& error) const = 0;
-            virtual ErorrControl&   error_detect() const  = 0;
+            virtual ErrorControl error_detect() const  = 0;
     };
 
     template<typename ErrorControl>
-    class failure_handler<ErrorControl> : public failure<ErrorControl>, public boost::system::erorr_category, public std::exception
+    class failure_handler : public failure<ErrorControl>, 
+														public boost::system::error_category,
+														public std::exception
     {
         public:
-						// Error code
-            enum error { THREAD_NO_FILE = 0, THREAD_CANNOT_CONNECT_OCL = 1};
-						// Create instance.
-            failure_handler();
-						const boost::system::error_category & get_failure_handler();
-            void error_code(ErrorControl& error);
-            std::string message(int ev)const;
+            // Error code
+            enum error { THREAD_NO_FILE = 100, THREAD_CANNOT_CONNECT_OCL = 110};
+            // Create instance.
+            failure_handler()throw();
+
             const boost::system::error_category& get_failure_handler();
-					  
+            std::string message(int ev)const;
+						boost::system::error_condition default_error_condition(int ev) const;
+						const char * name()const;
+	
+						const char * what()const throw();
+						
+            void error_code(ErrorControl& error)const{ std::string("test"); }
+            ErrorControl error_detect() const{ std::string("test2"); return what_str_; }
+
+						~failure_handler()throw() { }
         private:
             ErrorControl what_str_;
-            const boost::system::error_category failure_category;
-						static const  failure_handler<ErrorControl> * failure_error_category;
+            //static const  failure_handler<ErrorControl> *failure_error_category;
     };
 
 }
 
-
-
-
-
-#endif /* EXCEPTION_HANDLER_HPP */
+#endif /* ERROR_HANDLER_EXCEPTION_HANDLER_HPP */
