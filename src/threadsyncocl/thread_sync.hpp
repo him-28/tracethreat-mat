@@ -13,7 +13,6 @@ thread_sync();
 void get_data();
 
 private:
-//StackThread st;
 thread_controller<int> tc;
 };
 
