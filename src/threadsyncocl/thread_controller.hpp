@@ -1,12 +1,16 @@
 #ifndef THREAD_CONTROLLER_HPP_
 #define THREAD_CONTROLLER_HPP_
 
+//standard lib
 #include <iostream>
 #include "pthread.h"
-#include "threadsyncocl/buffer_sync.hpp"
 
+// 3rd
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+
+// internal
+#include "threadsyncocl/buffer_sync.hpp"
 
 template<typename BufferSync>
 class thread_controller
@@ -24,11 +28,11 @@ class runnable
 {
     public:
         virtual void *run() = 0;
-        virtual ~runnable() =  0;
+        virtual ~runnable() = 0;
 
 };
 
-runnable::~runnable() {};
+//runnable::~runnable() {};
 
 
 // Common thread
@@ -69,7 +73,7 @@ template<typename BufferSync>
 class comm_thread_buffer : public thread<BufferSync>
 {
 	public:
-		comm_thread_buffer(int ID, BufferSync const *  buffer_sync) : my_id(ID), buffer_sync_(buffer_sync){ }
+		comm_thread_buffer(int ID, BufferSync * const  buffer_sync) : my_id(ID), buffer_sync_(buffer_sync){ }
 		void * run();
 	private:
 		int my_id;

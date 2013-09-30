@@ -15,3 +15,4 @@ class BufferSync
 	private:
 	Buffer * buff;
 };
+

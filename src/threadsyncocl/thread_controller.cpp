@@ -30,7 +30,8 @@ thread<BufferSync>::thread(boost::shared_ptr<runnable> r, bool detached)
 }
 
 template<typename BufferSync>
-thread<BufferSync>::thread(bool detached) : runnable_(boost::make_shared<runnable>()), detached_(detached) { }
+thread<BufferSync>::thread(bool detached)
+    : runnable_(boost::shared_ptr<runnable>()), detached_(detached) { }
 
 template<typename BufferSync>
 void *thread<BufferSync>::start_thread_runnable(void *p_void)
@@ -45,7 +46,7 @@ void *thread<BufferSync>::start_thread(void *p_void)
 {
     thread<BufferSync> *thread_ptr = static_cast<thread<BufferSync>* >(p_void);
     thread_ptr->result = thread_ptr->run();
-    return thread_ptr->result();
+    return thread_ptr->result;
 }
 
 template<typename BufferSync>
@@ -87,39 +88,40 @@ void thread<BufferSync>::start()
         }
     }
 
-		status = pthread_attr_destroy(&thread_buffer_attr);
-		if(status){
+    status = pthread_attr_destroy(&thread_buffer_attr);
 
-				std::cout<<" cannot destroy " <<std::endl;
-		}
+    if(status) {
+
+        std::cout<<" cannot destroy " <<std::endl;
+    }
 
 
 }
 
 template<typename BufferSync>
-void * thread<BufferSync>::join()
+void *thread<BufferSync>::join()
 {
-	int status = pthread_join(thread_buffer_id, NULL);
-	if(status)
-	{
-			std::cout<<" Cannot join thread_buffer_id " <<std::endl;
-	}
+    int status = pthread_join(thread_buffer_id, NULL);
+
+    if(status) {
+        std::cout<<" Cannot join thread_buffer_id " <<std::endl;
+    }
 }
 
 template<typename BufferSync>
 void  thread<BufferSync>::set_completed()
 {
-		// join completed 
+    // join completed
 }
 
 
 //-- Communication thread buffer
 template<typename BufferSync>
-void * comm_thread_buffer<BufferSync>::run()
+void *comm_thread_buffer<BufferSync>::run()
 {
-		buffer_sync_.set_buffer();
+    buffer_sync_->set_buffer();
 
 }
 
 template class thread<BufferSync<buffer_kernel> >;
-template class comm_thread_buffer<BufferSync<buffer_kernel> >; 
+template class comm_thread_buffer<BufferSync<buffer_kernel> >;
