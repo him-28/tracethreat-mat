@@ -12,8 +12,7 @@ class thread_sync
 public:
 
 thread_sync();
-void get_data();
-
+void pre_check_struct();
 private:
 thread_controller<int> tc;
 };

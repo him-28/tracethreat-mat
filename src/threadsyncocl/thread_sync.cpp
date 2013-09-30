@@ -5,7 +5,7 @@ namespace controller
 {
 
 template<typename Sync>
-void thread_sync<Sync>::get_data()
+void thread_sync<Sync>::pre_check_struct()
 {
 tc.get_data();   
 std::cout<<"test"<<std::endl;
