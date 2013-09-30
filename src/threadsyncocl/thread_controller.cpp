@@ -1,5 +1,8 @@
 #include "threadsyncocl/thread_controller.hpp"
 
+namespace controller
+{
+
 template<typename BufferSync>
 void thread_controller<BufferSync>::get_data()
 {
@@ -123,3 +126,7 @@ void *comm_thread_buffer<BufferSync>::run()
 // Explicitly instance 
 template class thread<BufferSync<buffer_kernel> >;
 template class comm_thread_buffer<BufferSync<buffer_kernel> >;
+
+}
+
+

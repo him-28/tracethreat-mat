@@ -12,6 +12,10 @@
 // internal
 #include "threadsyncocl/buffer_sync.hpp"
 
+
+namespace controller
+{
+
 template<typename BufferSync>
 class thread_controller
 {
@@ -80,14 +84,8 @@ class comm_thread_buffer : public thread<BufferSync>
 		BufferSync * buffer_sync_;
 };
 
-// Mutex 
-template<typename Mutex>
-class mutex_buffer
-{
-    public:
 
-    private:
-        pthread_t * pthread_buffer;
-};
+}
+
 
 #endif /* THREAD_CONTROLLER_HPP */
