@@ -75,7 +75,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /usr/include/c++/4.6/bits/basic_ios.tcc \
  /usr/include/c++/4.6/bits/ostream.tcc /usr/include/c++/4.6/istream \
  /usr/include/c++/4.6/bits/istream.tcc \
- ../../src/threadsyncocl/thread_controller.hpp
+ ../../src/threadsyncocl/thread_controller.hpp \
+ ../../src/threadsyncocl/buffer_sync.hpp
 
 ../../src/threadsyncocl/thread_sync.hpp:
 
@@ -276,3 +277,5 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /usr/include/c++/4.6/bits/istream.tcc:
 
 ../../src/threadsyncocl/thread_controller.hpp:
+
+../../src/threadsyncocl/buffer_sync.hpp:

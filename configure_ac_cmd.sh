@@ -1,1 +1,1 @@
-./configure LDFLAGS=-L/home/chatsiri/workspacecpp/gtest-1.6.0/lib CPPFLAGS=-I/home/chatsiri/workspacecpp/gtest-1.6.0/include
+./configure LDFLAGS="-L/home/chatsiri/workspacecpp/gtest-1.6.0/lib -L/home/chatsiri/workspacecpp/boost-truck/stage/lib" CPPFLAGS="-I/home/chatsiri/workspacecpp/gtest-1.6.0/include -I/home/chatsiri/workspacecpp/boost-truck"

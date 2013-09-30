@@ -1,5 +1,9 @@
 #include "threadsyncocl/thread_sync.hpp"
 #include "gtest/gtest.h"
+
+namespace controller
+{
+
 template<typename Sync>
 void thread_sync<Sync>::get_data()
 {
@@ -14,4 +18,6 @@ thread_sync<Sync>::thread_sync()
 
 }
 
-template class thread_sync<int>;
+}
+
+template class controller::thread_sync<int>;
