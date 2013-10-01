@@ -6,6 +6,15 @@
 namespace controller
 {
 
+		//Define type class
+		class Mutex
+		{
+			public: 
+			   pthread_mutex_t mutex_t;
+		}
+
+
+		// Bule print of mutex.
     template<typename SemaphoreProcesses>
     class semaphore
     {
@@ -20,14 +29,14 @@ namespace controller
     class mutex_buffer : public semaphore<Mutex>
     {
         public:
-            init();
-            lock_request();
-            unlock_request();
-            try_lock();
+            bool init();
+            bool lock_request();
+            bool unlock_request();
+            bool try_lock();
             boost::unique_ptr<Mutex> processes();
-            destruction();
+            bool destruction();
         private:
-            pthread_mutex_t mutex;
+            Mutex::mutex_t * mutex;
     };
 
 }
