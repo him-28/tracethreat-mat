@@ -66,7 +66,6 @@ void thread<BufferSync>::start()
 
     if(!detached_) {
         if(!runnable_.get()) {
-            std::cout<<" In get() " <<std::endl;
             status = pthread_create(&thread_buffer_id,
                     &thread_buffer_attr,
                     thread<BufferSync>::start_thread,
@@ -91,11 +90,8 @@ void thread<BufferSync>::start()
     status = pthread_attr_destroy(&thread_buffer_attr);
 
     if(status) {
-
         std::cout<<" cannot destroy " <<std::endl;
-    }
-
-
+    }	
 }
 
 template<typename BufferSync>

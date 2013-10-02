@@ -20,15 +20,11 @@ namespace controller
                 return true;
             }
         } else {
-
             mx_ptr_vec.clear();
             mx_ptr ptr(new Mutex);
             mx_ptr_vec.push_back(ptr);
-
             return true;
-
         }
-
 
         return false;
     }
@@ -52,9 +48,11 @@ namespace controller
         boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
         Mutex *m = mx.get();
 
-        if(pthread_mutex_unlock(&m->mutex_t)) {
-
+        if(!pthread_mutex_unlock(&m->mutex_t)) {
+            return true;
         }
+
+        return false;
     }
 
     template<typename Mutex>
@@ -74,8 +72,16 @@ namespace controller
     bool mutex_buffer<Mutex>::destruction()
     {
 
+        boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
+        Mutex *m = mx.get();
 
+        if(!pthread_mutex_destroy(&m->mutex_t)) {
+            return true;
+        }
+
+        return false;
     }
+
 
     template class mutex_buffer<Mutex>;
 
