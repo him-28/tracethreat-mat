@@ -11,7 +11,7 @@
 
 // internal
 #include "threadsyncocl/buffer_sync.hpp"
-
+#include "threadsyncocl/semaphore_controller.hpp"
 
 namespace controller
 {
@@ -77,11 +77,15 @@ template<typename BufferSync>
 class comm_thread_buffer : public thread<BufferSync>
 {
 	public:
-		comm_thread_buffer(int ID, BufferSync * const  buffer_sync) : my_id(ID), buffer_sync_(buffer_sync){ }
+		comm_thread_buffer(int ID, BufferSync * const  buffer_sync) : my_id(ID), buffer_sync_(buffer_sync){
+			mutex_buff = new mutex_buffer<Mutex>();
+			mutex_buff->init();
+	  }
 		void * run();
 	private:
 		int my_id;
 		BufferSync * buffer_sync_;
+	  mutex_buffer<Mutex> * mutex_buff;	
 };
 
 

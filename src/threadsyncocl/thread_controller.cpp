@@ -115,7 +115,9 @@ void  thread<BufferSync>::set_completed()
 template<typename BufferSync>
 void *comm_thread_buffer<BufferSync>::run()
 {
+		mutex_buff->lock_request();
     buffer_sync_->set_buffer();
+		mutex_buff->unlock_request();
 
 }
 

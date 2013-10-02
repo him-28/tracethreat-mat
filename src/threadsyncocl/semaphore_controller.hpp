@@ -43,7 +43,7 @@ namespace controller
             //move sementics
             std::vector<boost::shared_ptr<Mutex> >   mx_ptr_vec;
     };
-
+	
 }
 
 #endif /* CONTROLLER__SEMAPHORE_CONTROLLER_HPP_ */
