@@ -12,5 +12,5 @@ libthreadsyncocl_adir = $(includedir)/threadsyncocl
 libthreadsyncocl_a_HEADERS = thread_sync.hpp
 
 # library
-libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp thread_controller.cpp buffer_sync.cpp
+libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp thread_controller.cpp buffer_sync.cpp semaphore_controller.cpp
 

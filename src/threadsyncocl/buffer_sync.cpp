@@ -1,5 +1,7 @@
 #include "buffer_sync.hpp"
 
+namespace controller
+{
 template<typename Buffer>
 void BufferSync<Buffer>::set_buffer()
 {
@@ -7,3 +9,4 @@ void BufferSync<Buffer>::set_buffer()
 }
 
 template class BufferSync<buffer_kernel>;
+}

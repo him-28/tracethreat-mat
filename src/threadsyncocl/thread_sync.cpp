@@ -7,9 +7,10 @@ namespace controller
 template<typename Sync>
 void thread_sync<Sync>::pre_check_struct()
 {
-tc.get_data();   
+
 std::cout<<"test"<<std::endl;
 ASSERT_EQ(std::string("chatsiri").size(), std::string("rattana").size()) <<" Not enqual ";
+
 }
 
 template<typename Sync>

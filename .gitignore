@@ -42,3 +42,8 @@ config.status
 configure
 libtool
 stamp-h1
+!*.cpp
+!*.hpp
+!*.am
+!*.ac
+!*.sh

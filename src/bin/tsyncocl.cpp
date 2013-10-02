@@ -6,7 +6,7 @@ int main()
 {
 
 	thread_sync<int> ts;// = new thread_sync<int>();
-  ts.get_data();
+  ts.pre_check_struct();
 
 //		thread_controller<int> tc;
 //		tc.get_data();
