@@ -15,8 +15,6 @@ namespace controller
     struct buffer_kernel;
     template<typename Buffer> class  BufferSync;
 
-    //volatile BufferSync<buffer_kernel> buff_sync_volatile;
-
     struct buffer_kernel {
         cl_int  buffer_length;
     };
@@ -25,9 +23,10 @@ namespace controller
     class BufferSync
     {
         public:
+						BufferSync(){ buff = new Buffer; buff->buffer_length = 0; }
             void set_buffer();
-        private:
             volatile Buffer *buff;
+        private:
     };
 
 }

@@ -12,6 +12,12 @@ TEST(thread_controller, thread_init)
 			thread1(new comm_thread_buffer<buffsync>(1, buff_sync_d ));
 		thread1->start();
 		thread1->run();		
+
+    boost::shared_ptr<comm_thread_buffer<buffsync> >  
+			thread2(new comm_thread_buffer<buffsync>(1, buff_sync_d ));
+		thread2->start();
+		thread2->run();		
+
 }
 
 

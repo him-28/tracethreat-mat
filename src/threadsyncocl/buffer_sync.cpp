@@ -5,7 +5,8 @@ namespace controller
 template<typename Buffer>
 void BufferSync<Buffer>::set_buffer()
 {
-	struct buffer_kernel buffer;
+	  buff->buffer_length++;
+		std::cout<<" Set buffer : " <<buff->buffer_length <<std::endl;
 }
 
 template class BufferSync<buffer_kernel>;
