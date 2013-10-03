@@ -32,6 +32,7 @@ namespace controller
     template<typename Mutex>
     bool mutex_buffer<Mutex>::lock_request()
     {
+				std::cout<<" Lock request " <<std::endl;
         boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
         Mutex *m = mx.get();
 
@@ -45,6 +46,7 @@ namespace controller
     template<typename Mutex>
     bool mutex_buffer<Mutex>::unlock_request()
     {
+				std::cout<<" Unlock request " <<std::endl;
         boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
         Mutex *m = mx.get();
 
