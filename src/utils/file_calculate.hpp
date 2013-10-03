@@ -30,7 +30,7 @@ public:
 			bool processes();
 			unsigned int file_size(const char * filename);
 private:
-			std::list<Extension> files;
+			std::list<std::string> files;
 			char * file_path;
 			DIR * dir;
 			struct dirent *ent;	

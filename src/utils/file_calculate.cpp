@@ -11,7 +11,9 @@ namespace util
     {
         if((dir = opendir(file_path)) != NULL) {
             while((ent = readdir(dir)) != NULL) {
-                std::cout<<" Path file name : " << ent->d_name <<std::endl;
+								std::string path      = std::string(file_path).append(std::string("/"));
+							 	std::string full_path = std::string(path).append(std::string(ent->d_name));
+								files.push_back(full_path);
             }
             closedir(dir);
         } else {
