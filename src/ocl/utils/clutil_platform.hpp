@@ -32,7 +32,7 @@
 //INTERNAL
 #include "utils/logger/clutil_logger.hpp"
 #include "exception/system_exception.hpp"
-#include "kernels/utils/clutil_infodevice.hpp"
+#include "ocl/utils/clutil_infodevice.hpp"
 
 #define DEFAULT_PLATFORM 0
 #define DEFAULT_USE_MAP  false

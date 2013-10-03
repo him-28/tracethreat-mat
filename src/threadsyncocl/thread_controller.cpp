@@ -1,4 +1,5 @@
 #include "threadsyncocl/thread_controller.hpp"
+#include "utils/file_calculate.hpp"
 
 namespace controller
 {

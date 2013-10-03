@@ -19,7 +19,7 @@
 #include <iostream>
 //Internal
 #include "data_structure/tire.hpp"
-#include "kernels/cl/struct_tire.h"
+//#include "kernels/cl/struct_tire.h"
 
 //- Data structure
 #include "data_structure/vector.hpp"

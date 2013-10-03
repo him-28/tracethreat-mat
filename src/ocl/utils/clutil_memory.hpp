@@ -30,7 +30,7 @@
 // Array parallel
 #include "data_structure/arrays_parallel.hpp"
 // Define type
-#include "structdef.hpp"
+#include "data_structure/structdef.hpp"
 // abstract algorithms
 #include "data_structure/absalgorithms.hpp"
 

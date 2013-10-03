@@ -19,6 +19,14 @@ thread_sync<Sync>::thread_sync()
 
 }
 
+
+template<typename Sync>
+boost::shared_ptr<Sync> & thread_sync<Sync>::buffer_ocl()
+{
+	return buffer_sync;
 }
 
 template class controller::thread_sync<int>;
+
+}
+

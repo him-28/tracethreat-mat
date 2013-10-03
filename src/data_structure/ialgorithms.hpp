@@ -6,7 +6,7 @@
  */
 
 #include <boost/utility.hpp>
-#include "structdef.hpp"
+#include "data_structure/structdef.hpp"
 
 namespace hnmav_datastructure
 {

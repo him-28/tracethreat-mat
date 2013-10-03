@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "threadsyncocl/thread_controller.hpp"
-#include "ocl/cl_bootstrap.hpp"
+//#include "ocl/cl_bootstrap.hpp"
 
 namespace controller
 {
@@ -12,7 +12,7 @@ template<typename BufferSync>
 class ibuffer_sync
 {
 	public:
-		virtual boost::shared_ptr<BufferSync> buffer_ocl() = 0;
+		virtual boost::shared_ptr<BufferSync> & buffer_ocl() = 0;
 
 };
 
@@ -23,7 +23,7 @@ public:
 
 thread_sync();
 
-boost::shared_ptr<Sync> buffer_ocl();
+boost::shared_ptr<Sync> & buffer_ocl();
 
 
 // for test case only
@@ -32,6 +32,7 @@ void pre_check_struct();
 private:
 thread_controller<int> tc;
 boost::shared_ptr<Sync> buffer_sync;
+
 };
 
 }

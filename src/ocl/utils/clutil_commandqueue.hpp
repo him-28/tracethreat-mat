@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-#include "kernels/cl_bootstrap.hpp"
+#include "ocl/cl_bootstrap.hpp"
 #include "clutil_infodevice.hpp"
 
 

@@ -17,7 +17,7 @@
 #include "utils/config/options_system.hpp"
 #include "utils/logger/clutil_logger.hpp"
 #include "data_structure/absalgorithms.hpp"
-#include "structdef.hpp"
+#include "data_structure/structdef.hpp"
 // initial
 namespace hnmav_kernel
 {

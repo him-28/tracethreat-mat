@@ -392,7 +392,11 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mm_malloc.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h \
+ ../../src/test/file_calculate_test.hpp \
+ ../../src/utils/file_calculate.hpp /usr/include/dirent.h \
+ /usr/include/x86_64-linux-gnu/bits/dirent.h /usr/include/c++/4.6/list \
+ /usr/include/c++/4.6/bits/stl_list.h /usr/include/c++/4.6/bits/list.tcc
 
 /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest.h:
 
@@ -1267,3 +1271,17 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mm_malloc.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h:
+
+../../src/test/file_calculate_test.hpp:
+
+../../src/utils/file_calculate.hpp:
+
+/usr/include/dirent.h:
+
+/usr/include/x86_64-linux-gnu/bits/dirent.h:
+
+/usr/include/c++/4.6/list:
+
+/usr/include/c++/4.6/bits/stl_list.h:
+
+/usr/include/c++/4.6/bits/list.tcc:

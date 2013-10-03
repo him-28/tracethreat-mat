@@ -25,7 +25,7 @@
 #include <cstring>
 
 #include "logger/clutil_logger.hpp"
-#include "config/options_system.hpp"
+#include "utils/config/options_system.hpp"
 #include "data_structure/absalgorithms.hpp"
 #include "data_structure/arrays_parallel.hpp"
 #include "exception/datastructure_exception.hpp" 

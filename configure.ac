@@ -15,6 +15,7 @@ AC_PROG_RANLIB
 
 #check for program
 AC_LANG([C++])
+CFLAGS_CXX=-std=c++0x
 
 #check header file
 AC_HEADER_STDC
@@ -43,7 +44,8 @@ AC_SUBST([LIBS])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/threadsyncocl/Makefile])
-AC_CONFIG_FILES([src/ocl/Makefile])
+#AC_CONFIG_FILES([src/ocl/Makefile])
+AC_CONFIG_FILES([src/utils/Makefile])
 AC_CONFIG_FILES([src/bin/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
