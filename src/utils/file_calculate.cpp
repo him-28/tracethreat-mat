@@ -78,7 +78,7 @@ namespace util
         qsort(file_d, count_file, sizeof(*file_d), compare_function);
 
         for(int count_filter = 0; count_filter < count_file; count_filter++) {
-            if(count_buffer > MAX_BUFFER_SIZES)
+            if(buffer_size > MAX_BUFFER_SIZES)
                 break;
 
             buffer_size += file_d[count_filter].size_cal;
