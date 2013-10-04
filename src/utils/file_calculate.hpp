@@ -4,13 +4,22 @@
 /*                       Titles                                          Authors                        Date
  * - Calculate file types send to Oclbuffer                              R.Chatsiri
  */
-//#include <cstdint>
-//#include "stdint.h"
-#include "dirent.h"
-//#include "stddef.h"
-#include <list>
+#define MAX_FILE_INCLUDED 1024
 
+
+#include "dirent.h"
+#include "stdlib.h"
+#include "string.h"
+#include "stdio.h"
+
+#include <list>
+#include <string>
 #include <iostream>
+#include <map>
+#include <vector>
+#include <fstream>
+
+#include "gtest/gtest.h"
 
 namespace util
 {
@@ -28,14 +37,24 @@ public:
 			bool set_filepath(char * file_path);
 			bool get_file();
 			bool processes();
-			unsigned int file_size(const char * filename);
+			unsigned int  file_size();
+			unsigned int  get_count_file();
+			const char ** get_file_cal();
+			long  int  ** get_size_cal();
+			~file_calculate();
 private:
 			std::list<std::string> files;
 			char * file_path;
 			DIR * dir;
-			struct dirent *ent;	
+			struct dirent *ent;
+			// file get size
+			FILE * p_file;
+			const char * file_name;	
+			const char * file_cal[MAX_FILE_INCLUDED];
+		  long int   * size_cal[MAX_FILE_INCLUDED];
+			unsigned int count_file;
 };
 
 }
 
-#endif /* UTIL__FILE_CALCULATE_HPP */
+#endif /* UTIL_FILE_CALCULATE_HPP */
