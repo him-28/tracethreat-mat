@@ -30,16 +30,16 @@ TEST_F(FileCalculateTest, RecurseFile)
 		fc.file_size();
     int count = fc.get_count_file();
 		ASSERT_NE(0, count);
-		const char ** file_name = fc.get_file_cal();
-		long  int  ** size      = fc.get_size_cal();
+		struct file_detail * fd = fc.get_file_d();
+
 		for(int i = 0; i < count; i++)
 		{
-			long int * size_addr = size[i];
 			std::stringstream ss;
-			ss << std::hex << size_addr;
+			ss << std::hex << fd[i].size_cal;
 			unsigned int size_int = 0;
 			ss >> size_int;
-			std::cout<<" Test file : "<< file_name[i] << ", size : " << static_cast<int>(size_int) <<std::endl;			
+			std::cout<<" File str : " << fd[i].file_cal 
+			<< ", size str : " << static_cast<int>(size_int) <<std::endl;
 		}
 }
 

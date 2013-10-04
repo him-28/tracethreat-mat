@@ -24,36 +24,48 @@
 namespace util
 {
 
-struct Extension
-{
-	unsigned int  elf_t;
-	unsigned int  exe_t;
-};
+    struct Extension {
+        unsigned int  elf_t;
+        unsigned int  exe_t;
+    };
 
-template<typename Extension>
-class file_calculate 
-{
-public:
-			bool set_filepath(char * file_path);
-			bool get_file();
-			bool processes();
-			unsigned int  file_size();
-			unsigned int  get_count_file();
-			const char ** get_file_cal();
-			long  int  ** get_size_cal();
-			~file_calculate();
-private:
-			std::list<std::string> files;
-			char * file_path;
-			DIR * dir;
-			struct dirent *ent;
-			// file get size
-			FILE * p_file;
-			const char * file_name;	
-			const char * file_cal[MAX_FILE_INCLUDED];
-		  long int   * size_cal[MAX_FILE_INCLUDED];
-			unsigned int count_file;
-};
+    struct file_detail {
+        unsigned int   *size_cal;
+        const char   *file_cal;
+        file_detail *operator=(file_detail *file_detail) {
+            if(file_detail == NULL) {
+                return (struct file_detail *)
+                        malloc(sizeof(struct file_detail) * MAX_FILE_INCLUDED);
+            }
+
+            return file_detail;
+        }
+    };
+
+    template<typename Extension>
+    class file_calculate
+    {
+        public:
+            bool set_filepath(char *file_path);
+            bool get_file();
+            bool processes();
+            unsigned int  file_size();
+            unsigned int  get_count_file();
+            struct file_detail *get_file_d();
+            ~file_calculate();
+        private:
+            std::list<std::string> files;
+            char *file_path;
+            DIR *dir;
+            struct dirent *ent;
+            // test
+            struct file_detail *file_d;
+            // file get size
+            FILE *p_file;
+            const char *file_name;
+            unsigned int count_file;
+            unsigned int size;
+    };
 
 }
 
