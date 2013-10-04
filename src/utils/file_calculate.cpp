@@ -76,7 +76,6 @@ namespace util
 
         buffer_size = 0;
         qsort(file_d, count_file, sizeof(*file_d), compare_function);
-        int count_buffer;
 
         for(int count_filter = 0; count_filter < count_file; count_filter++) {
             if(count_buffer > MAX_BUFFER_SIZES)
