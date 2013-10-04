@@ -5,7 +5,7 @@
  * - Calculate file types send to Oclbuffer                              R.Chatsiri
  */
 #define MAX_FILE_INCLUDED 1024
-
+#define MAX_BUFFER_SIZES  524288
 
 #include "dirent.h"
 #include "stdlib.h"
@@ -52,10 +52,11 @@ namespace util
             unsigned int  file_size();
             unsigned int  get_count_file();
             struct file_detail *get_file_d();
-//						unsigned int compare_function(const void * valuel, const void *valuer);
             ~file_calculate();
+						std::list<std::string> & get_files2buffer();
         private:
             std::list<std::string> files;
+						std::list<std::string> files2buffer;
             char *file_path;
             DIR *dir;
             struct dirent *ent;
@@ -66,6 +67,8 @@ namespace util
             const char *file_name;
             unsigned int count_file;
             unsigned int size;
+						// filter file send to buffer;
+						unsigned int buffer_size;
     };
 
 }
