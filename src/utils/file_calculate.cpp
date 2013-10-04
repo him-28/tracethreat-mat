@@ -47,20 +47,20 @@ namespace util
         long int size_summary = 0;
         unsigned int hex2size_int = 0;
         size = 0;
+				count_file = 0;
+        file_d = (struct file_detail *)malloc(sizeof(file_d) * MAX_FILE_INCLUDED);
 
-				file_d = (struct file_detail *)malloc(sizeof(file_d) * MAX_FILE_INCLUDED);
-					
         for(typename std::list<std::string>::iterator iter = files.begin(); iter != files.end(); ++iter, count_file++) {
             std::stringstream ss;
-					
+
             file_name = (*iter).c_str();
             p_file    = fopen(file_name, "rb");
             fseek(p_file, 0, SEEK_END);
- 
-            file_d[count_file].size_cal = (unsigned int*)ftell(p_file);
-	
-            file_d[count_file].file_cal = file_name;
 
+            file_d[count_file].size_cal = (unsigned int)ftell(p_file);
+	          file_d[count_file].file_cal = file_name;
+//            file_d[count_file].file_cal = (char *)malloc(sizeof(char) *(strlen(file_name)+1));
+//            strcpy(file_d[count_file].file_cal,file_name);
             fclose(p_file);
         }
 
@@ -76,6 +76,17 @@ namespace util
     struct file_detail *file_calculate<Extension>::get_file_d() {
         return file_d;
     }
+    /*
+    		template<typename Extension>
+    		unsigned int file_calculate<Extension>::compare_function(const void * valuel, const void * valuer)
+    		{
+    			struct file_detail * valuel_ = (file_detail*)valuel;
+    			unsigned int * size_l = valuel_->size_cal;
+    			struct file_detail * valuer_ = (file_detail*)valuer;
+    			unsigned int * size_r = valuer_->size_cal;
+    			return *size_l - *size_r;
+    		}
+    */
     template<typename Extension>
     file_calculate<Extension>::~file_calculate()
     {

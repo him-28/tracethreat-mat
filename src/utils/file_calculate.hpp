@@ -30,7 +30,7 @@ namespace util
     };
 
     struct file_detail {
-        unsigned int   *size_cal;
+        unsigned int size_cal;
         const char   *file_cal;
         file_detail *operator=(file_detail *file_detail) {
             if(file_detail == NULL) {
@@ -52,6 +52,7 @@ namespace util
             unsigned int  file_size();
             unsigned int  get_count_file();
             struct file_detail *get_file_d();
+//						unsigned int compare_function(const void * valuel, const void *valuer);
             ~file_calculate();
         private:
             std::list<std::string> files;

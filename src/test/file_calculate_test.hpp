@@ -1,5 +1,6 @@
 #include "utils/file_calculate.hpp"
 #include "stdio.h"
+#include "stdlib.h"
 
 using namespace util;
 
@@ -23,6 +24,14 @@ class FileCalculateTest : public ::testing::Test
         return ::testing::AssertionFailure()<< "Is cannot processes";
 }
 
+		int compare_function(const void * valuel, const void * valuer)
+		{
+			struct file_detail * valuel_ = (file_detail*)valuel;
+			unsigned int  size_l = valuel_->size_cal;
+			struct file_detail * valuer_ = (file_detail*)valuer;
+			unsigned int  size_r = valuer_->size_cal;
+			return size_l - size_r;
+		}
 
 TEST_F(FileCalculateTest, RecurseFile)
 {
@@ -41,5 +50,18 @@ TEST_F(FileCalculateTest, RecurseFile)
 			std::cout<<" File str : " << fd[i].file_cal 
 			<< ", size str : " << static_cast<int>(size_int) <<std::endl;
 		}
+
+		qsort(fd, count, sizeof(*fd), compare_function);
+
+		for(int i = 0; i < count; i++)
+		{
+			std::stringstream ss;
+			ss << std::hex << fd[i].size_cal;
+			unsigned int size_int = 0;
+			ss >> size_int;
+			std::cout<<" File str : " << fd[i].file_cal 
+			<< ", size str : " << static_cast<int>(size_int) <<std::endl;
+		}
+
 }
 
