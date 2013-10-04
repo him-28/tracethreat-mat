@@ -51,7 +51,7 @@ TEST_F(FileCalculateTest, RecurseFile)
 			<< ", size str : " << static_cast<int>(size_int) <<std::endl;
 		}
 
-		qsort(fd, count, sizeof(*fd), compare_function);
+		qsort(fd, count, sizeof(*fd), fd.compare_function);
 
 		for(int i = 0; i < count; i++)
 		{
