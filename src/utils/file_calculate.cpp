@@ -58,7 +58,9 @@ namespace util
         count_file = 0;
         file_d = (struct file_detail *)malloc(sizeof(file_d) * MAX_FILE_INCLUDED);
 
-        for(typename std::list<std::string>::iterator iter = files.begin(); iter != files.end(); ++iter, count_file++) {
+        for(typename std::list<std::string>::iterator iter = files.begin();
+                iter != files.end();
+                ++iter, count_file++) {
             std::stringstream ss;
 
             file_name = (*iter).c_str();
@@ -69,8 +71,6 @@ namespace util
             ss >> hex2size_int;
             file_d[count_file].size_cal = hex2size_int;// (unsigned int)ftell(p_file);
             file_d[count_file].file_cal = file_name;
-            //            file_d[count_file].file_cal = (char *)malloc(sizeof(char) *(strlen(file_name)+1));
-            //            strcpy(file_d[count_file].file_cal,file_name);
             fclose(p_file);
         }
 
@@ -106,13 +106,18 @@ namespace util
     template<typename Extension>
     file_calculate<Extension>::~file_calculate()
     {
-        /*
-        	delete p_file;
-        	delete file_path;
-        	delete ent;
-        	delete file_cal;
-        	delete name_cal;
-        */
+        file_name = NULL;
+        file_path = NULL;
+        //dir       = NULL;
+        ent       = NULL;
+        file_d    = NULL;
+        p_file    = NULL;
+        delete file_name;
+        delete file_path;
+        //delete dir;
+        delete file_d;
+        delete p_file;
+        delete ent;
     }
 
     template class file_calculate<Extension>;

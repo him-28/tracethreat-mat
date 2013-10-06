@@ -4,7 +4,15 @@
 namespace error
 {
 
-    template<typename ErrorControl>
+		class ErrorController
+		{
+
+			public:
+				typedef boost::system::error_category error_category;
+				typedef boost::system::generic_category generic_category;
+		};
+
+    template<typename ErrorController>
     class failure
     {
         public:
@@ -12,18 +20,18 @@ namespace error
             virtual ErorrControl&   error_detect() const  = 0;
     };
 
-    template<typename ErrorControl>
-    class failure_handler<ErrorControl : public failure<ErrorControl>, public boost::system::erorr_category, public std::exception
+    template<typename ErrorController, typename ErrorCode>
+    class failure_handler : public failure<ErrorController>, public boost::system::erorr_category, public std::exception
     {
         public:
             enum error { THREAD_NO_FILE = 0, THREAD_CANNOT_CONNECT_OCL = 1};
             failure_handler();
-            void error_code(ErrorControl& error);
+            void error_code(ErrorCode& error);
             std::string message(int ev)const;
             const boost::system::error_category& get_failure_handler();
         private:
             ErrorControl what_str_;
-            const boost::system::error_category failure_category;
+            ErrorController failure_category;
     };
 
 }
