@@ -46,6 +46,7 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/threadsyncocl/Makefile])
 #AC_CONFIG_FILES([src/ocl/Makefile])
 AC_CONFIG_FILES([src/utils/Makefile])
+AC_CONFIG_FILES([src/exception/Makefile])
 AC_CONFIG_FILES([src/bin/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file

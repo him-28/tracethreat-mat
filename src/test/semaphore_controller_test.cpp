@@ -2,6 +2,7 @@
 #include "threadsyncocl/semaphore_controller.hpp"
 #include "test/thread_controller_test.hpp"
 #include "test/file_calculate_test.hpp"
+#include "test/thread_exception_test.hpp"
 
 // semaphore test suite 
 using namespace controller;

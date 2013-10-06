@@ -5,6 +5,7 @@
 
 namespace util
 {
+
     int compare_function(const void *valuel, const void *valuer)
     {
         struct file_detail *valuel_ = (file_detail *)valuel;
@@ -13,6 +14,7 @@ namespace util
         unsigned int size_r = valuer_->size_cal;
         return size_l - size_r;
     }
+
 
     template<typename Extension>
     bool file_calculate<Extension>::processes()

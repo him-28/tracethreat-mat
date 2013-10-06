@@ -24,6 +24,15 @@ class FileCalculateTest : public ::testing::Test
         return ::testing::AssertionFailure()<< "Is cannot processes";
 }
 
+int compare_function(const void *valuel, const void *valuer)
+    {
+        struct file_detail *valuel_ = (file_detail *)valuel;
+        unsigned int size_l = valuel_->size_cal;
+        struct file_detail *valuer_ = (file_detail *)valuer;
+        unsigned int size_r = valuer_->size_cal;
+        return size_l - size_r;
+    }
+
 
 TEST_F(FileCalculateTest, RecurseFile)
 {
