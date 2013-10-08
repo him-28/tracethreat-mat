@@ -351,7 +351,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_class.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/call_traits.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp \
+ ../../src/threadsyncocl/thread_barrier_controller.hpp
 
 ../../src/threadsyncocl/thread_sync.hpp:
 
@@ -1122,3 +1123,5 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp:
+
+../../src/threadsyncocl/thread_barrier_controller.hpp:

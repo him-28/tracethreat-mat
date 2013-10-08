@@ -393,6 +393,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mm_malloc.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h \
+ ../../src/threadsyncocl/thread_barrier_controller.hpp \
  ../../src/test/file_calculate_test.hpp \
  ../../src/utils/file_calculate.hpp /usr/include/dirent.h \
  /usr/include/x86_64-linux-gnu/bits/dirent.h /usr/include/c++/4.6/list \
@@ -404,7 +405,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++io.h \
  /usr/include/c++/4.6/bits/fstream.tcc \
  ../../src/test/thread_exception_test.hpp \
- ../../src/exception/thread_exception.hpp \
+ ../../src/exception/failure_handler_code.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/system/error_code.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/system/config.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/system/api_config.hpp \
@@ -421,7 +422,8 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/config/abi_prefix.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/config/abi_suffix.hpp
+ /home/chatsiri/workspacecpp/boost-truck/boost/config/abi_suffix.hpp \
+ ../../src/test/thread_barrier_controller_test.hpp
 
 /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest.h:
 
@@ -1297,6 +1299,8 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 
 /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h:
 
+../../src/threadsyncocl/thread_barrier_controller.hpp:
+
 ../../src/test/file_calculate_test.hpp:
 
 ../../src/utils/file_calculate.hpp:
@@ -1331,7 +1335,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 
 ../../src/test/thread_exception_test.hpp:
 
-../../src/exception/thread_exception.hpp:
+../../src/exception/failure_handler_code.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/system/error_code.hpp:
 
@@ -1372,3 +1376,5 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/config/abi_prefix.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/config/abi_suffix.hpp:
+
+../../src/test/thread_barrier_controller_test.hpp:

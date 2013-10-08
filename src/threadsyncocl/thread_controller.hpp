@@ -12,6 +12,7 @@
 // internal
 #include "threadsyncocl/buffer_sync.hpp"
 #include "threadsyncocl/semaphore_controller.hpp"
+#include "threadsyncocl/thread_barrier_controller.hpp"
 
 namespace controller
 {

@@ -17,6 +17,8 @@ namespace controller
 
     struct buffer_kernel {
         cl_int  buffer_length;
+				cl_char buffer_send;
+				typedef int thread_int;
     };
 
     template<typename Buffer>

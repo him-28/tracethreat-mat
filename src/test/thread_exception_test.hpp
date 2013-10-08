@@ -1,4 +1,4 @@
-#include "exception/thread_exception.hpp"
+#include "exception/failure_handler_code.hpp"
 
 using namespace error;
 
@@ -9,5 +9,5 @@ TEST(failure_handler, boost_generic_category)
 	ec = *fd.thread_notfile;
 
 	ASSERT_EQ(ec.value(), fd.thread_notfile->value());
-	
+
 }
