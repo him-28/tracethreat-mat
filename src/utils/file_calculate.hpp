@@ -26,8 +26,8 @@ namespace util
 
 
     struct Extension {
-        unsigned int  elf_t;
-        unsigned int  exe_t;
+        typedef unsigned int  elf_t;
+        typedef unsigned int  exe_t;
     };
 
     struct file_detail {
@@ -47,7 +47,7 @@ namespace util
     class file_calculate
     {
         public:
-            bool set_filepath(char *file_path);
+            bool set_filepath(const char *file_path);
             bool get_file();
             bool processes();
             unsigned int  file_size();
@@ -58,7 +58,7 @@ namespace util
         private:
             std::list<std::string> files;
 						std::list<std::string> files2buffer;
-            char *file_path;
+            const char *file_path;
             DIR *dir;
             struct dirent *ent;
             // test

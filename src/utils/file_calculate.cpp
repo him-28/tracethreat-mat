@@ -45,7 +45,7 @@ namespace util
     }
 
     template<typename Extension>
-    bool file_calculate<Extension>::set_filepath(char *file_path)
+    bool file_calculate<Extension>::set_filepath(const char *file_path)
     {
         this->file_path = file_path;
     }

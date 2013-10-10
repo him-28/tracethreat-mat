@@ -23,9 +23,9 @@ namespace controller
     class barrier
     {
         public:
-						virtual bool barrier_init(barrier_controller<BarrierThread> * bc) = 0;
-            virtual bool barrier_wait(barrier_controller<BarrierThread> * bc) = 0;
-            virtual bool barrier_condition(barrier_controller<BarrierThread> * bc) = 0;
+            virtual bool barrier_init(barrier_controller<BarrierThread> *bc) = 0;
+            virtual bool barrier_wait(barrier_controller<BarrierThread> *bc) = 0;
+            virtual bool barrier_condition(barrier_controller<BarrierThread> *bc) = 0;
 
     };
 
@@ -35,19 +35,18 @@ namespace controller
 
         protected:
 
-						bool barrier_init(barrier_controller<BarrierThread> *b)
-						{
-								b->barrier_init();
-						}
+            bool barrier_init(barrier_controller<BarrierThread> *b) {
+                b->barrier_init();
+            }
 
-            bool barrier_wait(barrier_controller<BarrierThread> * b) {
+            bool barrier_wait(barrier_controller<BarrierThread> *b) {
                 b->barrier_wait();
             }
 
-            bool barrier_condition(barrier_controller<BarrierThread> * b) {
+            bool barrier_condition(barrier_controller<BarrierThread> *b) {
                 b->barrier_condition();
             }
-			 public:
+        public:
             virtual bool barrier_init() = 0;
             virtual bool condition_init() = 0;
             virtual bool barrier_wait() = 0;
@@ -79,10 +78,10 @@ namespace controller
             typename b_t::cond_t p_cond;
             //b_t::cond_wait_t p_cond_wait;
     };
-		
-		template class barrier_buffer<barrier_thread>;
-		template class barrier_controller<barrier_thread>;
-		template class barrier<barrier_thread>;
+
+    template class barrier_buffer<barrier_thread>;
+    template class barrier_controller<barrier_thread>;
+    template class barrier<barrier_thread>;
 }
 
 #endif /*  CONTROLLER_BARRIER_CONTROLLER__TRAHD_BARRIER_CONTROLLER_HPP */

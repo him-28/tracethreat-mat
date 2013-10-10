@@ -9,7 +9,7 @@ lib_LIBRARIES = libthreadsyncocl.a
 libthreadsyncocl_adir = $(includedir)/threadsyncocl
 
 #Header
-libthreadsyncocl_a_HEADERS = thread_sync.hpp  $(top_builddir)/src/utils/file_calculate.hpp  $(top_builddir)/src/exception/failure_handler_code.hpp
+libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp $(top_builddir)/src/utils/file_calculate.hpp  $(top_builddir)/src/exception/failure_handler_code.hpp
 
 
 # library

@@ -124,6 +124,7 @@ void *comm_thread_buffer<BufferSync>::run()
 
 // Explicitly instance 
 template class thread<BufferSync<buffer_kernel> >;
+template class thread<int>;
 template class comm_thread_buffer<BufferSync<buffer_kernel> >;
 
 }
