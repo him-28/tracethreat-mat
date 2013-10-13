@@ -17,16 +17,16 @@ namespace controller
     template<typename Buffer>
     BufferSync<Buffer>::BufferSync()
     {
-			  this->size_buff = 0;	
+				this->size_buff = 0;
 				std::cout<<" New init , Size buffer set : " << this->size_buff <<std::endl;
-
     }
 
 
     template<typename Buffer>
     void BufferSync<Buffer>::set_buffer()
     {
-			  this->size_buff = 0;	
+			  this->size_buff = 0;
+				std::cout<<" Test " <<std::endl;	
     }
 
     template<typename Buffer>

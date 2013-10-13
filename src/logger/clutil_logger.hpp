@@ -132,7 +132,7 @@ namespace  hnmav_util
 
         if(logging_instance == NULL) {
             std::cout<<" Logging not get instance , It's create new instance " <<std::endl;
-            logging_instance = new shared_ptr<clutil_logging<CONT, CONT1>>(new clutil_logging<CONT, CONT1>());
+            logging_instance = new shared_ptr<clutil_logging<CONT, CONT1> >(new clutil_logging<CONT, CONT1>());
         }
 
         return  *logging_instance;
@@ -169,7 +169,7 @@ namespace  hnmav_util
         std::vector<std::string> *list_info = format_info.get_str_format();
 
         for(std::vector<std::string>::iterator iter_log = list_info->begin(); iter_log !=  list_info->end() ; ++iter_log)
-                BOOST_LOG(write_log::get())<< *iter_log;
+            BOOST_LOG(write_log::get())<< *iter_log;
     }
 
 
@@ -184,13 +184,13 @@ namespace  hnmav_util
             CONT const& write_detail,
             format_type::type type)
     {
-       // Header
+        // Header
         format_logger<std::string,int>  format_log_header(write_header, type);
 
         std::vector<std::string> *list_header = format_log_header.get_str_format();
 
         for(std::vector<std::string>::iterator iter_log = list_header->begin(); iter_log !=  list_header->end() ; ++iter_log)
-                BOOST_LOG(write_log::get())<< *iter_log;
+            BOOST_LOG(write_log::get())<< *iter_log;
 
         // Info
         format_logger<std::string,int>  format_log_detail(write_detail, type);
