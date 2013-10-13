@@ -48,6 +48,9 @@ namespace util
     bool file_calculate<Extension>::set_filepath(const char *file_path)
     {
         this->file_path = file_path;
+				if(this->file_path != NULL)
+				  return true;
+				return false;
     }
 
     // use with C code
@@ -86,6 +89,7 @@ namespace util
             buffer_size += file_d[count_filter].size_cal;
             files2buffer.push_back(file_d[count_filter].file_cal);
         }
+			return buffer_size; // change to size of file on list
     }
 
     template<typename Extension>
@@ -101,7 +105,8 @@ namespace util
 
     template<typename Extension>
     std::list<std::string>& file_calculate<Extension>::get_files2buffer()
-    {
+    {		
+				std::cout<<" file 2 buffer : " << files2buffer.size() <<std::endl;
         return files2buffer;
     }
 

@@ -5,6 +5,7 @@ using namespace controller;
 
 TEST(thread_controller, thread_init)
 {
+		
 		//SCOPED_TRACE("TEST THREAD_CONTROLLER");
     typedef BufferSync<buffer_kernel> buffsync;
     buffsync *buff_sync_d = new BufferSync<buffer_kernel>();

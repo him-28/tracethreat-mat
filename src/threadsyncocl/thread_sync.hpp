@@ -9,6 +9,10 @@
 #include "threadsyncocl/thread_controller.hpp"
 #include "utils/file_calculate.hpp"
 
+//3rd
+#include "boost/tuple/tuple.hpp"
+
+
 namespace controller
 {
 
@@ -19,30 +23,18 @@ namespace controller
     {
         public:
             virtual boost::shared_ptr<BufferSync>& buffer_ocl() = 0;
-            virtual std::string path() = 0;
+            virtual std::string path()= 0;
     };
+/*
+		template<typename BufferSync>
+					 typedef buffer_kernel::size_int thread_sync<BufferSync>::size_type;
+*/
 
     template<typename BufferSync>
     class thread_sync : public ibuffer_sync<BufferSync>
     {
-        public:
-
-            thread_sync();
-
-            boost::shared_ptr<BufferSync>& buffer_ocl();
-
-            std::string path();
-
-            //processe sync and controller
-            bool sync_init();
-            bool sync_buffer();
-            bool sync_check_kernel();
-
-            // for test case only
-            //void pre_check_strucS();
 
         private:
-            //thread_controller<BufferSync> thread_cont;
             boost::shared_ptr<BufferSync> buffer_sync;
 
             //file processes
@@ -54,11 +46,29 @@ namespace controller
             typedef buffer_kernel::size_int size_type;
             typedef boost::shared_ptr<comm_thread_buffer<buffer_sync_type> > thread_ptr;
 
+						std::string  *file_path;
             thread_ptr   *thread_array_ptr;
             buffer_sync_type *buff_sync_internal;
 
+	          size_type thread_id;
+
             std::vector<thread_ptr> thread_ptr_vec;
 
+        public:
+
+            thread_sync();
+
+            boost::shared_ptr<BufferSync>& buffer_ocl();
+
+            std::string path();
+						void set_path(const char * path);	
+
+            //processe sync and controller
+            bool sync_init();
+            bool sync_buffer();
+            bool sync_check_kernel();
+						
+						boost::tuple<buffer_kernel::size_int> get_thread_info();
     };
 
 }

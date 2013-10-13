@@ -405,7 +405,22 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest_prod.h \
  /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest-test-part.h \
  /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest-typed-test.h \
- /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest_pred_impl.h
+ /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest_pred_impl.h \
+ /home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/ref.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/utility/addressof.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/tuple/detail/tuple_basic.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/cv_traits.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_const.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_volatile.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_cv.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_const.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_const.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_volatile.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/function_traits.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_pointer.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_reference.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/utility/swap.hpp
 
 ../../src/threadsyncocl/thread_sync.hpp:
 
@@ -1312,3 +1327,33 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest-typed-test.h:
 
 /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest_pred_impl.h:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/ref.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/utility/addressof.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/tuple/detail/tuple_basic.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/cv_traits.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_const.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_volatile.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_cv.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_const.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_const.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_volatile.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/function_traits.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_pointer.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_reference.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/utility/swap.hpp:
