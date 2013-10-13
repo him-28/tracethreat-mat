@@ -13,7 +13,10 @@ void thread_controller<BufferSync>::get_data()
 template<typename BufferSync>
 thread_controller<BufferSync>::thread_controller()
 {
-
+  //logger
+  logger_ptr = &util::clutil_logging<std::string, int>:: get_instance();
+	logger = logger_ptr->get();
+	logger->write("Load path thread...");	
 }
 
 // Explicitly instance 

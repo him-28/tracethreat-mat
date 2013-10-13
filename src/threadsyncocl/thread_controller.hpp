@@ -15,7 +15,7 @@
 #include "threadsyncocl/thread_barrier_controller.hpp"
 
 //
-#include "logger/clutil_logger.hpp"
+#include "utils/logger/clutil_logger.hpp"
 
 namespace controller
 {
