@@ -47,3 +47,6 @@ stamp-h1
 !*.am
 !*.ac
 !*.sh
+log/*
+log/logger_main.log
+log/

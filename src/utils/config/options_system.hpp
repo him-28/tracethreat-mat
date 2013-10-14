@@ -50,6 +50,7 @@ namespace hnmav_util
             std::string  get_logger_mainfile_path() const;
             std::string  get_logger_settingsfile_path() const;
             std::string&  get_config_file()const;
+						//std::string& get_dir_path()const;
 
         private:
             options_system();

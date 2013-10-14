@@ -7,7 +7,7 @@ namespace controller
 template<typename BufferSync>
 void thread_controller<BufferSync>::get_data()
 {
-    std::cout<<"Thread controller get_data " <<std::endl;
+	logger->write_info("thread_controller, get_data()");    
 }
 
 template<typename BufferSync>
@@ -24,7 +24,7 @@ thread<BufferSync>::thread(boost::shared_ptr<runnable> r, bool detached)
     : runnable_(r), detached_(detached)
 {
     if(!runnable_.get()) {
-        std::cout<<" Thread is detached " <<std::endl;
+        logger->write_info(" Thread is detached ");
         exit(-1);
     }
 }
@@ -35,7 +35,7 @@ thread<BufferSync>::thread(bool detached)
   //logger
   logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
 	logger = logger_ptr->get();
-	logger->write_info("Load path thread...");	
+	logger->write_info("Thread init/ not start ");
  }
 
 template<typename BufferSync>
@@ -60,13 +60,13 @@ void thread<BufferSync>::start()
     int status = pthread_attr_init(&thread_buffer_attr);
 
     if(status) {
-        std::cout<<" attr init fail " <<std::endl;
+        logger->write_info(" Attribute init fail ");
     }
 
     status = pthread_attr_setscope(&thread_buffer_attr, PTHREAD_SCOPE_SYSTEM);
 
     if(status) {
-        std::cout<<" setscope fail " <<std::endl;
+        logger->write_info(" setscope fail ");
     }
 
     if(!detached_) {
@@ -77,7 +77,7 @@ void thread<BufferSync>::start()
                     (void *)this);
 
             if(status) {
-                std::cout<<" Cannot create start_thread " <<std::endl;
+                logger->write_info(" Cannot create start_thread ");
             }
         } else {
             status = pthread_create(&thread_buffer_id,
@@ -86,7 +86,7 @@ void thread<BufferSync>::start()
                     (void *)this);
 
             if(status) {
-                std::cout<<" Cannot create start_thread_runnable " <<std::endl;
+                logger->write_info(" Cannot create start_thread_runnable ");
             }
 
         }
@@ -95,7 +95,7 @@ void thread<BufferSync>::start()
     status = pthread_attr_destroy(&thread_buffer_attr);
 
     if(status) {
-        std::cout<<" cannot destroy " <<std::endl;
+        logger->write_info(" cannot destroy ");
     }	
 }
 
@@ -105,7 +105,7 @@ void *thread<BufferSync>::join()
     int status = pthread_join(thread_buffer_id, NULL);
 
     if(status) {
-        std::cout<<" Cannot join thread_buffer_id " <<std::endl;
+        logger->write_info(" Cannot join thread_buffer_id ");
     }
 }
 

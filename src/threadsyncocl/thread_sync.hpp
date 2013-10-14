@@ -64,7 +64,7 @@ namespace controller
 						void set_path(const char * path);	
 
             //processe sync and controller
-            bool sync_init();
+            std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync> > > &  sync_init();
             bool sync_buffer();
             bool sync_check_kernel();
 						
