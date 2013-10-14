@@ -13,10 +13,6 @@ void thread_controller<BufferSync>::get_data()
 template<typename BufferSync>
 thread_controller<BufferSync>::thread_controller()
 {
-  //logger
-  logger_ptr = &util::clutil_logging<std::string, int>:: get_instance();
-	logger = logger_ptr->get();
-	logger->write("Load path thread...");	
 }
 
 // Explicitly instance 
@@ -35,7 +31,12 @@ thread<BufferSync>::thread(boost::shared_ptr<runnable> r, bool detached)
 
 template<typename BufferSync>
 thread<BufferSync>::thread(bool detached)
-    : runnable_(boost::shared_ptr<runnable>()), detached_(detached) { }
+    : runnable_(boost::shared_ptr<runnable>()), detached_(detached) {
+  //logger
+  logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+	logger = logger_ptr->get();
+	logger->write_info("Load path thread...");	
+ }
 
 template<typename BufferSync>
 void *thread<BufferSync>::start_thread_runnable(void *p_void)

@@ -8,6 +8,7 @@
 
 // semaphore test suite 
 using namespace controller;
+
 TEST(semaphore_mutex_controller, mutex_controller)
 {
 
@@ -23,8 +24,10 @@ TEST(semaphore_mutex_controller, mutex_controller)
 
 }
 
+
 GTEST_API_ int main(int argc, char ** argv)
 {
  testing::InitGoogleTest(&argc, argv);
+ testing::AddGlobalTestEnvironment( new ThreadSyncEnvironment(argc, argv));
  return RUN_ALL_TESTS();
 }

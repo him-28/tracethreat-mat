@@ -27,7 +27,7 @@ AC_CHECK_HEADERS([iostream])
 #m4_pattern_allow([AC_PROG_LIBTOOL])
 #AC_PROG_LIBTOOL
 
-LIBS="-lgtest -lpthread -lboost_system $LIBS"
+LIBS="-lgtest -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem $LIBS"
 
 AC_TYPE_SIZE_T
 ##################################

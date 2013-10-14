@@ -353,7 +353,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp \
  ../../src/threadsyncocl/thread_barrier_controller.hpp \
- ../../src/logger/clutil_logger.hpp \
+ ../../src/utils/logger/clutil_logger.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/detail/prologue.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/version.hpp \
@@ -1281,7 +1281,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/function/detail/function_iterate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/scoped_array.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/scoped_array.hpp \
- ../../src/logger/format_logger.hpp \
+ ../../src/utils/logger/format_logger.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/split.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/iter_find.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/find_iterator.hpp \
@@ -2107,7 +2107,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 ../../src/threadsyncocl/thread_barrier_controller.hpp:
 
-../../src/logger/clutil_logger.hpp:
+../../src/utils/logger/clutil_logger.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp:
 
@@ -3993,7 +3993,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/scoped_array.hpp:
 
-../../src/logger/format_logger.hpp:
+../../src/utils/logger/format_logger.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/split.hpp:
 
