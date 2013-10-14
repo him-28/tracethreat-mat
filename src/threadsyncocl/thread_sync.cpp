@@ -7,6 +7,10 @@ namespace controller
     template<typename BufferSync>
     thread_sync<BufferSync>::thread_sync()
     {
+				// logger 
+ 				logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+				logger = logger_ptr->get();
+				//init value
         thread_id = 0;
     }
 
@@ -37,12 +41,12 @@ namespace controller
         std::string path_all = path();
 
         if(!file_cal->set_filepath(path_all.c_str())) {
-            std::cout<<"File error " <<std::endl;
+            logger->write_info("File cannot get from path");
             return  thread_ptr_vec;
         }
 
         if(!file_cal->processes()) {
-            std::cout<<" Process error " <<std::endl;
+            logger->write_info("File cannot get/sorts in processes()");
             return thread_ptr_vec;
         }
 

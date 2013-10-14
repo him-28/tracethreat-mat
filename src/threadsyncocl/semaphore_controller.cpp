@@ -10,6 +10,10 @@ namespace controller
     template<typename Mutex>
     bool mutex_buffer<Mutex>::init()
     {
+				// logger 
+ 				logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+				logger = logger_ptr->get();
+
 
         if(mx_ptr_vec.size() == 0) {
             mx_ptr ptr(new Mutex);
@@ -32,7 +36,7 @@ namespace controller
     template<typename Mutex>
     bool mutex_buffer<Mutex>::lock_request()
     {
-				std::cout<<" Lock request " <<std::endl;
+				logger->write_info(" Lock request ");
         boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
         Mutex *m = mx.get();
 
@@ -46,7 +50,7 @@ namespace controller
     template<typename Mutex>
     bool mutex_buffer<Mutex>::unlock_request()
     {
-				std::cout<<" Unlock request " <<std::endl;
+				logger->write_info(" Unlock request ");
         boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
         Mutex *m = mx.get();
 

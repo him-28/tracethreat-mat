@@ -351,8 +351,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/detail/yield_k.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/memory_order.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/detail/operator_bool.hpp \
- ../../src/test/thread_controller_test.hpp \
- ../../src/threadsyncocl/thread_controller.hpp \
+ ../../src/utils/logger/clutil_logger.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/make_shared.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/make_shared.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/type_with_alignment.hpp \
@@ -386,15 +385,6 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/size_t.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/size_t_fwd.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/size_t_trait_undef.hpp \
- ../../src/threadsyncocl/buffer_sync.hpp /usr/include/CL/cl.h \
- /usr/include/CL/cl_platform.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/xmmintrin.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mmintrin.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mm_malloc.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h \
- ../../src/threadsyncocl/thread_barrier_controller.hpp \
- ../../src/utils/logger/clutil_logger.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/detail/prologue.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/version.hpp \
@@ -416,6 +406,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/integer_fwd.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/limits.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/cstdint.hpp \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/integer_traits.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/has_trivial_copy.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_const.hpp \
@@ -1322,6 +1313,15 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/predicate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/detail/predicate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp \
+ ../../src/test/thread_controller_test.hpp \
+ ../../src/threadsyncocl/thread_controller.hpp \
+ ../../src/threadsyncocl/buffer_sync.hpp /usr/include/CL/cl.h \
+ /usr/include/CL/cl_platform.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/xmmintrin.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mmintrin.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mm_malloc.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h \
+ ../../src/threadsyncocl/thread_barrier_controller.hpp \
  ../../src/test/file_calculate_test.hpp \
  ../../src/utils/file_calculate.hpp /usr/include/dirent.h \
  /usr/include/x86_64-linux-gnu/bits/dirent.h /usr/include/c++/4.6/fstream \
@@ -2160,9 +2160,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/detail/operator_bool.hpp:
 
-../../src/test/thread_controller_test.hpp:
-
-../../src/threadsyncocl/thread_controller.hpp:
+../../src/utils/logger/clutil_logger.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/make_shared.hpp:
 
@@ -2230,28 +2228,6 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/size_t_trait_undef.hpp:
 
-../../src/threadsyncocl/buffer_sync.hpp:
-
-/usr/include/CL/cl.h:
-
-/usr/include/CL/cl_platform.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h:
-
-/usr/include/stdint.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.6/include/xmmintrin.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.6/include/mmintrin.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.6/include/mm_malloc.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h:
-
-../../src/threadsyncocl/thread_barrier_controller.hpp:
-
-../../src/utils/logger/clutil_logger.hpp:
-
 /home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/log/detail/prologue.hpp:
@@ -2293,6 +2269,10 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/limits.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/cstdint.hpp:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h:
+
+/usr/include/stdint.h:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/integer_traits.hpp:
 
@@ -4123,6 +4103,26 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/detail/predicate.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp:
+
+../../src/test/thread_controller_test.hpp:
+
+../../src/threadsyncocl/thread_controller.hpp:
+
+../../src/threadsyncocl/buffer_sync.hpp:
+
+/usr/include/CL/cl.h:
+
+/usr/include/CL/cl_platform.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/xmmintrin.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/mmintrin.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/mm_malloc.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h:
+
+../../src/threadsyncocl/thread_barrier_controller.hpp:
 
 ../../src/test/file_calculate_test.hpp:
 

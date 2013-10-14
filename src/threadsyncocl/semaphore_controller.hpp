@@ -8,8 +8,13 @@
 #include <boost/move/move.hpp>
 #include <boost/shared_ptr.hpp>
 
+//
+#include "utils/logger/clutil_logger.hpp"
+
 namespace controller
 {
+		//work around with h_ prefix 
+    namespace h_util = hnmav_util;
     //Define type class
     class Mutex
     {
@@ -42,6 +47,11 @@ namespace controller
 						typedef boost::shared_ptr<Mutex>  mx_ptr;
             //move sementics
             std::vector<boost::shared_ptr<Mutex> >   mx_ptr_vec;
+
+            //logger
+					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
+						h_util::clutil_logging<std::string, int>   * logger;
+
     };
 	
 }

@@ -106,7 +106,6 @@ namespace util
     template<typename Extension>
     std::list<std::string>& file_calculate<Extension>::get_files2buffer()
     {		
-				std::cout<<" file 2 buffer : " << files2buffer.size() <<std::endl;
         return files2buffer;
     }
 

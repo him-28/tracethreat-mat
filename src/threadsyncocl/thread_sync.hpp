@@ -17,6 +17,7 @@ namespace controller
 {
 
     using namespace util;
+    namespace h_util = hnmav_util;
 
     template<typename BufferSync>
     class ibuffer_sync
@@ -25,10 +26,6 @@ namespace controller
             virtual boost::shared_ptr<BufferSync>& buffer_ocl() = 0;
             virtual std::string path()= 0;
     };
-/*
-		template<typename BufferSync>
-					 typedef buffer_kernel::size_int thread_sync<BufferSync>::size_type;
-*/
 
     template<typename BufferSync>
     class thread_sync : public ibuffer_sync<BufferSync>
@@ -69,6 +66,11 @@ namespace controller
             bool sync_check_kernel();
 						
 						boost::tuple<buffer_kernel::size_int> get_thread_info();
+
+            //logger
+					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
+						h_util::clutil_logging<std::string, int>   * logger;
+
     };
 
 }

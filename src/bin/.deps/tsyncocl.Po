@@ -352,7 +352,6 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/call_traits.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp \
- ../../src/threadsyncocl/thread_barrier_controller.hpp \
  ../../src/utils/logger/clutil_logger.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/detail/prologue.hpp \
@@ -1300,6 +1299,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/predicate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/detail/predicate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp \
+ ../../src/threadsyncocl/thread_barrier_controller.hpp \
  ../../src/utils/file_calculate.hpp /usr/include/dirent.h \
  /usr/include/x86_64-linux-gnu/bits/dirent.h /usr/include/c++/4.6/fstream \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/basic_file.h \
@@ -2104,8 +2104,6 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp:
-
-../../src/threadsyncocl/thread_barrier_controller.hpp:
 
 ../../src/utils/logger/clutil_logger.hpp:
 
@@ -4030,6 +4028,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/detail/predicate.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp:
+
+../../src/threadsyncocl/thread_barrier_controller.hpp:
 
 ../../src/utils/file_calculate.hpp:
 
