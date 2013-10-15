@@ -30,6 +30,8 @@ namespace controller
         }
     }
 */
+
+
     template<typename BufferSync>
     thread<BufferSync>::thread(bool detached)
         : runnable_(boost::shared_ptr<runnable>()), detached_(detached)
@@ -39,6 +41,18 @@ namespace controller
         logger = logger_ptr->get();
         logger->write_info("Thread, Thread init/ not start ", h_util::format_type::type_header);
     }
+
+/*
+    template<typename BufferSync>
+    thread<BufferSync>::thread()
+        : runnable_(boost::shared_ptr<runnable>())
+    {
+        //logger
+        logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        logger = logger_ptr->get();
+        logger->write_info("Thread, Thread init/ not start ", h_util::format_type::type_header);
+    }
+*/
 
     template<typename BufferSync>
     void *thread<BufferSync>::start_thread_runnable(void *p_void)
