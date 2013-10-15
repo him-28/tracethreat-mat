@@ -74,6 +74,10 @@ namespace  hnmav_util
             void write_info(CONT  const& write_detail, CONT const& write_info, format_type::type  type);
             void write_info(char const& write_info);
 
+            void write_info_test(CONT const& write_detail, CONT const& write_info);
+            void write_info_test(CONT const& write_info);
+
+
             void write_error(CONT const& write_error);
             void write_warning(CONT const& write_warning);
 
@@ -202,11 +206,23 @@ namespace  hnmav_util
     }
 
 
-
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(char const& write_info)
     {
         BOOST_LOG(write_log::get()) << write_info;
+    }
+
+
+    template<typename CONT, typename CONT1>
+    void clutil_logging<CONT, CONT1>::write_info_test(CONT  const& write_detail, CONT const& write_info)
+    {
+        BOOST_LOG(write_log::get())<< "[TEST]: " << write_detail << " : " << write_info;
+    }
+
+    template<typename CONT, typename CONT1>
+    void clutil_logging<CONT, CONT1>::write_info_test(CONT const& write_info)
+    {
+        BOOST_LOG(write_log::get()) << "[TEST]: " << write_info;
     }
 
     template<typename CONT, typename CONT1>

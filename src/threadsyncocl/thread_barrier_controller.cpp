@@ -13,9 +13,14 @@ namespace controller
 		template<typename BarrierThread>
 		bool barrier_buffer<BarrierThread>::barrier_init()
 		{ 
+
+ 			logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+			logger = logger_ptr->get();
 			 int error = pthread_barrier_init(&p_barrier, NULL, thread_num_);	
-			 if(!error)
+			 if(!error){
+					logger->write_info("barrier_buffer, init compeleted");
 					return true;
+				}
 			 return false;
 		}
 
@@ -25,8 +30,10 @@ namespace controller
 				int error = 0;
 				error |=  pthread_cond_init(&p_cond, 0);
 				error =   pthread_condattr_init(&p_condattr);
-				if(!error)
+				if(!error){
+					logger->write_info("barrier_buffer, init condition attribute");
 					return true;
+				}
 				return false;
 		}
 
@@ -34,8 +41,10 @@ namespace controller
 		bool barrier_buffer<BarrierThread>::barrier_wait()
 		{
 				int error = pthread_barrier_wait(&p_barrier);
-				if(!error)
+				if(!error){
 					return true;
+					logger->write_info("barrier_buffer, wait condition");
+				}
 				return false;
 		} 
 

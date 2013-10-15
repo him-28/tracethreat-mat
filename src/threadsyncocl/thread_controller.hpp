@@ -51,11 +51,12 @@ namespace controller
     {
 
         public:
-            thread(boost::shared_ptr<runnable> run, bool detached = false);
+            //thread(boost::shared_ptr<runnable> run, bool detached = false);
             thread(bool detached = false);
             void start();
             void *join();
-
+						
+					
         private:
             bool detached_;
 
@@ -72,12 +73,12 @@ namespace controller
             static void *start_thread_runnable(void *p_void);
             static void *start_thread(void   *p_void);
 
-            BufferSync buffer_sync;
+            //BufferSync buffer_sync;
             void *result;
             pthread_t thread_buffer_id;
             pthread_attr_t thread_buffer_attr;
-
-            //logger
+						
+						//logger
 					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
 						h_util::clutil_logging<std::string, int>   * logger;
 
@@ -100,6 +101,10 @@ namespace controller
             typename buffer_kernel::size_int  my_id;
             BufferSync *buffer_sync_;
             mutex_buffer<Mutex> *mutex_buff;
+	          //logger
+					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
+						h_util::clutil_logging<std::string, int>   * logger;
+
     };
 
 

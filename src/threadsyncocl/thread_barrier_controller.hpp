@@ -4,8 +4,13 @@
 #include "pthread.h"
 #include "threadsyncocl/buffer_sync.hpp"
 
+//
+#include "utils/logger/clutil_logger.hpp"
+
 namespace controller
 {
+
+		namespace h_util = hnmav_util;
 
     template<typename BarrierThread>
     class barrier_controller;
@@ -53,6 +58,9 @@ namespace controller
             virtual bool barrier_condition() = 0;
             virtual bool destroy() = 0;
             //virtual BarrierThread& get_barrier() = 0;
+						//logger
+					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
+						h_util::clutil_logging<std::string, int>   * logger;
 
     };
 
@@ -77,6 +85,10 @@ namespace controller
             typename b_t::buffer::thread_int const thread_num_;
             typename b_t::cond_t p_cond;
             //b_t::cond_wait_t p_cond_wait;
+            //logger
+					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
+						h_util::clutil_logging<std::string, int>   * logger;
+
     };
 
     template class barrier_buffer<barrier_thread>;
