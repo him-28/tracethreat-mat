@@ -166,6 +166,13 @@ namespace  hnmav_util
     }
 
     template<typename CONT, typename CONT1>
+    void clutil_logging<CONT, CONT1>::write_info(CONT  const& write_detail, CONT const& write_info)
+    {
+        BOOST_LOG(write_log::get())<< write_detail << " : " << write_info;
+    }
+
+
+    template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(CONT  const& write_info, format_type::type type)
     {
         format_logger<std::string,int>  format_info(write_info, type);
@@ -176,12 +183,6 @@ namespace  hnmav_util
             BOOST_LOG(write_log::get())<< *iter_log;
     }
 
-
-    template<typename CONT, typename CONT1>
-    void clutil_logging<CONT, CONT1>::write_info(CONT  const& write_detail, CONT const& write_info)
-    {
-        BOOST_LOG(write_log::get())<< write_detail << " : " << write_info;
-    }
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(CONT  const& write_header,

@@ -18,7 +18,10 @@ namespace controller
     BufferSync<Buffer>::BufferSync()
     {
 				this->size_buff = 0;
-				std::cout<<" New init , Size buffer set : " << this->size_buff <<std::endl;
+				// logger 
+ 				logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+				logger = logger_ptr->get();
+				logger->write_info("BufferSync, init size of size_buff");
     }
 
 
@@ -26,14 +29,13 @@ namespace controller
     void BufferSync<Buffer>::set_buffer()
     {
 			  this->size_buff = 0;
-				std::cout<<" Test " <<std::endl;	
     }
 
     template<typename Buffer>
     BufferSync<Buffer>& BufferSync<Buffer>::operator[](typename Buffer::size_int value)const
     {
         if(value < 0 || value >= size_buff)
-            std::cout<<"Size error " <<std::endl; // todo : error try catch
+            logger->write_info("BufferSync, Size error ");// todo : error try catch
 
         return buffersync_ptr[value];
     }

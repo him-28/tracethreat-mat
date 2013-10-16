@@ -1,5 +1,6 @@
 #include "threadsyncocl/thread_sync.hpp"
 
+
 namespace controller
 {
 
@@ -7,10 +8,10 @@ namespace controller
     template<typename BufferSync>
     thread_sync<BufferSync>::thread_sync()
     {
-				// logger 
- 				logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
-				logger = logger_ptr->get();
-				//init value
+        // logger
+        logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        logger = logger_ptr->get();
+        //init value
         thread_id = 0;
     }
 
@@ -33,8 +34,12 @@ namespace controller
         return buffer_sync;
     }
 
+
+    /**
+    * @brief Thread_ptr_vec push shared_ptr of  comm_thread_buff in order to contain file of thread
+    */
     template<typename BufferSync>
-    std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync> > > & 
+    std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync> > >&
     thread_sync<BufferSync>::sync_init()
     {
         file_cal = new file_calculate<Extension>();
@@ -69,9 +74,31 @@ namespace controller
             );
         }
 
+        thread_pv_ptr = &thread_ptr_vec;
         return thread_ptr_vec;
     }
 
+    template<typename BufferSync>
+    ibuffer_sync<BufferSync>& thread_sync<BufferSync>::sync_processes()
+    {
+
+        logger->write_info("Thread processes ", h_util::format_type::type_center);
+        typedef BufferSync  buffer_sync;
+        typedef comm_thread_buffer<buffer_sync>  comm_thread_buff;
+        //define Thread run / mutex at here
+        typename std::vector<thread_ptr>::iterator iter_threads;
+
+        for(iter_threads = thread_pv_ptr->begin();
+                iter_threads != thread_pv_ptr->end();
+                ++iter_threads) {
+            // get thread prompt.
+            boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
+            ct_buff->start();
+            ct_buff->run();
+        }
+
+        logger->write_info("End of Thread processes ", h_util::format_type::type_center);
+    }
 
     template<typename BufferSync>
     boost::tuple<buffer_kernel::size_int> thread_sync<BufferSync>::get_thread_info()

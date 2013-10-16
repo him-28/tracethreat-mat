@@ -271,62 +271,9 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/mm_malloc.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h \
- ../../src/threadsyncocl/semaphore_controller.hpp \
- /usr/include/c++/4.6/vector /usr/include/c++/4.6/bits/stl_vector.h \
- /usr/include/c++/4.6/bits/stl_bvector.h \
- /usr/include/c++/4.6/bits/vector.tcc \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/unique_ptr.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/config_begin.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/workaround.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/config_end.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/utilities.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/interprocess_fwd.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/move/move.hpp \
- /usr/include/c++/4.6/iterator \
- /usr/include/c++/4.6/bits/stream_iterator.h \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/has_trivial_destructor.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/min_max.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/type_traits.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/transform_iterator.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/mpl.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/containers/version_type.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/version_type.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_begin.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/mpl.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/type_traits.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_end.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_end.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/pointer_traits.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/config_begin.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/workaround.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/config_end.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/memory_util.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/mpl.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/preprocessor.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/local.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/slot.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/detail/def.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/punctuation/paren_if.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/punctuation/paren.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/control/expr_if.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_params.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_trailing_params.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_trailing.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_shifted_params.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_shifted.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/logical/not.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/iterate.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/elem.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/data.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/size.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/has_member_function_callable_with.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/iter/forward1.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/bounds/lower1.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/detail/shared.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/bounds/upper1.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/local.hpp \
- /usr/include/c++/4.6/climits \
+ ../../src/utils/logger/clutil_logger.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/log/detail/prologue.hpp \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/syslimits.h \
  /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
@@ -335,26 +282,6 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/pointer_type.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/compressed_pair.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/detail/compressed_pair.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_empty.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_convertible.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_array.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_abstract.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_lvalue_reference.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_reference.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_rvalue_reference.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_function.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/false_result.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/is_function_ptr_helper.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_class.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/call_traits.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp \
- ../../src/utils/logger/clutil_logger.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/log/detail/prologue.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/version.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/config/auto_link.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/thread/detail/platform.hpp \
@@ -372,13 +299,16 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /usr/include/c++/4.6/stdexcept \
  /home/chatsiri/workspacecpp/boost-truck/boost/integer.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/integer_fwd.hpp \
+ /usr/include/c++/4.6/climits \
  /home/chatsiri/workspacecpp/boost-truck/boost/limits.hpp \
  /usr/include/c++/4.6/limits \
  /home/chatsiri/workspacecpp/boost-truck/boost/cstdint.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/integer_traits.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/has_trivial_copy.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/has_trivial_destructor.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_const.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/composite_traits.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_array.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_union.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/ref.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/utility/addressof.hpp \
@@ -393,7 +323,9 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/bind/mem_fn_template.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/bind/mem_fn_cc.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/enum.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/enum_params.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_params.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/detail/no_exceptions_support.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/function/function1.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/core/record.hpp \
@@ -405,6 +337,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/detail/atomic_count.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/detail/atomic_count_gcc_x86.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/attributes/attribute_values_view.hpp \
+ /usr/include/c++/4.6/iterator \
+ /usr/include/c++/4.6/bits/stream_iterator.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/utility/slim_string.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/compatibility/cpp_c_headers/cstddef \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/attributes/attribute.hpp \
@@ -425,7 +359,19 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/utility/compare_pointees.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/utility/in_place_factory.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/utility/detail/in_place_factory_prefix.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/punctuation/paren.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/iterate.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/elem.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/data.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/size.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/slot.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/detail/def.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_binary_params.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_trailing_params.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/iter/forward1.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/bounds/lower1.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/detail/shared.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/bounds/upper1.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/utility/detail/in_place_factory_suffix.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/optional/optional_fwd.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/utility/type_dispatch/type_dispatcher.hpp \
@@ -555,10 +501,12 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/parameter/aux_/arg_list.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/parameter/aux_/result_of0.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/utility/result_of.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_shifted_params.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/facilities/intercept.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/or.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/preprocessed/gcc/or.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/utility/declval.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_rvalue_reference.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/utility/detail/result_of_iterate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/parameter/aux_/default.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/parameter/aux_/parameter_requirements.hpp \
@@ -568,8 +516,15 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/begin.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/end.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/iterator_tags.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_reference.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/and.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/preprocessed/gcc/and.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_convertible.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_abstract.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_lvalue_reference.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_function.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/false_result.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/is_function_ptr_helper.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/sources/features.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/vector.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/limits/vector.hpp \
@@ -626,6 +581,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/less.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/comparison_op.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/preprocessed/gcc/less.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_trailing.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/thread/locks.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/thread/exceptions.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/system/system_error.hpp \
@@ -641,6 +597,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/decay.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_bounds.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_pointer.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/move/move.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/thread/thread_time.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/date_time/time_clock.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/date_time/c_time.hpp \
@@ -676,6 +633,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/date_time/gregorian/greg_weekday.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/date_time/constrained_value.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_base_of.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_class.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/date_time/date_defs.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/date_time/gregorian/greg_day_of_year.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/date_time/gregorian_calendar.hpp \
@@ -754,6 +712,9 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/formatters/basic_formatters.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/formatters/attr.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/format.hpp \
+ /usr/include/c++/4.6/vector /usr/include/c++/4.6/bits/stl_vector.h \
+ /usr/include/c++/4.6/bits/stl_bvector.h \
+ /usr/include/c++/4.6/bits/vector.tcc \
  /home/chatsiri/workspacecpp/boost-truck/boost/format/detail/compat_workarounds.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/format/detail/config_macros.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/format/detail/workarounds_gcc-2_95.hpp \
@@ -798,6 +759,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/fold_impl.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/preprocessed/gcc/fold_impl.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/empty_base.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_empty.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/keywords/format.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/formatters/c_decorator.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/io/ios_state.hpp \
@@ -1049,6 +1011,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/date_time/time_zone_base.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/parameter/parameters.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/detail/is_xxx.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_shifted.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/parameter/aux_/template_keyword.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/parameter/aux_/set.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/mpl/insert.hpp \
@@ -1159,6 +1122,7 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/comparison/greater.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/comparison/less.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/comparison/less_equal.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/logical/not.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/comparison/not_equal.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/detail/sink_init_helpers.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/log/utility/init/filter_parser.hpp \
@@ -1299,6 +1263,42 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/predicate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/detail/predicate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp \
+ ../../src/threadsyncocl/semaphore_controller.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/unique_ptr.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/config_begin.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/workaround.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/config_end.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/utilities.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/interprocess_fwd.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/min_max.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/type_traits.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/transform_iterator.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/mpl.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/containers/version_type.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/version_type.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_begin.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/mpl.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/type_traits.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_end.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_end.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/pointer_traits.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/config_begin.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/workaround.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/config_end.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/memory_util.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/mpl.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/preprocessor.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/local.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/punctuation/paren_if.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/control/expr_if.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/has_member_function_callable_with.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/local.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/pointer_type.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/compressed_pair.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/detail/compressed_pair.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/call_traits.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp \
  ../../src/threadsyncocl/thread_barrier_controller.hpp \
  ../../src/utils/file_calculate.hpp /usr/include/dirent.h \
  /usr/include/x86_64-linux-gnu/bits/dirent.h /usr/include/c++/4.6/fstream \
@@ -1939,119 +1939,11 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /usr/lib/gcc/x86_64-linux-gnu/4.6/include/emmintrin.h:
 
-../../src/threadsyncocl/semaphore_controller.hpp:
+../../src/utils/logger/clutil_logger.hpp:
 
-/usr/include/c++/4.6/vector:
+/home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp:
 
-/usr/include/c++/4.6/bits/stl_vector.h:
-
-/usr/include/c++/4.6/bits/stl_bvector.h:
-
-/usr/include/c++/4.6/bits/vector.tcc:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/unique_ptr.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/config_begin.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/workaround.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/config_end.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/utilities.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/interprocess_fwd.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/move/move.hpp:
-
-/usr/include/c++/4.6/iterator:
-
-/usr/include/c++/4.6/bits/stream_iterator.h:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/has_trivial_destructor.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/min_max.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/type_traits.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/transform_iterator.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/mpl.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/containers/version_type.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/version_type.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_begin.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/mpl.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/type_traits.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_end.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_end.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/pointer_traits.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/config_begin.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/workaround.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/config_end.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/memory_util.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/mpl.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/preprocessor.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/local.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/slot.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/detail/def.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/punctuation/paren_if.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/punctuation/paren.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/control/expr_if.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_params.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_trailing_params.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_trailing.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_shifted_params.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_shifted.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/logical/not.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/iterate.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/elem.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/data.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/size.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/has_member_function_callable_with.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/iter/forward1.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/bounds/lower1.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/detail/shared.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/bounds/upper1.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/local.hpp:
-
-/usr/include/c++/4.6/climits:
+/home/chatsiri/workspacecpp/boost-truck/boost/log/detail/prologue.hpp:
 
 /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/limits.h:
 
@@ -2070,46 +1962,6 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/pointer_type.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/compressed_pair.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/detail/compressed_pair.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_empty.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_convertible.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_array.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_abstract.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_lvalue_reference.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_reference.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_rvalue_reference.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_function.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/false_result.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/is_function_ptr_helper.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_class.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/call_traits.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp:
-
-../../src/utils/logger/clutil_logger.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/log/common.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/log/detail/prologue.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/version.hpp:
 
@@ -2145,6 +1997,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/integer_fwd.hpp:
 
+/usr/include/c++/4.6/climits:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/limits.hpp:
 
 /usr/include/c++/4.6/limits:
@@ -2155,9 +2009,13 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/has_trivial_copy.hpp:
 
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/has_trivial_destructor.hpp:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_const.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/composite_traits.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_array.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_union.hpp:
 
@@ -2189,7 +2047,11 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/enum.hpp:
 
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum.hpp:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/enum_params.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_params.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/detail/no_exceptions_support.hpp:
 
@@ -2212,6 +2074,10 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/smart_ptr/detail/atomic_count_gcc_x86.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/log/attributes/attribute_values_view.hpp:
+
+/usr/include/c++/4.6/iterator:
+
+/usr/include/c++/4.6/bits/stream_iterator.h:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/log/utility/slim_string.hpp:
 
@@ -2253,7 +2119,31 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/utility/detail/in_place_factory_prefix.hpp:
 
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/punctuation/paren.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/iterate.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/elem.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/data.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/array/size.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/slot.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/detail/def.hpp:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_binary_params.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_trailing_params.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/iter/forward1.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/bounds/lower1.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/slot/detail/shared.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/bounds/upper1.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/utility/detail/in_place_factory_suffix.hpp:
 
@@ -2519,6 +2409,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/utility/result_of.hpp:
 
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_shifted_params.hpp:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/facilities/intercept.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/mpl/or.hpp:
@@ -2526,6 +2418,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/preprocessed/gcc/or.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/utility/declval.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_rvalue_reference.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/utility/detail/result_of_iterate.hpp:
 
@@ -2545,9 +2439,23 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/mpl/iterator_tags.hpp:
 
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_reference.hpp:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/mpl/and.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/preprocessed/gcc/and.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_convertible.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_abstract.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_lvalue_reference.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_function.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/false_result.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/detail/is_function_ptr_helper.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/log/sources/features.hpp:
 
@@ -2661,6 +2569,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/preprocessed/gcc/less.hpp:
 
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_trailing.hpp:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/thread/locks.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/thread/exceptions.hpp:
@@ -2696,6 +2606,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_bounds.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_pointer.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/move/move.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/thread/thread_time.hpp:
 
@@ -2768,6 +2680,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/date_time/constrained_value.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_base_of.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_class.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/date_time/date_defs.hpp:
 
@@ -2929,6 +2843,14 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/format.hpp:
 
+/usr/include/c++/4.6/vector:
+
+/usr/include/c++/4.6/bits/stl_vector.h:
+
+/usr/include/c++/4.6/bits/stl_bvector.h:
+
+/usr/include/c++/4.6/bits/vector.tcc:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/format/detail/compat_workarounds.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/format/detail/config_macros.hpp:
@@ -3016,6 +2938,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/mpl/aux_/preprocessed/gcc/fold_impl.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/mpl/empty_base.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/type_traits/is_empty.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/log/keywords/format.hpp:
 
@@ -3523,6 +3447,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 
 /home/chatsiri/workspacecpp/boost-truck/boost/detail/is_xxx.hpp:
 
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/repetition/enum_shifted.hpp:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/parameter/aux_/template_keyword.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/parameter/aux_/set.hpp:
@@ -3742,6 +3668,8 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/comparison/less.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/comparison/less_equal.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/logical/not.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/comparison/not_equal.hpp:
 
@@ -4028,6 +3956,78 @@ tsyncocl.o: tsyncocl.cpp ../../src/threadsyncocl/thread_sync.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/detail/predicate.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp:
+
+../../src/threadsyncocl/semaphore_controller.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/unique_ptr.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/config_begin.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/workaround.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/config_end.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/utilities.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/interprocess_fwd.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/min_max.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/type_traits.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/transform_iterator.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/mpl.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/containers/version_type.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/version_type.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_begin.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/mpl.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/type_traits.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_end.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/container/detail/config_end.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/pointer_traits.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/config_begin.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/workaround.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/config_end.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/memory_util.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/mpl.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/preprocessor.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/local.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/punctuation/paren_if.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/control/expr_if.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/intrusive/detail/has_member_function_callable_with.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/preprocessor/iteration/detail/local.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/detail/pointer_type.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/compressed_pair.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/detail/compressed_pair.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/call_traits.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/detail/call_traits.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/interprocess/smart_ptr/deleter.hpp:
 
 ../../src/threadsyncocl/thread_barrier_controller.hpp:
 

@@ -87,7 +87,7 @@ TEST_F(ThreadSyncTest, sync_init)
         ct_buff->start();
         ct_buff->run();
     }
-
+		ts.sync_processes();
     logger->write_info_test(" End Loop Sync ");
 }
 

@@ -95,7 +95,7 @@ namespace controller
                         thread<BufferSync>::start_thread,
                         (void *)this);
 
-                logger->write_info("Thread, ID : ");
+                logger->write_info("Thread, ID : "); // add argument
 
                 if(status) {
                     logger->write_info(" Cannot create start_thread ");
@@ -105,7 +105,7 @@ namespace controller
                         &thread_buffer_attr,
                         thread<BufferSync>::start_thread_runnable,
                         (void *)this);
-                logger->write_info("Thread, ID : ");
+                logger->write_info("Thread, ID : "); // add argument
 
                 if(status) {
                     logger->write_info(" Cannot create start_thread_runnable ");

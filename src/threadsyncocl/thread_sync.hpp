@@ -25,6 +25,7 @@ namespace controller
         public:
             virtual boost::shared_ptr<BufferSync>& buffer_ocl() = 0;
             virtual std::string path()= 0;
+            virtual ibuffer_sync& sync_processes() = 0;
     };
 
     template<typename BufferSync>
@@ -43,13 +44,19 @@ namespace controller
             typedef buffer_kernel::size_int size_type;
             typedef boost::shared_ptr<comm_thread_buffer<buffer_sync_type> > thread_ptr;
 
-						std::string  *file_path;
+            std::string  *file_path;
             thread_ptr   *thread_array_ptr;
             buffer_sync_type *buff_sync_internal;
 
-	          size_type thread_id;
+            size_type thread_id;
 
             std::vector<thread_ptr> thread_ptr_vec;
+            // pointer handler vector of shared_ptr of threads.
+            std::vector<thread_ptr> *thread_pv_ptr;
+            //logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
+
 
         public:
 
@@ -58,18 +65,16 @@ namespace controller
             boost::shared_ptr<BufferSync>& buffer_ocl();
 
             std::string path();
-						void set_path(const char * path);	
+            void set_path(const char *path);
 
             //processe sync and controller
-            std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync> > > &  sync_init();
+            std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync> > >&   sync_init();
             bool sync_buffer();
             bool sync_check_kernel();
-						
-						boost::tuple<buffer_kernel::size_int> get_thread_info();
 
-            //logger
-					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
-						h_util::clutil_logging<std::string, int>   * logger;
+            boost::tuple<buffer_kernel::size_int> get_thread_info();
+
+            ibuffer_sync<BufferSync>& sync_processes();
 
     };
 

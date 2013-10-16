@@ -1,5 +1,5 @@
-#ifndef THREAD_CONTROLLER_HPP_
-#define THREAD_CONTROLLER_HPP_
+#ifndef CONTROLLER__THREAD_CONTROLLER_HPP_
+#define CONTROLLER__THREAD_CONTROLLER_HPP_
 
 //standard lib
 #include <iostream>

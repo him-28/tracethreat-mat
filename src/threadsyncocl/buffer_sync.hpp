@@ -5,12 +5,16 @@
 
 // 3rd
 #include "CL/cl.h"
-//#include "pthread.h"
+
+// internal
+#include "utils/logger/clutil_logger.hpp"
+
 
 #define MAX_LENGTH 1024
 
 namespace controller
 {
+		namespace h_util = hnmav_util;
     //Declare forward which caller class.
     struct buffer_kernel;
     template<typename Buffer> class  BufferSync;
@@ -33,10 +37,13 @@ namespace controller
            BufferSync<Buffer> & operator[](typename Buffer::size_int value)const;
            BufferSync<Buffer>& operator=(BufferSync<Buffer> * buffr);						
 		       BufferSync<Buffer> & operator*(BufferSync<Buffer> & buffr);
-
+					 
         private:
             typename Buffer::size_int size_buff;
 					  BufferSync *buffersync_ptr;
+						//logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
 
     };
 
