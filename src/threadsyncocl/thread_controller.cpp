@@ -15,6 +15,7 @@ namespace controller
     {
     }
 
+
     // Explicitly instance
     template class thread_controller<int>;
     template class thread_controller<BufferSync<char> >;
@@ -144,7 +145,7 @@ namespace controller
     {
 				logger->write_info("-- To critical section --");
         mutex_buff->lock_request();
-    //    buffer_sync_->set_buffer();
+        buffer_sync_->set_buffer(5);
         mutex_buff->unlock_request();
 				logger->write_info("-- End of critical section --");
     }

@@ -61,6 +61,7 @@ namespace controller
         list_files = &file_cal->get_files2buffer();
         thread_size = list_files->size();
 
+				buff_sync_internal = new BufferSync();
         // Thread will start on thread_new
         for(typename std::list<std::string>::iterator
                 iter_file =  list_files->begin();
@@ -70,7 +71,7 @@ namespace controller
             thread_ptr_vec.push_back(
                     boost::shared_ptr<comm_thread_buffer<BufferSync> >(
                             new comm_thread_buffer<BufferSync>
-                            (thread_id, &buff_sync_internal[thread_id]))
+                            (thread_id, buff_sync_internal)) //[thread_id]
             );
         }
 

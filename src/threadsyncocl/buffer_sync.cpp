@@ -1,4 +1,5 @@
 #include "buffer_sync.hpp"
+#define MAX_BUFFER_SIZE 500000
 
 namespace controller
 {
@@ -18,6 +19,8 @@ namespace controller
     BufferSync<Buffer>::BufferSync()
     {
 				this->size_buff = 0;
+				this->buff = new Buffer;
+				this->buff->buffer_length = 0;
 				// logger 
  				logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
 				logger = logger_ptr->get();
@@ -26,9 +29,19 @@ namespace controller
 
 
     template<typename Buffer>
-    void BufferSync<Buffer>::set_buffer()
+    bool BufferSync<Buffer>::set_buffer(typename buffer_kernel::size_int buffer, char * file_name)
     {
-			  this->size_buff = 0;
+				if(this->buff->buffer_length >= MAX_BUFFER_SIZE)
+				 	return false;
+
+				this->buff->buffer_length++;
+				
+				std::ifstream read_binary(file_name, std::ios::in | std::ios::binary);
+				read_binary.seekg(0, std::ios::end);
+				int file_length_size = read_binary.tellg();
+				read_binary.seekg(0, std::ios::beg);
+
+				return true;
     }
 
     template<typename Buffer>
