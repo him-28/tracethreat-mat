@@ -9,17 +9,9 @@
 
 namespace data_structure
 {
-    struct NodeStruct {
-        typename char_t = char;
-        typename value_t = unit32_t;
-        typename node_t  = unint32_t;
-				
-        char_t *begin;
-        char_t *end;
-        value_t *value;
-				std::size_t *offset;
-    };
+		struct NodeStruct;
 
+		//-------------------------------- Inheritance to 
     template<typename NodeStructi::char_t, typename NodeStruct::value_t>
     class ac_matching
     {
@@ -41,6 +33,21 @@ namespace data_structure
             virtual void insert(const NodeStruct *node_ptr) = 0;
             virtual matching(const NodeStruct *node_ptr, matcher& match) const = 0;
             bool sort_array;
+    };
+
+    struct NodeStruct {
+        typename char_t = char;
+        typename value_t = unit32_t;
+        typename node_t  = unint32_t;
+				
+        char_t *begin;
+        char_t *end;
+        value_t *value;
+				std::size_t *offset;
+
+				node_t * prev;
+				node_t * child;
+				node_t * fail;
     };
 
 }

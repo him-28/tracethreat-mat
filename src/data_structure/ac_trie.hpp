@@ -28,7 +28,7 @@ class ac_trie
 			virtual void                set_fail(const NodeStruct * node_ptr) = 0;
 			virtual NodeStruct::node_t  report(const NodeStruct * node_ptr) = 0;
 			virtual void                set_report(const NodeStruct * p , NodeStruct::node_t report) = 0;
-			
+			//virtual NodeStruct::char_t  label(const NodeStruct::node_t p) const = 0;			
 			virtual void insert(const NodeStruct * node_ptr) = 0;
 			virtual void build() = 0;
 			virtual void clear() = 0;	 
