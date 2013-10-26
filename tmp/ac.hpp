@@ -6,7 +6,10 @@
  */
 
 template<typename NodeStruct>
-class ac : public 
+class ac : public ac_matching<NodeStructure> 
+{
 
+
+};
 #endif
 
