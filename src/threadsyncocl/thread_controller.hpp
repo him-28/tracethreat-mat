@@ -27,7 +27,7 @@ namespace controller
     {
         public:
             thread_controller();
-						virtual controller
+						
         private:
 
     };

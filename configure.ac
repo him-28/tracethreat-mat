@@ -44,6 +44,7 @@ AC_SUBST([LIBS])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/threadsyncocl/Makefile])
+AC_CONFIG_FILES([src/data_structure/Makefile])
 #AC_CONFIG_FILES([src/ocl/Makefile])
 AC_CONFIG_FILES([src/utils/Makefile])
 AC_CONFIG_FILES([src/exception/Makefile])

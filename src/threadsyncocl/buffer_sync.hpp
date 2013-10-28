@@ -32,7 +32,7 @@ namespace controller
         public:
             BufferSync(typename buffer_kernel::size_int  buffersync_size);
 						BufferSync();
-            bool set_buffer(typename Buffer::size_int buffer);
+            bool set_buffer(controller::buffer_kernel::size_int, char * filename);
            volatile Buffer *buff;
            BufferSync<Buffer> & operator[](typename Buffer::size_int value)const;
            BufferSync<Buffer>& operator=(BufferSync<Buffer> * buffr);						

@@ -3,13 +3,13 @@
 
 namespace controller
 {
-
+		/*
     template<typename BufferSync>
     void thread_controller<BufferSync>::get_data()
     {
         //	logger->write_info("thread_controller, get_data()");
     }
-
+		*/
     template<typename BufferSync>
     thread_controller<BufferSync>::thread_controller()
     {
@@ -145,7 +145,7 @@ namespace controller
     {
 				logger->write_info("-- To critical section --");
         mutex_buff->lock_request();
-        buffer_sync_->set_buffer(5);
+        buffer_sync_->set_buffer(5, "file_name");
         mutex_buff->unlock_request();
 				logger->write_info("-- End of critical section --");
     }

@@ -35,12 +35,12 @@ namespace controller
 				 	return false;
 
 				this->buff->buffer_length++;
-				
+/*				
 				std::ifstream read_binary(file_name, std::ios::in | std::ios::binary);
 				read_binary.seekg(0, std::ios::end);
 				int file_length_size = read_binary.tellg();
 				read_binary.seekg(0, std::ios::beg);
-
+*/
 				return true;
     }
 

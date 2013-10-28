@@ -1372,7 +1372,8 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/detail/bitmask.hpp \
  /usr/include/c++/4.6/stack /usr/include/c++/4.6/bits/stl_stack.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/filesystem/convenience.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple_io.hpp
+ /home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple_io.hpp \
+ ../../src/test/ac_tire_test.hpp ../../src/data_structure/ac_tire.hpp
 
 /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest.h:
 
@@ -4231,3 +4232,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/filesystem/convenience.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple_io.hpp:
+
+../../src/test/ac_tire_test.hpp:
+
+../../src/data_structure/ac_tire.hpp:
