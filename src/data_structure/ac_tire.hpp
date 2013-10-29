@@ -18,8 +18,8 @@ namespace data_structure
     template<typename SymbolT, typename KeywordIterT>
     class goto_function
     {
-
-        private:
+			 public:
+    //    private:
             typedef std::size_t state_t;
             typedef std::map<state_t, std::set<size_t> > output_function;
             typedef boost::unordered_map<SymbolT, state_t>  edges_t;
@@ -54,12 +54,6 @@ namespace data_structure
 
     };
 
-
-    /* template<typename SymbolT,
-              typename KeywordIterT,
-              typename InputIterT,
-              typename CallbackT> */
-
     template<typename SymbolT,
              typename KeywordIterT,
              typename InputIterT,
@@ -75,7 +69,7 @@ namespace data_structure
             failure_function<SymbolT, KeywordIterT> fail_;
             size_t where_;
         public:
-
+						ac_tire(KeywordIterT const & kw_begin, KeywordIterT const & kw_end);
             void search(InputIterT input_it, InputIterT input_end, CallbackT& callback);
             SymbolT const& input(InputIterT *input_it);
             //void input(InputIterT * input_it);

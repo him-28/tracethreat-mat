@@ -7,6 +7,23 @@ namespace data_structure
              typename KeywordIterT,
              typename InputIterT,
              typename CallbackT>
+    ac_tire<SymbolT,
+            KeywordIterT,
+            InputIterT,
+            CallbackT>::ac_tire(KeywordIterT const& kw_begin, KeywordIterT const& kw_end)
+                : goto_(kw_begin, kw_end, output_),
+                  fail_(goto_, output_),
+                  where_(0),
+                  state_(0)
+    {
+
+    }
+
+
+    template<typename SymbolT,
+             typename KeywordIterT,
+             typename InputIterT,
+             typename CallbackT>
     void ac_tire<SymbolT,
          KeywordIterT,
          InputIterT,
@@ -14,35 +31,35 @@ namespace data_structure
                  InputIterT input_end,
                  CallbackT& callback)
     {
-				for(; input_it != input_end; ++input_it, where_++)
-				{
-							input(input_it);
-						  std::set<size_t> const & out_node = output_[state_];
-							typename std::set<size_t>::const_iterator output_it;
-							for(output_it = out_node.begin(); output_it != out_node.end(); ++output_it)
-							{
-								callback(*output_it, where_);
-							}
-				}
+        for(; input_it != input_end; ++input_it, where_++) {
+            input(input_it);
+            std::set<size_t> const& out_node = output_[state_];
+            typename std::set<size_t>::const_iterator output_it;
+
+            for(output_it = out_node.begin(); output_it != out_node.end(); ++output_it) {
+                callback(*output_it, where_);
+            }
+        }
     }
 
-   template<typename SymbolT,
-             typename KeywordIterT,
-             typename InputIterT,
-             typename CallbackT>
-    SymbolT const & ac_tire<SymbolT,
-         KeywordIterT,
-         InputIterT,
-         CallbackT>::input(InputIterT * input_it)
-				{
-						state_t next;
-						while((next = goto_(state_, input(*input_it))) == AC_FAIL_STATE )
-						{
-							state_ = fail_(state_);
-						}
-						state_ = next;
-						return state_;
-				}
+    template<typename SymbolT,
+    typename KeywordIterT,
+    typename InputIterT,
+    typename CallbackT>
+    SymbolT const& ac_tire<SymbolT,
+            KeywordIterT,
+            InputIterT,
+            CallbackT>::input(InputIterT *input_it)
+    {
+        state_t next;
+
+        while((next = goto_(state_, input(*input_it))) == AC_FAIL_STATE ) {
+            state_ = fail_(state_);
+        }
+
+        state_ = next;
+        return state_;
+    }
 
     //------------------------- goto_function --------------------------------
     template<typename SymbolT, typename KeywordIterT>
@@ -155,8 +172,8 @@ namespace data_structure
 
     template<typename SymbolT, typename KeywordIterT>
     inline void failure_function<SymbolT, KeywordIterT>::queue_edges(
-            typename goto_function<SymbolT, KeywordIterT>::edges_t const& node, 
-						std::deque<state_t>& queue)
+            typename goto_function<SymbolT, KeywordIterT>::edges_t const& node,
+            std::deque<state_t>& queue)
     {
         typename goto_function<SymbolT, KeywordIterT>::edges_t::const_iterator edge_it;
 
