@@ -6,10 +6,12 @@ namespace data_structure
     template<typename SymbolT,
              typename KeywordIterT,
              typename InputIterT,
+             typename KeywordT,
              typename CallbackT>
     ac_tire<SymbolT,
             KeywordIterT,
             InputIterT,
+            KeywordT,
             CallbackT>::ac_tire(KeywordIterT const& kw_begin, KeywordIterT const& kw_end)
                 : goto_(kw_begin, kw_end, output_),
                   fail_(goto_, output_),
@@ -23,10 +25,12 @@ namespace data_structure
     template<typename SymbolT,
              typename KeywordIterT,
              typename InputIterT,
+             typename KeywordT,
              typename CallbackT>
     void ac_tire<SymbolT,
          KeywordIterT,
          InputIterT,
+         KeywordT,
          CallbackT>::search(InputIterT input_it,
                  InputIterT input_end,
                  CallbackT& callback)
@@ -45,16 +49,18 @@ namespace data_structure
     template<typename SymbolT,
     typename KeywordIterT,
     typename InputIterT,
+    typename KeywordT,
     typename CallbackT>
-    SymbolT const& ac_tire<SymbolT,
+    SymbolT const ac_tire<SymbolT,
             KeywordIterT,
             InputIterT,
-            CallbackT>::input(InputIterT *input_it)
+            KeywordT,
+            CallbackT>::input(InputIterT input_it)
     {
         state_t next;
 
-        while((next = goto_(state_, input(*input_it))) == AC_FAIL_STATE ) {
-            state_ = fail_(state_);
+        while((next = goto_(state_, input(input_it))) == AC_FAIL_STATE ) {
+            //    state_ = fail_(state_);
         }
 
         state_ = next;
@@ -62,8 +68,8 @@ namespace data_structure
     }
 
     //------------------------- goto_function --------------------------------
-    template<typename SymbolT, typename KeywordIterT>
-    goto_function<SymbolT, KeywordIterT>::goto_function(KeywordIterT kw_iter,
+    template<typename SymbolT, typename KeywordIterT, typename KeywordT>
+    goto_function<SymbolT, KeywordIterT, KeywordT>::goto_function(KeywordIterT kw_iter,
             KeywordIterT  const&   kw_end,
             output_function& output_f)
     {
@@ -78,8 +84,8 @@ namespace data_structure
     }
 
 
-    template<typename SymbolT, typename KeywordIterT>
-    void goto_function<SymbolT, KeywordIterT>::enter(KeywordIterT const& keyword,
+    template<typename SymbolT, typename KeywordIterT, typename KeywordT>
+    void goto_function<SymbolT, KeywordIterT, KeywordT>::enter(KeywordT const& keyword,
             state_t& newstate)
     {
         state_t state = 0;
@@ -100,7 +106,7 @@ namespace data_structure
             state = edge->second;
         }
 
-        graph_resize(graph_.size() + keyword.size() - index);
+        graph_.resize(graph_.size() + keyword.size() - index);
         node = &graph_[state];
 
         for(; index < keyword.size(); index++) {
@@ -110,8 +116,8 @@ namespace data_structure
         }
     }
 
-    template<typename SymbolT, typename KeywordIterT>
-    std::size_t goto_function<SymbolT, KeywordIterT>::operator()(state_t state, SymbolT const& symbol)const
+    template<typename SymbolT, typename KeywordIterT, typename KeywordT>
+    std::size_t goto_function<SymbolT, KeywordIterT, KeywordT>::operator()(state_t state, SymbolT const& symbol)const
     {
         edges_t const& node(graph_[state]);
         typename edges_t::const_iterator const& edge_it(node.find(symbol));
@@ -124,15 +130,17 @@ namespace data_structure
     }
 
 
-    template<typename SymbolT, typename KeywordIterT>
-    std::vector<std::map<std::size_t, std::set<std::size_t> > > const& goto_function<SymbolT, KeywordIterT>::get_nodes()const
+    template<typename SymbolT, typename KeywordIterT, typename KeywordT>
+    std::vector<boost::unordered_map<SymbolT, std::size_t> >
+    const& goto_function<SymbolT, KeywordIterT, KeywordT>::get_nodes()const
     {
         return graph_;
     }
 
     //------------------------------- failure_function----------------------------------
-    template<typename SymbolT, typename KeywordIterT>
-    failure_function<SymbolT, KeywordIterT>::failure_function(goto_function<SymbolT, KeywordIterT> const& _goto,
+    template<typename SymbolT, typename KeywordIterT, typename KeywordT>
+    failure_function<SymbolT, KeywordIterT, KeywordT>::failure_function(
+            goto_function<SymbolT, KeywordIterT, KeywordT> const& _goto,
             output_function& output)
     {
         std::deque<state_t> queue;
@@ -141,8 +149,11 @@ namespace data_structure
         while(!queue.empty()) {
             state_t r = queue.front();
             queue.pop_front();
-            typename goto_function<SymbolT, KeywordIterT>::edges_t const& node(_goto.get_nodes()[r]);
-            typename goto_function<SymbolT, KeywordIterT>::edges_t::const_iterator edge_it;
+
+            typename goto_function<SymbolT, KeywordIterT, KeywordT>
+            ::edges_t const& node(_goto.get_nodes()[r]);
+            typename goto_function<SymbolT, KeywordIterT, KeywordT>
+            ::edges_t::const_iterator edge_it;
 
             for(edge_it = node.begin(); edge_it != node.end(); ++edge_it) {
                 std::pair<SymbolT, state_t> const& edge(*edge_it);
@@ -164,24 +175,25 @@ namespace data_structure
 
     }
 
-    template<typename SymbolT, typename KeywordIterT>
-    std::size_t failure_function<SymbolT, KeywordIterT>::operator()(state_t state)const
+    template<typename SymbolT, typename KeywordIterT, typename KeywordT>
+    std::size_t failure_function<SymbolT, KeywordIterT, KeywordT>::operator()(state_t state)const
     {
         return table_[state];
     }
 
-    template<typename SymbolT, typename KeywordIterT>
-    inline void failure_function<SymbolT, KeywordIterT>::queue_edges(
-            typename goto_function<SymbolT, KeywordIterT>::edges_t const& node,
-            std::deque<state_t>& queue)
+    template<typename SymbolT, typename KeywordIterT, typename KeywordT>
+    inline void failure_function<SymbolT, KeywordIterT, KeywordT>::queue_edges(
+            typename goto_function<SymbolT, KeywordIterT, KeywordT>::edges_t const& node,
+            std::deque<std::size_t>& queue)
     {
-        typename goto_function<SymbolT, KeywordIterT>::edges_t::const_iterator edge_it;
+        typename goto_function<SymbolT, KeywordIterT, KeywordT>::edges_t::const_iterator edge_it;
 
         for(edge_it = node.begin(); edge_it != node.end(); ++edge_it) {
-            std::pair<SymbolT, state_t> const& edge(*edge_it);
+            std::pair<SymbolT, std::size_t> const& edge(*edge_it);
             queue.push_back(edge.second);
             table_[edge.second] = 0;
         }
 
     }
+
 }
