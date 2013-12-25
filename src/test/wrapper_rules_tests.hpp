@@ -7,12 +7,10 @@
 TEST(wrapper_rule_compiles, wrapper_yr_rules_load)
 {
 	 using namespace wrapper;
-	 char const * file_name = "test.cpp";
-	 struct YARA_Rules yr_rules;
+	 char const * file_name = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/database/sample.rules";
 	 
-	 wrapper_rule_compiles<struct YARA_Rules>  wrapper_rc;
-
-	 iwrapper<struct YARA_Rules> *  wrapper = &wrapper_rc;
+	 wrapper_rule_compiles<struct YARA_wrapper>  wrapper_rc;
+	 EXPECT_EQ(wrapper_rc.wrapper_yr_rules_load(file_name, wrapper_rc.get_rules()), true);
 };
 
 

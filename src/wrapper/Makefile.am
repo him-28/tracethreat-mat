@@ -9,7 +9,8 @@ lib_LIBRARIES = libwrapper.a
 libwrapper_adir = $(includedir)/wrapper
 
 #Header
-libwrapper_a_HEADERS = wrapper_rules.hpp
+libwrapper_a_HEADERS = wrapper_rules.hpp 
+# $(top_srcdir)/src/rules/rules.c 
 
 # library
 libwrapper_a_SOURCES = $(libwrapper_a_HEADERS) wrapper_rules.cpp

@@ -1393,11 +1393,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/assign/list_of.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/assign/assignment_exception.hpp \
  ../../src/test/wrapper_rules_tests.hpp \
- ../../src/wrapper/wrapper_rules.hpp ../../src/rules/rules.c \
- ../../src/rules/arena.h ../../src/rules/yara.h ../../src/rules/exec.h \
- ../../src/rules/exefiles.h ../../src/rules/filemap.h \
- ../../src/rules/mem.h ../../src/rules/proc.h ../../src/rules/re.h \
- ../../src/rules/utils.h ../../src/rules/yara.h
+ ../../src/wrapper/wrapper_rules.hpp ../../src/rules/yara.h
 
 /home/chatsiri/workspacecpp/gtest-1.6.0/include/gtest/gtest.h:
 
@@ -4300,25 +4296,5 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 ../../src/test/wrapper_rules_tests.hpp:
 
 ../../src/wrapper/wrapper_rules.hpp:
-
-../../src/rules/rules.c:
-
-../../src/rules/arena.h:
-
-../../src/rules/yara.h:
-
-../../src/rules/exec.h:
-
-../../src/rules/exefiles.h:
-
-../../src/rules/filemap.h:
-
-../../src/rules/mem.h:
-
-../../src/rules/proc.h:
-
-../../src/rules/re.h:
-
-../../src/rules/utils.h:
 
 ../../src/rules/yara.h:

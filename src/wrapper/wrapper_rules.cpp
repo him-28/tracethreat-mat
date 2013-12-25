@@ -6,13 +6,13 @@
 #include "wrapper/wrapper_rules.hpp"
 namespace wrapper{
 
-template<typename YARA_Rules>
-bool wrapper_rule_compiles<YARA_Rules>::wrapper_yr_rules_load(
+template<typename YARA_wrapper>
+bool wrapper_rule_compiles<YARA_wrapper>::wrapper_yr_rules_load(
         const char *filename,
-        YR_RULES **rules)
+        typename YARA_wrapper::rules_wrapper * rules)
 {
 		int result;
-		result = yr_rules_load(filename, rules);
+		result = yr_rules_load(filename, &rules);
 		if(result == ERROR_UNSUPPORTED_FILE_VERSION ||
 			 result == ERROR_CORRUPT_FILE)
 		{
@@ -29,5 +29,7 @@ bool wrapper_rule_compiles<YARA_Rules>::compile_rule(char ** filename)
 {
 
 }
+
+template class wrapper_rule_compiles<YARA_wrapper>;
 
 }
