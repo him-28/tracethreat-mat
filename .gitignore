@@ -50,3 +50,6 @@ stamp-h1
 log/*
 log/logger_main.log
 log/
+!*.Po
+src/rules/.deps/*
+src/rules/.deps/
