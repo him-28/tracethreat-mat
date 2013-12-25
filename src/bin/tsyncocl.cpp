@@ -21,6 +21,7 @@ std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> co
         char const *begin,
         char const  *end)
 {
+		/*
     ac_tire<char,
             std::vector<std::string>::const_iterator,
             std::vector<std::string>::const_iterator,
@@ -29,8 +30,9 @@ std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> co
             >
             ac(keywords.begin(), keywords.end());
     results<std::vector<std::string> > result(keywords);
+		*/
 //    ac.search(begin, end, result);
-    return result.hits_;
+  //  return result.hits_;
 
 }
 

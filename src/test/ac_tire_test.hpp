@@ -77,6 +77,7 @@ TEST_F(InitDataAc , ac_add_list_str)
         char end_input_tmp = td[i].input[strlen(td[i].input)];
         //				char k_begin = td[i].keywords.begin();
         //				char k_end   = td[i].keywords.end();
+        /*
         ac_tire<char,
                 std::vector<std::string>::const_iterator,
                 char,
@@ -84,9 +85,10 @@ TEST_F(InitDataAc , ac_add_list_str)
                 results<std::vector<std::string> >
                 >
                 ac(td[i].keywords.begin(), td[i].keywords.end());
+				*/
         //				ac(std::string("data"),std::string("value"));
-        results<std::vector<std::string> > result(td[i].keywords);
-        ac.search(input_tmp, end_input_tmp, result);
+        // results<std::vector<std::string> > result(td[i].keywords);
+        // ac.search(input_tmp, end_input_tmp, result);
     }
 
 }

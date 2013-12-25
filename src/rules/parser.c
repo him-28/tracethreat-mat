@@ -1,11 +1,29 @@
+/*
+Copyright (c) 2013. Victor M. Alvarez [plusvic@gmail.com].
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 #include <stddef.h>
 #include <string.h>
 
+#include "ahocorasick.h"
+#include "atoms.h"
 #include "exec.h"
 #include "hash.h"
 #include "mem.h"
 #include "parser.h"
+#include "re.h"
 #include "utils.h"
 
 
@@ -86,8 +104,8 @@ void yr_parser_emit_pushes_for_strings(
     yyscan_t yyscanner,
     const char* identifier)
 {
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
-  STRING* string = compiler->current_rule_strings;
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_STRING* string = compiler->current_rule_strings;
   const char* string_identifier;
   const char* target_identifier;
 
@@ -113,23 +131,23 @@ void yr_parser_emit_pushes_for_strings(
           PTR_TO_UINT64(string),
           NULL);
 
-      string->flags |= STRING_FLAGS_REFERENCED;
+      string->g_flags |= STRING_GFLAGS_REFERENCED;
     }
 
     string = yr_arena_next_address(
         compiler->strings_arena,
         string,
-        sizeof(STRING));
+        sizeof(YR_STRING));
   }
 }
 
 
-STRING* yr_parser_lookup_string(
+YR_STRING* yr_parser_lookup_string(
     yyscan_t yyscanner,
     const char* identifier)
 {
-  STRING* string;
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_STRING* string;
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
 
   string = compiler->current_rule_strings;
 
@@ -141,7 +159,7 @@ STRING* yr_parser_lookup_string(
     string = yr_arena_next_address(
         compiler->strings_arena,
         string,
-        sizeof(STRING));
+        sizeof(YR_STRING));
   }
 
   yr_compiler_set_error_extra_info(compiler, identifier);
@@ -151,15 +169,15 @@ STRING* yr_parser_lookup_string(
 }
 
 
-EXTERNAL_VARIABLE* yr_parser_lookup_external_variable(
+YR_EXTERNAL_VARIABLE* yr_parser_lookup_external_variable(
     yyscan_t yyscanner,
     const char* identifier)
 {
-  EXTERNAL_VARIABLE* external;
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_EXTERNAL_VARIABLE* external;
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
   int i;
 
-  external = (EXTERNAL_VARIABLE*) yr_arena_base_address(
+  external = (YR_EXTERNAL_VARIABLE*) yr_arena_base_address(
       compiler->externals_arena);
 
   for (i = 0; i < compiler->externals_count; i++)
@@ -170,7 +188,7 @@ EXTERNAL_VARIABLE* yr_parser_lookup_external_variable(
     external = yr_arena_next_address(
         compiler->externals_arena,
         external,
-        sizeof(EXTERNAL_VARIABLE));
+        sizeof(YR_EXTERNAL_VARIABLE));
   }
 
   yr_compiler_set_error_extra_info(compiler, identifier);
@@ -179,314 +197,39 @@ EXTERNAL_VARIABLE* yr_parser_lookup_external_variable(
   return NULL;
 }
 
-int yr_parser_new_hex_string(
-    YARA_COMPILER* compiler,
-    SIZED_STRING* charstr,
-    uint8_t** new_string,
-    uint8_t** new_mask,
-    int32_t* length)
-{
-  int i;
-  int skip_lo;
-  int skip_hi;
-  int skip_exact;
-  int inside_or;
-  int or_count;
-  int result = ERROR_SUCCESS;
-  char c, d;
-  char* s;
-  char* closing_bracket;
-  uint8_t high_nibble = 0;
-  uint8_t low_nibble = 0;
-  uint8_t mask_high_nibble = 0;
-  uint8_t mask_low_nibble = 0;
-  uint8_t* hex;
-  uint8_t* mask;
-  uint8_t* hex_ptr;
-  uint8_t* mask_ptr;
 
-  hex_ptr = hex =  yr_malloc(charstr->length / 2);
-  mask_ptr = mask = yr_malloc(charstr->length);
-
-  if (hex == NULL || mask == NULL)
-  {
-    if (hex)
-      yr_free(hex);
-
-    if (mask)
-      yr_free(mask);
-
-    return ERROR_INSUFICIENT_MEMORY;
-  }
-
-  *length = 0;
-  inside_or = FALSE;
-
-  // Start iterating at 1 because at 0 is the opening curly brace.
-
-  i = 1;
-
-  // Iterate up to the character prior the closing curly brace.
-
-  while (i < charstr->length - 1)
-  {
-    c = toupper(charstr->c_string[i]);
-
-    if (isalnum(c) || (c == '?'))
-    {
-      d = toupper(charstr->c_string[i + 1]);
-
-      if (!isalnum(d) && (d != '?'))
-      {
-        result = ERROR_UNPAIRED_NIBBLE;
-        break;
-      }
-
-      if (c != '?')
-      {
-        high_nibble = todigit(c);
-        mask_high_nibble = 0x0F;
-      }
-      else
-      {
-        high_nibble = 0;
-        mask_high_nibble = 0;
-      }
-
-      if (d != '?')
-      {
-        low_nibble = todigit(d);
-        mask_low_nibble = 0x0F;
-      }
-      else
-      {
-        low_nibble = 0;
-        mask_low_nibble = 0;
-      }
-
-      *hex++ = (high_nibble << 4) | (low_nibble);
-      *mask++ = (mask_high_nibble << 4) | (mask_low_nibble);
-
-      (*length)++;
-
-      i+=2;
-    }
-    else if (c == '(')
-    {
-      if (inside_or)
-      {
-        result = ERROR_NESTED_OR_OPERATION;
-        break;
-      }
-
-      inside_or = TRUE;
-      *mask++ = MASK_OR;
-      i++;
-    }
-    else if (c == ')')
-    {
-      inside_or = FALSE;
-      *mask++ = MASK_OR_END;
-      i++;
-    }
-    else if (c == '|')
-    {
-      if (!inside_or)
-      {
-        result = ERROR_MISPLACED_OR_OPERATOR;
-        break;
-      }
-
-      *mask++ = MASK_OR;
-      i++;
-    }
-    else if (c == '[')
-    {
-      if (inside_or)
-      {
-        result = ERROR_SKIP_INSIDE_OR_OPERATION;
-        break;
-      }
-
-      closing_bracket = strchr(charstr->c_string + i + 1, ']');
-
-      if (closing_bracket == NULL)
-      {
-        result = ERROR_MISMATCHED_BRACKET;
-        break;
-      }
-      else
-      {
-        s = closing_bracket + 1;
-
-        while (*s == ' ')
-          s++;  // Skip spaces.
-
-        if (*s == '}')
-        {
-          // No skip instruction should exists at the end of the string.
-          result = ERROR_SKIP_AT_END;
-          break;
-        }
-        else if (*s == '[')
-        {
-          // Consecutive skip intructions are not allowed.
-          result = ERROR_CONSECUTIVE_SKIPS;
-          break;
-        }
-      }
-
-      // Only decimal digits and '-' are allowed between brackets.
-
-      for (s = charstr->c_string + i + 1; s < closing_bracket; s++)
-      {
-        if ((*s != '-') && (*s < '0' || *s > '9'))
-        {
-          result = ERROR_INVALID_SKIP_VALUE;
-          break;
-        }
-      }
-
-      skip_lo = atoi(charstr->c_string + i + 1);
-
-      if (skip_lo < 0 || skip_lo > MASK_MAX_SKIP)
-      {
-        result = ERROR_INVALID_SKIP_VALUE;
-        break;
-      }
-
-      skip_exact = 1;
-
-      s = strchr(charstr->c_string + i + 1, '-');
-
-      if (s != NULL && s < closing_bracket)
-      {
-        skip_hi = atoi(s + 1);
-
-        if (skip_hi <= skip_lo || skip_hi > MASK_MAX_SKIP)
-        {
-          result = ERROR_INVALID_SKIP_VALUE;
-          break;
-        }
-
-        skip_exact = 0;
-      }
-
-      if (skip_exact)
-      {
-        *mask++ = MASK_EXACT_SKIP;
-        *mask++ = (unsigned char) skip_lo;
-      }
-      else
-      {
-        *mask++ = MASK_RANGE_SKIP;
-        *mask++ = (unsigned char) skip_lo;
-        *mask++ = (unsigned char) skip_hi;
-      }
-
-      i = (int) (closing_bracket - charstr->c_string + 1);
-
-    }
-    else if (c == ']')
-    {
-      result = ERROR_MISMATCHED_BRACKET;
-      break;
-    }
-    else if (c == ' ' || c == '\n' || c == '\t')
-    {
-      i++;
-    }
-    else
-    {
-      result = ERROR_INVALID_CHAR_IN_HEX_STRING;
-      break;
-    }
-
-  }
-
-  *mask++ = MASK_END;
-
-  // Wildcards or skip instructions are not allowed at the first
-  // position the string.
-
-  if (mask_ptr[0] != 0xFF)
-  {
-    result = ERROR_MISPLACED_WILDCARD_OR_SKIP;
-  }
-
-  // Check if OR syntax is correct.
-
-  i = 0;
-  or_count = 0;
-
-  while (mask_ptr[i] != MASK_END)
-  {
-    if (mask_ptr[i] == MASK_OR)
-    {
-      or_count++;
-
-      if (mask_ptr[i+1] == MASK_OR || mask_ptr[i+1] == MASK_OR_END)
-      {
-        result = ERROR_INVALID_OR_OPERATION_SYNTAX;
-        break;
-      }
-    }
-    else if (mask_ptr[i] == MASK_OR_END)
-    {
-      if (or_count <  2)
-      {
-        result = ERROR_INVALID_OR_OPERATION_SYNTAX;
-        break;
-      }
-
-      or_count = 0;
-    }
-
-    i++;
-  }
-
-  if (result == ERROR_SUCCESS)
-    result = yr_arena_write_data(
-        compiler->sz_arena,
-        hex_ptr,
-        *length,
-        (void*) new_string);
-
-  if (result == ERROR_SUCCESS)
-    result = yr_arena_write_data(
-        compiler->sz_arena,
-        mask_ptr,
-        i + 1,
-        (void*) new_mask);
-
-  yr_free(hex_ptr);
-  yr_free(mask_ptr);
-
-  return result;
-}
-
-
-STRING* yr_parser_reduce_string_declaration(
+YR_STRING* yr_parser_reduce_string_declaration(
     yyscan_t yyscanner,
     int32_t flags,
     const char* identifier,
     SIZED_STRING* str)
 {
+  int i;
   int error_offset;
-  int min_token_length;
+  int min_atom_length;
   char* file_name;
-  char warning_message[512];
+  char message[512];
 
-  STRING* string;
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_STRING* string;
+  YR_AC_MATCH* new_match;
+  ATOM_TREE* atom_tree;
+  YR_ATOM_LIST_ITEM* atom;
+  YR_ATOM_LIST_ITEM* atom_list = NULL;
+  RE* re = NULL;
+
+  uint8_t* literal_string;
+
+  int literal_string_len;
+  int max_string_len;
+
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
 
   compiler->last_result = yr_arena_allocate_struct(
       compiler->strings_arena,
-      sizeof(STRING),
+      sizeof(YR_STRING),
       (void**) &string,
-      offsetof(STRING, identifier),
-      offsetof(STRING, string),
-      offsetof(STRING, mask),
+      offsetof(YR_STRING, identifier),
+      offsetof(YR_STRING, string),
       EOL);
 
   if (compiler->last_result != ERROR_SUCCESS)
@@ -501,110 +244,204 @@ STRING* yr_parser_reduce_string_declaration(
     return NULL;
 
   if (strcmp(identifier,"$") == 0)
-    flags |= STRING_FLAGS_ANONYMOUS;
+    flags |= STRING_GFLAGS_ANONYMOUS;
 
-  if (!(flags & STRING_FLAGS_WIDE))
-    flags |= STRING_FLAGS_ASCII;
+  if (!(flags & STRING_GFLAGS_WIDE))
+    flags |= STRING_GFLAGS_ASCII;
 
-  // The STRING_FLAGS_SINGLE_MATCH flag indicates that finding
+  // The STRING_GFLAGS_SINGLE_MATCH flag indicates that finding
   // a single match for the string is enough. This is true in
   // most cases, except when the string count (#) and string offset (@)
   // operators are used. All strings are marked STRING_FLAGS_SINGLE_MATCH
   // initially, and unmarked later if required.
 
-  flags |= STRING_FLAGS_SINGLE_MATCH;
+  flags |= STRING_GFLAGS_SINGLE_MATCH;
 
-  string->flags = flags;
-  string->mask = NULL;
-  string->re.regexp = NULL;
-  string->re.extra = NULL;
-  string->matches_list_head = NULL;
-  string->matches_list_tail = NULL;
+  string->g_flags = flags;
 
-  if (flags & STRING_FLAGS_HEXADECIMAL)
+  memset(string->matches, 0, sizeof(string->matches));
+
+  if (flags & STRING_GFLAGS_HEXADECIMAL ||
+      flags & STRING_GFLAGS_REGEXP)
   {
-    compiler->last_result = yr_parser_new_hex_string(
-        compiler,
-        str,
-        &string->string,
-        &string->mask,
-        &string->length);
+    if (flags & STRING_GFLAGS_HEXADECIMAL)
+      compiler->last_result = yr_re_compile_hex(
+          str->c_string, &re);
+    else
+      compiler->last_result = yr_re_compile(
+          str->c_string, &re);
+
+    if (compiler->last_result != ERROR_SUCCESS)
+    {
+      snprintf(
+          message,
+          sizeof(message),
+          "invalid %s in string \"%s\": %s",
+          (flags & STRING_GFLAGS_HEXADECIMAL) ?
+              "hex string" : "regular expression",
+          identifier,
+          re->error_message);
+
+      yr_compiler_set_error_extra_info(compiler, message);
+      string = NULL;
+      goto _exit;
+    }
+
+    if (re->flags & RE_FLAGS_START_ANCHORED)
+      string->g_flags |= STRING_GFLAGS_START_ANCHORED;
+
+    if (re->flags & RE_FLAGS_END_ANCHORED)
+      string->g_flags |= STRING_GFLAGS_END_ANCHORED;
+
+    if (re->flags & RE_FLAGS_FAST_HEX_REGEXP)
+      string->g_flags |= STRING_GFLAGS_FAST_HEX_REGEXP;
+
+    if (re->flags & RE_FLAGS_LITERAL_STRING)
+    {
+      string->g_flags |= STRING_GFLAGS_LITERAL;
+      literal_string = re->literal_string;
+      literal_string_len = re->literal_string_len;
+
+      compiler->last_result = yr_atoms_extract_from_string(
+          literal_string, literal_string_len, string->g_flags, &atom_list);
+    }
+    else
+    {
+      compiler->last_result = yr_re_emit_code(
+          re, compiler->re_code_arena);
+
+      if (compiler->last_result != ERROR_SUCCESS)
+      {
+        string = NULL;
+        goto _exit;
+      }
+
+      compiler->last_result = yr_atoms_extract_from_re(
+          re, string->g_flags, &atom_list);
+    }
   }
   else
   {
-    if (flags & STRING_FLAGS_REGEXP)
-    {
-      if (yr_regex_compile(
-          &string->re,
-          str->c_string,
-          flags & STRING_FLAGS_NO_CASE,
-          compiler->last_error_extra_info,
-          sizeof(compiler->last_error_extra_info),
-          &error_offset) <= 0)
-      {
-        compiler->last_result = ERROR_INVALID_REGULAR_EXPRESSION;
-      }
-    }
+    string->g_flags |= STRING_GFLAGS_LITERAL;
+    literal_string = (uint8_t*) str->c_string;
+    literal_string_len = str->length;
 
-    if (compiler->last_result == ERROR_SUCCESS)
-    {
-      compiler->last_result = yr_arena_write_data(
-          compiler->sz_arena,
-          str->c_string,
-          str->length + 1, // +1 to include the null at the end
-          (void*) &string->string);
-
-      string->length = str->length;
-    }
+    compiler->last_result  = yr_atoms_extract_from_string(
+        literal_string, literal_string_len, string->g_flags, &atom_list);
   }
 
   if (compiler->last_result != ERROR_SUCCESS)
-    return NULL;
+  {
+    string = NULL;
+    goto _exit;
+  }
+
+  if (STRING_IS_LITERAL(string))
+  {
+    compiler->last_result = yr_arena_write_data(
+        compiler->sz_arena,
+        literal_string,
+        literal_string_len,
+        (void*) &string->string);
+
+    if (compiler->last_result != ERROR_SUCCESS)
+    {
+      string = NULL;
+      goto _exit;
+    }
+
+    string->length = literal_string_len;
+  }
 
   // Add the string to Aho-Corasick automaton.
 
-  compiler->last_result = yr_ac_add_string(
+  if (atom_list != NULL)
+  {
+    compiler->last_result = yr_ac_add_string(
       compiler->automaton_arena,
       compiler->automaton,
       string,
-      &min_token_length);
-
-    char * temp_str = string->string;
-    printf("SIZE OF STRING : %d ", sizeof(string->string));
-    // check string
-    int length = 0;// string->length;
-    while(string->string != NULL && length < string->length )
-	{
-		//	*temp_str = string->matches_list_tail->data;
-		  if(*temp_str != 0)
-	  		printf("STRING SCAN :0x%08x\n", *temp_str);
-       temp_str = string->string++;
-       length++;
+      atom_list);
   }
+  else
+  {
+    compiler->last_result = yr_arena_allocate_struct(
+        compiler->automaton_arena,
+        sizeof(YR_AC_MATCH),
+        (void**) &new_match,
+        offsetof(YR_AC_MATCH, string),
+        offsetof(YR_AC_MATCH, forward_code),
+        offsetof(YR_AC_MATCH, backward_code),
+        offsetof(YR_AC_MATCH, next),
+        EOL);
+
+    if (compiler->last_result == ERROR_SUCCESS)
+    {
+      new_match->backtrack = 0;
+      new_match->string = string;
+      new_match->forward_code = re->root_node->forward_code;
+      new_match->backward_code = NULL;
+      new_match->next = compiler->automaton->root->matches;
+      compiler->automaton->root->matches = new_match;
+    }
+  }
+
+  atom = atom_list;
+
+  if (atom != NULL)
+    min_atom_length = MAX_ATOM_LENGTH;
+  else
+    min_atom_length = 0;
+
+  while (atom != NULL)
+  {
+    if (atom->atom_length < min_atom_length)
+      min_atom_length = atom->atom_length;
+    atom = atom->next;
+  }
+
+  if (STRING_IS_LITERAL(string))
+  {
+    if (STRING_IS_WIDE(string))
+      max_string_len = string->length * 2;
+    else
+      max_string_len = string->length;
+
+    if (max_string_len == min_atom_length)
+      string->g_flags |= STRING_GFLAGS_FITS_IN_ATOM;
+  }
+
   if (compiler->file_name_stack_ptr > 0)
-    file_name = compiler->file_name_stack[
-        compiler->file_name_stack_ptr - 1];
+    file_name = compiler->file_name_stack[compiler->file_name_stack_ptr - 1];
   else
     file_name = NULL;
 
-  if (min_token_length < 2 && compiler->error_report_function != NULL)
+  if (min_atom_length < 2 && compiler->error_report_function != NULL)
   {
     snprintf(
-        warning_message,
-        sizeof(warning_message),
+        message,
+        sizeof(message),
         "%s is slowing down scanning%s",
         string->identifier,
-        min_token_length == 0 ? " (critical!)" : "");
+        min_atom_length == 0 ? " (critical!)" : "");
 
     compiler->error_report_function(
         YARA_ERROR_LEVEL_WARNING,
         file_name,
         yyget_lineno(yyscanner),
-        warning_message);
+        message);
   }
 
   if (compiler->last_result != ERROR_SUCCESS)
-    return NULL;
+    string = NULL;
+
+_exit:
+
+  if (atom_list != NULL)
+    yr_atoms_list_destroy(atom_list);
+
+  if (re != NULL)
+    yr_re_destroy(re);
 
   return string;
 }
@@ -615,12 +452,12 @@ int yr_parser_reduce_rule_declaration(
     int32_t flags,
     const char* identifier,
     char* tags,
-    STRING* strings,
-    META* metas)
+    YR_STRING* strings,
+    YR_META* metas)
 {
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
-  RULE* rule;
-  STRING* string;
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_RULE* rule;
+  YR_STRING* string;
 
   if (yr_hash_table_lookup(
         compiler->rules_table,
@@ -651,7 +488,7 @@ int yr_parser_reduce_rule_declaration(
     string = yr_arena_next_address(
         compiler->strings_arena,
         string,
-        sizeof(STRING));
+        sizeof(YR_STRING));
   }
 
   if (compiler->last_result != ERROR_SUCCESS)
@@ -659,13 +496,13 @@ int yr_parser_reduce_rule_declaration(
 
   compiler->last_result = yr_arena_allocate_struct(
       compiler->rules_arena,
-      sizeof(RULE),
+      sizeof(YR_RULE),
       (void**) &rule,
-      offsetof(RULE, identifier),
-      offsetof(RULE, tags),
-      offsetof(RULE, strings),
-      offsetof(RULE, metas),
-      offsetof(RULE, namespace),
+      offsetof(YR_RULE, identifier),
+      offsetof(YR_RULE, tags),
+      offsetof(YR_RULE, strings),
+      offsetof(YR_RULE, metas),
+      offsetof(YR_RULE, ns),
       EOL);
 
   if (compiler->last_result != ERROR_SUCCESS)
@@ -688,11 +525,11 @@ int yr_parser_reduce_rule_declaration(
   if (compiler->last_result != ERROR_SUCCESS)
     return compiler->last_result;
 
-  rule->flags = flags | compiler->current_rule_flags;
+  rule->g_flags = flags | compiler->current_rule_flags;
   rule->tags = tags;
   rule->strings = strings;
   rule->metas = metas;
-  rule->namespace = compiler->current_namespace;
+  rule->ns = compiler->current_namespace;
 
   compiler->current_rule_flags = 0;
   compiler->current_rule_strings = NULL;
@@ -712,16 +549,16 @@ int yr_parser_reduce_string_identifier(
     const char* identifier,
     int8_t instruction)
 {
-  STRING* string;
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_STRING* string;
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
 
   if (strcmp(identifier, "$") == 0)
   {
     if (compiler->loop_depth > 0)
     {
       yr_parser_emit_with_arg(
-          yyscanner, 
-          PUSH_M, 
+          yyscanner,
+          PUSH_M,
           LOOP_LOCAL_VARS * (compiler->loop_depth - 1),
           NULL);
 
@@ -733,11 +570,11 @@ int yr_parser_reduce_string_identifier(
 
         while(!STRING_IS_NULL(string))
         {
-          string->flags &= ~STRING_FLAGS_SINGLE_MATCH;
+          string->g_flags &= ~STRING_GFLAGS_SINGLE_MATCH;
           string = yr_arena_next_address(
               compiler->strings_arena,
               string,
-              sizeof(STRING));
+              sizeof(YR_STRING));
         }
       }
     }
@@ -759,11 +596,11 @@ int yr_parser_reduce_string_identifier(
           NULL);
 
       if (instruction != SFOUND)
-        string->flags &= ~STRING_FLAGS_SINGLE_MATCH;
+        string->g_flags &= ~STRING_GFLAGS_SINGLE_MATCH;
 
       yr_parser_emit(yyscanner, instruction, NULL);
 
-      string->flags |= STRING_FLAGS_REFERENCED;
+      string->g_flags |= STRING_GFLAGS_REFERENCED;
     }
   }
 
@@ -776,8 +613,8 @@ int yr_parser_reduce_external(
   const char* identifier,
   int8_t instruction)
 {
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
-  EXTERNAL_VARIABLE* external;
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_EXTERNAL_VARIABLE* external;
 
   external = yr_parser_lookup_external_variable(yyscanner, identifier);
 
@@ -820,22 +657,22 @@ int yr_parser_reduce_external(
 }
 
 
-META* yr_parser_reduce_meta_declaration(
+YR_META* yr_parser_reduce_meta_declaration(
     yyscan_t yyscanner,
     int32_t type,
     const char* identifier,
     const char* string,
     int32_t integer)
 {
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
-  META* meta;
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_META* meta;
 
   compiler->last_result = yr_arena_allocate_struct(
       compiler->metas_arena,
-      sizeof(META),
+      sizeof(YR_META),
       (void**) &meta,
-      offsetof(META, identifier),
-      offsetof(META, string),
+      offsetof(YR_META, identifier),
+      offsetof(YR_META, string),
       EOL);
 
   if (compiler->last_result != ERROR_SUCCESS)
@@ -871,7 +708,7 @@ int yr_parser_lookup_loop_variable(
     yyscan_t yyscanner,
     const char* identifier)
 {
-  YARA_COMPILER* compiler = yyget_extra(yyscanner);
+  YR_COMPILER* compiler = yyget_extra(yyscanner);
   int i;
 
   for (i = 0; i < compiler->loop_depth; i++)

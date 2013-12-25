@@ -1,3 +1,18 @@
+/*
+Copyright (c) 2007. Victor M. Alvarez [plusvic@gmail.com].
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 #ifndef _EXEC_H
 #define _EXEC_H
@@ -66,13 +81,13 @@ typedef struct _EVALUATION_CONTEXT
   uint64_t  file_size;
   uint64_t  entry_point;
 
-  MEMORY_BLOCK*   mem_block;
+  YR_MEMORY_BLOCK*   mem_block;
 
 } EVALUATION_CONTEXT;
 
 
 int yr_execute_code(
-    YARA_RULES* rules,
+    YR_RULES* rules,
     EVALUATION_CONTEXT* context);
 
 #endif

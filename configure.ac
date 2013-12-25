@@ -13,6 +13,8 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CXX
 AC_PROG_RANLIB
 
+AC_PROG_CC
+
 #check for program
 AC_LANG([C++])
 CFLAGS_CXX=-std=c++0x
@@ -39,15 +41,19 @@ AC_SUBST([AM_CXXFLAGS])
 AC_SUBST([AM_LDFLAGS])
 AC_SUBST([LIBS])
 
+AC_SUBST([AM_CFLAGS])
+
 #check library function
 #AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/threadsyncocl/Makefile])
 AC_CONFIG_FILES([src/data_structure/Makefile])
-#AC_CONFIG_FILES([src/ocl/Makefile])
+AC_CONFIG_FILES([src/wrapper/Makefile])
 AC_CONFIG_FILES([src/utils/Makefile])
 AC_CONFIG_FILES([src/exception/Makefile])
+AC_CONFIG_FILES([src/rules/Makefile])
+AC_CONFIG_FILES([src/rules/re_lexer/Makefile])
 AC_CONFIG_FILES([src/bin/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file

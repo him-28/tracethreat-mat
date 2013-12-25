@@ -1,16 +1,34 @@
+/*
+Copyright (c) 2007. Victor M. Alvarez [plusvic@gmail.com].
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 #include <string.h>
 #include <assert.h>
 
 #include "exec.h"
+#include "re.h"
 
-#define STACK_SIZE 4096
+#define STACK_SIZE 16384
 #define MEM_SIZE   MAX_LOOP_NESTING * LOOP_LOCAL_VARS
 
 
 #define push(x)  \
-    if (sp < STACK_SIZE) stack[sp++] = (x); \
-    else return ERROR_EXEC_STACK_OVERFLOW
+    do { \
+      if (sp < STACK_SIZE) stack[sp++] = (x); \
+      else return ERROR_EXEC_STACK_OVERFLOW; \
+    } while(0)
 
 
 #define pop(x)  x = stack[--sp]
@@ -25,7 +43,7 @@
 
 
 #define function_read(type) \
-    int64_t read_##type(MEMORY_BLOCK* block, size_t offset) \
+    int64_t read_##type(YR_MEMORY_BLOCK* block, size_t offset) \
     { \
       while (block != NULL) \
       { \
@@ -49,12 +67,9 @@ function_read(int32_t)
 
 
 int yr_execute_code(
-    YARA_RULES* rules,
+    YR_RULES* rules,
     EVALUATION_CONTEXT* context)
 {
-  int64_t rA;
-  int64_t rB;
-  int64_t rC;
   int64_t r1;
   int64_t r2;
   int64_t r3;
@@ -63,17 +78,17 @@ int yr_execute_code(
   int32_t sp = 0;
   uint8_t* ip = rules->code_start;
 
-  RULE* rule;
-  STRING* string;
-  MATCH* match;
-  EXTERNAL_VARIABLE* external;
-  REGEXP re;
+  YR_RULE* rule;
+  YR_STRING* string;
+  YR_MATCH* match;
+  YR_EXTERNAL_VARIABLE* external;
 
-  char* identifier;
   int i;
   int found;
   int count;
   int result;
+  int flags;
+  int tidx = yr_get_tidx();
 
   while(1)
   {
@@ -123,7 +138,7 @@ int yr_execute_code(
         r1 = *(uint64_t*)(ip + 1);
         ip += sizeof(uint64_t);
         pop(mem[r1]);
-        break;     
+        break;
 
       case SWAPUNDEF:
         r1 = *(uint64_t*)(ip + 1);
@@ -278,33 +293,33 @@ int yr_execute_code(
         break;
 
       case RULE_PUSH:
-        rule = *(RULE**)(ip + 1);
+        rule = *(YR_RULE**)(ip + 1);
         ip += sizeof(uint64_t);
-        push(rule->flags & RULE_FLAGS_MATCH ? 1 : 0);
+        push(rule->t_flags[tidx] & RULE_TFLAGS_MATCH ? 1 : 0);
         break;
 
       case RULE_POP:
         pop(r1);
-        rule = *(RULE**)(ip + 1);
+        rule = *(YR_RULE**)(ip + 1);
         ip += sizeof(uint64_t);
         if (r1)
-          rule->flags |= RULE_FLAGS_MATCH;
+          rule->t_flags[tidx] |= RULE_TFLAGS_MATCH;
         break;
 
       case EXT_INT:
-        external = *(EXTERNAL_VARIABLE**)(ip + 1);
+        external = *(YR_EXTERNAL_VARIABLE**)(ip + 1);
         ip += sizeof(uint64_t);
         push(external->integer);
         break;
 
       case EXT_STR:
-        external = *(EXTERNAL_VARIABLE**)(ip + 1);
+        external = *(YR_EXTERNAL_VARIABLE**)(ip + 1);
         ip += sizeof(uint64_t);
         push(PTR_TO_UINT64(external->string));
         break;
 
       case EXT_BOOL:
-        external = *(EXTERNAL_VARIABLE**)(ip + 1);
+        external = *(YR_EXTERNAL_VARIABLE**)(ip + 1);
         ip += sizeof(uint64_t);
         if (external->type == EXTERNAL_VARIABLE_TYPE_FIXED_STRING ||
             external->type == EXTERNAL_VARIABLE_TYPE_MALLOC_STRING)
@@ -315,8 +330,8 @@ int yr_execute_code(
 
       case SFOUND:
         pop(r1);
-        string = UINT64_TO_PTR(STRING*, r1);
-        push(string->flags & STRING_FLAGS_FOUND ? 1 : 0);
+        string = UINT64_TO_PTR(YR_STRING*, r1);
+        push(string->matches[tidx].tail != NULL ? 1 : 0);
         break;
 
       case SFOUND_AT:
@@ -329,8 +344,8 @@ int yr_execute_code(
           break;
         }
 
-        string = UINT64_TO_PTR(STRING*, r2);
-        match = string->matches_list_head;
+        string = UINT64_TO_PTR(YR_STRING*, r2);
+        match = string->matches[tidx].head;
         found = 0;
 
         while (match != NULL)
@@ -364,8 +379,8 @@ int yr_execute_code(
           break;
         }
 
-        string = UINT64_TO_PTR(STRING*, r3);
-        match = string->matches_list_head;
+        string = UINT64_TO_PTR(YR_STRING*, r3);
+        match = string->matches[tidx].head;
         found = FALSE;
 
         while (match != NULL && !found)
@@ -391,8 +406,8 @@ int yr_execute_code(
 
       case SCOUNT:
         pop(r1);
-        string = UINT64_TO_PTR(STRING*, r1);
-        match = string->matches_list_head;
+        string = UINT64_TO_PTR(YR_STRING*, r1);
+        match = string->matches[tidx].head;
         found = 0;
         while (match != NULL)
         {
@@ -412,8 +427,8 @@ int yr_execute_code(
           break;
         }
 
-        string = UINT64_TO_PTR(STRING*, r2);
-        match = string->matches_list_head;
+        string = UINT64_TO_PTR(YR_STRING*, r2);
+        match = string->matches[tidx].head;
         i = 1;
         found = FALSE;
 
@@ -442,8 +457,8 @@ int yr_execute_code(
 
         while (r1 != UNDEFINED)
         {
-          string = UINT64_TO_PTR(STRING*, r1);
-          if (string->flags & STRING_FLAGS_FOUND)
+          string = UINT64_TO_PTR(YR_STRING*, r1);
+          if (string->matches[tidx].tail != NULL)
             found++;
           count++;
           pop(r1);
@@ -504,9 +519,11 @@ int yr_execute_code(
         break;
 
       case MATCHES:
+        pop(r3);
         pop(r2);
         pop(r1);
 
+        flags = (int) r3;
         count = strlen(UINT64_TO_PTR(char*, r1));
 
         if (count == 0)
@@ -515,21 +532,13 @@ int yr_execute_code(
           break;
         }
 
-        result = yr_regex_compile(&re,
-            UINT64_TO_PTR(char*, r2),
-            FALSE,
-            NULL,
-            0,
-            &i);
-
-        // Regexp should compile without errors,
-        // it was verified during compile time.
-        assert(result > 0);
-
-        result = yr_regex_exec(&re,
-            FALSE,
-            UINT64_TO_PTR(char*, r1),
-            count);
+        result = yr_re_exec(
+          UINT64_TO_PTR(uint8_t*, r2),
+          UINT64_TO_PTR(uint8_t*, r1),
+          count,
+          flags | RE_FLAGS_SCAN,
+          NULL,
+          NULL);
 
         push(result >= 0);
         break;

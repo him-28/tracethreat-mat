@@ -1,3 +1,18 @@
+/*
+Copyright (c) 2007. Victor M. Alvarez [plusvic@gmail.com].
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 #include <stdint.h>
 #include <string.h>
@@ -72,13 +87,13 @@ uint32_t hash(
 
 int yr_hash_table_create(
     int size,
-    HASH_TABLE** table)
+    YR_HASH_TABLE** table)
 {
-  HASH_TABLE* new_table;
+  YR_HASH_TABLE* new_table;
   int i;
 
-  new_table = yr_malloc(sizeof(HASH_TABLE) +
-                        size * sizeof(HASH_TABLE_ENTRY*));
+  new_table = yr_malloc(sizeof(YR_HASH_TABLE) +
+                        size * sizeof(YR_HASH_TABLE_ENTRY*));
 
   if (new_table == NULL)
     return ERROR_INSUFICIENT_MEMORY;
@@ -94,10 +109,10 @@ int yr_hash_table_create(
 }
 
 void yr_hash_table_destroy(
-    HASH_TABLE* table)
+    YR_HASH_TABLE* table)
 {
-  HASH_TABLE_ENTRY* entry;
-  HASH_TABLE_ENTRY* next_entry;
+  YR_HASH_TABLE_ENTRY* entry;
+  YR_HASH_TABLE_ENTRY* next_entry;
 
   int i;
 
@@ -108,8 +123,8 @@ void yr_hash_table_destroy(
     while (entry != NULL)
     {
       next_entry = entry->next;
-      if (entry->namespace != NULL)
-        yr_free(entry->namespace);
+      if (entry->ns != NULL)
+        yr_free(entry->ns);
       yr_free(entry->key);
       yr_free(entry);
       entry = next_entry;
@@ -121,17 +136,17 @@ void yr_hash_table_destroy(
 
 
 void* yr_hash_table_lookup(
-    HASH_TABLE* table,
+    YR_HASH_TABLE* table,
     const char* key,
-    const char* namespace)
+    const char* ns)
 {
-  HASH_TABLE_ENTRY* entry;
+  YR_HASH_TABLE_ENTRY* entry;
   uint32_t bucket_index;
 
   bucket_index = hash(0, key, strlen(key));
 
-  if (namespace != NULL)
-    bucket_index = hash(bucket_index, namespace, strlen(namespace));
+  if (ns != NULL)
+    bucket_index = hash(bucket_index, ns, strlen(ns));
 
   bucket_index = bucket_index % table->size;
 
@@ -140,8 +155,8 @@ void* yr_hash_table_lookup(
   while (entry != NULL)
   {
     if (strcmp(entry->key, key) == 0 &&
-        (entry->namespace == namespace || 
-         strcmp(entry->namespace, namespace) == 0))
+        (entry->ns == ns ||
+         strcmp(entry->ns, ns) == 0))
     {
       return entry->value;
     }
@@ -153,15 +168,15 @@ void* yr_hash_table_lookup(
 }
 
 int yr_hash_table_add(
-    HASH_TABLE* table,
+    YR_HASH_TABLE* table,
     const char* key,
-    const char* namespace,
+    const char* ns,
     void* value)
 {
-  HASH_TABLE_ENTRY* entry;
+  YR_HASH_TABLE_ENTRY* entry;
   uint32_t bucket_index;
 
-  entry = (HASH_TABLE_ENTRY*) yr_malloc(sizeof(HASH_TABLE_ENTRY));
+  entry = (YR_HASH_TABLE_ENTRY*) yr_malloc(sizeof(YR_HASH_TABLE_ENTRY));
 
   if (entry == NULL)
     return ERROR_INSUFICIENT_MEMORY;
@@ -174,16 +189,16 @@ int yr_hash_table_add(
     return ERROR_INSUFICIENT_MEMORY;
   }
 
-  if (namespace != NULL)
-    entry->namespace = yr_strdup(namespace);
+  if (ns != NULL)
+    entry->ns = yr_strdup(ns);
   else
-    entry->namespace = NULL;
+    entry->ns = NULL;
 
   entry->value = value;
   bucket_index = hash(0, key, strlen(key));
 
-  if (namespace != NULL)
-    bucket_index = hash(bucket_index, namespace, strlen(namespace));
+  if (ns != NULL)
+    bucket_index = hash(bucket_index, ns, strlen(ns));
 
   bucket_index = bucket_index % table->size;
 

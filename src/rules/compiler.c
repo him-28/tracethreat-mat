@@ -1,24 +1,41 @@
+/*
+Copyright (c) 2013. Victor M. Alvarez [plusvic@gmail.com].
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 
+#include "ahocorasick.h"
 #include "arena.h"
 #include "exec.h"
 #include "filemap.h"
-#include "lex.h"
+#include "hash.h"
+#include "lexer.h"
 #include "mem.h"
 #include "utils.h"
 #include "yara.h"
 
 
 int yr_compiler_create(
-    YARA_COMPILER** compiler)
+    YR_COMPILER** compiler)
 {
   int result;
-  YARA_COMPILER* new_compiler;
+  YR_COMPILER* new_compiler;
 
-  new_compiler = (YARA_COMPILER*) yr_malloc(sizeof(YARA_COMPILER));
+  new_compiler = (YR_COMPILER*) yr_malloc(sizeof(YR_COMPILER));
 
   if (new_compiler == NULL)
     return ERROR_INSUFICIENT_MEMORY;
@@ -40,28 +57,31 @@ int yr_compiler_create(
   result = yr_hash_table_create(10007, &new_compiler->rules_table);
 
   if (result == ERROR_SUCCESS)
-    result = yr_arena_create(&new_compiler->sz_arena);
+    result = yr_arena_create(1024, 0, &new_compiler->sz_arena);
 
   if (result == ERROR_SUCCESS)
-    result = yr_arena_create(&new_compiler->rules_arena);
+    result = yr_arena_create(1024, 0, &new_compiler->rules_arena);
 
   if (result == ERROR_SUCCESS)
-    result = yr_arena_create(&new_compiler->strings_arena);
+    result = yr_arena_create(1024, 0, &new_compiler->strings_arena);
 
   if (result == ERROR_SUCCESS)
-    result = yr_arena_create(&new_compiler->code_arena);
+    result = yr_arena_create(1024, 0, &new_compiler->code_arena);
 
   if (result == ERROR_SUCCESS)
-    result = yr_arena_create(&new_compiler->automaton_arena);
+    result = yr_arena_create(1024, 0, &new_compiler->re_code_arena);
 
   if (result == ERROR_SUCCESS)
-    result = yr_arena_create(&new_compiler->externals_arena);
+    result = yr_arena_create(1024, 0, &new_compiler->automaton_arena);
 
   if (result == ERROR_SUCCESS)
-    result = yr_arena_create(&new_compiler->namespaces_arena);
+    result = yr_arena_create(1024, 0, &new_compiler->externals_arena);
 
   if (result == ERROR_SUCCESS)
-    result = yr_arena_create(&new_compiler->metas_arena);
+    result = yr_arena_create(1024, 0, &new_compiler->namespaces_arena);
+
+  if (result == ERROR_SUCCESS)
+    result = yr_arena_create(1024, 0, &new_compiler->metas_arena);
 
   if (result == ERROR_SUCCESS)
     result = yr_ac_create_automaton(
@@ -74,31 +94,7 @@ int yr_compiler_create(
   }
   else  // if error, do cleanup
   {
-    if (new_compiler->sz_arena != NULL)
-      yr_arena_destroy(new_compiler->sz_arena);
-
-    if (new_compiler->rules_arena != NULL)
-      yr_arena_destroy(new_compiler->rules_arena);
-
-    if (new_compiler->strings_arena != NULL)
-      yr_arena_destroy(new_compiler->strings_arena);
-
-    if (new_compiler->code_arena != NULL)
-      yr_arena_destroy(new_compiler->code_arena);
-
-    if (new_compiler->automaton_arena != NULL)
-      yr_arena_destroy(new_compiler->automaton_arena);
-
-    if (new_compiler->externals_arena != NULL)
-      yr_arena_destroy(new_compiler->externals_arena);
-
-    if (new_compiler->namespaces_arena != NULL)
-      yr_arena_destroy(new_compiler->namespaces_arena);
-
-    if (new_compiler->metas_arena != NULL)
-      yr_arena_destroy(new_compiler->metas_arena);
-
-    yr_free(new_compiler);
+    yr_compiler_destroy(new_compiler);
   }
 
   return result;
@@ -106,7 +102,7 @@ int yr_compiler_create(
 
 
 void yr_compiler_destroy(
-    YARA_COMPILER* compiler)
+    YR_COMPILER* compiler)
 {
   int i;
 
@@ -124,6 +120,9 @@ void yr_compiler_destroy(
 
   if (compiler->code_arena != NULL)
     yr_arena_destroy(compiler->code_arena);
+
+  if (compiler->re_code_arena != NULL)
+    yr_arena_destroy(compiler->re_code_arena);
 
   if (compiler->automaton_arena != NULL)
     yr_arena_destroy(compiler->automaton_arena);
@@ -147,7 +146,7 @@ void yr_compiler_destroy(
 
 
 int _yr_compiler_push_file(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     FILE* fh)
 {
   if (compiler->file_stack_ptr < MAX_INCLUDE_DEPTH)
@@ -165,7 +164,7 @@ int _yr_compiler_push_file(
 
 
 FILE* _yr_compiler_pop_file(
-    YARA_COMPILER* compiler)
+    YR_COMPILER* compiler)
 {
   FILE* result = NULL;
 
@@ -179,7 +178,7 @@ FILE* _yr_compiler_pop_file(
 }
 
 int yr_compiler_push_file_name(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     const char* file_name)
 {
   int i;
@@ -209,7 +208,7 @@ int yr_compiler_push_file_name(
 
 
 void yr_compiler_pop_file_name(
-    YARA_COMPILER* compiler)
+    YR_COMPILER* compiler)
 {
   if (compiler->file_name_stack_ptr > 0)
   {
@@ -221,7 +220,7 @@ void yr_compiler_pop_file_name(
 
 
 char* yr_compiler_get_current_file_name(
-    YARA_COMPILER* context)
+    YR_COMPILER* context)
 {
   if (context->file_name_stack_ptr > 0)
   {
@@ -235,10 +234,10 @@ char* yr_compiler_get_current_file_name(
 
 
 int _yr_compiler_set_namespace(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     const char* namespace)
 {
-  NAMESPACE* ns;
+  YR_NAMESPACE* ns;
   char* ns_name;
   int result;
   int i;
@@ -259,7 +258,7 @@ int _yr_compiler_set_namespace(
     ns = yr_arena_next_address(
         compiler->namespaces_arena,
         ns,
-        sizeof(NAMESPACE));
+        sizeof(YR_NAMESPACE));
   }
 
   if (!found)
@@ -272,16 +271,19 @@ int _yr_compiler_set_namespace(
     if (result == ERROR_SUCCESS)
       result = yr_arena_allocate_struct(
           compiler->namespaces_arena,
-          sizeof(NAMESPACE),
+          sizeof(YR_NAMESPACE),
           (void*) &ns,
-          offsetof(NAMESPACE, name),
+          offsetof(YR_NAMESPACE, name),
           EOL);
 
     if (result != ERROR_SUCCESS)
       return result;
 
     ns->name = ns_name;
-    ns->flags = 0;
+
+    for (i = 0; i < MAX_THREADS; i++)
+      ns->t_flags[i] = 0;
+
     compiler->namespaces_count++;
   }
 
@@ -290,7 +292,7 @@ int _yr_compiler_set_namespace(
 }
 
 int yr_compiler_add_file(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     FILE* rules_file,
     const char* namespace)
 {
@@ -304,7 +306,7 @@ int yr_compiler_add_file(
 
 
 int yr_compiler_add_string(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     const char* rules_string,
     const char* namespace)
 {
@@ -317,12 +319,12 @@ int yr_compiler_add_string(
 }
 
 int _yr_compiler_compile_rules(
-  YARA_COMPILER* compiler)
+  YR_COMPILER* compiler)
 {
-  YARA_RULES_FILE_HEADER* rules_file_header;
-  ARENA* arena;
-  RULE null_rule;
-  EXTERNAL_VARIABLE null_external;
+  YARA_RULES_FILE_HEADER* rules_file_header = NULL;
+  YR_ARENA* arena;
+  YR_RULE null_rule;
+  YR_EXTERNAL_VARIABLE null_external;
 
   int8_t halt = HALT;
   int result;
@@ -335,23 +337,23 @@ int _yr_compiler_compile_rules(
       NULL);
 
   // Write a null rule indicating the end.
-  memset(&null_rule, 0xFA, sizeof(RULE));
-  null_rule.flags = RULE_FLAGS_NULL;
+  memset(&null_rule, 0xFA, sizeof(YR_RULE));
+  null_rule.g_flags = RULE_GFLAGS_NULL;
 
   yr_arena_write_data(
       compiler->rules_arena,
       &null_rule,
-      sizeof(RULE),
+      sizeof(YR_RULE),
       NULL);
 
   // Write a null external the end.
-  memset(&null_external, 0xFA, sizeof(EXTERNAL_VARIABLE));
+  memset(&null_external, 0xFA, sizeof(YR_EXTERNAL_VARIABLE));
   null_external.type = EXTERNAL_VARIABLE_TYPE_NULL;
 
   yr_arena_write_data(
       compiler->externals_arena,
       &null_external,
-      sizeof(EXTERNAL_VARIABLE),
+      sizeof(YR_EXTERNAL_VARIABLE),
       NULL);
 
   // Create Aho-Corasick automaton's failure links.
@@ -359,7 +361,7 @@ int _yr_compiler_compile_rules(
       compiler->automaton_arena,
       compiler->automaton);
 
-  result = yr_arena_create(&arena);
+  result = yr_arena_create(1024, 0, &arena);
 
   if (result == ERROR_SUCCESS)
     result = yr_arena_allocate_struct(
@@ -403,6 +405,14 @@ int _yr_compiler_compile_rules(
   if (result == ERROR_SUCCESS)
   {
     compiler->code_arena = NULL;
+    result = yr_arena_append(
+        arena,
+        compiler->re_code_arena);
+  }
+
+  if (result == ERROR_SUCCESS)
+  {
+    compiler->re_code_arena = NULL;
     result = yr_arena_append(
         arena,
         compiler->rules_arena);
@@ -460,10 +470,10 @@ int _yr_compiler_compile_rules(
 
 
 int yr_compiler_get_rules(
-    YARA_COMPILER* compiler,
-    YARA_RULES** rules)
+    YR_COMPILER* compiler,
+    YR_RULES** rules)
 {
-  YARA_RULES* yara_rules;
+  YR_RULES* yara_rules;
   YARA_RULES_FILE_HEADER* rules_file_header;
 
   int result = ERROR_SUCCESS;
@@ -474,7 +484,7 @@ int yr_compiler_get_rules(
   if (result != ERROR_SUCCESS)
     return result;
 
-  yara_rules = yr_malloc(sizeof(YARA_RULES));
+  yara_rules = yr_malloc(sizeof(YR_RULES));
 
   if (yara_rules == NULL)
     return ERROR_INSUFICIENT_MEMORY;
@@ -493,7 +503,13 @@ int yr_compiler_get_rules(
     yara_rules->externals_list_head = rules_file_header->externals_list_head;
     yara_rules->automaton = rules_file_header->automaton;
     yara_rules->code_start = rules_file_header->code_start;
-    yara_rules->matches_arena = NULL;
+    yara_rules->threads_count = 0;
+
+    #if WIN32
+    yara_rules->mutex = CreateMutex(NULL, FALSE, NULL);
+    #else
+    pthread_mutex_init(&yara_rules->mutex, NULL);
+    #endif
 
     *rules = yara_rules;
   }
@@ -508,11 +524,11 @@ int yr_compiler_get_rules(
 
 
 int yr_compiler_define_integer_variable(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     const char* identifier,
     int64_t value)
 {
-  EXTERNAL_VARIABLE* external;
+  YR_EXTERNAL_VARIABLE* external;
 
   char* id;
   int result;
@@ -525,10 +541,10 @@ int yr_compiler_define_integer_variable(
   if (result == ERROR_SUCCESS)
     result = yr_arena_allocate_struct(
         compiler->externals_arena,
-        sizeof(EXTERNAL_VARIABLE),
+        sizeof(YR_EXTERNAL_VARIABLE),
         (void**) &external,
-        offsetof(EXTERNAL_VARIABLE, identifier),
-        offsetof(EXTERNAL_VARIABLE, string),
+        offsetof(YR_EXTERNAL_VARIABLE, identifier),
+        offsetof(YR_EXTERNAL_VARIABLE, string),
         EOL);
 
   if (result == ERROR_SUCCESS)
@@ -546,11 +562,11 @@ int yr_compiler_define_integer_variable(
 
 
 int yr_compiler_define_boolean_variable(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     const char* identifier,
     int value)
 {
-  EXTERNAL_VARIABLE* external;
+  YR_EXTERNAL_VARIABLE* external;
 
   char* id;
   int result;
@@ -563,10 +579,10 @@ int yr_compiler_define_boolean_variable(
   if (result == ERROR_SUCCESS)
     result = yr_arena_allocate_struct(
         compiler->externals_arena,
-        sizeof(EXTERNAL_VARIABLE),
+        sizeof(YR_EXTERNAL_VARIABLE),
         (void**) &external,
-        offsetof(EXTERNAL_VARIABLE, identifier),
-        offsetof(EXTERNAL_VARIABLE, string),
+        offsetof(YR_EXTERNAL_VARIABLE, identifier),
+        offsetof(YR_EXTERNAL_VARIABLE, string),
         EOL);
 
   if (result == ERROR_SUCCESS)
@@ -585,14 +601,15 @@ int yr_compiler_define_boolean_variable(
 
 
 int yr_compiler_define_string_variable(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     const char* identifier,
     const char* value)
 {
-  EXTERNAL_VARIABLE* external;
+  YR_EXTERNAL_VARIABLE* external = NULL;
 
-  char* id;
-  char* val;
+  char* id = NULL;
+  char* val = NULL;
+
   int result;
 
   result = yr_arena_write_string(
@@ -609,10 +626,10 @@ int yr_compiler_define_string_variable(
   if (result == ERROR_SUCCESS)
     result = yr_arena_allocate_struct(
         compiler->externals_arena,
-        sizeof(EXTERNAL_VARIABLE),
+        sizeof(YR_EXTERNAL_VARIABLE),
         (void**) &external,
-        offsetof(EXTERNAL_VARIABLE, identifier),
-        offsetof(EXTERNAL_VARIABLE, string),
+        offsetof(YR_EXTERNAL_VARIABLE, identifier),
+        offsetof(YR_EXTERNAL_VARIABLE, string),
         EOL);
 
   if (result == ERROR_SUCCESS)
@@ -631,7 +648,7 @@ int yr_compiler_define_string_variable(
 
 
 char* yr_compiler_get_error_message(
-    YARA_COMPILER* compiler,
+    YR_COMPILER* compiler,
     char* buffer,
     int buffer_size)
 {
@@ -675,83 +692,6 @@ char* yr_compiler_get_error_message(
           "duplicate loop identifier \"%s\"",
           compiler->last_error_extra_info);
       break;
-    case ERROR_INVALID_CHAR_IN_HEX_STRING:
-      snprintf(
-          buffer,
-          buffer_size,
-          "invalid char in hex string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_MISMATCHED_BRACKET:
-      snprintf(
-          buffer,
-          buffer_size,
-          "mismatched bracket in string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_SKIP_AT_END:
-      snprintf(
-          buffer,
-          buffer_size,
-          "skip at the end of string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_INVALID_SKIP_VALUE:
-      snprintf(
-          buffer,
-          buffer_size,
-          "invalid skip in string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_UNPAIRED_NIBBLE:
-      snprintf(
-          buffer,
-          buffer_size,
-          "unpaired nibble in string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_CONSECUTIVE_SKIPS:
-      snprintf(
-          buffer,
-          buffer_size,
-          "two consecutive skips in string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_MISPLACED_WILDCARD_OR_SKIP:
-      snprintf(
-          buffer,
-          buffer_size,
-          "misplaced wildcard or skip at string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_MISPLACED_OR_OPERATOR:
-      snprintf(
-          buffer,
-          buffer_size,
-          "misplaced OR (|) operator at string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_NESTED_OR_OPERATION:
-      snprintf(
-          buffer,
-          buffer_size,
-          "nested OR (|) operator at string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_INVALID_OR_OPERATION_SYNTAX:
-      snprintf(
-          buffer,
-          buffer_size,
-          "invalid syntax at hex string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
-    case ERROR_SKIP_INSIDE_OR_OPERATION:
-      snprintf(
-          buffer,
-          buffer_size,
-          "skip inside an OR (|) operation at string \"%s\"",
-          compiler->last_error_extra_info);
-      break;
     case ERROR_UNDEFINED_STRING:
       snprintf(
           buffer,
@@ -786,6 +726,7 @@ char* yr_compiler_get_error_message(
           buffer_size,
           "wrong use of anonymous string");
       break;
+    case ERROR_INVALID_HEX_STRING:
     case ERROR_INVALID_REGULAR_EXPRESSION:
     case ERROR_SYNTAX_ERROR:
       snprintf(

@@ -1,3 +1,18 @@
+/*
+Copyright (c) 2007. Victor M. Alvarez [plusvic@gmail.com].
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 %{
 
@@ -11,19 +26,16 @@
 #include "hash.h"
 #include "sizedstr.h"
 #include "mem.h"
-#include "lex.h"
-#include "regex/regex.h"
+#include "lexer.h"
 #include "parser.h"
+#include "re.h"
 #include "utils.h"
 #include "yara.h"
 
 #define YYERROR_VERBOSE
-#define YYDEBUG 1
 
 #define INTEGER_SET_ENUMERATION 1
 #define INTEGER_SET_RANGE 2
-
-
 
 #define ERROR_IF(x) \
     if (x) \
@@ -35,7 +47,7 @@
 %}
 
 %debug
-
+%name-prefix="yara_yy"
 %pure-parser
 %parse-param {void *yyscanner}
 %lex-param {yyscan_t yyscanner}
@@ -134,11 +146,11 @@
 %destructor { yr_free($$); } _REGEXP_
 
 %union {
-  void*           sized_string;
+  SIZED_STRING*   sized_string;
   char*           c_string;
   int64_t         integer;
-  void*           string;
-  void*           meta;
+  YR_STRING*         string;
+  YR_META*           meta;
 }
 
 
@@ -172,23 +184,23 @@ meta  : /* empty */                      {  $$ = NULL; }
       | _META_ ':' meta_declarations
         {
           // Each rule have a list of meta-data info, consisting in a
-          // sequence of META structures. The last META structure does
+          // sequence of YR_META structures. The last YR_META structure does
           // not represent a real meta-data, it's just a end-of-list marker
           // identified by a specific type (META_TYPE_NULL). Here we
           // write the end-of-list marker.
 
-          META null_meta;
-          YARA_COMPILER* compiler;
+          YR_META null_meta;
+          YR_COMPILER* compiler;
 
           compiler = yyget_extra(yyscanner);
 
-          memset(&null_meta, 0xFF, sizeof(META));
+          memset(&null_meta, 0xFF, sizeof(YR_META));
           null_meta.type = META_TYPE_NULL;
 
           yr_arena_write_data(
               compiler->metas_arena,
               &null_meta,
-              sizeof(META),
+              sizeof(YR_META),
               NULL);
 
           $$ = $3;
@@ -204,23 +216,23 @@ strings : /* empty */
         | _STRINGS_ ':' string_declarations
         {
           // Each rule have a list of strings, consisting in a sequence
-          // of STRING structures. The last STRING structure does not
+          // of YR_STRING structures. The last YR_STRING structure does not
           // represent a real string, it's just a end-of-list marker
           // identified by a specific flag (STRING_FLAGS_NULL). Here we
           // write the end-of-list marker.
 
-          STRING null_string;
-          YARA_COMPILER* compiler;
+          YR_STRING null_string;
+          YR_COMPILER* compiler;
 
           compiler = yyget_extra(yyscanner);
 
-          memset(&null_string, 0xFF, sizeof(STRING));
-          null_string.flags = STRING_FLAGS_NULL;
+          memset(&null_string, 0xFF, sizeof(YR_STRING));
+          null_string.g_flags = STRING_GFLAGS_NULL;
 
           yr_arena_write_data(
               compiler->strings_arena,
               &null_string,
-              sizeof(STRING),
+              sizeof(YR_STRING),
               NULL);
 
           $$ = $3;
@@ -238,8 +250,8 @@ rule_modifiers : /* empty */                      { $$ = 0;  }
                ;
 
 
-rule_modifier : _PRIVATE_       { $$ = RULE_FLAGS_PRIVATE; }
-              | _GLOBAL_        { $$ = RULE_FLAGS_GLOBAL; }
+rule_modifier : _PRIVATE_       { $$ = RULE_GFLAGS_PRIVATE; }
+              | _GLOBAL_        { $$ = RULE_GFLAGS_GLOBAL; }
               ;
 
 
@@ -271,7 +283,7 @@ tag_list  : _IDENTIFIER_
             }
           | tag_list _IDENTIFIER_
             {
-              YARA_COMPILER* compiler = yyget_extra(yyscanner);
+              YR_COMPILER* compiler = yyget_extra(yyscanner);
               char* tag_name = $1;
               size_t tag_length = tag_name != NULL ? strlen(tag_name) : 0;
 
@@ -388,7 +400,7 @@ string_declaration  : _STRING_IDENTIFIER_ '=' _TEXTSTRING_ string_modifiers
                       {
                         $$ = yr_parser_reduce_string_declaration(
                             yyscanner,
-                            $4 | STRING_FLAGS_REGEXP,
+                            $4 | STRING_GFLAGS_REGEXP,
                             $1,
                             $3);
 
@@ -401,7 +413,7 @@ string_declaration  : _STRING_IDENTIFIER_ '=' _TEXTSTRING_ string_modifiers
                       {
                         $$ = yr_parser_reduce_string_declaration(
                             yyscanner,
-                            STRING_FLAGS_HEXADECIMAL,
+                            STRING_GFLAGS_HEXADECIMAL,
                             $1,
                             $3);
 
@@ -418,10 +430,10 @@ string_modifiers : /* empty */                              { $$ = 0;  }
                  ;
 
 
-string_modifier : _WIDE_        { $$ = STRING_FLAGS_WIDE; }
-                | _ASCII_       { $$ = STRING_FLAGS_ASCII; }
-                | _NOCASE_      { $$ = STRING_FLAGS_NO_CASE; }
-                | _FULLWORD_    { $$ = STRING_FLAGS_FULL_WORD; }
+string_modifier : _WIDE_        { $$ = STRING_GFLAGS_WIDE; }
+                | _ASCII_       { $$ = STRING_GFLAGS_ASCII; }
+                | _NOCASE_      { $$ = STRING_GFLAGS_NO_CASE; }
+                | _FULLWORD_    { $$ = STRING_GFLAGS_FULL_WORD; }
                 ;
 
 
@@ -436,11 +448,10 @@ boolean_expression  : '(' boolean_expression ')'
                       }
                     | _IDENTIFIER_
                       {
-                        YARA_COMPILER* compiler = yyget_extra(yyscanner);
-                        RULE* rule;
-                        EXTERNAL_VARIABLE* external;
+                        YR_COMPILER* compiler = yyget_extra(yyscanner);
+                        YR_RULE* rule;
 
-                        rule = (RULE*) yr_hash_table_lookup(
+                        rule = (YR_RULE*) yr_hash_table_lookup(
                             compiler->rules_table,
                             $1,
                             compiler->current_namespace->name);
@@ -467,42 +478,35 @@ boolean_expression  : '(' boolean_expression ')'
                       }
                     | text _MATCHES_ _REGEXP_
                       {
-                        YARA_COMPILER* compiler = yyget_extra(yyscanner);
+                        YR_COMPILER* compiler = yyget_extra(yyscanner);
                         SIZED_STRING* sized_string = $3;
-                        REGEXP re;
+                        RE* re;
 
-                        char* string;
-                        int error_offset;
-                        int result;
+                        compiler->last_result = yr_re_compile(
+                            sized_string->c_string, &re);
 
-                        result = yr_regex_compile(&re,
-                            sized_string->c_string,
-                            FALSE,
-                            compiler->last_error_extra_info,
-                            sizeof(compiler->last_error_extra_info),
-                            &error_offset);
+                        ERROR_IF(compiler->last_result != ERROR_SUCCESS);
 
-                        if (result > 0)
-                        {
-                          yr_arena_write_string(
-                            compiler->sz_arena,
-                            sized_string->c_string,
-                            &string);
+                        compiler->last_result = yr_re_emit_code(
+                            re, compiler->re_code_arena);
 
-                          yr_parser_emit_with_arg_reloc(
-                              yyscanner,
-                              PUSH,
-                              PTR_TO_UINT64(string),
-                              NULL);
+                        ERROR_IF(compiler->last_result != ERROR_SUCCESS);
 
-                          yr_parser_emit(yyscanner, MATCHES, NULL);
-                        }
-                        else
-                        {
-                          compiler->last_result = \
-                            ERROR_INVALID_REGULAR_EXPRESSION;
-                        }
+                        yr_parser_emit_with_arg_reloc(
+                            yyscanner,
+                            PUSH,
+                            PTR_TO_UINT64(re->root_node->forward_code),
+                            NULL);
 
+                        yr_parser_emit_with_arg(
+                            yyscanner,
+                            PUSH,
+                            re->flags,
+                            NULL);
+
+                        yr_parser_emit(yyscanner, MATCHES, NULL);
+
+                        yr_re_destroy(re);
                         yr_free($3);
 
                         ERROR_IF(compiler->last_result != ERROR_SUCCESS);
@@ -555,7 +559,7 @@ boolean_expression  : '(' boolean_expression ')'
                       }
                     | _FOR_ for_expression _IDENTIFIER_ _IN_
                       {
-                        YARA_COMPILER* compiler = yyget_extra(yyscanner);
+                        YR_COMPILER* compiler = yyget_extra(yyscanner);
                         int result = ERROR_SUCCESS;
                         int var_index;
 
@@ -566,13 +570,13 @@ boolean_expression  : '(' boolean_expression ')'
                         ERROR_IF(compiler->last_result != ERROR_SUCCESS);
 
                         var_index = yr_parser_lookup_loop_variable(
-                            yyscanner, 
+                            yyscanner,
                             $3);
 
                         if (var_index >= 0)
                         {
                           yr_compiler_set_error_extra_info(
-                              compiler, 
+                              compiler,
                               $3);
 
                           compiler->last_result = \
@@ -592,7 +596,7 @@ boolean_expression  : '(' boolean_expression ')'
                       }
                       integer_set ':'
                       {
-                        YARA_COMPILER* compiler = yyget_extra(yyscanner);
+                        YR_COMPILER* compiler = yyget_extra(yyscanner);
                         int mem_offset = LOOP_LOCAL_VARS * compiler->loop_depth;
                         int8_t* addr;
 
@@ -626,7 +630,7 @@ boolean_expression  : '(' boolean_expression ')'
                       }
                       '(' boolean_expression ')'
                       {
-                        YARA_COMPILER* compiler = yyget_extra(yyscanner);
+                        YR_COMPILER* compiler = yyget_extra(yyscanner);
                         int mem_offset;
 
                         compiler->loop_depth--;
@@ -666,7 +670,7 @@ boolean_expression  : '(' boolean_expression ')'
                               NULL);
 
                           yr_parser_emit(yyscanner, POP, NULL);
-                          yr_parser_emit(yyscanner, POP, NULL);                       
+                          yr_parser_emit(yyscanner, POP, NULL);
                         }
 
                         // Pop end-of-list marker.
@@ -675,11 +679,11 @@ boolean_expression  : '(' boolean_expression ')'
                         // At this point the loop quantifier (any, all, 1, 2,..)
                         // is at the top of the stack. Check if the quantifier
                         // is undefined (meaning "all") and replace it with the
-                        // iterations counter in that case. 
+                        // iterations counter in that case.
                         yr_parser_emit_with_arg(
                             yyscanner, SWAPUNDEF, mem_offset + 2, NULL);
 
-                        // Compare the loop quantifier with the number of 
+                        // Compare the loop quantifier with the number of
                         // expressions evaluating to TRUE.
                         yr_parser_emit_with_arg(
                             yyscanner, PUSH_M, mem_offset + 1, NULL);
@@ -691,9 +695,8 @@ boolean_expression  : '(' boolean_expression ')'
                       }
                     | _FOR_ for_expression _OF_ string_set ':'
                       {
-                        YARA_COMPILER* compiler = yyget_extra(yyscanner);
+                        YR_COMPILER* compiler = yyget_extra(yyscanner);
                         int mem_offset = LOOP_LOCAL_VARS * compiler->loop_depth;
-                        int result = ERROR_SUCCESS;
                         int8_t* addr;
 
                         if (compiler->loop_depth == MAX_LOOP_NESTING)
@@ -717,13 +720,13 @@ boolean_expression  : '(' boolean_expression ')'
                       }
                       '(' boolean_expression ')'
                       {
-                        YARA_COMPILER* compiler = yyget_extra(yyscanner);
+                        YR_COMPILER* compiler = yyget_extra(yyscanner);
                         int mem_offset;
 
                         compiler->loop_depth--;
                         mem_offset = LOOP_LOCAL_VARS * compiler->loop_depth;
 
-                        // Increment counter by the value returned by the 
+                        // Increment counter by the value returned by the
                         // boolean expression (0 or 1).
                         yr_parser_emit_with_arg(
                             yyscanner, ADD_M, mem_offset + 1, NULL);
@@ -747,11 +750,11 @@ boolean_expression  : '(' boolean_expression ')'
                         // At this point the loop quantifier (any, all, 1, 2,..)
                         // is at top of the stack. Check if the quantifier is
                         // undefined (meaning "all") and replace it with the
-                        // iterations counter in that case. 
+                        // iterations counter in that case.
                         yr_parser_emit_with_arg(
                             yyscanner, SWAPUNDEF, mem_offset + 2, NULL);
 
-                        // Compare the loop quantifier with the number of 
+                        // Compare the loop quantifier with the number of
                         // expressions evaluating to TRUE.
                         yr_parser_emit_with_arg(
                             yyscanner, PUSH_M, mem_offset + 1, NULL);
@@ -811,7 +814,7 @@ boolean_expression  : '(' boolean_expression ')'
 
 text  : _TEXTSTRING_
         {
-          YARA_COMPILER* compiler = yyget_extra(yyscanner);
+          YR_COMPILER* compiler = yyget_extra(yyscanner);
           SIZED_STRING* sized_string = $1;
           char* string;
 
@@ -970,8 +973,7 @@ expression  : '(' expression ')'
               }
             | _IDENTIFIER_
               {
-                YARA_COMPILER* compiler = yyget_extra(yyscanner);
-                EXTERNAL_VARIABLE* external;
+                YR_COMPILER* compiler = yyget_extra(yyscanner);
                 int var_index;
 
                 var_index = yr_parser_lookup_loop_variable(yyscanner, $1);
@@ -979,9 +981,9 @@ expression  : '(' expression ')'
                 if (var_index >= 0)
                 {
                   yr_parser_emit_with_arg(
-                    yyscanner, 
-                    PUSH_M, 
-                    LOOP_LOCAL_VARS * var_index, 
+                    yyscanner,
+                    PUSH_M,
+                    LOOP_LOCAL_VARS * var_index,
                     NULL);
                 }
                 else

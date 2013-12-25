@@ -16,74 +16,137 @@ limitations under the License.
 
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include "mem.h"
+#include "re.h"
 #include "yara.h"
 
 #ifdef WIN32
 #define snprintf _snprintf
 #endif
 
+#ifdef WIN32
+#else
+#include <pthread.h>
+#endif
 
-char isregexescapable[256];
-char isregexhashable[256];
-char isalphanum[256];
 char lowercase[256];
+char altercase[256];
+
+#ifdef WIN32
+DWORD key;
+#else
+pthread_key_t key;
+#endif
 
 
-void yr_initialize()
+//
+// yr_initialize
+//
+// Should be called by main thread before using any other
+// function from libyara.
+//
+
+void yr_initialize(void)
 {
   int i;
 
   for (i = 0; i < 256; i++)
   {
-  	lowercase[i] = tolower(i);
-    isregexhashable[i] = isalnum(i);
-   	isalphanum[i] = isalnum(i);
-    isregexescapable[i] = FALSE;
+    if (i >= 'a' && i <= 'z')
+      altercase[i] = i - 32;
+    else if (i >= 'A' && i <= 'Z')
+      altercase[i] = i + 32;
+    else
+      altercase[i] = i;
+
+    lowercase[i] = tolower(i);
   }
 
-  // Add other characters that we can hash with for regexes.
-
-  isregexhashable['"'] = TRUE;
-  isregexhashable['\''] = TRUE;
-  isregexhashable[','] = TRUE;
-  isregexhashable[';'] = TRUE;
-  isregexhashable[':'] = TRUE;
-  isregexhashable['/'] = TRUE;
-  isregexhashable['%'] = TRUE;
-  isregexhashable['@'] = TRUE;
-  isregexhashable['#'] = TRUE;
-  isregexhashable['='] = TRUE;
-
-
-  // Characters that are escaped in regexes.
-  isregexescapable['['] = TRUE;
-  isregexescapable['{'] = TRUE;
-  isregexescapable['.'] = TRUE;
-  isregexescapable['('] = TRUE;
-  isregexescapable[')'] = TRUE;
-  isregexescapable['.'] = TRUE;
-  isregexescapable['?'] = TRUE;
-  isregexescapable['^'] = TRUE;
-  isregexescapable['*'] = TRUE;
-  isregexescapable['+'] = TRUE;
-  isregexescapable['$'] = TRUE;
-  isregexescapable['|'] = TRUE;
-  isregexescapable['\\'] = TRUE;
-
   yr_heap_alloc();
+
+  #ifdef WIN32
+  key = TlsAlloc();
+  #else
+  pthread_key_create(&key, NULL);
+  #endif
+
+  yr_re_initialize();
 }
 
 
-void yr_finalize()
+//
+// yr_finalize_thread
+//
+// Should be called by ALL threads using libyara before exiting.
+//
+
+void yr_finalize_thread(void)
 {
+  yr_re_finalize_thread();
+}
+
+
+//
+// yr_finalize
+//
+// Should be called by main thread before exiting. Main thread doesn't
+// need to explicitely call yr_finalize_thread because yr_finalize already
+// calls it.
+//
+
+void yr_finalize(void)
+{
+  yr_re_finalize_thread();
+
+  #ifdef WIN32
+  TlsFree(key);
+  #else
+  pthread_key_delete(key);
+  #endif
+
+  yr_re_finalize();
   yr_heap_free();
 }
 
+//
+// _yr_set_tidx
+//
+// Set the thread index (tidx) for the current thread. The tidx is the index
+// that will be used by the thread to access thread-specific data stored in
+// YR_RULES structure.
+//
+// Args:
+//    int tidx   - The zero-based tidx that will be associated to the current
+//                 thread.
+//
+
+void yr_set_tidx(int tidx)
+{
+  #ifdef WIN32
+  TlsSetValue(key, (LPVOID) (tidx + 1));
+  #else
+  pthread_setspecific(key, (void*) (size_t) (tidx + 1));
+  #endif
+}
 
 
+//
+// _yr_get_tidx
+//
+// Get the thread index (tidx) for the current thread.
+//
+// Returns:
+//    The tidx for the current thread or -1 if the current thread doesn't
+//    have any tidx associated.
+//
 
-
-
-
+int yr_get_tidx(void)
+{
+  #ifdef WIN32
+  return (int) TlsGetValue(key) - 1;
+  #else
+  return (int) (size_t) pthread_getspecific(key) - 1;
+  #endif
+}
