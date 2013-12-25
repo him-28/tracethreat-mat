@@ -5,66 +5,83 @@
  *
  */
 
-extern "C"{
-//	#include "rules/rules.c"
-	#include "rules/yara.h"
+extern "C" {
+    //	#include "rules/rules.c"
+#include "rules/yara.h"
 }
 
-namespace wrapper{
+//
+#include "utils/logger/clutil_logger.hpp"
 
-/*   Wrapper class call rules for file signature */
-//struct yc_wrapper_rules;
 
-struct YARA_wrapper{
- 	typedef struct YARA_COMPILER  compiler_wrapper;
-	typedef struct _YR_RULES  rules_wrapper;
-};
-
-typedef struct _EXTERNAL
+namespace wrapper
 {
-  char type;
-  char*  name;
-  union {
-    char* string;
-    int integer;
-    int boolean;
-  };
-  struct _EXTERNAL* next;
+    namespace h_util = hnmav_util;
 
-} EXTERNAL;
+    /*   Wrapper class call rules for file signature */
+    //struct yc_wrapper_rules;
 
-template<typename YARA_wrapper>
-class iwrapper
-{
-public:
-	virtual bool compile_rule(char ** filename) = 0;
-	virtual typename YARA_wrapper::compiler_wrapper & get_compiler() = 0;
-};
+    typedef struct _EXTERNAL {
+        char type;
+        char  *name;
+        union {
+            char *string;
+            int integer;
+            int boolean;
+        };
+        struct _EXTERNAL *next;
 
-template<typename Compiler = struct YARA_wrapper>
-class wrapper_rule_compiles : public iwrapper<Compiler>
-{
-public:
-	wrapper_rule_compiles(){ };
-	bool compile_rule(char ** filerule);
- 	typename Compiler::compiler_wrapper & get_compiler(){ };
-	typename Compiler::rules_wrapper * get_rules(){ return rules; };
-	bool wrapper_yr_rules_load(const char * filename, typename Compiler::rules_wrapper * rules);	
-	EXTERNAL * load_rule()const;
-  
-private:
-  YARA_COMPILER* compiler;
-  YR_RULES* rules;
-  FILE* rule_file;
-  EXTERNAL* external;
-	char const * argv;
-  int pid;
-  int errors;
-  int result;
+    } EXTERNAL;
 
-};
+
+    struct YARA_wrapper {
+        typedef struct _YR_COMPILER  compiler_wrapper;
+        typedef struct _YR_RULES  rules_wrapper;
+        typedef struct _EXTERNAL   enternal_wrapper;
+    };
+
+    template<typename YARA_wrapper>
+    class iwrapper
+    {
+        public:
+            virtual bool compile_rule(char **filename) = 0;
+            virtual typename YARA_wrapper::compiler_wrapper& get_compiler() = 0;
+    };
+
+    template<typename Compiler = struct YARA_wrapper>
+    class wrapper_rule_compiles : public iwrapper<Compiler>
+    {
+        public:
+            wrapper_rule_compiles();
+            bool compile_rule(char **filerule);
+            typename Compiler::compiler_wrapper & get_compiler() {
+                return *compiler;
+            };
+            typename Compiler::rules_wrapper *get_rules() {
+                return rules;
+            };
+            bool wrapper_yr_rules_load(const char *filename, typename Compiler::rules_wrapper *rules);
+						bool wrapper_yr_compiler_create(typename Compiler::compiler_wrapper * compiler);
+            EXTERNAL *load_rule()const;
+
+        private:
+            typename Compiler::compiler_wrapper *compiler;
+            typename Compiler::rules_wrapper *rules;
+            typename Compiler::enternal_wrapper *external;
+
+            FILE *rule_file;
+            char const *argv;
+            int pid;
+            int errors;
+            int result;
+            //logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
+
+
+    };
 
 }
 
 
-#endif 
+#endif

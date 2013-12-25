@@ -18,7 +18,7 @@ limitations under the License.
 #include <stdio.h>
 #include <string.h>
 
-#include "ahocorasick.h"
+//#include "ahocorasick.h"
 #include "arena.h"
 #include "exec.h"
 #include "filemap.h"
@@ -82,11 +82,12 @@ int yr_compiler_create(
 
   if (result == ERROR_SUCCESS)
     result = yr_arena_create(1024, 0, &new_compiler->metas_arena);
-
+/*
   if (result == ERROR_SUCCESS)
     result = yr_ac_create_automaton(
         new_compiler->automaton_arena,
         &new_compiler->automaton);
+*/
 
   if (result == ERROR_SUCCESS)
   {
@@ -357,10 +358,11 @@ int _yr_compiler_compile_rules(
       NULL);
 
   // Create Aho-Corasick automaton's failure links.
+	/*
   yr_ac_create_failure_links(
       compiler->automaton_arena,
       compiler->automaton);
-
+  */
   result = yr_arena_create(1024, 0, &arena);
 
   if (result == ERROR_SUCCESS)

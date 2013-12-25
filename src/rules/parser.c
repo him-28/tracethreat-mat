@@ -17,7 +17,7 @@ limitations under the License.
 #include <stddef.h>
 #include <string.h>
 
-#include "ahocorasick.h"
+//#include "ahocorasick.h"
 #include "atoms.h"
 #include "exec.h"
 #include "hash.h"
@@ -357,11 +357,13 @@ YR_STRING* yr_parser_reduce_string_declaration(
 
   if (atom_list != NULL)
   {
+/*
     compiler->last_result = yr_ac_add_string(
       compiler->automaton_arena,
       compiler->automaton,
       string,
       atom_list);
+*/
   }
   else
   {
