@@ -7,9 +7,12 @@
 #include "test/thread_sync_test.hpp"
 #include "test/ac_tire_test.hpp"
 
+
 //#include "rules/yara.h"
 //#include "rules/re.h"
 #include "test/wrapper_rules_tests.hpp"
+#include "test/file_handler_test.hpp"
+
 
 // semaphore test suite 
 using namespace controller;

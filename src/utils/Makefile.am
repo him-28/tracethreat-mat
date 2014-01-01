@@ -9,9 +9,9 @@ lib_LIBRARIES = libutils.a
 libutils_adir = $(includedir)/utils
 
 #Header
-libutils_a_HEADERS = file_calculate.hpp config/options_system.hpp logger/clutil_logger.hpp 
+libutils_a_HEADERS = file_calculate.hpp file_handler.hpp config/options_system.hpp logger/clutil_logger.hpp 
 
 # library
-libutils_a_SOURCES = $(libutils_a_HEADERS) file_calculate.cpp  logger/format_logger.hpp
+libutils_a_SOURCES = $(libutils_a_HEADERS) file_calculate.cpp  logger/format_logger.hpp file_handler.cpp
 
 

@@ -5,21 +5,20 @@
  *
  */
 
-extern "C" {
-    //	#include "rules/rules.c"
+//extern "C" {
 #include "rules/yara.h"
-}
+//}
 
-//
+
 #include "utils/logger/clutil_logger.hpp"
-
+#include "utils/file_handler.hpp"
+#include "boost/shared_ptr.hpp"
 
 namespace wrapper
 {
     namespace h_util = hnmav_util;
-
+		namespace utility = util;
     /*   Wrapper class call rules for file signature */
-    //struct yc_wrapper_rules;
 
     typedef struct _EXTERNAL {
         char type;
@@ -45,7 +44,8 @@ namespace wrapper
     {
         public:
             virtual bool compile_rule(char **filename) = 0;
-            virtual typename YARA_wrapper::compiler_wrapper& get_compiler() = 0;
+						virtual void set_compiler(typename YARA_wrapper::compiler_wrapper * compiler) = 0;
+            virtual typename YARA_wrapper::compiler_wrapper * get_compiler() = 0;
     };
 
     template<typename Compiler = struct YARA_wrapper>
@@ -54,14 +54,22 @@ namespace wrapper
         public:
             wrapper_rule_compiles();
             bool compile_rule(char **filerule);
-            typename Compiler::compiler_wrapper & get_compiler() {
-                return *compiler;
+            typename Compiler::compiler_wrapper * get_compiler() {
+                boost::shared_ptr<typename Compiler::compiler_wrapper> c_ptr =  compiler_w_ptr[0];
+								return c_ptr.get();
             };
             typename Compiler::rules_wrapper *get_rules() {
                 return rules;
             };
             bool wrapper_yr_rules_load(const char *filename, typename Compiler::rules_wrapper *rules);
 						bool wrapper_yr_compiler_create(typename Compiler::compiler_wrapper * compiler);
+						bool wrapper_yr_compiler_push_fn(typename Compiler::compiler_wrapper * compiler,
+								char const * file_name_rules);
+
+						void set_compiler(typename Compiler::compiler_wrapper * compiler){ 
+										this->compiler = compiler;
+						}
+			
             EXTERNAL *load_rule()const;
 
         private:
@@ -69,15 +77,22 @@ namespace wrapper
             typename Compiler::rules_wrapper *rules;
             typename Compiler::enternal_wrapper *external;
 
+						//vector handling shared_ptr
+						std::vector<boost::shared_ptr<typename Compiler::compiler_wrapper> >  compiler_w_ptr;
+
             FILE *rule_file;
             char const *argv;
             int pid;
             int errors;
             int result;
+
+						//load file
+						utility::ifile<utility::common_filetype> * file_inf;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
 
+						//boost::shared_ptr<typename Compiler::compiler_wrapper> * compiler_ptr;
 
     };
 

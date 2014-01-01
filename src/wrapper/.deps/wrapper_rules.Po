@@ -1253,7 +1253,8 @@ wrapper_rules.o: wrapper_rules.cpp ../../src/wrapper/wrapper_rules.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/predicate_facade.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/predicate.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/detail/predicate.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp
+ /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp \
+ ../../src/utils/file_handler.hpp ../../src/filetypes/binary.hpp
 
 ../../src/wrapper/wrapper_rules.hpp:
 
@@ -3862,3 +3863,7 @@ wrapper_rules.o: wrapper_rules.cpp ../../src/wrapper/wrapper_rules.hpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/detail/predicate.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/algorithm/string/join.hpp:
+
+../../src/utils/file_handler.hpp:
+
+../../src/filetypes/binary.hpp:

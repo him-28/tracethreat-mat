@@ -10,6 +10,10 @@
 namespace hnmav_filetypes
 {
 
+		struct binary_type{
+
+		};
+
     class binary_factory
     {
 

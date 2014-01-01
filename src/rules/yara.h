@@ -597,14 +597,30 @@ int yr_get_tidx(void);
 
 void yr_set_tidx(int);
 
+void yr_compiler_destroy(
+    YR_COMPILER* compiler);
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int yr_rules_load(
+    const char* filename,
+    YR_RULES** rules);
+
 
 int yr_compiler_create(
     YR_COMPILER** compiler);
 
 
-void yr_compiler_destroy(
-    YR_COMPILER* compiler);
+int yr_compiler_push_file_name(
+    YR_COMPILER* compiler,
+    const char* file_name);
 
+#ifdef __cplusplus
+}
+#endif
 
 int yr_compiler_add_file(
     YR_COMPILER* compiler,
@@ -616,12 +632,6 @@ int yr_compiler_add_string(
     YR_COMPILER* compiler,
     const char* rules_string,
     const char* yr_namespace);
-
-
-int yr_compiler_push_file_name(
-    YR_COMPILER* compiler,
-    const char* file_name);
-
 
 void yr_compiler_pop_file_name(
     YR_COMPILER* compiler);
@@ -692,10 +702,6 @@ int yr_rules_save(
     YR_RULES* rules,
     const char* filename);
 
-
-int yr_rules_load(
-    const char* filename,
-    YR_RULES** rules);
 
 
 int yr_rules_destroy(
