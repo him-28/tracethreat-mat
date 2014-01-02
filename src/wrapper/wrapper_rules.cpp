@@ -8,7 +8,7 @@
 
 namespace wrapper
 {
-
+	//	namespace utility = util;
 
     template<typename Compiler>
     bool wrapper_rule_compiles<Compiler>::compile_rule(char **filename)
@@ -27,10 +27,11 @@ namespace wrapper
         logger->write_info("Wrapper-lib, Start... ", h_util::format_type::type_header);
 			
 				//shared ptr handler code.
-				boost::shared_ptr<typename Compiler::compiler_wrapper> compiler_ptr;
-				compiler_w_ptr.push_back(compiler_ptr);
+				//boost::shared_ptr<typename Compiler::compiler_wrapper> compiler_ptr;
+			  //compiler_w_ptr.push_back(compiler_ptr);
 
-				//:compiler_ptr = compiler;
+				boost::shared_ptr<typename Compiler::rules_wrapper> rules_ptr;
+				rules_w_ptr.push_back(rules_ptr);
     }
 
     template<typename Compiler>
@@ -39,6 +40,7 @@ namespace wrapper
             typename Compiler::rules_wrapper *rules)
     {
         int result;
+				std::cout<<" Rules addr : " << rules <<", Rules de addr : " << &rules <<std::endl;
         result = yr_rules_load(filename, &rules);
         logger->write_info("--Wrapper rules load, result : ", boost::lexical_cast<std::string>(result));
 
@@ -57,12 +59,10 @@ namespace wrapper
     {
         logger->write_info("--Wrapper rules load, compiler create...");
 				int errors;
-				typename Compiler::compiler_wrapper * cw  = compiler;
-        if(yr_compiler_create(&cw) != ERROR_SUCCESS) {
+        if(yr_compiler_create(&this->compiler) != ERROR_SUCCESS) {
             return false;
         }
-				this->compiler = cw;
-
+	
         return true;
     }
 
@@ -72,12 +72,12 @@ namespace wrapper
             char const *file_name_rules)
     {
 				int errors = 0;
-				//const char * rule_file_conv = (const char*)rule_file;
-				FILE * rule_files = fopen("/home/chatsiri/Dropbox/reversing_engineer/malwarecookbook/3/3/clamav.yara", "r");
-        if(rule_files != NULL) {
-					typename Compiler::compiler_wrapper * cw = compiler;
+        if(file_name_rules != NULL) {
+
+					typename Compiler::compiler_wrapper ** cw = &compiler;
 					errors = yr_compiler_push_file_name(this->compiler, file_name_rules);
-					
+
+
 					if(errors == 0){
 						return true;
 					}
@@ -85,6 +85,37 @@ namespace wrapper
 			return false;
     }
 
+		template<typename Compiler>
+		bool wrapper_rule_compiles<Compiler>::wrapper_yr_compiler_add_file(
+				typename Compiler::compiler_wrapper * compiler,
+				char const * file_name_rule)
+		{
+			
+				file_inf = new utility::file_handler<utility::common_filetype>();
+				file_inf->set_filepath(file_name_rule);
+				file_inf->file_read(); 
+				int error = yr_compiler_add_file(this->compiler, file_inf->get_file(), NULL);
+
+				std::cout<<" Compiler addr : " << this->compiler <<std::endl;
+
+				if(error) return false;
+				return true;	
+		}
+
+		/*	
+		template<typename Compiler>
+		bool wrapper_rule_compiles<Compiler>::wrapper_yr_compiler_get_rules(
+				typename Compiler::compiler_wrapper * compiler, 
+								typename Compiler::rules_wrapper * rules)
+		{
+				std::cout<<" Rules addr : " << rules <<", Rules de addr : " << &rules <<std::endl;
+				std::cout<<" Compiler addr : " << this->compiler <<std::endl;
+
+				if(!yr_compiler_get_rules(this->compiler, &this->rules)) return true;
+				return false;
+
+		}
+		*/
 
     template class wrapper_rule_compiles<YARA_wrapper>;
 
