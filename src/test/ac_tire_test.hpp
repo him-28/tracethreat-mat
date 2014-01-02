@@ -38,32 +38,41 @@ class InitDataAc : public ::testing::Test
 
         };
 
-        /*
-                std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> const& keywords,
-                        char *begin,
-                        char  *end) {
-                    ac_tire<char,
-                            std::vector<std::string>::const_iterator,
-                            char,
-                            results<std::vector<std::string> > > ac(keywords.begin(), keywords.end());
-                    results<std::vector<std::string> > result(keywords);
-                    ac.search(*begin, *end, result);
-                    return result.hits_;
+        // /*
+        std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> const& keywords,
+                char *begin,
+                char  *end) {
+            /*
+            ac_graph<char,
+            std::vector<std::string>::const_iterator,
+            char,
+            results<std::vector<std::string> > > ac(keywords.begin(), keywords.end());
+            	*/
+            ac_graph<char,
+                     std::vector<std::string>::const_iterator,
+                     char,
+                     results<std::vector<std::string> > > ac(keywords.begin(), keywords.end());
 
-                }
-        */
+
+
+            results<std::vector<std::string> > result(keywords);
+            ac.search(*begin, *end, result);
+            return result.hits_;
+
+        }
+        // */
 
         virtual void SetUp() {
             td[0].keywords = boost::assign::list_of("he")("his")("her");
             td[0].input    = "hi";
-            /*
+
             for(int i = 0; i  < 1; i++) {
-            		char * input_tmp = const_cast<char*>(&td[i].input[0]);
-            		char * end_input_tmp = const_cast<char*>(&td[i].input[strlen(td[i].input)]);
-            ac_test_function(td[i].keywords,
-            input_tmp,
-            end_input_tmp);
-            } */
+                char *input_tmp = const_cast<char *>(&td[i].input[0]);
+                char *end_input_tmp = const_cast<char *>(&td[i].input[strlen(td[i].input)]);
+                ac_test_function(td[i].keywords,
+                        input_tmp,
+                        end_input_tmp);
+            }
         }
         test_data td[1];
 
@@ -77,18 +86,18 @@ TEST_F(InitDataAc , ac_add_list_str)
         char end_input_tmp = td[i].input[strlen(td[i].input)];
         //				char k_begin = td[i].keywords.begin();
         //				char k_end   = td[i].keywords.end();
-        /*
-        ac_tire<char,
+        
+        ac_graph<char,
                 std::vector<std::string>::const_iterator,
                 char,
                 std::string,
                 results<std::vector<std::string> >
                 >
                 ac(td[i].keywords.begin(), td[i].keywords.end());
-				*/
+        		
         //				ac(std::string("data"),std::string("value"));
-        // results<std::vector<std::string> > result(td[i].keywords);
-        // ac.search(input_tmp, end_input_tmp, result);
+        results<std::vector<std::string> > result(td[i].keywords);
+        ac.search(input_tmp, end_input_tmp, result);
     }
 
 }

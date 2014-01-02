@@ -21,8 +21,8 @@ std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> co
         char const *begin,
         char const  *end)
 {
-		/*
-    ac_tire<char,
+	//	/*
+    ac_graph<char,
             std::vector<std::string>::const_iterator,
             std::vector<std::string>::const_iterator,
             std::string,
@@ -30,9 +30,9 @@ std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> co
             >
             ac(keywords.begin(), keywords.end());
     results<std::vector<std::string> > result(keywords);
-		*/
-//    ac.search(begin, end, result);
-  //  return result.hits_;
+  //		*//
+ //   ac.search(begin, end, result);
+    return result.hits_;
 
 }
 
@@ -73,11 +73,11 @@ int main()
 
     }
 
-    /*
+/*   
         for(int i = 0; i  < 1; i++) {
             char input_tmp = td[i].input[0];
             char end_input_tmp = td[i].input[strlen(td[i].input)];
-            ac_tire<char,
+            ac_graph<char,
                     std::vector<std::string>::iterator,
                     char,
                     std::string,
@@ -89,6 +89,6 @@ int main()
             ac.search(input_tmp, end_input_tmp, result);
 
         }
-    */
+  */  
 
 }
