@@ -42,10 +42,8 @@ namespace wrapper
     template<typename YARA_wrapper>
     class iwrapper
     {
-        public:
-            virtual bool compile_rule(char **filename) = 0;
 						virtual void set_compiler(typename YARA_wrapper::compiler_wrapper * compiler) = 0;
-            virtual typename YARA_wrapper::compiler_wrapper * get_compiler() = 0;
+            virtual typename YARA_wrapper::compiler_wrapper & get_compiler() const= 0;
     };
 
     template<typename Compiler = struct YARA_wrapper>
@@ -54,17 +52,28 @@ namespace wrapper
         public:
             wrapper_rule_compiles();
             bool compile_rule(char **filerule);
-            typename Compiler::compiler_wrapper * get_compiler() {
-                boost::shared_ptr<typename Compiler::compiler_wrapper> c_ptr =  compiler_w_ptr[0];
-								return c_ptr.get();
+            typename Compiler::compiler_wrapper & get_compiler() const{
+            //    boost::shared_ptr<typename Compiler::compiler_wrapper> c_ptr =  compiler_w_ptr[0];
+						//		std::cout<<" GET compiler : "<< c_ptr.get() <<std::endl;
+								return  *this->compiler;// c_ptr.get();
             };
             typename Compiler::rules_wrapper *get_rules() {
-                return rules;
+								boost::shared_ptr<typename Compiler::rules_wrapper>  r_ptr = rules_w_ptr[0];
+                return r_ptr.get();
             };
             bool wrapper_yr_rules_load(const char *filename, typename Compiler::rules_wrapper *rules);
 						bool wrapper_yr_compiler_create(typename Compiler::compiler_wrapper * compiler);
+
 						bool wrapper_yr_compiler_push_fn(typename Compiler::compiler_wrapper * compiler,
 								char const * file_name_rules);
+						
+						bool wrapper_yr_compiler_add_file(typename Compiler::compiler_wrapper * compiler,
+								char const * rule_file);
+
+						/*				
+						bool wrapper_yr_compiler_get_rules(typename Compiler::compiler_wrapper * compiler, 
+								typename Compiler::rules_wrapper * rules);
+						*/
 
 						void set_compiler(typename Compiler::compiler_wrapper * compiler){ 
 										this->compiler = compiler;
@@ -79,7 +88,7 @@ namespace wrapper
 
 						//vector handling shared_ptr
 						std::vector<boost::shared_ptr<typename Compiler::compiler_wrapper> >  compiler_w_ptr;
-
+						std::vector<boost::shared_ptr<typename Compiler::rules_wrapper> > rules_w_ptr;
             FILE *rule_file;
             char const *argv;
             int pid;
@@ -93,6 +102,8 @@ namespace wrapper
             h_util::clutil_logging<std::string, int>    *logger;
 
 						//boost::shared_ptr<typename Compiler::compiler_wrapper> * compiler_ptr;
+
+    				boost::shared_ptr<typename Compiler::compiler_wrapper> compiler_ptr;
 
     };
 

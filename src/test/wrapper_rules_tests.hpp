@@ -29,10 +29,22 @@ TEST_F(WrapperRuleCompilerTest, wrapper_yr_rules_load)
 
 TEST_F(WrapperRuleCompilerTest, wrapper_yr_compiler_create)
 {
-				EXPECT_EQ(wrapper_rc.wrapper_yr_compiler_create(wrapper_rc.get_compiler()), true);
+	  EXPECT_EQ(wrapper_rc.wrapper_yr_compiler_create(&wrapper_rc.get_compiler()), true);
 }
 
-TEST_F(WrapperRuleCompilerTest, wrapper_rule_compiles)
+TEST_F(WrapperRuleCompilerTest, wrapper_yr_compiler_push_fn)
 {
-		EXPECT_EQ(wrapper_rc.wrapper_yr_compiler_push_fn(wrapper_rc.get_compiler(), argv[2]), true);
+		EXPECT_EQ(wrapper_rc.wrapper_yr_compiler_push_fn(&wrapper_rc.get_compiler(), argv[2]), true);
 }
+
+TEST_F(WrapperRuleCompilerTest, wrapper_yr_compiler_add_file)
+{
+		EXPECT_EQ(wrapper_rc.wrapper_yr_compiler_add_file(&wrapper_rc.get_compiler(), argv[2]), true);
+}
+
+/*
+TEST_F(WrapperRuleCompilerTest, wrapper_yr_compiler_get_rules)
+{
+		EXPECT_EQ(wrapper_rc.wrapper_yr_compiler_get_rules(&wrapper_rc.get_compiler(),wrapper_rc.get_rules()), true);
+}
+*/
