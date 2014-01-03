@@ -10,6 +10,7 @@
 #include <set>
 #include <vector>
 #include <typeinfo>
+#include <cstdio>
 
 #include <boost/unordered_map.hpp>
 #include <boost/assign/list_of.hpp>
@@ -19,6 +20,32 @@ static size_t const AC_FAIL_STATE = -1;
 
 namespace data_structure
 {
+
+        template<typename KeywordStoreT>
+        struct results {
+            results(KeywordStoreT const& keywords, bool summary = false)
+                : keywords_(keywords),
+                  hits_(keywords.size()),
+                  summary_(summary) {
+
+            }
+
+            void operator()(std::size_t what, std::size_t where) {
+
+                if(!summary_)
+                    std::cerr << "[" << where << "]" << keywords_[what] << std::endl;
+                else
+                    std::cerr << ".";
+
+                hits_[what].insert(where);
+            }
+            KeywordStoreT const& keywords_;
+            std::vector<std::set<std::size_t> > hits_;
+            bool summary_;
+
+        };
+
+
 template <typename SymbolT>
 class ac_graph
 {
@@ -41,11 +68,13 @@ public:
 
     // input is sequence of symbols
     // CallbackT must be callable with (size_t what, size_t where)
-    template <typename InputIterT, typename CallbackT>
+//    template <typename InputIterT, typename CallbackT>
     void search(
-            InputIterT input_it,
-            InputIterT input_end,
-            CallbackT & callback)
+          /*  InputIterT  input_it,
+            InputIterT  input_end,*/
+						char const *  input_it,
+						char const * input_end,
+            results<std::vector<std::string> >  & callback)
     {
 				/*
 				if(typeid(input_it) != typeid(char const *))
@@ -55,14 +84,18 @@ public:
 				*/
         for ( ; input_it != input_end; ++input_it, where_++)
         {
-						//            SymbolT const &input(*input_it);
-            SymbolT const &input(input_it);
+	
+	//					SymbolT const & input = *input_it;
+//            SymbolT const &input(*input_it);
+            char const & input = *input_it;
             {
                 state_t next;
+								//char * input_tmp = const_cast<char*>(input);
                 while ((next = goto_(state_, input)) == AC_FAIL_STATE)
                     state_ = fail_(state_);
                 state_ = next;
             }
+
             {
                 std::set<std::size_t> const &out_node = output_[state_];
                 typename std::set<size_t>::const_iterator output_it;

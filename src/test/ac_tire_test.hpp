@@ -13,7 +13,7 @@ class InitDataAc : public ::testing::Test
             std::vector<std::string> keywords;
             char const *input;
         } test_data;
-
+			/*
         template<typename KeywordStoreT>
         struct results {
             results(KeywordStoreT const& keywords, bool summary = false)
@@ -37,20 +37,18 @@ class InitDataAc : public ::testing::Test
             bool summary_;
 
         };
-
+		*/
         // /*
         std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> const& keywords,
-                char *begin,
-                char  *end) {
+                char const *begin,
+                char const *end) {
             /*
             ac_graph<char,
             std::vector<std::string>::const_iterator,
             char,
             results<std::vector<std::string> > > ac(keywords.begin(), keywords.end());
             	*/
-            ac_graph<
-                     std::vector<std::string>::const_iterator
-                    > ac(keywords.begin(), keywords.end());
+            ac_graph<char> ac(keywords.begin(), keywords.end());
 
             results<std::vector<std::string> > result(keywords);
 //            ac.search(*begin, *end, result);
@@ -87,13 +85,13 @@ TEST_F(InitDataAc , ac_add_list_str)
         //				char k_end   = td[i].keywords.end();
         
         ac_graph<
-                std::vector<std::string>::const_iterator
+									char
                 >
                 ac(td[i].keywords.begin(), td[i].keywords.end());
         		
         //				ac(std::string("data"),std::string("value"));
         results<std::vector<std::string> > result(td[i].keywords);
-        ac.search(input_tmp, end_input_tmp, result);
+        ac.search(&input_tmp, &end_input_tmp, result);
     }
 
 }

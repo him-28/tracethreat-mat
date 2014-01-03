@@ -8,15 +8,18 @@ using namespace controller;
 using namespace data_structure;
 
 //struct results<std::vector<std::string> >;
-
+/*
 typedef struct {
     std::vector<std::string> keywords;
     char const *input;
 } test_data;
+*/
 
-
+/*
 typedef std::vector<std::set<std::size_t> > (*test_function_t)(std::vector<std::string> const&, char const *, char const *);
+*/
 
+/*
 std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> const& keywords,
         char const *begin,
         char const  *end)
@@ -30,13 +33,13 @@ std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> co
             >
             ac(keywords.begin(), keywords.end());
     results<std::vector<std::string> > result(keywords);
-  //		*//
+  //		*/
  //   ac.search(begin, end, result);
-    return result.hits_;
+  //  return result.hits_;
 
-}
+//}
 
-static std::vector<test_function_t> test_functions = boost::assign::list_of(&ac_test_function);
+//static std::vector<test_function_t> test_functions = boost::assign::list_of(&ac_test_function);
 
 
 /*
@@ -57,7 +60,7 @@ static std::vector<test_function_t> test_functions = boost::assign::list_of(&ac_
 int main()
 {
 
-
+/*
     test_data td[1];
 
     td[0].keywords = boost::assign::list_of("he")("his")("her");
@@ -72,6 +75,8 @@ int main()
         }
 
     }
+
+*/
 
 /*   
         for(int i = 0; i  < 1; i++) {

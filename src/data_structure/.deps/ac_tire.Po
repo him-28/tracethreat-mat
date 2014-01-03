@@ -38,6 +38,16 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
  /usr/include/c++/4.6/bits/stl_vector.h \
  /usr/include/c++/4.6/bits/stl_bvector.h \
  /usr/include/c++/4.6/bits/vector.tcc /usr/include/c++/4.6/typeinfo \
+ /usr/include/c++/4.6/cstdio /usr/include/stdio.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio2.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/unordered_map.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/unordered/unordered_map.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/unordered/unordered_map_fwd.hpp \
@@ -47,14 +57,11 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/config/compiler/gcc.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/config/select_stdlib_config.hpp \
  /usr/include/c++/4.6/cstddef \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/config/no_tr1/utility.hpp \
  /usr/include/c++/4.6/utility /usr/include/c++/4.6/bits/stl_relops.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/config/stdlib/libstdcpp3.hpp \
  /usr/include/unistd.h /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
  /usr/include/x86_64-linux-gnu/bits/environments.h \
- /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
  /usr/include/x86_64-linux-gnu/bits/unistd.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/config/select_platform_config.hpp \
@@ -171,8 +178,6 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
  /usr/include/c++/4.6/ios /usr/include/c++/4.6/iosfwd \
  /usr/include/c++/4.6/bits/stringfwd.h \
  /usr/include/c++/4.6/bits/postypes.h /usr/include/c++/4.6/cwchar \
- /usr/include/wchar.h /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/wchar2.h \
  /usr/include/c++/4.6/bits/char_traits.h \
@@ -359,7 +364,6 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
  /usr/include/linux/limits.h \
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
- /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /home/chatsiri/workspacecpp/boost-truck/boost/cstdint.hpp \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
  /usr/include/c++/4.6/cstring /usr/include/string.h \
@@ -577,6 +581,32 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
 
 /usr/include/c++/4.6/typeinfo:
 
+/usr/include/c++/4.6/cstdio:
+
+/usr/include/stdio.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h:
+
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
+/usr/include/x86_64-linux-gnu/bits/typesizes.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
+
+/usr/include/x86_64-linux-gnu/bits/sys_errlist.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdio.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:
+
 /home/chatsiri/workspacecpp/boost-truck/boost/unordered_map.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/unordered/unordered_map.hpp:
@@ -595,8 +625,6 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
 
 /usr/include/c++/4.6/cstddef:
 
-/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h:
-
 /home/chatsiri/workspacecpp/boost-truck/boost/config/no_tr1/utility.hpp:
 
 /usr/include/c++/4.6/utility:
@@ -610,10 +638,6 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
 /usr/include/x86_64-linux-gnu/bits/posix_opt.h:
 
 /usr/include/x86_64-linux-gnu/bits/environments.h:
-
-/usr/include/x86_64-linux-gnu/bits/types.h:
-
-/usr/include/x86_64-linux-gnu/bits/typesizes.h:
 
 /usr/include/x86_64-linux-gnu/bits/confname.h:
 
@@ -868,12 +892,6 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
 /usr/include/c++/4.6/bits/postypes.h:
 
 /usr/include/c++/4.6/cwchar:
-
-/usr/include/wchar.h:
-
-/usr/include/stdio.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h:
 
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 
@@ -1268,8 +1286,6 @@ ac_tire.o: ac_tire.cpp ../../src/data_structure/ac_tire.hpp \
 /usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
 
 /usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/cstdint.hpp:
 

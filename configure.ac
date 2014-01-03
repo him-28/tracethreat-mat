@@ -17,7 +17,7 @@ AC_PROG_CC
 
 #check for program
 AC_LANG([C++])
-CFLAGS_CXX=-std=c++0x
+#CFLAGS_CXX=-std=c++0x
 
 #check header file
 AC_HEADER_STDC
