@@ -52,10 +52,10 @@ class InitDataAc : public ::testing::Test
                      std::vector<std::string>::const_iterator
                     > ac(keywords.begin(), keywords.end());
 
-            results<std::vector<std::string> > result(keywords);
-//            ac.search(*begin, *end, result);
-//            ac.search(begin, end, result);
 
+
+            results<std::vector<std::string> > result(keywords);
+            ac.search(*begin, *end, result);
             return result.hits_;
 
         }
@@ -86,8 +86,11 @@ TEST_F(InitDataAc , ac_add_list_str)
         //				char k_begin = td[i].keywords.begin();
         //				char k_end   = td[i].keywords.end();
         
-        ac_graph<
-                std::vector<std::string>::const_iterator
+        ac_graph<char,
+                std::vector<std::string>::const_iterator,
+                char,
+                std::string,
+                results<std::vector<std::string> >
                 >
                 ac(td[i].keywords.begin(), td[i].keywords.end());
         		

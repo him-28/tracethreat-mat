@@ -55,7 +55,8 @@ public:
 				*/
         for ( ; input_it != input_end; ++input_it, where_++)
         {
-            SymbolT const &input(*input_it);
+						//            SymbolT const &input(*input_it);
+            SymbolT const &input(input_it);
             {
                 state_t next;
                 while ((next = goto_(state_, input)) == AC_FAIL_STATE)

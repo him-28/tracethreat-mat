@@ -53,7 +53,6 @@ AC_CONFIG_FILES([src/wrapper/Makefile])
 AC_CONFIG_FILES([src/utils/Makefile])
 AC_CONFIG_FILES([src/exception/Makefile])
 AC_CONFIG_FILES([src/rules/Makefile])
-AC_CONFIG_FILES([src/rules/re_lexer/Makefile])
 AC_CONFIG_FILES([src/bin/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
