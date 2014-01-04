@@ -85,12 +85,9 @@ public:
         for ( ; input_it != input_end; ++input_it, where_++)
         {
 	
-	//					SymbolT const & input = *input_it;
-//            SymbolT const &input(*input_it);
             char const & input = *input_it;
             {
                 state_t next;
-								//char * input_tmp = const_cast<char*>(input);
                 while ((next = goto_(state_, input)) == AC_FAIL_STATE)
                     state_ = fail_(state_);
                 state_ = next;

@@ -13,63 +13,23 @@ class InitDataAc : public ::testing::Test
             std::vector<std::string> keywords;
             char const *input;
         } test_data;
-			/*
-        template<typename KeywordStoreT>
-        struct results {
-            results(KeywordStoreT const& keywords, bool summary = false)
-                : keywords_(keywords),
-                  hits_(keywords.size()),
-                  summary_(summary) {
 
-            }
-
-            void operator()(std::size_t what, std::size_t where) {
-
-                if(!summary_)
-                    std::cerr << "[" << where << "]" << keywords_[what] << std::endl;
-                else
-                    std::cerr << ".";
-
-                hits_[what].insert(where);
-            }
-            KeywordStoreT const& keywords_;
-            std::vector<std::set<std::size_t> > hits_;
-            bool summary_;
-
-        };
-		*/
-        // /*
         std::vector<std::set<std::size_t> > ac_test_function(std::vector<std::string> const& keywords,
                 char const *begin,
                 char const *end) {
-            /*
-            ac_graph<char,
-            std::vector<std::string>::const_iterator,
-            char,
-            results<std::vector<std::string> > > ac(keywords.begin(), keywords.end());
-            	*/
+
             ac_graph<char> ac(keywords.begin(), keywords.end());
 
             results<std::vector<std::string> > result(keywords);
-//            ac.search(*begin, *end, result);
-//            ac.search(begin, end, result);
-
+            ac.search(begin, end, result);
             return result.hits_;
 
         }
-        // */
 
         virtual void SetUp() {
-            td[0].keywords = boost::assign::list_of("he")("his")("her");
-            td[0].input    = "hi";
+            td[0].keywords = boost::assign::list_of("4bc647")("537db2e3a337");
+            td[0].input    = "a82a3f7daca1e4bc647c46d0dd553e637b06cc23547783ff91813d91fa3a197a63254331c0ac3c2189d138824797b800fdd73bdc8858081bb1e8e386a6033bc684454207b6997537db2e3a33711cd223db32ee49905a39a687bec057daa582a6a2b532e268b211a7529f4459b7102c2549e42d36344f53aece6b258f5904a4c0dec27dfbe8c61e9ee7885a57913cbf508322184e4b65";
 
-            for(int i = 0; i  < 1; i++) {
-                char *input_tmp = const_cast<char *>(&td[i].input[0]);
-                char *end_input_tmp = const_cast<char *>(&td[i].input[strlen(td[i].input)]);
-                ac_test_function(td[i].keywords,
-                        input_tmp,
-                        end_input_tmp);
-            }
         }
         test_data td[1];
 
@@ -78,6 +38,16 @@ class InitDataAc : public ::testing::Test
 
 TEST_F(InitDataAc , ac_add_list_str)
 {
+
+            for(int i = 0; i  < 1; i++) {
+                char *input_tmp = const_cast<char *>(&td[i].input[0]);
+                char *end_input_tmp = const_cast<char *>(&td[i].input[strlen(td[i].input)]);
+                ac_test_function(td[i].keywords,
+                        input_tmp,
+                        end_input_tmp);
+            }
+
+		/*
     for(int i = 0; i  < 1; i++) {
         char input_tmp = td[i].input[0];
         char end_input_tmp = td[i].input[strlen(td[i].input)];
@@ -93,5 +63,5 @@ TEST_F(InitDataAc , ac_add_list_str)
         results<std::vector<std::string> > result(td[i].keywords);
         ac.search(&input_tmp, &end_input_tmp, result);
     }
-
+		*/
 }
