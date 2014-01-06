@@ -59,8 +59,10 @@ namespace wrapper
     {
         logger->write_info("--Wrapper rules load, compiler create...");
 				int errors;
-        if(yr_compiler_create(&this->compiler) != ERROR_SUCCESS) {
-            return false;
+       // if(yr_compiler_create(&this->compiler) != ERROR_SUCCESS) {
+    if(yr_compiler_create(&compiler) != ERROR_SUCCESS) {
+ 
+          return false;
         }
 	
         return true;
@@ -74,8 +76,9 @@ namespace wrapper
 				int errors = 0;
         if(file_name_rules != NULL) {
 
-					typename Compiler::compiler_wrapper ** cw = &compiler;
-					errors = yr_compiler_push_file_name(this->compiler, file_name_rules);
+				//	typename Compiler::compiler_wrapper ** cw = &compiler;
+		//			errors = yr_compiler_push_file_name(this->compiler, file_name_rules);
+		  			errors = yr_compiler_push_file_name(compiler, file_name_rules);
 
 
 					if(errors == 0){
@@ -94,7 +97,8 @@ namespace wrapper
 				file_inf = new utility::file_handler<utility::common_filetype>();
 				file_inf->set_filepath(file_name_rule);
 				file_inf->file_read(); 
-				int error = yr_compiler_add_file(this->compiler, file_inf->get_file(), NULL);
+//				int error = yr_compiler_add_file(this->compiler, file_inf->get_file(), NULL);
+				int error = yr_compiler_add_file(compiler, file_inf->get_file(), NULL);
 
 				std::cout<<" Compiler addr : " << this->compiler <<std::endl;
 
