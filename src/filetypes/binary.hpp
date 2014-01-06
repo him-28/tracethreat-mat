@@ -10,6 +10,7 @@
 namespace hnmav_filetypes
 {
 
+		
 		struct binary_type{
 
 		};
