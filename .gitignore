@@ -53,3 +53,5 @@ log/
 !*.Po
 src/rules/.deps/*
 src/rules/.deps/
+tmp/
+tmp/*
