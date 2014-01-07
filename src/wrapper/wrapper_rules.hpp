@@ -43,7 +43,7 @@ namespace wrapper
     class iwrapper
     {
 						virtual void set_compiler(typename YARA_wrapper::compiler_wrapper * compiler) = 0;
-            virtual typename YARA_wrapper::compiler_wrapper * get_compiler() = 0;
+            virtual typename YARA_wrapper::compiler_wrapper * get_compiler()const = 0;
     };
 
     template<typename Compiler = struct YARA_wrapper>
@@ -52,16 +52,17 @@ namespace wrapper
         public:
             wrapper_rule_compiles();
             bool compile_rule(char **filerule);
-            typename Compiler::compiler_wrapper * get_compiler(){
+            typename Compiler::compiler_wrapper * get_compiler()const{
             //    boost::shared_ptr<typename Compiler::compiler_wrapper> c_ptr =  compiler_w_ptr[0];
 						//		std::cout<<" GET compiler : "<< c_ptr.get() <<std::endl;
-								return  compiler;// c_ptr.get();
+								return  this->compiler;// c_ptr.get();
             };
             typename Compiler::rules_wrapper * get_rules() {
 								boost::shared_ptr<typename Compiler::rules_wrapper>  r_ptr = rules_w_ptr[0];
-                return rules;//r_ptr.get();
+                return r_ptr.get();
             };
             bool wrapper_yr_rules_load(const char *filename, typename Compiler::rules_wrapper * rules);
+
 						bool wrapper_yr_compiler_create(typename Compiler::compiler_wrapper * compiler);
 
 						bool wrapper_yr_compiler_push_fn(typename Compiler::compiler_wrapper * compiler,

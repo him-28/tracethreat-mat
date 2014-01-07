@@ -57,11 +57,12 @@ namespace wrapper
         int errors;
 
 						std::cout<<" Compiler addr : " << compiler << ", This->compiler : " << this->compiler <<std::endl;
-
-        if(yr_compiler_create(&this->compiler) != ERROR_SUCCESS) {
+				/*&this->compiler */
+        if(yr_compiler_create(&compiler) != ERROR_SUCCESS) {
 
             return false;
         }
+				this->compiler = compiler;
 						std::cout<<"After Compiler addr : " << compiler << ", This->compiler : " << this->compiler <<std::endl;
 
         return true;
