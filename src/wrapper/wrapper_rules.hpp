@@ -56,7 +56,6 @@ namespace wrapper
 								return  this->compiler;
             };
             typename Compiler::rules_wrapper * get_rules() {
-								boost::shared_ptr<typename Compiler::rules_wrapper>  r_ptr = rules_w_ptr[0];
                 return this->rules;
             };
             bool wrapper_yr_rules_load(const char *filename, typename Compiler::rules_wrapper * rules);
