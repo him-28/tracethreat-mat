@@ -26,8 +26,6 @@ namespace wrapper
         logger = logger_ptr->get();
         logger->write_info("Wrapper-lib, Start... ", h_util::format_type::type_header);
 
-        boost::shared_ptr<typename Compiler::rules_wrapper> rules_ptr;
-        rules_w_ptr.push_back(rules_ptr);
     }
 
     template<typename Compiler>
@@ -36,10 +34,8 @@ namespace wrapper
             typename Compiler::rules_wrapper *rules)
     {
         int result;
-				std::cout<<"Rules addr : " << rules << ", &Rules addr : " << &rules <<std::endl;
         result = yr_rules_load(filename, &rules);
         logger->write_info("--Wrapper rules load, result : ", boost::lexical_cast<std::string>(result));
-				std::cout<<"After Rules addr : " << rules<<", &Rules addr : "<< &rules <<", This->rules : " << this->rules<<std::endl;
         if(result == ERROR_UNSUPPORTED_FILE_VERSION ||
                 result == ERROR_CORRUPT_FILE) {
             return false;
@@ -56,14 +52,12 @@ namespace wrapper
         logger->write_info("--Wrapper rules load, compiler create...");
         int errors;
 
-						std::cout<<" Compiler addr : " << compiler << ", This->compiler : " << this->compiler <<std::endl;
 				/*&this->compiler */
         if(yr_compiler_create(&compiler) != ERROR_SUCCESS) {
 
             return false;
         }
 				this->compiler = compiler;
-						std::cout<<"After Compiler addr : " << compiler << ", This->compiler : " << this->compiler <<std::endl;
 
         return true;
     }
@@ -76,10 +70,7 @@ namespace wrapper
         int errors = 0;
 
         if(file_name_rules != NULL) {
-						std::cout<<" Compiler addr : " << compiler <<std::endl;
             errors = yr_compiler_push_file_name(compiler, file_name_rules);
-						std::cout<<" After Compiler addr : " << compiler <<std::endl;
-
             if(errors == 0) {
                 return true;
             }
@@ -97,33 +88,27 @@ namespace wrapper
         file_inf = new utility::file_handler<utility::common_filetype>();
         file_inf->set_filepath(file_name_rule);
         file_inf->file_read();
-						std::cout<<" Compiler addr : " << compiler <<std::endl;
 
         int error = yr_compiler_add_file(compiler, file_inf->get_file(), NULL);
-						std::cout<<" After Compiler addr : " << compiler <<std::endl;
-
-       // std::cout<<" Compiler addr : " << this->compiler <<std::endl;
 
         if(error) return false;
 
         return true;
     }
 
-    
+/*    
     template<typename Compiler>
     bool wrapper_rule_compiles<Compiler>::wrapper_yr_compiler_get_rules(
     		typename Compiler::compiler_wrapper * compiler,
     						typename Compiler::rules_wrapper * rules)
     {
-    		std::cout<<" Rules addr : " << rules <<", Rules de addr : " << &rules <<"This->Rule : "<< this->rules <<std::endl;
-    		std::cout<<" Compiler addr : " << this->compiler <<std::endl;
 
     		if(!yr_compiler_get_rules(compiler, &this->rules)) return true;
     		return false;
 
     }
     
-
+*/
     template class wrapper_rule_compiles<YARA_wrapper>;
 
 }

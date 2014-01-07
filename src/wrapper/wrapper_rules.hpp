@@ -53,13 +53,11 @@ namespace wrapper
             wrapper_rule_compiles();
             bool compile_rule(char **filerule);
             typename Compiler::compiler_wrapper * get_compiler()const{
-            //    boost::shared_ptr<typename Compiler::compiler_wrapper> c_ptr =  compiler_w_ptr[0];
-						//		std::cout<<" GET compiler : "<< c_ptr.get() <<std::endl;
-								return  this->compiler;// c_ptr.get();
+								return  this->compiler;
             };
             typename Compiler::rules_wrapper * get_rules() {
 								boost::shared_ptr<typename Compiler::rules_wrapper>  r_ptr = rules_w_ptr[0];
-                return this->rules;// r_ptr.get();
+                return this->rules;
             };
             bool wrapper_yr_rules_load(const char *filename, typename Compiler::rules_wrapper * rules);
 
@@ -70,11 +68,11 @@ namespace wrapper
 						
 						bool wrapper_yr_compiler_add_file(typename Compiler::compiler_wrapper * compiler,
 								char const * rule_file);
-
-										
+							
+						/*			
 						bool wrapper_yr_compiler_get_rules(typename Compiler::compiler_wrapper * compiler, 
 								typename Compiler::rules_wrapper * rules);
-						
+						*/
 
 						void set_compiler(typename Compiler::compiler_wrapper * compiler){ 
 										this->compiler = compiler;
@@ -87,9 +85,6 @@ namespace wrapper
             typename Compiler::rules_wrapper *rules;
             typename Compiler::enternal_wrapper *external;
 
-						//vector handling shared_ptr
-						std::vector<boost::shared_ptr<typename Compiler::compiler_wrapper> >  compiler_w_ptr;
-						std::vector<boost::shared_ptr<typename Compiler::rules_wrapper> > rules_w_ptr;
             FILE *rule_file;
             char const *argv;
             int pid;
@@ -101,10 +96,6 @@ namespace wrapper
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
-
-						//boost::shared_ptr<typename Compiler::compiler_wrapper> * compiler_ptr;
-
-    				boost::shared_ptr<typename Compiler::compiler_wrapper> compiler_ptr;
 
     };
 
