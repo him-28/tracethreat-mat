@@ -36,9 +36,10 @@ namespace wrapper
             typename Compiler::rules_wrapper *rules)
     {
         int result;
-        result = yr_rules_load(filename, &this->rules);
+				std::cout<<"Rules addr : " << rules << ", &Rules addr : " << &rules <<std::endl;
+        result = yr_rules_load(filename, &rules /* &this->rules*/);
         logger->write_info("--Wrapper rules load, result : ", boost::lexical_cast<std::string>(result));
-
+				std::cout<<"After Rules addr : " << rules<<", &Rules addr : "<< &rules <<std::endl;
         if(result == ERROR_UNSUPPORTED_FILE_VERSION ||
                 result == ERROR_CORRUPT_FILE) {
             return false;
