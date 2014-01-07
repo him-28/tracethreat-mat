@@ -4,7 +4,7 @@ namespace data_structure
 {
 //using namespace std;
 //using namespace boost::assign;
-
+/*
 template <typename KeywordStoreT>
 struct results
 {
@@ -28,6 +28,7 @@ struct results
     std::vector<std::set<std::size_t> > hits_;
     bool summary_;
 };
+*/
 
 typedef std::vector<std::set<std::size_t> > (*test_function_t)
 (std::vector<std::string> const &, char const *, char const *);
