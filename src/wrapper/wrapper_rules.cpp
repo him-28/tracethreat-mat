@@ -37,9 +37,9 @@ namespace wrapper
     {
         int result;
 				std::cout<<"Rules addr : " << rules << ", &Rules addr : " << &rules <<std::endl;
-        result = yr_rules_load(filename, &rules /* &this->rules*/);
+        result = yr_rules_load(filename, &rules);
         logger->write_info("--Wrapper rules load, result : ", boost::lexical_cast<std::string>(result));
-				std::cout<<"After Rules addr : " << rules<<", &Rules addr : "<< &rules <<std::endl;
+				std::cout<<"After Rules addr : " << rules<<", &Rules addr : "<< &rules <<", This->rules : " << this->rules<<std::endl;
         if(result == ERROR_UNSUPPORTED_FILE_VERSION ||
                 result == ERROR_CORRUPT_FILE) {
             return false;
@@ -109,20 +109,20 @@ namespace wrapper
         return true;
     }
 
-    /*
+    
     template<typename Compiler>
     bool wrapper_rule_compiles<Compiler>::wrapper_yr_compiler_get_rules(
     		typename Compiler::compiler_wrapper * compiler,
     						typename Compiler::rules_wrapper * rules)
     {
-    		std::cout<<" Rules addr : " << rules <<", Rules de addr : " << &rules <<std::endl;
+    		std::cout<<" Rules addr : " << rules <<", Rules de addr : " << &rules <<"This->Rule : "<< this->rules <<std::endl;
     		std::cout<<" Compiler addr : " << this->compiler <<std::endl;
 
-    		if(!yr_compiler_get_rules(this->compiler, &this->rules)) return true;
+    		if(!yr_compiler_get_rules(compiler, &this->rules)) return true;
     		return false;
 
     }
-    */
+    
 
     template class wrapper_rule_compiles<YARA_wrapper>;
 

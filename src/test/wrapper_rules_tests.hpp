@@ -48,6 +48,7 @@ TEST_F(WrapperRuleCompilerTest, wrapper_yr_compiler_add_file)
 /*
 TEST_F(WrapperRuleCompilerTest, wrapper_yr_compiler_get_rules)
 {
-		EXPECT_EQ(wrapper_rc.wrapper_yr_compiler_get_rules(&wrapper_rc.get_compiler(),wrapper_rc.get_rules()), true);
+		EXPECT_EQ(wrapper_rc.wrapper_yr_compiler_get_rules(wrapper_rc.get_compiler(),wrapper_rc.get_rules()), true);
 }
 */
+
