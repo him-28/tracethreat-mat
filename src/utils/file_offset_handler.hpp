@@ -11,10 +11,10 @@ namespace util
     class pack_file_offset
     {
         public:
-						std::vector<int> 
+						std::vector<uint8_t> 
 
         private:
-            std::vector<std::string> offset;
+            std::vector<uint8_t> offset;
 						std::string  file_name;
     };
 

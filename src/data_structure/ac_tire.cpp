@@ -2,33 +2,6 @@
 
 namespace data_structure
 {
-//using namespace std;
-//using namespace boost::assign;
-/*
-template <typename KeywordStoreT>
-struct results
-{
-    results(KeywordStoreT const & keywords, bool summary = false)
-    :   keywords_(keywords),
-        hits_(keywords.size()),
-        summary_(summary)
-    {
-    }
-
-    void operator()(size_t what, size_t where)
-    {
-        if (!summary_)
-            std::cerr << "[" << where << "]" << keywords_[what] << std::endl;
-        else
-            std::cerr << ".";
-        hits_[what].insert(where);
-    }
-
-    KeywordStoreT const &keywords_;
-    std::vector<std::set<std::size_t> > hits_;
-    bool summary_;
-};
-*/
 
 typedef std::vector<std::set<std::size_t> > (*test_function_t)
 (std::vector<std::string> const &, char const *, char const *);
