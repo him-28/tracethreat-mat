@@ -13,12 +13,21 @@ extern "C"{
 
 
 class PFRing{
-
 public:
 
+inline int add_filtering_rule(filtering_rule  * rule);
 
 private:
+pfring * ring;
+char * device_name;
 
 };
+
+inline int RFRing::add_filtering_rule(filtering_rule * rule)
+{
+
+
+}
+
 
 #endif /*PRRING_HANDLER_HPP */
