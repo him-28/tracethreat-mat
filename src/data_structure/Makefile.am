@@ -9,7 +9,7 @@ lib_LIBRARIES = libdstr.a
 libdstr_adir = $(includedir)/data_structure
 
 #Header
-libdstr_a_HEADERS = ac_tire.hpp
+libdstr_a_HEADERS = ac_tire.hpp gotofn_ocl.hpp
 
 # library
 libdstr_a_SOURCES = $(libdstr_a_HEADERS) ac_tire.cpp
