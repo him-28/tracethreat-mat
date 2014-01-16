@@ -1,159 +1,143 @@
 #ifndef PE__HPP
 #define PE__HPP
-/* Sourefile license 
- * Copyright: Alberto Wu, Tomasz Kojm
- * */
 
-#ifndef __PE_H
-#define __PE_H
 
-#include "clamav.h"
-#include "execs.h"
-#include "others.h"
-#include "cltypes.h"
-#include "fmap.h"
-#include "bcfeatures.h"
-/** @file */
 /** Header for this PE file
  *   \group_pe */
+
+typedef uint8_t  BYTE;
+typedef uint16_t WORD;
+typedef uint32_t DWORD;
+typedef int32_t  LONG;
+typedef uint32_t ULONG;
+
 struct pe_image_file_hdr {
-    uint32_t Magic;  /**< PE magic header: PE\\0\\0 */
-    uint16_t Machine;/**< CPU this executable runs on, see libclamav/pe.c for possible values */
-    uint16_t NumberOfSections;/**< Number of sections in this executable */
-    uint32_t TimeDateStamp;   /**< Unreliable */
-    uint32_t PointerToSymbolTable;	    /**< debug */
-    uint32_t NumberOfSymbols;		    /**< debug */
-    uint16_t SizeOfOptionalHeader;	    /**< == 224 */
-    uint16_t Characteristics;
+    DWORD Magic;  /**< PE magic header: PE\\0\\0 */
+    WORD Machine;/**< CPU this executable runs on, see libclamav/pe.c for possible values */
+    WORD NumberOfSections;/**< Number of sections in this executable */
+    DWORD TimeDateStamp;   /**< Unreliable */
+    DWORD PointerToSymbolTable;	    /**< debug */
+    DWORD NumberOfSymbols;		    /**< debug */
+    WORD SizeOfOptionalHeader;	    /**< == 224 */
+    WORD Characteristics;
 };
 
 /** PE data directory header
  *   \group_pe */
 struct pe_image_data_dir {
-    uint32_t VirtualAddress;
-    uint32_t Size;
+    DWORD VirtualAddress;
+    DWORD Size;
 };
 
 /** 32-bit PE optional header
  *   \group_pe */
 struct pe_image_optional_hdr32 {
-    uint16_t Magic;
-    uint8_t  MajorLinkerVersion;		    /**< unreliable */
-    uint8_t  MinorLinkerVersion;		    /**< unreliable */
-    uint32_t SizeOfCode;			    /**< unreliable */
-    uint32_t SizeOfInitializedData;		    /**< unreliable */
-    uint32_t SizeOfUninitializedData;		    /**< unreliable */
-    uint32_t AddressOfEntryPoint;
-    uint32_t BaseOfCode;
-    uint32_t BaseOfData;
-    uint32_t ImageBase;				    /**< multiple of 64 KB */
-    uint32_t SectionAlignment;			    /**< usually 32 or 4096 */
-    uint32_t FileAlignment;			    /**< usually 32 or 512 */
-    uint16_t MajorOperatingSystemVersion;	    /**< not used */
-    uint16_t MinorOperatingSystemVersion;	    /**< not used */
-    uint16_t MajorImageVersion;			    /**< unreliable */
-    uint16_t MinorImageVersion;			    /**< unreliable */
-    uint16_t MajorSubsystemVersion;
-    uint16_t MinorSubsystemVersion;
-    uint32_t Win32VersionValue;			    /*< ? */
-    uint32_t SizeOfImage;
-    uint32_t SizeOfHeaders;
-    uint32_t CheckSum;				    /**< NT drivers only */
-    uint16_t Subsystem;
-    uint16_t DllCharacteristics;
-    uint32_t SizeOfStackReserve;
-    uint32_t SizeOfStackCommit;
-    uint32_t SizeOfHeapReserve;
-    uint32_t SizeOfHeapCommit;
-    uint32_t LoaderFlags;			    /*< ? */
-    uint32_t NumberOfRvaAndSizes;		    /**< unreliable */
+    WORD Magic;
+    BYPE  MajorLinkerVersion;		    /**< unreliable */
+    BYPE  MinorLinkerVersion;		    /**< unreliable */
+    DWORD SizeOfCode;			    /**< unreliable */
+    DWORD SizeOfInitializedData;		    /**< unreliable */
+    DWORD SizeOfUninitializedData;		    /**< unreliable */
+    DWORD AddressOfEntryPoint;
+    DWORD BaseOfCode;
+    DWORD BaseOfData;
+    DWORD ImageBase;				    /**< multiple of 64 KB */
+    DWORD SectionAlignment;			    /**< usually 32 or 4096 */
+    DWORD FileAlignment;			    /**< usually 32 or 512 */
+    WORD MajorOperatingSystemVersion;	    /**< not used */
+    WORD MinorOperatingSystemVersion;	    /**< not used */
+    WORD MajorImageVersion;			    /**< unreliable */
+    WORD MinorImageVersion;			    /**< unreliable */
+    WORD MajorSubsystemVersion;
+    WORD MinorSubsystemVersion;
+    DWORD Win32VersionValue;			    /*< ? */
+    DWORD SizeOfImage;
+    DWORD SizeOfHeaders;
+    DWORD CheckSum;				    /**< NT drivers only */
+    WORD Subsystem;
+    WORD DllCharacteristics;
+    DWORD SizeOfStackReserve;
+    DWORD SizeOfStackCommit;
+    DWORD SizeOfHeapReserve;
+    DWORD SizeOfHeapCommit;
+    DWORD LoaderFlags;			    /*< ? */
+    DWORD NumberOfRvaAndSizes;		    /**< unreliable */
     struct pe_image_data_dir DataDirectory[16];
 };
 
 /** PE 64-bit optional header
  *   \group_pe */
 struct pe_image_optional_hdr64 {
-    uint16_t Magic;
-    uint8_t  MajorLinkerVersion;		    /**< unreliable */
-    uint8_t  MinorLinkerVersion;		    /**< unreliable */
-    uint32_t SizeOfCode;			    /**< unreliable */
-    uint32_t SizeOfInitializedData;		    /**< unreliable */
-    uint32_t SizeOfUninitializedData;		    /**< unreliable */
-    uint32_t AddressOfEntryPoint;
-    uint32_t BaseOfCode;
+    WORD Magic;
+    BYPE  MajorLinkerVersion;		    /**< unreliable */
+    BYPE  MinorLinkerVersion;		    /**< unreliable */
+    DWORD SizeOfCode;			    /**< unreliable */
+    DWORD SizeOfInitializedData;		    /**< unreliable */
+    DWORD SizeOfUninitializedData;		    /**< unreliable */
+    DWORD AddressOfEntryPoint;
+    DWORD BaseOfCode;
     uint64_t ImageBase;				    /**< multiple of 64 KB */
-    uint32_t SectionAlignment;			    /**< usually 32 or 4096 */
-    uint32_t FileAlignment;			    /**< usually 32 or 512 */
-    uint16_t MajorOperatingSystemVersion;	    /**< not used */
-    uint16_t MinorOperatingSystemVersion;	    /**< not used */
-    uint16_t MajorImageVersion;			    /**< unreliable */
-    uint16_t MinorImageVersion;			    /**< unreliable */
-    uint16_t MajorSubsystemVersion;
-    uint16_t MinorSubsystemVersion;
-    uint32_t Win32VersionValue;			    /* ? */
-    uint32_t SizeOfImage;
-    uint32_t SizeOfHeaders;
-    uint32_t CheckSum;				    /**< NT drivers only */
-    uint16_t Subsystem;
-    uint16_t DllCharacteristics;
+    DWORD SectionAlignment;			    /**< usually 32 or 4096 */
+    DWORD FileAlignment;			    /**< usually 32 or 512 */
+    WORD MajorOperatingSystemVersion;	    /**< not used */
+    WORD MinorOperatingSystemVersion;	    /**< not used */
+    WORD MajorImageVersion;			    /**< unreliable */
+    WORD MinorImageVersion;			    /**< unreliable */
+    WORD MajorSubsystemVersion;
+    WORD MinorSubsystemVersion;
+    DWORD Win32VersionValue;			    /* ? */
+    DWORD SizeOfImage;
+    DWORD SizeOfHeaders;
+    DWORD CheckSum;				    /**< NT drivers only */
+    WORD Subsystem;
+    WORD DllCharacteristics;
     uint64_t SizeOfStackReserve;
     uint64_t SizeOfStackCommit;
     uint64_t SizeOfHeapReserve;
     uint64_t SizeOfHeapCommit;
-    uint32_t LoaderFlags;			    /* ? */
-    uint32_t NumberOfRvaAndSizes;		    /**< unreliable */
+    DWORD LoaderFlags;			    /* ? */
+    DWORD NumberOfRvaAndSizes;		    /**< unreliable */
     struct pe_image_data_dir DataDirectory[16];
 };
 
 /** PE section header
  *   \group_pe */
+#define IMAGE_SIZEOF_SHORT_NAME 8 
 struct pe_image_section_hdr {
-    uint8_t Name[8];			    /**< may not end with NULL */
-    /*
- *     union {
- *     	uint32_t PhysicalAddress;
- *     		uint32_t VirtualSize;
- *     		    } AddrSize;
- *     		        */
-    uint32_t VirtualSize;
-    uint32_t VirtualAddress;
-    uint32_t SizeOfRawData;		    /**< multiple of FileAlignment */
-    uint32_t PointerToRawData;		    /**< offset to the section's data */
-    uint32_t PointerToRelocations;	    /**< object files only */
-    uint32_t PointerToLinenumbers;	    /**< object files only */
-    uint16_t NumberOfRelocations;	    /**< object files only */
-    uint16_t NumberOfLinenumbers;	    /**< object files only */
-    uint32_t Characteristics;
+    BYPE Name[IMAGE_SIZEOF_SHORT_NAME];			    /**< may not end with NULL */
+
+		union{ 
+			DWORD PhysicalAddress;
+			DWORD VirtualSize;
+		}Misc;
+
+    DWORD VirtualSize;
+    DWORD VirtualAddress;
+    DWORD SizeOfRawData;		    /**< multiple of FileAlignment */
+    DWORD PointerToRawData;		    /**< offset to the section's data */
+    DWORD PointerToRelocations;	    /**< object files only */
+    DWORD PointerToLinenumbers;	    /**< object files only */
+    WORD NumberOfRelocations;	    /**< object files only */
+    WORD NumberOfLinenumbers;	    /**< object files only */
+    DWORD Characteristics;
 };
 
 /** Data for the bytecode PE hook
  *   \group_pe */
 struct cli_pe_hook_data {
-  uint32_t offset;
-  uint32_t ep; /**< EntryPoint as file offset */
-  uint16_t nsections;/**< Number of sections */
-  uint16_t dummy; /* align */
+  DWORD offset;
+  DWORD ep; /**< EntryPoint as file offset */
+  WORD nsections;/**< Number of sections */
+  WORD dummy; /* align */
   struct pe_image_file_hdr file_hdr;/**< Header for this PE file */
   struct pe_image_optional_hdr32 opt32; /**< 32-bit PE optional header */
-  uint32_t dummy2; /* align */
+  DWORD dummy2; /* align */
   struct pe_image_optional_hdr64 opt64;/**< 64-bit PE optional header */
   struct pe_image_data_dir dirs[16]; /**< PE data directory header */
-  uint32_t e_lfanew;/**< address of new exe header */
-  uint32_t overlays;/**< number of overlays */
-  int32_t overlays_sz;/**< size of overlays */
-  uint32_t hdr_size;/**< internally needed by rawaddr */
+  DWORD e_lfanew;/**< address of new exe header */
+  DWORD overlays;/**< number of overlays */
+  LONG overlays_sz;/**< size of overlays */
+  DWORD hdr_size;/**< internally needed by rawaddr */
 };
-
-/*
-int cli_scanpe(cli_ctx *ctx);
-
-int cli_peheader(fmap_t *map, struct cli_exe_info *peinfo);
-int cli_checkfp_pe(cli_ctx *ctx, uint8_t *authsha1);
-
-uint32_t cli_rawaddr(uint32_t, const struct cli_exe_section *, uint16_t, unsigned int *, size_t, uint32_t);
-void findres(uint32_t, uint32_t, uint32_t, fmap_t *map, struct cli_exe_section *, uint16_t, uint32_t, int (*)(void *, uint32_t, uint32_t, uint32_t, uint32_t), void *);
-*/
-
-#endif
 
 #endif
