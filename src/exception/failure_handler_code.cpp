@@ -15,7 +15,7 @@ namespace error
 			if( ev == thread_notfile->value()) return std::string("Thread not file scanning");
 			if( ev == thread_cannot_connect_ocl->value()) return std::string("Thread haven't ocl");
 			if( ev == file_is_null->value()) return std::string("File is not path or null");
-			return std::string("Thread system unknow error");
+			return std::string("Error codes don't supported system.");
 	
 	}
 

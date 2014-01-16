@@ -6,7 +6,7 @@
  *  --option system  exception                                           Chatsiri.rat                   18/11/2012
  *  --cl utility exception                                               Chatsiri.rat                   26/11/2012
  *  --Changed Base to System exception name                              Chatsiri.rat                   26/11/2012
- *  --Separate sub type 
+ *  --Separate sub type
  *         system : package system all
  *         cl     : opencl all
  */
@@ -120,8 +120,8 @@ namespace hnmav_exception
 
     }
 
-		namespace file_system
-		{
+    namespace file_system
+    {
 
         class error_code_entry
         {
@@ -134,26 +134,42 @@ namespace hnmav_exception
                 failure_handler<ErrorController, int> failure_h;
         };
 
-        /**
-        * @brief Error code defines in exception/exception_code.hpp. 
-        * Member funciton gets invalid code of 0 - 10
-        *
-        * @param error_cnumber  Define error code.
-        *
-        * @return DS_INVAILD_XXX ( XXX means size, value ,.etc ) return code meaning.
-        */
         std::string error_code_entry::get_error_cnumber(int error_cnumber)
         {
-            g_error_code.set_error_cnumber(error_cnumber);
-            return g_error_code.get_msg_error();
+            if(error_cnumber == FILE_IS_NULL)
+                return failure_h.message(failure.message(failure_h.file_is_null->value()));
         }
 
-				class offset_exception : public system_exception{
+        class offset_exception : public system_exception
+        {
+            public:
+                offset_exception(std::string type_name) throw() : type_name_(type_name) { }
 
+                const char *what() const throw() {
+                    std::string error_default = "Error default, Offset Exception ";
+                    return  error_default.c_str();
+                }
 
-				};
-			
-		}
+                const char *process_name() const {
+                    std::string name = "Offset exception";
+                    return name.c_str();
+                }
+                // Data structure size
+                std::string message_error_size_initial() {
+                    return type_name_.append(error_codetype.get_error_cnumber( DS_INVAILD_SIZE  ));
+                }
+
+                std::string message_at_error_size() {
+                    return type_name_.append(error_codetype.get_error_cnumber( AT_INVALID_SIZE ));
+                }
+
+                ~offset_exception() throw() {}
+            private:
+                std::string type_name_;
+                error_code_entry  error_codetype;
+        };
+
+    }
 
 }
 
