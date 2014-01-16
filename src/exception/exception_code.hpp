@@ -9,8 +9,12 @@
 //STL
 #include <map>
 
+//container exception.
 #define  DS_INVAILD_SIZE   0
 #define  DS_INVAILD_VALUE -1
+
+//file system exception.
+#define  FILENAME_IS_NULL -2
 
 // Algorithms internal codes.
 #define  AT_INVALID_SIZE -100

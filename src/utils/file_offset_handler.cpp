@@ -21,16 +21,28 @@ void  file_offset_handler<FileType, MAPPED_FILE>::mapped_file(std::list<std::str
 {
     std::list<std::string>::iterator iter_files;
     std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
-		boost::shared_ptr<std::vector<MAPPED_FILE*> > mapped_file_vec_shared_ptr(mapped_vec_);
+    boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_file_vec_shared_ptr(mapped_vec_);
 
     for(iter_files = file_name.begin();
             iter_file != file_name.end();
             ++iter_file) {
-				ifh = new  
+
+        try {
+
+
+        } catch() {
+
+
+        }
+
+        if(set_filepath(*ite_file)) {
+
+        }
+
         for(iter_mapped_files = mapped_vec.begin();
                 iter_mapped_files != mapped_vec.end();
                 ++iter_mapped_files) {
-								
+
         }
     }
 

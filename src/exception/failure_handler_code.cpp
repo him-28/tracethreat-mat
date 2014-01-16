@@ -14,6 +14,7 @@ namespace error
 	{		
 			if( ev == thread_notfile->value()) return std::string("Thread not file scanning");
 			if( ev == thread_cannot_connect_ocl->value()) return std::string("Thread haven't ocl");
+			if( ev == file_is_null->value()) return std::string("File is not path or null");
 			return std::string("Thread system unknow error");
 	
 	}
@@ -24,6 +25,7 @@ namespace error
 		// rch:- issure with create singleton
 		//	if(thread_notfile == NULL){
 				this->thread_notfile = new boost::system::error_code(THREAD_NOT_FILE,*fh);
+				this->file_is_null   = new boost::system::error_code(FILE_IS_NULL, *fh);
 		//	}
 	}		
 

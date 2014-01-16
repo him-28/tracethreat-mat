@@ -27,6 +27,8 @@
 #include <string>
 #include <iostream>
 
+#include "exception/failure_handler_code.hpp"
+
 namespace hnmav_exception
 {
     using namespace boost;
@@ -118,6 +120,40 @@ namespace hnmav_exception
 
     }
 
+		namespace file_system
+		{
+
+        class error_code_entry
+        {
+
+            public:
+                error_code_entry() {  }
+                std::string get_error_cnumber(int  error_cnumber);
+            private:
+                int error_cnumber_;
+                failure_handler<ErrorController, int> failure_h;
+        };
+
+        /**
+        * @brief Error code defines in exception/exception_code.hpp. 
+        * Member funciton gets invalid code of 0 - 10
+        *
+        * @param error_cnumber  Define error code.
+        *
+        * @return DS_INVAILD_XXX ( XXX means size, value ,.etc ) return code meaning.
+        */
+        std::string error_code_entry::get_error_cnumber(int error_cnumber)
+        {
+            g_error_code.set_error_cnumber(error_cnumber);
+            return g_error_code.get_msg_error();
+        }
+
+				class offset_exception : public system_exception{
+
+
+				};
+			
+		}
 
 }
 

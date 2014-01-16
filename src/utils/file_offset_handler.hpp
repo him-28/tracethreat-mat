@@ -73,7 +73,6 @@ namespace util
 
             ifile<common_filetype> *ifh;
 						std::vector<MAPPED_FILE*>  * mapped_vec_;
-						shared_ptr<std::vector<MAPPED_FILE*> > mapped_file_vec_shared_ptr;
     };
 
 

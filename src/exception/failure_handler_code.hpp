@@ -13,6 +13,11 @@ namespace error
         THREAD_CANNOT_CONNECT_OCL = 120
     };
 
+		enum file_system_error{
+				FILE_IS_NULL = 210,
+				FLIE_NO_PATH = 220
+		};
+
     class ErrorController
     {
 
@@ -49,8 +54,11 @@ namespace error
             //	~exception() throw(){ }
             ~failure_handler() throw();
 
+						// thread error code
             const boost::system::error_code *thread_notfile;
             const boost::system::error_code *thread_cannot_connect_ocl;
+						// file system error code
+						const boost::system::error_code *file_is_null;
 
         private:
             //ErrorController failure_category;
