@@ -1,4 +1,5 @@
 #include "exception/failure_handler_code.hpp"
+#include "exception/system_exception.hpp"
 
 using namespace error;
 

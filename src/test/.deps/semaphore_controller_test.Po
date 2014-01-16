@@ -1330,14 +1330,33 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /usr/include/c++/4.6/bits/fstream.tcc \
  ../../src/test/thread_exception_test.hpp \
  ../../src/exception/failure_handler_code.hpp \
- ../../src/test/thread_barrier_controller_test.hpp \
- ../../src/test/thread_sync_test.hpp \
- ../../src/threadsyncocl/thread_sync.hpp \
+ ../../src/exception/system_exception.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/all.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/error_info.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/info_tuple.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/tuple/detail/tuple_basic.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/cv_traits.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_cv.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_volatile.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_api_function.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_at_line.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_errno.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_handle.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_name.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_open_mode.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_type_info_name.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_nested_exception.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/filesystem.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/filesystem/operations.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/detail/bitmask.hpp \
+ /usr/include/c++/4.6/stack /usr/include/c++/4.6/bits/stl_stack.h \
+ /home/chatsiri/workspacecpp/boost-truck/boost/filesystem/convenience.hpp \
+ /home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple_io.hpp \
+ ../../src/exception/exception_code.hpp \
+ ../../src/test/thread_barrier_controller_test.hpp \
+ ../../src/test/thread_sync_test.hpp \
+ ../../src/threadsyncocl/thread_sync.hpp \
  ../../src/utils/config/options_system.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/program_options.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/program_options/options_description.hpp \
@@ -1355,24 +1374,6 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/program_options/detail/convert.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/program_options/variables_map.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/program_options/version.hpp \
- ../../src/exception/system_exception.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/all.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/error_info.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/info_tuple.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_api_function.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_at_line.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_errno.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_handle.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_name.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_open_mode.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_type_info_name.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_nested_exception.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/filesystem.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/filesystem/operations.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/detail/bitmask.hpp \
- /usr/include/c++/4.6/stack /usr/include/c++/4.6/bits/stl_stack.h \
- /home/chatsiri/workspacecpp/boost-truck/boost/filesystem/convenience.hpp \
- /home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple_io.hpp \
  ../../src/test/ac_tire_test.hpp ../../src/data_structure/ac_tire.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/unordered_map.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/unordered/unordered_map.hpp \
@@ -1392,6 +1393,7 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/unordered/detail/unique.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/assign/list_of.hpp \
  /home/chatsiri/workspacecpp/boost-truck/boost/assign/assignment_exception.hpp \
+ ../../src/test/system_exception_test.hpp \
  ../../src/test/wrapper_rules_tests.hpp \
  ../../src/wrapper/wrapper_rules.hpp ../../src/rules/yara.h \
  ../../src/utils/file_handler.hpp ../../src/filetypes/binary.hpp \
@@ -4167,11 +4169,13 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 
 ../../src/exception/failure_handler_code.hpp:
 
-../../src/test/thread_barrier_controller_test.hpp:
+../../src/exception/system_exception.hpp:
 
-../../src/test/thread_sync_test.hpp:
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/all.hpp:
 
-../../src/threadsyncocl/thread_sync.hpp:
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/error_info.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/info_tuple.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple.hpp:
 
@@ -4182,6 +4186,44 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/add_cv.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/type_traits/remove_volatile.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_api_function.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_at_line.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_errno.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_handle.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_name.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_open_mode.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_type_info_name.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_nested_exception.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/filesystem.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/filesystem/operations.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/detail/bitmask.hpp:
+
+/usr/include/c++/4.6/stack:
+
+/usr/include/c++/4.6/bits/stl_stack.h:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/filesystem/convenience.hpp:
+
+/home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple_io.hpp:
+
+../../src/exception/exception_code.hpp:
+
+../../src/test/thread_barrier_controller_test.hpp:
+
+../../src/test/thread_sync_test.hpp:
+
+../../src/threadsyncocl/thread_sync.hpp:
 
 ../../src/utils/config/options_system.hpp:
 
@@ -4216,44 +4258,6 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/program_options/variables_map.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/program_options/version.hpp:
-
-../../src/exception/system_exception.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/all.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/error_info.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/info_tuple.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_api_function.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_at_line.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_errno.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_handle.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_name.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_file_open_mode.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_type_info_name.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/exception/errinfo_nested_exception.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/filesystem.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/filesystem/operations.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/detail/bitmask.hpp:
-
-/usr/include/c++/4.6/stack:
-
-/usr/include/c++/4.6/bits/stl_stack.h:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/filesystem/convenience.hpp:
-
-/home/chatsiri/workspacecpp/boost-truck/boost/tuple/tuple_io.hpp:
 
 ../../src/test/ac_tire_test.hpp:
 
@@ -4294,6 +4298,8 @@ semaphore_controller_test.o: semaphore_controller_test.cpp \
 /home/chatsiri/workspacecpp/boost-truck/boost/assign/list_of.hpp:
 
 /home/chatsiri/workspacecpp/boost-truck/boost/assign/assignment_exception.hpp:
+
+../../src/test/system_exception_test.hpp:
 
 ../../src/test/wrapper_rules_tests.hpp:
 

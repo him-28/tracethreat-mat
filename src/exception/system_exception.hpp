@@ -28,10 +28,14 @@
 #include <iostream>
 
 #include "exception/failure_handler_code.hpp"
+// Internal code
+#include "exception/exception_code.hpp"
 
 namespace hnmav_exception
 {
     using namespace boost;
+    using namespace error;
+
     //________________________ Base virtual abstract ________________________________//
     class system_exception : public std::exception,  exception
     {
@@ -131,19 +135,26 @@ namespace hnmav_exception
                 std::string get_error_cnumber(int  error_cnumber);
             private:
                 int error_cnumber_;
-                failure_handler<ErrorController, int> failure_h;
         };
 
         std::string error_code_entry::get_error_cnumber(int error_cnumber)
         {
-            if(error_cnumber == FILE_IS_NULL)
-                return failure_h.message(failure.message(failure_h.file_is_null->value()));
+            failure_handler<ErrorController, int> failure_h;
+						failure_h.failure_handler_init(); // work around cannot use constructor to init 
+						boost::system::error_code ec(error_cnumber, failure_h);
+
+						if(error_cnumber == failure_h.file_is_null->value()){
+								return failure_h.message_detail(ec.value());
+						}
+						return std::string("No error code supported");
         }
 
         class offset_exception : public system_exception
         {
             public:
-                offset_exception(std::string type_name) throw() : type_name_(type_name) { }
+                offset_exception(std::string type_name) throw() : type_name_(type_name) {
+
+                }
 
                 const char *what() const throw() {
                     std::string error_default = "Error default, Offset Exception ";
@@ -155,18 +166,15 @@ namespace hnmav_exception
                     return name.c_str();
                 }
                 // Data structure size
-                std::string message_error_size_initial() {
-                    return type_name_.append(error_codetype.get_error_cnumber( DS_INVAILD_SIZE  ));
-                }
-
-                std::string message_at_error_size() {
-                    return type_name_.append(error_codetype.get_error_cnumber( AT_INVALID_SIZE ));
+                std::string message_error_file_is_null() {
+                    return type_name_.append(error_codetype.get_error_cnumber(FILE_IS_NULL));
                 }
 
                 ~offset_exception() throw() {}
             private:
                 std::string type_name_;
                 error_code_entry  error_codetype;
+
         };
 
     }

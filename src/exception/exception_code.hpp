@@ -21,6 +21,7 @@
 
 namespace hnmav_exception
 {
+    using namespace boost;
 
     class gen_error_code;
 

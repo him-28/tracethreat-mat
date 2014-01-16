@@ -6,7 +6,7 @@
 #include "test/thread_barrier_controller_test.hpp"
 #include "test/thread_sync_test.hpp"
 #include "test/ac_tire_test.hpp"
-
+#include "test/system_exception_test.hpp"
 
 //#include "rules/yara.h"
 //#include "rules/re.h"

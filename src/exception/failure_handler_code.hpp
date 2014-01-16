@@ -41,13 +41,17 @@ namespace error
     {
         public:
 
-            failure_handler();
+            void failure_handler_init();
 
             void error_code(ErrorCode& error)const;
             ErrorController& error_detect()const;
 
             const char *name()const;
+
             std::string message(int ev)const;
+
+            std::string message_detail(int ev)const;
+
             boost::system::error_condition default_error_condition(int ev) const;
 
             const char *what() const throw();
