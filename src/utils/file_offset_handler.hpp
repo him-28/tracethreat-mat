@@ -6,20 +6,10 @@
 
 #define FILE_DESCRIPTOR  int
 
+#include "filetypes/pe.hpp"
 
 namespace util
 {
-    struct MAPPED_FILE_PE {
-        FILE_DESCRIPTOR   file;
-        size_t            size;
-        uint8_t 					*data;
-    };
-
-    struct MAMORY_BLOCK_PE {
-        unsigned char *data;
-        size_t				 	size;
-        size_t					base;
-    };
 
     template<typename  MAPPED_FILE = struct MAPPED_FILE_PE,
              typename MEMORY_BLOCK = struct MEMORY_BLOCK_PE>
@@ -68,11 +58,22 @@ namespace util
             */
             std::vector<pack_file_offset>  offset_perfile()const;
 
+            /**
+            * @brief
+            *
+            * @param file_name input file name or directory file.
+            * @param mapped_vec structure MAPPED_FILE type container.
+            *
+            * @return success init file mapped.
+            */
+            void mapped_file(std::list<std::string> file_name,
+                    std::vector<MAPPED_FILE *> mapped_vec);
 
         private:
 
             ifile<common_filetype> *ifh;
-
+						std::vector<MAPPED_FILE*>  * mapped_vec_;
+						shared_ptr<std::vector<MAPPED_FILE*> > mapped_file_vec_shared_ptr;
     };
 
 

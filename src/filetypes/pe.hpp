@@ -11,6 +11,47 @@ typedef uint32_t DWORD;
 typedef int32_t  LONG;
 typedef uint32_t ULONG;
 
+
+#define FIELD_OFFSET(type, field)    ((size_t)&(((type *)0)->field))
+
+#define IMAGE_FIRST_SECTION( ntheader ) ((PIMAGE_SECTION_HEADER)        \
+    ((BYTE*)ntheader +                                              \
+     FIELD_OFFSET( IMAGE_NT_HEADERS, OptionalHeader ) +                 \
+     ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader   \
+    ))
+
+
+#define IMAGE_SIZEOF_FILE_HEADER             20
+
+
+#define IMAGE_FILE_RELOCS_STRIPPED           0x0001  // Relocation info stripped from file.
+#define IMAGE_FILE_EXECUTABLE_IMAGE          0x0002  // File is executable  (i.e. no unresolved externel references).
+#define IMAGE_FILE_LINE_NUMS_STRIPPED        0x0004  // Line nunbers stripped from file.
+#define IMAGE_FILE_LOCAL_SYMS_STRIPPED       0x0008  // Local symbols stripped from file.
+#define IMAGE_FILE_AGGRESIVE_WS_TRIM         0x0010  // Agressively trim working set
+#define IMAGE_FILE_LARGE_ADDRESS_AWARE       0x0020  // App can handle >2gb addresses
+#define IMAGE_FILE_BYTES_REVERSED_LO         0x0080  // Bytes of machine word are reversed.
+#define IMAGE_FILE_32BIT_MACHINE             0x0100  // 32 bit word machine.
+#define IMAGE_FILE_DEBUG_STRIPPED            0x0200  // Debugging info stripped from file in .DBG file
+#define IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP   0x0400  // If Image is on removable media, copy and run from the swap file.
+#define IMAGE_FILE_NET_RUN_FROM_SWAP         0x0800  // If Image is on Net, copy and run from the swap file.
+#define IMAGE_FILE_SYSTEM                    0x1000  // System File.
+#define IMAGE_FILE_DLL                       0x2000  // File is a DLL.
+#define IMAGE_FILE_UP_SYSTEM_ONLY            0x4000  // File should only be run on a UP machine
+#define IMAGE_FILE_BYTES_REVERSED_HI         0x8000  // Bytes of machine word are reversed.
+
+
+#define IMAGE_FILE_MACHINE_I386              0x014c  // Intel 386.
+
+#define IMAGE_SUBSYSTEM_UNKNOWN              0   // Unknown subsystem.
+#define IMAGE_SUBSYSTEM_NATIVE               1   // Image doesn't require a subsystem.
+#define IMAGE_SUBSYSTEM_WINDOWS_GUI          2   // Image runs in the Windows GUI subsystem.
+#define IMAGE_SUBSYSTEM_WINDOWS_CUI          3   // Image runs in the Windows character subsystem.
+#define IMAGE_SUBSYSTEM_OS2_CUI              5   // image runs in the OS/2 character subsystem.
+#define IMAGE_SUBSYSTEM_POSIX_CUI            7   // image runs in the Posix character subsystem.
+#define IMAGE_SUBSYSTEM_NATIVE_WINDOWS       8   // image is a native Win9x driver.
+
+
 struct pe_image_file_hdr {
     DWORD Magic;  /**< PE magic header: PE\\0\\0 */
     WORD Machine;/**< CPU this executable runs on, see libclamav/pe.c for possible values */
@@ -32,6 +73,7 @@ struct pe_image_data_dir {
 /** 32-bit PE optional header
  *   \group_pe */
 struct pe_image_optional_hdr32 {
+		// Standard field.
     WORD Magic;
     BYPE  MajorLinkerVersion;		    /**< unreliable */
     BYPE  MinorLinkerVersion;		    /**< unreliable */
@@ -39,6 +81,8 @@ struct pe_image_optional_hdr32 {
     DWORD SizeOfInitializedData;		    /**< unreliable */
     DWORD SizeOfUninitializedData;		    /**< unreliable */
     DWORD AddressOfEntryPoint;
+
+		// NT additional fields.
     DWORD BaseOfCode;
     DWORD BaseOfData;
     DWORD ImageBase;				    /**< multiple of 64 KB */
@@ -102,15 +146,16 @@ struct pe_image_optional_hdr64 {
 
 /** PE section header
  *   \group_pe */
-#define IMAGE_SIZEOF_SHORT_NAME 8 
+#define IMAGE_SIZEOF_SHORT_NAME 8
+
+typedef struct _IMAGE_DATA_DIRECTORY{
+        DWORD PhysicalAddress;
+        DWORD VirtualSize;
+    }MAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+
+
 struct pe_image_section_hdr {
-    BYPE Name[IMAGE_SIZEOF_SHORT_NAME];			    /**< may not end with NULL */
-
-		union{ 
-			DWORD PhysicalAddress;
-			DWORD VirtualSize;
-		}Misc;
-
+    BYPE Name[IMAGE_SIZEOF_SHORT_NAME];			    /**< may not end with NULL */ 
     DWORD VirtualSize;
     DWORD VirtualAddress;
     DWORD SizeOfRawData;		    /**< multiple of FileAlignment */
@@ -125,19 +170,33 @@ struct pe_image_section_hdr {
 /** Data for the bytecode PE hook
  *   \group_pe */
 struct cli_pe_hook_data {
-  DWORD offset;
-  DWORD ep; /**< EntryPoint as file offset */
-  WORD nsections;/**< Number of sections */
-  WORD dummy; /* align */
-  struct pe_image_file_hdr file_hdr;/**< Header for this PE file */
-  struct pe_image_optional_hdr32 opt32; /**< 32-bit PE optional header */
-  DWORD dummy2; /* align */
-  struct pe_image_optional_hdr64 opt64;/**< 64-bit PE optional header */
-  struct pe_image_data_dir dirs[16]; /**< PE data directory header */
-  DWORD e_lfanew;/**< address of new exe header */
-  DWORD overlays;/**< number of overlays */
-  LONG overlays_sz;/**< size of overlays */
-  DWORD hdr_size;/**< internally needed by rawaddr */
+    DWORD offset;
+    DWORD ep; /**< EntryPoint as file offset */
+    WORD nsections;/**< Number of sections */
+    WORD dummy; /* align */
+    struct pe_image_file_hdr file_hdr;/**< Header for this PE file */
+    struct pe_image_optional_hdr32 opt32; /**< 32-bit PE optional header */
+    DWORD dummy2; /* align */
+    struct pe_image_optional_hdr64 opt64;/**< 64-bit PE optional header */
+    struct pe_image_data_dir dirs[16]; /**< PE data directory header */
+    DWORD e_lfanew;/**< address of new exe header */
+    DWORD overlays;/**< number of overlays */
+    LONG overlays_sz;/**< size of overlays */
+    DWORD hdr_size;/**< internally needed by rawaddr */
 };
+
+struct MAPPED_FILE_PE {
+    FILE_DESCRIPTOR   file;
+    size_t            size;
+    uint8_t 					*data;
+};
+
+struct MAMORY_BLOCK_PE {
+    unsigned char *data;
+    size_t				 	size;
+    size_t					base;
+};
+
+
 
 #endif
