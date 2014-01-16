@@ -57,3 +57,6 @@ tmp/
 tmp/*
 *.cpp~
 *.hpp~
+*.Po
+src/test/.deps/*
+src/test/.deps/
