@@ -189,6 +189,8 @@ struct MAPPED_FILE_PE {
     FILE_DESCRIPTOR   file;
     size_t            size;
     uint8_t 					*data;
+		uint32_t          ops_begin;
+		uint32_t					ops_end;
 };
 
 struct MAMORY_BLOCK_PE {

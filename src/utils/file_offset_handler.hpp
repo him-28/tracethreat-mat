@@ -43,6 +43,8 @@ namespace util
     class file_offset_handler : public file_handler<FileType>, pack_file_offset<FileType>
     {
         public:
+					
+						file_offset_handler();
             /**
             * @brief File pointer points file name in order to scanning.
             *
@@ -72,7 +74,12 @@ namespace util
         private:
 
             ifile<common_filetype> *ifh;
-						std::vector<MAPPED_FILE*>  * mapped_vec_;
+            std::vector<MAPPED_FILE *>   *mapped_vec_;
+						MAPPED_FILE * mapped_file_ptr;
+            //logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
+
     };
 
 
