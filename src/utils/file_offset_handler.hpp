@@ -71,6 +71,7 @@ namespace util
             void mapped_file(std::list<std::string> file_name,
                     std::vector<MAPPED_FILE *> mapped_vec);
 
+						bool unmapped_file(std::vector<MAPPED_FILE* > mapped_vec);
         private:
 
             ifile<common_filetype> *ifh;

@@ -30,7 +30,6 @@ void  file_offset_handler<FileType, MAPPED_FILE>::mapped_file(std::list<std::str
         std::vector<MAPPED_FILE *> mapped_vec)
 {
     std::list<std::string>::iterator iter_files;
-    //std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
     boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_file_vec_shared_ptr(mapped_vec_);
     mapped_vec_  = mapped_vec;
 
@@ -65,12 +64,38 @@ void  file_offset_handler<FileType, MAPPED_FILE>::mapped_file(std::list<std::str
                     continue;
                 }
 
+                mapped_file_ptr->data = (uint8_t *)mmap(0,
+                        mapped_file_ptr->size,
+                        PROT_READ,
+                        MAP_PRIVATE,
+                        mapped_file_ptr->file,
+                        0);
+
+                if(mapped_file_ptr->data == MAP_FAILED) {
+                    throw file_system_excep::offset_exception("[** File cannot map **]");
+                    continue;
+                }
+
             } catch(file_system_excep::offset_exception& offset_excep) {
 
                 logger->write_info("Error, Mapped file", offset_excep.message_error_file_is_null());
             }
         }
     }
+
+    template<typename FileType, typename MAPPED_FILE>
+    bool  file_offset_handler<FileType, MAPPED_FILE>::unmapped_file(std::vector<MAPPED_FILE * > mapped_vec) {
+        std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
+
+        for(iter_mapped_files = mapped_vec.begin();
+                iter_mapped_files != mapped_vec.end();
+                ++iter_mapped_files) {
+            struct MAPPED_FILE *mapped_file_ptr = *iter_mapped_files;
+            munmap(mapped_file_ptr->data, mapped_file_ptr->size);
+        }
+
+    }
+
 
 }
 
