@@ -38,10 +38,12 @@ public:
   bool file_read();
   bool set_filepath(char const * file_path);
 	typename FileType::file_ptr * get_file() const;
-	bool get_fdetail_create();	
+	bool get_fdetail_create();
+	struct state * get_file_status() const;	
 
 private:
 	typename FileType::filename * p_file;
+	struct state  file_status;
 	const char * file_path;
 };
 
