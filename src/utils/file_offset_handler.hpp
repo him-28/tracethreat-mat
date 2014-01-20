@@ -15,7 +15,7 @@
 
 #include "filetypes/pe.hpp"
 #include "utils/file_handler.hpp"
-#include "exception/system_exception.hpp"
+//#include "exception/system_exception.hpp"
 
 //
 #include "utils/logger/clutil_logger.hpp"
@@ -81,9 +81,9 @@ namespace util
             * @param file_name input file name or directory file.
             * @param mapped_vec structure MAPPED_FILE type container.
             *
-            * @return success init file mapped.
+            * @return True, success init file mapped.
             */
-            void mapped_file(std::list<std::string> file_name,
+            bool mapped_file(std::list<std::string> file_name,
                     std::vector<MAPPED_FILE *> mapped_vec,
                     file_offset_handler<FileType, MAPPED_FILE>& file_offset_object);
 

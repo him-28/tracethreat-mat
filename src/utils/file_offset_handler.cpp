@@ -40,7 +40,7 @@ namespace util
     {
         std::list<std::string>::iterator iter_files;
         boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_file_vec_shared_ptr(mapped_vec_);
-        mapped_vec_  = mapped_vec;
+        mapped_vec_  = &mapped_vec;
         const char *file_name;
 
 				if(!file_name_list.size() || !mapped_vec.size() ){
@@ -58,7 +58,7 @@ namespace util
                 if(s_file_name.empty())
                     throw file_system_excep::offset_exception("[** File is null **]");
 
-                *file_name  = s_file_name.c_str();
+                file_name  = s_file_name.c_str();
 
             } catch(file_system_excep::offset_exception& offset_excep) {
                 logger->write_info("Error, file offset", offset_excep.message_error_file_is_null());
@@ -66,7 +66,7 @@ namespace util
             }
 
             if(this->set_filepath(file_name)) {
-                mapped_file_ptr =	mapped_vec_[std::distance(file_name_list.begin(), iter_files)];
+                mapped_file_ptr =	mapped_vec_->at(std::distance(file_name_list.begin(), iter_files));
 
                 try {
                     if(mapped_file_ptr == NULL) {
@@ -116,6 +116,7 @@ namespace util
 
     }
 
+		template class file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>;
 
 }
 

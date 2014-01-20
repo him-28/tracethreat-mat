@@ -15,6 +15,7 @@
 #include <boost/exception/all.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_io.hpp>

@@ -17,19 +17,19 @@ class FileOffsetHandlerTest : public ::testing::Test
                 list_file_type.push_back(file_name_offset[count_file]);
 
 						    s_mapped_fpe[count_file]	 = (struct MAPPED_FILE_PE *)malloc(sizeof(s_mapped_fpe));
-                vec_file_map_type.push_back(s_mapped_fpe[count_file]);
+                mapped_file_vec.push_back(s_mapped_fpe[count_file]);
 
             }
 
         }
         std::list<std::string> list_file_type;
         struct MAPPED_FILE_PE *s_mapped_fpe[FILE_SIZE];
-        std::vector<MAPPED_FILE_PE *> vec_file_map_type;
+        std::vector<MAPPED_FILE_PE *> mapped_file_vec;
 
 };
 
 TEST_F(FileOffsetHandlerTest, mapped_file_test)
 {
 		file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;			
-		h.mapped_file(list_file_type, mapped_vec, fileoffset_h); 
+		EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
 }; 

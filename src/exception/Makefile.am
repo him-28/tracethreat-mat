@@ -9,9 +9,9 @@ lib_LIBRARIES = libexception.a
 libexception_adir = $(includedir)/utils
 
 #Header
-libexception_a_HEADERS = failure_handler_code.hpp  system_exception.hpp
+libexception_a_HEADERS = failure_handler_code.hpp system_exception.hpp
 
 # library
-libexception_a_SOURCES = $(libexception_a_HEADERS) failure_handler_code.cpp
+libexception_a_SOURCES = $(libexception_a_HEADERS) failure_handler_code.cpp system_exception.cpp
 
 
