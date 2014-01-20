@@ -28,7 +28,7 @@ namespace util
 
     template<typename  MAPPED_FILE = struct MAPPED_FILE_PE,
              typename MEMORY_BLOCK = struct MEMORY_BLOCK_PE>
-    class file_detail
+    class file_offset_detail
     {
         public:
             std::vector<MAPPED_FILE *>& get_mappedfile_vec() {
