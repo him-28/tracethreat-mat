@@ -74,7 +74,7 @@ namespace util
 
             if(file_offset_object.set_filepath(file_name)) {
 
-								if(!file_offset_object.file_read()){
+								if(!file_offset_object.file_read_mapped()){
 										throw file_system_excep::offset_exception("[** File cannot open path **]");
 								}
 
@@ -88,6 +88,7 @@ namespace util
                     struct stat *file_status =  file_offset_object.get_file_status();
 
                     mapped_file_ptr->size =	file_status->st_size;
+										mapped_file_ptr->file = file_offset_object.get_popen_file();
 
                     if(mapped_file_ptr->size == 0 || mapped_file_ptr->file == -1) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
@@ -130,6 +131,7 @@ namespace util
     }
 
 		template class file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>;
+//    template class file_offset_handler<struct common_openfile_type, struct MAPPED_FILE_PE>;
 
 }
 

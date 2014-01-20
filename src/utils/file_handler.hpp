@@ -21,6 +21,7 @@ namespace util
 
     struct common_filetype {
         typedef FILE file_ptr;
+				typedef int  file_open_ptr;
         typedef const char  const_char;
         typedef struct binary_type binary;
     };
@@ -48,7 +49,7 @@ namespace util
             virtual typename FileType::file_ptr *get_file() const = 0;
     };
 
-    template<typename FileType = struct common_openfile_type>
+    template<typename FileType = struct common_filetype>
     class file_handler : public ifile<FileType>
     {
 
@@ -56,13 +57,16 @@ namespace util
 
             file_handler() { };
             bool file_read();
+						bool file_read_mapped();
             bool set_filepath(char const *file_path);
             typename FileType::file_ptr *get_file() const;
             bool get_fdetail_create();
             struct stat *get_file_status();
+						typename FileType::file_open_ptr & get_popen_file();
 						bool close_file();
         private:
             typename FileType::file_ptr *p_file;
+						typename FileType::file_open_ptr p_open_file;
             struct stat  file_status;
             const char *file_path;
     };
