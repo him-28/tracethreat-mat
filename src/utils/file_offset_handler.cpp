@@ -39,8 +39,11 @@ namespace util
             file_offset_handler<FileType, MAPPED_FILE>& file_offset_object)
     {
         std::list<std::string>::iterator iter_files;
-        boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_file_vec_shared_ptr(mapped_vec_);
-        mapped_vec_  = &mapped_vec;
+        boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared 
+						= boost::make_shared<std::vector<MAPPED_FILE* > >();
+				mapped_vec_shared->swap(mapped_vec);
+				mapped_file_vec_shared.push_back(mapped_vec_shared);
+  
         const char *file_name;
 
 				if(!file_name_list.size() || !mapped_vec.size() ){
@@ -65,7 +68,7 @@ namespace util
                 continue;
             }
 
-            if(this->set_filepath(file_name)) {
+            if(file_offset_object.set_filepath(file_name)) {
                 mapped_file_ptr =	mapped_vec_->at(std::distance(file_name_list.begin(), iter_files));
 
                 try {

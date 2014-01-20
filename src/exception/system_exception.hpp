@@ -52,39 +52,17 @@ namespace hnmav_exception
         {
             public:
 
-                option_system_exception(std::string type) throw() : type_name(type) { }
+                option_system_exception(std::string type) throw();
 
-                const char *what() const throw() {
-                    std::string error_default = "Error default ";
-                    return  error_default.c_str();
-                }
+                const char *what() const throw();
 
-                const char *process_name() const {
-                    std::string name = "Option system exception";
-                    return name.c_str();
-                }
+                const char *process_name() const;
                 // return   [error data , default file path]
-                tuple<std::string, std::string> message_error_path() {
-                    std::string  str_error_path = " ";
+                tuple<std::string, std::string> message_error_path(); 
 
-                    type_name = default_path_system();
-                    type_name = type_name.append("/").append(type_name);
+                std::string default_path_system();
 
-                    str_error_path = "Error cannot get path from file, Path swaps to default : ";
-                    str_error_path = str_error_path.append(type_name);
-
-                    tuple<std::string, std::string> tuple_type = make_tuple<std::string, std::string>(str_error_path, type_name);
-
-
-                    return tuple_type;
-                }
-
-                std::string default_path_system() {
-                    filesystem::path full_path(filesystem::current_path());
-                    return full_path.string();
-                }
-
-                ~option_system_exception() throw() { }
+                ~option_system_exception() throw();
 
             private:
                 std::string type_name;
@@ -98,8 +76,8 @@ namespace hnmav_exception
         class clbootstrap_exception : public system_exception
         {
             public:
-                clbootstrap_exception(std::string type) throw() : type_name(type) { }
-                ~clbootstrap_exception() throw() {}
+                clbootstrap_exception(std::string type) throw();
+                ~clbootstrap_exception() throw();
             private:
                 std::string type_name;
         };
@@ -108,21 +86,10 @@ namespace hnmav_exception
         class clutil_exception : public std::runtime_error
         {
             public:
-                clutil_exception(cl_int err, const std::string& name)
-                    : std::runtime_error(add_msg_err(err, name)) {}
+                clutil_exception(cl_int err, const std::string& name);
 
                 std::string add_msg_err(cl_int err, const std::string& name);
-        };
-
-        std::string clutil_exception::add_msg_err(cl_int err, const std::string& name)
-        {
-            std::string error_msg("Error : ");
-            error_msg.append(" ( ");
-            error_msg.append(boost::lexical_cast<std::string>(err));
-            error_msg.append(" ) ");
-            return error_msg;
-        }
-
+        }; 
     }
 
     namespace file_system
@@ -132,46 +99,21 @@ namespace hnmav_exception
         {
 
             public:
-                error_code_entry() {  }
+                error_code_entry();
                 std::string get_error_cnumber(int  error_cnumber);
             private:
                 int error_cnumber_;
         };
-
-        std::string error_code_entry::get_error_cnumber(int error_cnumber)
-        {
-            failure_handler<ErrorController, int> failure_h;
-						failure_h.failure_handler_init(); // work around cannot use constructor to init 
-						boost::system::error_code ec(error_cnumber, failure_h);
-
-						if(error_cnumber == failure_h.file_is_null->value()){
-								return failure_h.message_detail(ec.value());
-						}
-						return std::string("No error code supported");
-        }
-
+ 
         class offset_exception : public system_exception
         {
             public:
-                offset_exception(std::string type_name) throw() : type_name_(type_name) {
-
-                }
-
-                const char *what() const throw() {
-                    std::string error_default = "Error default, Offset Exception ";
-                    return  error_default.c_str();
-                }
-
-                const char *process_name() const {
-                    std::string name = "Offset exception";
-                    return name.c_str();
-                }
+                offset_exception(std::string type_name) throw();
+                const char *what() const throw();
+                const char *process_name() const;
                 // Data structure size
-                std::string message_error_file_is_null() {
-                    return type_name_.append(error_codetype.get_error_cnumber(FILE_IS_NULL));
-                }
-
-                ~offset_exception() throw() {}
+                std::string message_error_file_is_null(); 
+                ~offset_exception() throw();
             private:
                 std::string type_name_;
                 error_code_entry  error_codetype;

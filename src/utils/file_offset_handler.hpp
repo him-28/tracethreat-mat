@@ -15,7 +15,7 @@
 
 #include "filetypes/pe.hpp"
 #include "utils/file_handler.hpp"
-//#include "exception/system_exception.hpp"
+#include "exception/system_exception.hpp"
 
 //
 #include "utils/logger/clutil_logger.hpp"
@@ -91,6 +91,7 @@ namespace util
         private:
 
             ifile<common_filetype> *ifh;
+			      std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  mapped_file_vec_shared;
             std::vector<MAPPED_FILE *>   *mapped_vec_;
             MAPPED_FILE *mapped_file_ptr;
             //logger
