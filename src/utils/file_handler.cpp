@@ -12,9 +12,9 @@ namespace util
             return false;
         }
 
-        p_file = fopen(file_path,"r");
+        *p_file = open(file_path,O_RDONLY);
 
-        if(p_file == NULL) {
+        if(*p_file == -1) {
             throw std::runtime_error("File cannot open");
             return false;
         }
@@ -53,7 +53,15 @@ namespace util
         return false;
     }
 
-    template class file_handler<common_filetype>;
+	  template<typename FileType>
+    bool file_handler<FileType>::close_file()
+		{
+					close(*p_file);
+					return true;
+		}
+
+    //template class file_handler<common_filetype>;
+    template class file_handler<common_openfile_type>;
 
     //file_strem
     template<typename FileType,typename StructFileType, typename PointerType>

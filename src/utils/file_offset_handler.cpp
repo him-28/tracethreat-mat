@@ -73,6 +73,11 @@ namespace util
             }
 
             if(file_offset_object.set_filepath(file_name)) {
+
+								if(!file_offset_object.file_read()){
+										throw file_system_excep::offset_exception("[** File cannot open path **]");
+								}
+
                 mapped_file_ptr =	mapped_vec_shared->at(std::distance(file_name_list.begin(), iter_files));
 
                 try {
@@ -84,7 +89,7 @@ namespace util
 
                     mapped_file_ptr->size =	file_status->st_size;
 
-                    if(mapped_file_ptr->size == 0) {
+                    if(mapped_file_ptr->size == 0 || mapped_file_ptr->file == -1) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
 										logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
