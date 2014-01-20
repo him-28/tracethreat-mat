@@ -1,6 +1,10 @@
 #ifndef PE__HPP
 #define PE__HPP
 
+#include "stdint.h"
+#include "stdio.h"
+
+#define FILE_DESCRIPTOR  int
 
 /** Header for this PE file
  *   \group_pe */
@@ -75,8 +79,8 @@ struct pe_image_data_dir {
 struct pe_image_optional_hdr32 {
 		// Standard field.
     WORD Magic;
-    BYPE  MajorLinkerVersion;		    /**< unreliable */
-    BYPE  MinorLinkerVersion;		    /**< unreliable */
+    BYTE  MajorLinkerVersion;		    /**< unreliable */
+    BYTE  MinorLinkerVersion;		    /**< unreliable */
     DWORD SizeOfCode;			    /**< unreliable */
     DWORD SizeOfInitializedData;		    /**< unreliable */
     DWORD SizeOfUninitializedData;		    /**< unreliable */
@@ -113,8 +117,8 @@ struct pe_image_optional_hdr32 {
  *   \group_pe */
 struct pe_image_optional_hdr64 {
     WORD Magic;
-    BYPE  MajorLinkerVersion;		    /**< unreliable */
-    BYPE  MinorLinkerVersion;		    /**< unreliable */
+    BYTE  MajorLinkerVersion;		    /**< unreliable */
+    BYTE  MinorLinkerVersion;		    /**< unreliable */
     DWORD SizeOfCode;			    /**< unreliable */
     DWORD SizeOfInitializedData;		    /**< unreliable */
     DWORD SizeOfUninitializedData;		    /**< unreliable */
@@ -155,7 +159,7 @@ typedef struct _IMAGE_DATA_DIRECTORY{
 
 
 struct pe_image_section_hdr {
-    BYPE Name[IMAGE_SIZEOF_SHORT_NAME];			    /**< may not end with NULL */ 
+    BYTE Name[IMAGE_SIZEOF_SHORT_NAME];			    /**< may not end with NULL */ 
     DWORD VirtualSize;
     DWORD VirtualAddress;
     DWORD SizeOfRawData;		    /**< multiple of FileAlignment */
