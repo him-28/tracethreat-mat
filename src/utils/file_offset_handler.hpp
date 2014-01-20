@@ -87,11 +87,28 @@ namespace util
                     std::vector<MAPPED_FILE *> mapped_vec,
                     file_offset_handler<FileType, MAPPED_FILE>& file_offset_object);
 
+            /**
+            * @brief Ummap single file from memory.
+            *
+            * @param mapped_vec  Struct MAPPED_FILE types include details for file mapped on memory area.
+            *
+            * @return True, Success for file unmapped on memory.
+            */
             bool unmapped_file(std::vector<MAPPED_FILE * > mapped_vec);
+
+            /**
+            * @brief Get PE Header file from file system.
+            *
+            * @param mapped_file_vec  Insert file detail from memory mapped.
+            *
+            * @return Vector contains header file of PE.
+            */
+            boost::shared_ptr<std::vector<PIMAGE_NT_HEADERS *> >& get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec);
+
         private:
 
             ifile<common_filetype> *ifh;
-			      std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  mapped_file_vec_shared;
+            std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  mapped_file_vec_shared;
             std::vector<MAPPED_FILE *>   *mapped_vec_;
             MAPPED_FILE *mapped_file_ptr;
             //logger

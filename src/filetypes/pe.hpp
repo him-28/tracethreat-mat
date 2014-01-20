@@ -18,6 +18,11 @@ typedef uint32_t ULONG;
 
 #define FIELD_OFFSET(type, field)    ((size_t)&(((type *)0)->field))
 
+#define IMAGE_DOS_SIGNATURE                 0x4D5A      // MZ
+#define IMAGE_OS2_SIGNATURE                 0x4E45      // NE
+#define IMAGE_OS2_SIGNATURE_LE              0x4C45      // LE
+#define IMAGE_NT_SIGNATURE                  0x50450000  // PE00
+
 #define IMAGE_FIRST_SECTION( ntheader ) ((PIMAGE_SECTION_HEADER)        \
     ((BYTE*)ntheader +                                              \
      FIELD_OFFSET( IMAGE_NT_HEADERS, OptionalHeader ) +                 \
@@ -54,6 +59,38 @@ typedef uint32_t ULONG;
 #define IMAGE_SUBSYSTEM_OS2_CUI              5   // image runs in the OS/2 character subsystem.
 #define IMAGE_SUBSYSTEM_POSIX_CUI            7   // image runs in the Posix character subsystem.
 #define IMAGE_SUBSYSTEM_NATIVE_WINDOWS       8   // image is a native Win9x driver.
+
+
+struct IMAGE_NT_HEADERS{
+		DWORD Signature;
+		typedef struct pe_image_file_hdr  FileHeader;
+	  typedef struct pe_image_optional_hdr32  OptionalHeader32;		
+		typedef struct pe_image_optional_hdr64  OptionalHeader64;	
+
+};
+
+
+struct IMAGE_DOS_HEADER {      // DOS .EXE header
+    WORD   e_magic;                     // Magic number
+    WORD   e_cblp;                      // Bytes on last page of file
+    WORD   e_cp;                        // Pages in file
+    WORD   e_crlc;                      // Relocations
+    WORD   e_cparhdr;                   // Size of header in paragraphs
+    WORD   e_minalloc;                  // Minimum extra paragraphs needed
+    WORD   e_maxalloc;                  // Maximum extra paragraphs needed
+    WORD   e_ss;                        // Initial (relative) SS value
+    WORD   e_sp;                        // Initial SP value
+    WORD   e_csum;                      // Checksum
+    WORD   e_ip;                        // Initial IP value
+    WORD   e_cs;                        // Initial (relative) CS value
+    WORD   e_lfarlc;                    // File address of relocation table
+    WORD   e_ovno;                      // Overlay number
+    WORD   e_res[4];                    // Reserved words
+    WORD   e_oemid;                     // OEM identifier (for e_oeminfo)
+    WORD   e_oeminfo;                   // OEM information; e_oemid specific
+    WORD   e_res2[10];                  // Reserved words
+    LONG   e_lfanew;                    // File address of new exe header
+  };
 
 
 struct pe_image_file_hdr {

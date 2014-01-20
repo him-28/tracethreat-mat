@@ -40,18 +40,18 @@ namespace util
     {
         std::list<std::string>::iterator iter_files;
 
-        boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared 
-						= boost::make_shared<std::vector<MAPPED_FILE* > >();
+        boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared
+            = boost::make_shared<std::vector<MAPPED_FILE * > >();
 
-				mapped_vec_shared->swap(mapped_vec);
-				mapped_file_vec_shared.push_back(mapped_vec_shared);
-  
+        mapped_vec_shared->swap(mapped_vec);
+        mapped_file_vec_shared.push_back(mapped_vec_shared);
+
         const char *file_name;
 
-				if(!file_name_list.size() || !mapped_vec_shared->size() ){
-						 logger->write_info("Not data on file_name or mapped file");
-						 return false;
-				}
+        if(!file_name_list.size() || !mapped_vec_shared->size() ) {
+            logger->write_info("Not data on file_name or mapped file");
+            return false;
+        }
 
         for(iter_files = file_name_list.begin();
                 iter_files != file_name_list.end();
@@ -63,7 +63,7 @@ namespace util
                 if(s_file_name.empty())
                     throw file_system_excep::offset_exception("[** File is null **]");
 
-								logger->write_info("File path for mmaped ", s_file_name);
+                logger->write_info("File path for mmaped ", s_file_name);
 
                 file_name  = s_file_name.c_str();
 
@@ -74,9 +74,9 @@ namespace util
 
             if(file_offset_object.set_filepath(file_name)) {
 
-								if(!file_offset_object.file_read_mapped()){
-										throw file_system_excep::offset_exception("[** File cannot open path **]");
-								}
+                if(!file_offset_object.file_read_mapped()) {
+                    throw file_system_excep::offset_exception("[** File cannot open path **]");
+                }
 
                 mapped_file_ptr =	mapped_vec_shared->at(std::distance(file_name_list.begin(), iter_files));
 
@@ -88,13 +88,15 @@ namespace util
                     struct stat *file_status =  file_offset_object.get_file_status();
 
                     mapped_file_ptr->size =	file_status->st_size;
-										mapped_file_ptr->file = file_offset_object.get_popen_file();
+
+                    mapped_file_ptr->file = file_offset_object.get_popen_file();
 
                     if(mapped_file_ptr->size == 0 || mapped_file_ptr->file == -1) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
-										logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
-										logger->write_info("Mapped file ptr name  ", boost::lexical_cast<std::string>(mapped_file_ptr->file));
+
+                    //logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
+                    //logger->write_info("Mapped file ptr name  ", boost::lexical_cast<std::string>(mapped_file_ptr->file));
                     mapped_file_ptr->data = (uint8_t *)mmap(0,
                             mapped_file_ptr->size,
                             PROT_READ,
@@ -104,6 +106,7 @@ namespace util
 
                     if(mapped_file_ptr->data == MAP_FAILED) {
                         throw file_system_excep::offset_exception("[** File cannot map **]");
+                        file_offset_object.close_file();
                     }
 
                 } catch(file_system_excep::offset_exception& offset_excep) {
@@ -113,7 +116,8 @@ namespace util
                 }
             }
         }
-			return true;
+
+        return true;
     }
 
     template<typename FileType, typename MAPPED_FILE>
@@ -130,8 +134,24 @@ namespace util
 
     }
 
-		template class file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>;
-//    template class file_offset_handler<struct common_openfile_type, struct MAPPED_FILE_PE>;
+    template<typename FileType, typename MAPPED_FILE>
+    boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> >&
+    file_offset_handler<FileType, MAPPED_FILE>::get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec)
+    {
+        IMAGE_DOS_HEADER *dos_header;
+        IMAGE_NT_HEADERS *nt_header;
+        size_t headers_size = 0;
+        typename std::vector<MAPPED_FILE *>::iterator  iter_mf_vec;
+				MAPPED_FILE * mapped_file_ptr;
+        for(iter_mf_vec = mapped_file_vec.begin(); iter_mf_vec != mapped_file_vec.end(); ++iter_mf_vec) {
+							mapped_file_ptr = *iter_mf_vec;
+						  if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER))
+									return ;	
+        }
+    }
+
+    template class file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>;
+    //    template class file_offset_handler<struct common_openfile_type, struct MAPPED_FILE_PE>;
 
 }
 
