@@ -39,14 +39,16 @@ namespace util
             file_offset_handler<FileType, MAPPED_FILE>& file_offset_object)
     {
         std::list<std::string>::iterator iter_files;
+
         boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared 
 						= boost::make_shared<std::vector<MAPPED_FILE* > >();
+
 				mapped_vec_shared->swap(mapped_vec);
 				mapped_file_vec_shared.push_back(mapped_vec_shared);
   
         const char *file_name;
 
-				if(!file_name_list.size() || !mapped_vec.size() ){
+				if(!file_name_list.size() || !mapped_vec_shared->size() ){
 						 logger->write_info("Not data on file_name or mapped file");
 						 return false;
 				}
@@ -61,6 +63,8 @@ namespace util
                 if(s_file_name.empty())
                     throw file_system_excep::offset_exception("[** File is null **]");
 
+								logger->write_info("File path for mmaped ", s_file_name);
+
                 file_name  = s_file_name.c_str();
 
             } catch(file_system_excep::offset_exception& offset_excep) {
@@ -69,7 +73,7 @@ namespace util
             }
 
             if(file_offset_object.set_filepath(file_name)) {
-                mapped_file_ptr =	mapped_vec_->at(std::distance(file_name_list.begin(), iter_files));
+                mapped_file_ptr =	mapped_vec_shared->at(std::distance(file_name_list.begin(), iter_files));
 
                 try {
                     if(mapped_file_ptr == NULL) {
@@ -83,7 +87,8 @@ namespace util
                     if(mapped_file_ptr->size == 0) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
-
+										logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
+										logger->write_info("Mapped file ptr name  ", boost::lexical_cast<std::string>(mapped_file_ptr->file));
                     mapped_file_ptr->data = (uint8_t *)mmap(0,
                             mapped_file_ptr->size,
                             PROT_READ,
