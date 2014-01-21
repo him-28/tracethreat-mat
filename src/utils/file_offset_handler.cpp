@@ -146,19 +146,19 @@ namespace util
             = boost::make_shared<std::vector<IMAGE_NT_HEADERS * > >();
 				pe_header_vec_shared.push_back(mapped_vec_shared);
 
-        IMAGE_DOS_HEADER *dos_header;
-        IMAGE_NT_HEADERS *nt_header;
+        struct IMAGE_DOS_HEADER *dos_header;
+        struct IMAGE_NT_HEADERS *nt_header;
         size_t headers_size = 0;
         typename std::vector<MAPPED_FILE *>::iterator  iter_mf_vec;
         MAPPED_FILE *mapped_file_ptr;
 
-        for(iter_mf_vec = mapped_file_vec.begin(); iter_mf_vec != mapped_file_vec.end(); ++iter_mf_vec) {
+        for(iter_mf_vec = mapped_file_vec->begin(); iter_mf_vec != mapped_file_vec->end(); ++iter_mf_vec) {
             mapped_file_ptr = *iter_mf_vec;
 
             if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER))
                 continue;
 
-            dos_header = (struct IMAGE_DOS_HEADER)mapped_file_ptr->data;
+            dos_header = (struct IMAGE_DOS_HEADER*)mapped_file_ptr->data;
 
             if(dos_header->e_magic != IMAGE_DOS_SIGNATURE)
                 continue;
@@ -166,12 +166,12 @@ namespace util
             if(dos_header->e_lfanew < 0)
                 continue;
 
-            headers_size = dos_header->e_lfanew + sizeof(nt_header) + sizeof(IMAGE_FILE_HEADER);
+            headers_size = dos_header->e_lfanew + sizeof(nt_header) + sizeof(pe_image_file_hdr);
 
             if(mapped_file_ptr->size < headers_size)
                 continue;
 
-            nt_header = (IMAGE_NT_HEADERS)(mapped_file_ptr->data + dos_header->e_lfanew);
+            nt_header = (IMAGE_NT_HEADERS*)(mapped_file_ptr->data + dos_header->e_lfanew);
 
             headers_size += nt_header->FileHeader.SizeOfOptionalHeader;
 
@@ -181,6 +181,7 @@ namespace util
                 mapped_vec_shared->push_back(nt_header);
             }
         }
+		
     }
 
     template class file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>;

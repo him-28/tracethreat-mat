@@ -61,13 +61,6 @@ typedef uint32_t ULONG;
 #define IMAGE_SUBSYSTEM_NATIVE_WINDOWS       8   // image is a native Win9x driver.
 
 
-struct IMAGE_NT_HEADERS{
-		DWORD Signature;
-		typedef struct pe_image_file_hdr  FileHeader;
-	  typedef struct pe_image_optional_hdr32  OptionalHeader32;		
-		typedef struct pe_image_optional_hdr64  OptionalHeader64;	
-
-};
 
 
 struct IMAGE_DOS_HEADER {      // DOS .EXE header
@@ -240,6 +233,14 @@ struct MAMORY_BLOCK_PE {
     size_t					base;
 };
 
+
+struct IMAGE_NT_HEADERS{
+DWORD Signature;
+struct pe_image_file_hdr  FileHeader;
+struct pe_image_optional_hdr32  OptionalHeader32;		
+struct pe_image_optional_hdr64  OptionalHeader64;	
+
+};
 
 
 #endif

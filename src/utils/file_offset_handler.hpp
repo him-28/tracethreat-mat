@@ -103,7 +103,7 @@ namespace util
             *
             * @return Vector contains header file of PE.
             */
-            boost::shared_ptr<std::vector<PIMAGE_NT_HEADERS *> >& get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec);
+            boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> >& get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec);
 
             /**
             * @brief Pass by value. Shared pointer contains vector mapped_file
@@ -111,6 +111,16 @@ namespace util
             * @return Shared_ptr contains vector of MAPPED_FILE * pointer.
             */
             boost::shared_ptr<std::vector<MAPPED_FILE *> >  get_mapped_file();
+
+
+            /**
+            * @brief List PE header detail
+            *
+            * @param image_nt_header  Struct of PE header.
+            *
+            * @return String contain detail of PE header
+            */
+            std::list<std::string> list_pe_header(struct IMAGE_NT_HEADERS *image_nt_header);
 
         private:
 
