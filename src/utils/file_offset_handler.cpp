@@ -47,6 +47,7 @@ namespace util
         mapped_file_vec_shared.push_back(mapped_vec_shared);
 
         const char *file_name;
+        MAPPED_FILE *mapped_file_ptr;
 
         if(!file_name_list.size() || !mapped_vec_shared->size() ) {
             logger->write_info("Not data on file_name or mapped file");
@@ -138,15 +139,47 @@ namespace util
     boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> >&
     file_offset_handler<FileType, MAPPED_FILE>::get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec)
     {
+
+        logger->write_info("Intial PE header...");
+
+        boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> > mapped_vec_shared
+            = boost::make_shared<std::vector<IMAGE_NT_HEADERS * > >();
+				pe_header_vec_shared.push_back(mapped_vec_shared);
+
         IMAGE_DOS_HEADER *dos_header;
         IMAGE_NT_HEADERS *nt_header;
         size_t headers_size = 0;
         typename std::vector<MAPPED_FILE *>::iterator  iter_mf_vec;
-				MAPPED_FILE * mapped_file_ptr;
+        MAPPED_FILE *mapped_file_ptr;
+
         for(iter_mf_vec = mapped_file_vec.begin(); iter_mf_vec != mapped_file_vec.end(); ++iter_mf_vec) {
-							mapped_file_ptr = *iter_mf_vec;
-						  if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER))
-									return ;	
+            mapped_file_ptr = *iter_mf_vec;
+
+            if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER))
+                continue;
+
+            dos_header = (struct IMAGE_DOS_HEADER)mapped_file_ptr->data;
+
+            if(dos_header->e_magic != IMAGE_DOS_SIGNATURE)
+                continue;
+
+            if(dos_header->e_lfanew < 0)
+                continue;
+
+            headers_size = dos_header->e_lfanew + sizeof(nt_header) + sizeof(IMAGE_FILE_HEADER);
+
+            if(mapped_file_ptr->size < headers_size)
+                continue;
+
+            nt_header = (IMAGE_NT_HEADERS)(mapped_file_ptr->data + dos_header->e_lfanew);
+
+            headers_size += nt_header->FileHeader.SizeOfOptionalHeader;
+
+            if(nt_header->Signature == IMAGE_NT_SIGNATURE &&
+                    nt_header->FileHeader.Machine == IMAGE_FILE_MACHINE_I386 &&
+                    mapped_file_ptr->size < headers_size) {
+                mapped_vec_shared->push_back(nt_header);
+            }
         }
     }
 

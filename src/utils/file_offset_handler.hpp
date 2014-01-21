@@ -105,11 +105,19 @@ namespace util
             */
             boost::shared_ptr<std::vector<PIMAGE_NT_HEADERS *> >& get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec);
 
+            /**
+            * @brief Pass by value. Shared pointer contains vector mapped_file
+            *
+            * @return Shared_ptr contains vector of MAPPED_FILE * pointer.
+            */
+            boost::shared_ptr<std::vector<MAPPED_FILE *> >  get_mapped_file();
+
         private:
 
             ifile<common_filetype> *ifh;
             std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  mapped_file_vec_shared;
-            std::vector<MAPPED_FILE *>   *mapped_vec_;
+            std::vector<boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> > > pe_header_vec_shared;
+            //std::vector<MAPPED_FILE *>   *mapped_vec_;
             MAPPED_FILE *mapped_file_ptr;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
