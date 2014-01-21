@@ -3,6 +3,17 @@
 namespace filetypes
 {
 
+		template<typename MAPPED_FILE>
+		pe_file_controller<MAPPED_FILE>::pe_file_controller()
+		{
+				//logger
+        logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
+        logger = logger_ptr->get();
+        logger->write_info_test("Init logger pe_file_controller");
+
+
+		}
+
     template<typename MAPPED_FILE>
     boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> >&
     pe_file_controller<MAPPED_FILE>::get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec)

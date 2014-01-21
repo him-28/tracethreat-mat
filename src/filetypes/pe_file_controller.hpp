@@ -44,6 +44,7 @@ namespace filetypes
     {
 
         public:
+						pe_file_controller();
             /**
             * @brief Get PE Header file from file system.
             *
