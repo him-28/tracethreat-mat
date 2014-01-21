@@ -10,8 +10,6 @@ namespace filetypes
         logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
         logger->write_info_test("Init logger pe_file_controller");
-
-
 		}
 
     template<typename MAPPED_FILE>
