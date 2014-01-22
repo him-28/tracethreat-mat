@@ -14,14 +14,14 @@ namespace filetypes
 		}
 
     template<typename MAPPED_FILE>
-    boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> >&
+    boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> >&
     pe_file_controller<MAPPED_FILE>::get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec)
     {
 
         logger->write_info("Intial PE header...");
 
-        boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> > mapped_vec_shared
-            = boost::make_shared<std::vector<IMAGE_NT_HEADERS * > >();
+        boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> > mapped_vec_shared
+            = boost::make_shared<std::vector<struct IMAGE_NT_HEADERS * > >();
         pe_header_vec_shared.push_back(mapped_vec_shared);
 
         struct IMAGE_DOS_HEADER *dos_header;
