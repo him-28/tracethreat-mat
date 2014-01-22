@@ -1,4 +1,5 @@
 #include "filetypes/pe_file_controller.hpp"
+#include "boost/lexical_cast.hpp"
 
 namespace filetypes
 {
@@ -33,20 +34,29 @@ namespace filetypes
             mapped_file_ptr = *iter_mf_vec;
 
             if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER))
+						{
+								logger->write_info("Mappper data < IMAGE_DOS_HEADER");
                 continue;
+						}
 
             dos_header = (struct IMAGE_DOS_HEADER *)mapped_file_ptr->data;
 
-            if(dos_header->e_magic != IMAGE_DOS_SIGNATURE)
+            if(dos_header->e_magic != IMAGE_DOS_SIGNATURE){
+								logger->write_info("Mapper e_mage != IMAGE_DOS_SIGNATURE");
                 continue;
+						}
 
-            if(dos_header->e_lfanew < 0)
+            if(dos_header->e_lfanew < 0){
+								logger->write_info("Mapper e_lfanew < 0");
                 continue;
+						}
 
             headers_size = dos_header->e_lfanew + sizeof(nt_header) + sizeof(pe_image_file_hdr);
 
-            if(mapped_file_ptr->size < headers_size)
+            if(mapped_file_ptr->size < headers_size){
+								logger->write_info("Mapper size < headers_size");
                 continue;
+						}
 
             nt_header = (IMAGE_NT_HEADERS *)(mapped_file_ptr->data + dos_header->e_lfanew);
 
@@ -58,7 +68,7 @@ namespace filetypes
                 mapped_vec_shared->push_back(nt_header);
             }
         }
-
+			  //return *mapped_vec_shared.get();
     }
 
 
@@ -89,7 +99,7 @@ namespace filetypes
     std::list<std::string> pe_file_controller<MAPPED_FILE>
     ::list_pe_header(struct IMAGE_NT_HEADERS *image_nt_header)
     {
-        struct pe_image_file_hdr *pe_file_header = image_nt_header->FileHeader;
+        struct pe_image_file_hdr *pe_file_header = &image_nt_header->FileHeader;
 
         // Detail from pe.c
         switch(EC16(pe_file_header->Machine)) {
@@ -214,10 +224,11 @@ namespace filetypes
             break;
 
         default:
-            logger->write_info("Machine type: ** UNKNOWN ** (0x%x)\n", EC16(pe_file_header->Machine));
+            logger->write_info("Machine type: ** UNKNOWN ** (0x%x)\n", 
+							boost::lexical_cast<std::string>(EC16(pe_file_header->Machine)));
         }
     }
 
-
+		template class pe_file_controller<struct MAPPED_FILE_PE>;
 
 }

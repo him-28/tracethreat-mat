@@ -68,6 +68,7 @@ namespace util
             * @return True, if able get all offset.
             */
             bool set_file_offset(typename FileType::file_ptr *p_file);
+
             /**
             * @brief Seek file from file-mapped.
             *
@@ -83,7 +84,7 @@ namespace util
             *
             * @return True, success init file mapped.
             */
-            bool mapped_file(std::list<std::string> file_name,
+             bool  mapped_file(std::list<std::string> file_name,
                     std::vector<MAPPED_FILE *> mapped_vec,
                     file_offset_handler<FileType, MAPPED_FILE>& file_offset_object);
 
@@ -102,13 +103,13 @@ namespace util
             *
             * @return Shared_ptr contains vector of MAPPED_FILE * pointer.
             */
-            boost::shared_ptr<std::vector<MAPPED_FILE *> >  get_mapped_file();
+            std::vector<MAPPED_FILE *> & get_mapped_file();
 
         private:
 
             ifile<common_filetype> *ifh;
 						boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared;
-            std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  mapped_file_vec_shared;
+            //std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  mapped_file_vec_shared;
             //std::vector<MAPPED_FILE *>   *mapped_vec_;
             MAPPED_FILE *mapped_file_ptr;
             //logger

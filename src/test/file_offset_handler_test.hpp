@@ -32,4 +32,5 @@ TEST_F(FileOffsetHandlerTest, mapped_file_test)
 {
 		file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;			
 		EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
+    EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
 }; 

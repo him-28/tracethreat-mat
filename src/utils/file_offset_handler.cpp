@@ -34,16 +34,15 @@ namespace util
 
 
     template<typename FileType, typename MAPPED_FILE>
-    bool  file_offset_handler<FileType, MAPPED_FILE>::mapped_file(std::list<std::string> file_name_list,
+    bool file_offset_handler<FileType, MAPPED_FILE>::mapped_file(std::list<std::string> file_name_list,
             std::vector<MAPPED_FILE *> mapped_vec,
             file_offset_handler<FileType, MAPPED_FILE>& file_offset_object)
     {
         std::list<std::string>::iterator iter_files;
 
         mapped_vec_shared = boost::make_shared<std::vector<MAPPED_FILE * > >();
-
         mapped_vec_shared->swap(mapped_vec);
-        mapped_file_vec_shared.push_back(mapped_vec_shared);
+        //mapped_file_vec_shared.push_back(mapped_vec_shared);
 
         const char *file_name;
         MAPPED_FILE *mapped_file_ptr;
@@ -117,7 +116,15 @@ namespace util
             }
         }
 
-        return true;
+        return true; //mapped_vec_shared;
+    }
+
+    template<typename FileType, typename MAPPED_FILE>
+    std::vector<MAPPED_FILE *> & file_offset_handler<FileType, MAPPED_FILE>
+    ::get_mapped_file()
+    {
+        //boost::shared_ptr<std::vector<MAPPED_FILE *> > * mfv_shared = mapped_file_vec_shared.back();
+        return *mapped_vec_shared.get();// mapped_file_vec_shared.at(0);
     }
 
     template<typename FileType, typename MAPPED_FILE>
@@ -130,6 +137,7 @@ namespace util
                 ++iter_mapped_files) {
             MAPPED_FILE *mapped_file_ptr = *iter_mapped_files;
             munmap(mapped_file_ptr->data, mapped_file_ptr->size);
+            close(mapped_file_ptr->file);
         }
 
     }
