@@ -107,8 +107,8 @@ namespace util
         private:
 
             ifile<common_filetype> *ifh;
+						boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared;
             std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  mapped_file_vec_shared;
-            std::vector<boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> > > pe_header_vec_shared;
             //std::vector<MAPPED_FILE *>   *mapped_vec_;
             MAPPED_FILE *mapped_file_ptr;
             //logger
