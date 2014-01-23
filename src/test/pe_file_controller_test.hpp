@@ -15,7 +15,7 @@ class PEFileControllerTest : public ::testing::Test
 
             char const *file_name_offset[FILE_SIZE];
 
-            file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/clam-petite.exe";
+            file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/Crack.exe";
 
             for(int count_file = 0; count_file < 	FILE_SIZE; count_file++) {
                 list_file_type.push_back(file_name_offset[count_file]);
@@ -60,7 +60,7 @@ TEST_F(PEFileControllerTest, pe_read_header)
     pe_file_controller<struct MAPPED_FILE_PE>  pe_file_col;
 		pe_file_col.get_pe_header(&pe_header_vec_ptr);
 
- //   typename std::vector<struct IMAGE_NT_HEADERS *>::iterator iter_pe_header;
+    typename std::vector<struct IMAGE_NT_HEADERS *>::iterator iter_pe_header;
 /*
     for(iter_pe_header = pe_header_shared_ptr->begin();
             iter_pe_header != pe_header_shared_ptr->end();

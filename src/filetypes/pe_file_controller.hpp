@@ -6,6 +6,7 @@
 #define EC16(x) ((uint16_t)convert_ec16(&(x)))
 #define EC32(x) ((uint32_t)convert_ec32(&(x)))
 
+#define MIN(x,y) ((x < y)?(x):(y))
 
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
@@ -44,7 +45,7 @@ namespace filetypes
     {
 
         public:
-						pe_file_controller();
+            pe_file_controller();
             /**
             * @brief Get PE Header file from file system.
             *
@@ -89,12 +90,21 @@ namespace filetypes
             * @return int32_t type
             */
             inline int32_t convert_ec32(uint16_t *buffer);
+            //support small file scanning.
+            /**
+            * @brief Retrive data from PE file by containning on vector
+            *
+            * @param pe_header_vec_ptr  PE Header details from list_pe_header member functions.
+            *
+            * @return
+            */
+            uint8_t retrive_offset_lite(std::vector<struct IMAGE_NT_HEADERS *>  pe_header_vec_ptr)const;
 
         private:
             IMAGE_NT_HEADERS *image_nt_header;
 
-            std::vector<boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> > > pe_header_vec_shared;
-
+            std::vector<boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> > > pe_header_vec_shared;
+            boost::shared_ptr<vector<struct IMAGE_NT_HEADERS_EXT> * >  pe_offset_vec_shared_ptr;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

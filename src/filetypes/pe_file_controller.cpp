@@ -4,14 +4,14 @@
 namespace filetypes
 {
 
-		template<typename MAPPED_FILE>
-		pe_file_controller<MAPPED_FILE>::pe_file_controller()
-		{
-				//logger
+    template<typename MAPPED_FILE>
+    pe_file_controller<MAPPED_FILE>::pe_file_controller()
+    {
+        //logger
         logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
         logger->write_info_test("Init logger pe_file_controller");
-		}
+    }
 
     template<typename MAPPED_FILE>
     boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> >&
@@ -33,30 +33,33 @@ namespace filetypes
         for(iter_mf_vec = mapped_file_vec->begin(); iter_mf_vec != mapped_file_vec->end(); ++iter_mf_vec) {
             mapped_file_ptr = *iter_mf_vec;
 
-            if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER))
-						{
-								logger->write_info("Mappper data < IMAGE_DOS_HEADER");
+            if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER)) {
+                logger->write_info("Mappper data < IMAGE_DOS_HEADER");
                 continue;
-						}
+            }
 
             dos_header = (struct IMAGE_DOS_HEADER *)mapped_file_ptr->data;
 
-            if(dos_header->e_magic != IMAGE_DOS_SIGNATURE){
-								logger->write_info("Mapper e_mage != IMAGE_DOS_SIGNATURE");
+            if(dos_header->e_magic != IMAGE_DOS_SIGNATURE &&
+                    dos_header->e_magic != IMAGE_DOS_SIGNATURE_BIG) {
+                logger->write_info("Mapper e_mage != IMAGE_DOS_SIGNATURE");
+                mapped_vec_shared->push_back(nt_header);
                 continue;
-						}
+            }
 
-            if(dos_header->e_lfanew < 0){
-								logger->write_info("Mapper e_lfanew < 0");
+            if(dos_header->e_lfanew < 0) {
+                logger->write_info("Mapper e_lfanew < 0");
+                mapped_vec_shared->push_back(nt_header);
                 continue;
-						}
+            }
 
             headers_size = dos_header->e_lfanew + sizeof(nt_header) + sizeof(pe_image_file_hdr);
 
-            if(mapped_file_ptr->size < headers_size){
-								logger->write_info("Mapper size < headers_size");
+            if(mapped_file_ptr->size < headers_size) {
+                logger->write_info("Mapper size < headers_size");
+                mapped_vec_shared->push_back(nt_header);
                 continue;
-						}
+            }
 
             nt_header = (IMAGE_NT_HEADERS *)(mapped_file_ptr->data + dos_header->e_lfanew);
 
@@ -68,9 +71,48 @@ namespace filetypes
                 mapped_vec_shared->push_back(nt_header);
             }
         }
-			  //return *mapped_vec_shared.get();
+
+        //return *mapped_vec_shared.get();
     }
 
+
+    template<typename MAPPED_FILE>
+    uint8_t  pe_file_controller<MAPPED_FILE>::retrive_offset_lite(
+            std::vector<struct IMAGE_NT_HEADERS * >  pe_header_vec_ptr)const
+    {
+        int count_offset;
+        int count_section;
+        struct pe_image_section_hdr section;
+        typename std::vector<struct IMAGE_NT_HEADERS *>::iterator iter_pe_header;
+        struct IMAGE_NT_HEADERS    *nt_headers;
+				struct IMAGE_NT_HEADERS_EXT * nt_headers_ext;
+        for(iter_pe_header = pe_header_vec_ptr.begin();
+                iter_pe_header != pe_header_vec_ptr.end();
+                ++iter_pe_header) {
+            nt_headers = *iter_pe_header;
+            section = (struct IMAGE_FIRST_SECTION)nt_headers;
+            count_offset = 0;
+
+            while(count_offset < MIN(nt_headers->FileHeader.NumberOfSections, 60) {
+            if((uint8_t)section -
+                (uint8_t)nt_headers + sizeof(struct pe_image_section_hdr) < nt_headers->size) {
+                    if(nt_headers->rva >= section->VirtualAddress &&
+                            nt_headers->rva < section->VirtualAddress +
+                    section->SizeOfRawData) {
+                        uint64_t  pe_offset_start = section->PointerToRawData +
+                                (nt_headers->rva - section->VirtualAddress);
+											  nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
+												nt_headers_ext->offset = pe_offset_start;
+                        pe_offset_vec_shared_ptr->push_back(	nt_headers_ext );
+                    }
+                }
+
+            }
+        }
+				if(pe_offset_vec_shared_ptr->size() == 0)
+					return 0;
+				return 1;
+    }
 
     template<typename MAPPED_FILE>
     inline int16_t pe_file_controller<MAPPED_FILE>::convert_ec16(uint16_t *buff)
@@ -224,11 +266,11 @@ namespace filetypes
             break;
 
         default:
-            logger->write_info("Machine type: ** UNKNOWN ** (0x%x)\n", 
-							boost::lexical_cast<std::string>(EC16(pe_file_header->Machine)));
+            logger->write_info("Machine type: ** UNKNOWN ** (0x%x)\n",
+                    boost::lexical_cast<std::string>(EC16(pe_file_header->Machine)));
         }
     }
 
-		template class pe_file_controller<struct MAPPED_FILE_PE>;
+    template class pe_file_controller<struct MAPPED_FILE_PE>;
 
 }

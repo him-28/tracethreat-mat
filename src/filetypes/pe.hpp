@@ -18,12 +18,14 @@ typedef uint32_t ULONG;
 
 #define FIELD_OFFSET(type, field)    ((size_t)&(((type *)0)->field))
 
+#define IMAGE_DOS_SIGNATURE_BIG            0x5A4D      // MZ
+
 #define IMAGE_DOS_SIGNATURE                 0x4D5A      // MZ
 #define IMAGE_OS2_SIGNATURE                 0x4E45      // NE
 #define IMAGE_OS2_SIGNATURE_LE              0x4C45      // LE
 #define IMAGE_NT_SIGNATURE                  0x50450000  // PE00
 
-#define IMAGE_FIRST_SECTION( ntheader ) ((PIMAGE_SECTION_HEADER)        \
+#define IMAGE_FIRST_SECTION( ntheader ) ((pe_image_section_hdr)        \
     ((BYTE*)ntheader +                                              \
      FIELD_OFFSET( IMAGE_NT_HEADERS, OptionalHeader ) +                 \
      ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader   \
@@ -241,6 +243,13 @@ struct pe_image_optional_hdr32  OptionalHeader32;
 struct pe_image_optional_hdr64  OptionalHeader64;	
 
 };
+
+//PE Header
+struct IMAGE_NT_HEADERS_EXT{
+		uint64_t      data;
+		uint64_t      offset; 
+};
+
 
 
 #endif
