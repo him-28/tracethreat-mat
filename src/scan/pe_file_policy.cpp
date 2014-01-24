@@ -19,7 +19,14 @@ std::vector<struct file_scan_result<MAPPED_FILE> > pe_file_policy<Policy, MAPPED
 scan_file_engine(std::vector<MAPPED_FILE *> mapped_file_pe)
 {
 		typename std::vector<MAPPED_FILE*>::iterator iter_mapped_file_pe;
-		
+	  MAPPED_FILE *  mf;
+	  for(iter_mapped_file_pe = mapped_file_pe.begin();
+					iter_mapped_file_pe != mapped_file_pe.end();
+					++iter_mapped_file_pe)
+		{
+				mf = *iter_mapped_file_pe;
+			  bool result = scan_file(mf); 	
+		}		
 
 }
 
