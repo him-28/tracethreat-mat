@@ -72,13 +72,13 @@ namespace filetypes
             }
         }
 
-        //return *mapped_vec_shared.get();
+        return *mapped_vec_shared.back();
     }
 
 
     template<typename MAPPED_FILE>
     uint8_t  pe_file_controller<MAPPED_FILE>::retrive_offset_lite(
-            std::vector<struct IMAGE_NT_HEADERS * >  pe_header_vec_ptr)const
+            std::vector<MAPPED_FILE*>  pe_header_vec_ptr)const
     {
         int count_offset;
         int count_section;
@@ -93,14 +93,14 @@ namespace filetypes
             section = (struct IMAGE_FIRST_SECTION)nt_headers;
             count_offset = 0;
 
-            while(count_offset < MIN(nt_headers->FileHeader.NumberOfSections, 60) {
+            while(count_offset < MIN(nt_headers->FileHeader.NumberOfSections, 60)) {
             if((uint8_t)section -
                 (uint8_t)nt_headers + sizeof(struct pe_image_section_hdr) < nt_headers->size) {
-                    if(nt_headers->rva >= section->VirtualAddress &&
-                            nt_headers->rva < section->VirtualAddress +
-                    section->SizeOfRawData) {
-                        uint64_t  pe_offset_start = section->PointerToRawData +
-                                (nt_headers->rva - section->VirtualAddress);
+                    if(nt_headers->rva >= section.VirtualAddress &&
+                            nt_headers->rva < section.VirtualAddress +
+                    section.SizeOfRawData) {
+                        uint64_t  pe_offset_start = section.PointerToRawData +
+                                (nt_headers->rva - section.VirtualAddress);
 												nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
 												nt_headers_ext->offset = pe_offset_start;
                         pe_offset_vec_shared_ptr->push_back(	nt_headers_ext );

@@ -227,6 +227,8 @@ struct MAPPED_FILE_PE {
     uint8_t 					*data;
 		uint32_t          ops_begin;
 		uint32_t					ops_end;
+		uint64_t          rva_block;
+	  size_t            size_block;
 };
 
 struct MAMORY_BLOCK_PE {
@@ -241,7 +243,6 @@ DWORD Signature;
 struct pe_image_file_hdr  FileHeader;
 struct pe_image_optional_hdr32  OptionalHeader32;		
 struct pe_image_optional_hdr64  OptionalHeader64;	
-
 };
 
 //PE Header

@@ -98,7 +98,7 @@ namespace filetypes
             *
             * @return
             */
-            uint8_t retrive_offset_lite(std::vector<struct IMAGE_NT_HEADERS *>  pe_header_vec_ptr)const;
+            uint8_t retrive_offset_lite(std::vector<MAPPED_FILE*>  pe_header_vec_ptr)const;
 
         private:
             IMAGE_NT_HEADERS *image_nt_header;
