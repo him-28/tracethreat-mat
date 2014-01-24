@@ -101,7 +101,7 @@ namespace filetypes
                     section->SizeOfRawData) {
                         uint64_t  pe_offset_start = section->PointerToRawData +
                                 (nt_headers->rva - section->VirtualAddress);
-											  nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
+												nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
 												nt_headers_ext->offset = pe_offset_start;
                         pe_offset_vec_shared_ptr->push_back(	nt_headers_ext );
                     }
