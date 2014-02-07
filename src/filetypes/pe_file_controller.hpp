@@ -53,7 +53,7 @@ namespace filetypes
             *
             * @return Vector contains header file of PE.
             */
-            boost::shared_ptr<std::vector<IMAGE_NT_HEADERS *> >&
+            std::vector<IMAGE_NT_HEADERS *>&
             get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec);
 
             /**
@@ -98,17 +98,50 @@ namespace filetypes
             *
             * @return
             */
-            uint8_t retrive_offset_lite(std::vector<MAPPED_FILE*>  pe_header_vec_ptr)const;
+            uint8_t retrive_offset_lite(std::vector<MAPPED_FILE *>  pe_header_vec_ptr,
+                    std::vector<struct IMAGE_NT_HEADERS * > pe_header)const;
+
+            /**
+            * @brief Get offset file per struct
+            *
+            * @param pe_header_ptr  contains data and size
+            *
+            * @return  retrun extens of struct IMAGE_NT_HEADER
+            */
+            struct IMAGE_NT_HEADERS_EXT& retrive_offset(MAPPED_FILE *pe_map_ptr,
+                    IMAGE_NT_HEADERS *pe_header)const;
+
+            /**
+            * @brief Convert * buffer of file to vector
+            *
+            * @param data  buffer data.(uint8_t)
+            *
+            * @return convert file completed.
+            */
+            bool convert2buffer(uint8_t   *data);
+
+            /**
+            * @brief Scan file with pe type
+            *
+            * @param file_buffer_vec   Vector type uint8_t contain all buffer file.
+            *
+            * @return scan completed return true.
+            */
+            bool scan(std::<uint8_t> file_buffer_vec);
 
         private:
             IMAGE_NT_HEADERS *image_nt_header;
 
             std::vector<boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> > > pe_header_vec_shared;
-            boost::shared_ptr<vector<struct IMAGE_NT_HEADERS_EXT> * >  pe_offset_vec_shared_ptr;
+            //retrive_offset_lite
+            boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS_EXT *> >  pe_offset_vec_shared_ptr;
+            // file buffer
+            std::vector<uint8_t> file_buffer_vec;
+
+            //retrive_offset
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
-
     };
 
 }

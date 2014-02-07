@@ -25,9 +25,9 @@ typedef uint32_t ULONG;
 #define IMAGE_OS2_SIGNATURE_LE              0x4C45      // LE
 #define IMAGE_NT_SIGNATURE                  0x50450000  // PE00
 
-#define IMAGE_FIRST_SECTION( ntheader ) ((pe_image_section_hdr)        \
+#define IMAGE_FIRST_SECTION( ntheader ) ((PIMAGE_SECTION_HEADER)        \
     ((BYTE*)ntheader +                                              \
-     FIELD_OFFSET( IMAGE_NT_HEADERS, OptionalHeader ) +                 \
+     FIELD_OFFSET( IMAGE_NT_HEADERS, OptionalHeader32 ) +                 \
      ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader   \
     ))
 
@@ -85,7 +85,7 @@ struct IMAGE_DOS_HEADER {      // DOS .EXE header
     WORD   e_oeminfo;                   // OEM information; e_oemid specific
     WORD   e_res2[10];                  // Reserved words
     LONG   e_lfanew;                    // File address of new exe header
-  };
+};
 
 
 struct pe_image_file_hdr {
@@ -109,7 +109,7 @@ struct pe_image_data_dir {
 /** 32-bit PE optional header
  *   \group_pe */
 struct pe_image_optional_hdr32 {
-		// Standard field.
+    // Standard field.
     WORD Magic;
     BYTE  MajorLinkerVersion;		    /**< unreliable */
     BYTE  MinorLinkerVersion;		    /**< unreliable */
@@ -118,7 +118,7 @@ struct pe_image_optional_hdr32 {
     DWORD SizeOfUninitializedData;		    /**< unreliable */
     DWORD AddressOfEntryPoint;
 
-		// NT additional fields.
+    // NT additional fields.
     DWORD BaseOfCode;
     DWORD BaseOfData;
     DWORD ImageBase;				    /**< multiple of 64 KB */
@@ -184,14 +184,14 @@ struct pe_image_optional_hdr64 {
  *   \group_pe */
 #define IMAGE_SIZEOF_SHORT_NAME 8
 
-typedef struct _IMAGE_DATA_DIRECTORY{
-        DWORD PhysicalAddress;
-        DWORD VirtualSize;
-    }MAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+typedef struct _IMAGE_DATA_DIRECTORY {
+    DWORD PhysicalAddress;
+    DWORD VirtualSize;
+} MAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
 
 
-struct pe_image_section_hdr {
-    BYTE Name[IMAGE_SIZEOF_SHORT_NAME];			    /**< may not end with NULL */ 
+typedef struct  _pe_image_section_hdr {
+    BYTE Name[IMAGE_SIZEOF_SHORT_NAME];			    /**< may not end with NULL */
     DWORD VirtualSize;
     DWORD VirtualAddress;
     DWORD SizeOfRawData;		    /**< multiple of FileAlignment */
@@ -201,7 +201,7 @@ struct pe_image_section_hdr {
     WORD NumberOfRelocations;	    /**< object files only */
     WORD NumberOfLinenumbers;	    /**< object files only */
     DWORD Characteristics;
-};
+}pe_image_section_hdr, *PIMAGE_SECTION_HEADER;
 
 /** Data for the bytecode PE hook
  *   \group_pe */
@@ -225,10 +225,8 @@ struct MAPPED_FILE_PE {
     FILE_DESCRIPTOR   file;
     size_t            size;
     uint8_t 					*data;
-		uint32_t          ops_begin;
-		uint32_t					ops_end;
-		uint64_t          rva_block;
-	  size_t            size_block;
+    uint32_t          ops_begin;
+    uint32_t					ops_end;
 };
 
 struct MAMORY_BLOCK_PE {
@@ -238,17 +236,22 @@ struct MAMORY_BLOCK_PE {
 };
 
 
-struct IMAGE_NT_HEADERS{
-DWORD Signature;
-struct pe_image_file_hdr  FileHeader;
-struct pe_image_optional_hdr32  OptionalHeader32;		
-struct pe_image_optional_hdr64  OptionalHeader64;	
+struct IMAGE_NT_HEADERS {
+    DWORD Signature;
+    struct pe_image_file_hdr  FileHeader;
+    struct pe_image_optional_hdr32  OptionalHeader32;
+    struct pe_image_optional_hdr64  OptionalHeader64;
+    //contain type
+    uint64_t          rva_block;
+    size_t            size_block;
 };
 
+typedef struct IMAGE_NT_HEADERS  *PIMAGE_NT_HEADERS ;
+
 //PE Header
-struct IMAGE_NT_HEADERS_EXT{
-		uint64_t      data;
-		uint64_t      offset; 
+struct IMAGE_NT_HEADERS_EXT {
+    uint64_t      data;
+    uint64_t      offset;
 };
 
 

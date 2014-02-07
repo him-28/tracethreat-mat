@@ -14,7 +14,7 @@ namespace filetypes
     }
 
     template<typename MAPPED_FILE>
-    boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> >&
+    std::vector<struct IMAGE_NT_HEADERS *>&
     pe_file_controller<MAPPED_FILE>::get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec)
     {
 
@@ -61,6 +61,7 @@ namespace filetypes
                 continue;
             }
 
+            // completed type get header
             nt_header = (IMAGE_NT_HEADERS *)(mapped_file_ptr->data + dos_header->e_lfanew);
 
             headers_size += nt_header->FileHeader.SizeOfOptionalHeader;
@@ -72,47 +73,129 @@ namespace filetypes
             }
         }
 
-        return *mapped_vec_shared.back();
+        return *mapped_vec_shared;
     }
 
 
     template<typename MAPPED_FILE>
     uint8_t  pe_file_controller<MAPPED_FILE>::retrive_offset_lite(
-            std::vector<MAPPED_FILE*>  pe_header_vec_ptr)const
+            std::vector<MAPPED_FILE *>  pe_map_vec_ptr,
+            std::vector<struct IMAGE_NT_HEADERS *> pe_header)const
     {
         int count_offset;
         int count_section;
-        struct pe_image_section_hdr section;
+
+        PIMAGE_SECTION_HEADER section;
+        PIMAGE_NT_HEADERS  nt_header;
+        struct IMAGE_NT_HEADERS_EXT *nt_headers_ext;
+        MAPPED_FILE   *pe_map_ptr;
+
         typename std::vector<struct IMAGE_NT_HEADERS *>::iterator iter_pe_header;
-        struct IMAGE_NT_HEADERS    *nt_headers;
-				struct IMAGE_NT_HEADERS_EXT * nt_headers_ext;
-        for(iter_pe_header = pe_header_vec_ptr.begin();
-                iter_pe_header != pe_header_vec_ptr.end();
+        //calculate rva
+        uint64_t rva_block_;
+        size_t   buffer_length_;
+
+        for(iter_pe_header = pe_header.begin();
+                iter_pe_header != pe_header.end();
                 ++iter_pe_header) {
-            nt_headers = *iter_pe_header;
-            section = (struct IMAGE_FIRST_SECTION)nt_headers;
+            nt_header = *iter_pe_header;
+
+            // pe_map_vec_ptr(File mapped)  gurantee size of containing equal pe_header(Header)
+            pe_map_ptr = pe_map_vec_ptr.at(std::distance(pe_header.begin(), iter_pe_header));
+
+            rva_block_     = nt_header->OptionalHeader32.AddressOfEntryPoint;
+            buffer_length_ = pe_map_ptr->size -((uint8_t *)&nt_header - pe_map_ptr->data);
+
+            nt_header->rva_block  = rva_block_;
+            nt_header->size_block = buffer_length_;
+
+            section = IMAGE_FIRST_SECTION(nt_header);
             count_offset = 0;
 
-            while(count_offset < MIN(nt_headers->FileHeader.NumberOfSections, 60)) {
-            if((uint8_t)section -
-                (uint8_t)nt_headers + sizeof(struct pe_image_section_hdr) < nt_headers->size) {
-                    if(nt_headers->rva >= section.VirtualAddress &&
-                            nt_headers->rva < section.VirtualAddress +
-                    section.SizeOfRawData) {
-                        uint64_t  pe_offset_start = section.PointerToRawData +
-                                (nt_headers->rva - section.VirtualAddress);
-												nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
-												nt_headers_ext->offset = pe_offset_start;
+            while(count_offset < MIN(nt_header->FileHeader.NumberOfSections, 60)) {
+                if((uint8_t *)&section -
+                        (uint8_t *)&nt_header + sizeof(pe_image_section_hdr) < pe_map_ptr->size) {
+                    if(nt_header->rva_block >= section->VirtualAddress &&
+                            nt_header->rva_block < section->VirtualAddress +
+                            section->SizeOfRawData) {
+                        uint64_t  pe_offset_start = section->PointerToRawData + \
+                                (nt_header->rva_block - section->VirtualAddress);
+                        nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
+                        nt_headers_ext->offset = pe_offset_start;
                         pe_offset_vec_shared_ptr->push_back(	nt_headers_ext );
                     }
                 }
 
             }
         }
-				if(pe_offset_vec_shared_ptr->size() == 0)
-					return 0;
-				return 1;
+
+        if(pe_offset_vec_shared_ptr->size() == 0)
+            return 0;
+
+        return 1;
     }
+
+
+    template<typename MAPPED_FILE>
+    struct IMAGE_NT_HEADERS_EXT&   pe_file_controller<MAPPED_FILE>::retrive_offset(
+            MAPPED_FILE  *pe_map_ptr,
+            IMAGE_NT_HEADERS *pe_header)const {
+
+        boost::shared_ptr<struct IMAGE_NT_HEADERS_EXT>
+        nth_ext_shared_ptr = boost::make_shared<struct IMAGE_NT_HEADERS_EXT>();
+
+        PIMAGE_SECTION_HEADER section;
+        PIMAGE_NT_HEADERS  nt_header;
+        struct IMAGE_NT_HEADERS_EXT *nt_headers_ext;
+
+        int count_offset;
+        int count_section;
+
+        section = IMAGE_FIRST_SECTION(nt_header);
+        count_offset = 0;
+
+        //calculate block
+        pe_header->rva_block = nt_header->OptionalHeader32.AddressOfEntryPoint;
+        pe_header->size_block = pe_map_ptr->size -((uint8_t *)nt_header - pe_map_ptr->data);
+
+        while(count_offset < MIN(nt_header->FileHeader.NumberOfSections, 60)) {
+            if((uint8_t *)section -
+                    (uint8_t *)nt_header + sizeof(pe_image_section_hdr) < pe_map_ptr->size) {
+                if(nt_header->rva_block >= section->VirtualAddress &&
+                        nt_header->rva_block < section->VirtualAddress + section->SizeOfRawData) {
+                    uint64_t  pe_offset_start = section->PointerToRawData +
+                            (nt_header->rva_block - section->VirtualAddress);
+					
+                    nth_ext_shared_ptr->offset = pe_offset_start;
+										nth_ext_shared_ptr->data   = pe_map_ptr->data;
+										nth_ext_shared_ptr->size   = pe_map_ptr->size;
+			
+										logger->write_info("pe_file_controller::retrive_offset, size \n", 
+														nth_ext_shared_ptr->size);
+										logger->write_info("pe_file_controller::retrive_offset, offset \n", 
+														nth_ext_shared_ptr->offset);
+
+										return *nth_ext_shared_ptr.get();
+                }
+
+                section++;
+                count_offset++;
+            } else {
+
+                break;
+            }
+
+        }
+
+        return *nth_ext_shared_ptr.get();
+    }
+
+    template<typename MAPPED_FILE>
+		bool pe_file_controller<MAPPED_FILE>::convert2buffer(uint8_t   *data, size_t size){
+					file_buffer_vec.assign(data, data+size);		
+					if(file_buffer_vec.size() == 0) return false;
+					return true;
+		}
 
     template<typename MAPPED_FILE>
     inline int16_t pe_file_controller<MAPPED_FILE>::convert_ec16(uint16_t *buff)

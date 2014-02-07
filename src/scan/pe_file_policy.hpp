@@ -11,15 +11,16 @@
 
 
 template<typename Policy, typename MAPPED_FILE = struct MAPPED_FILE_PE>
-class pe_file_policy : public file_policy<MAPPED_FILE>
+class pe_file_policy : public file_controller_policy<MAPPED_FILE>
 {
 
     protected:
-        bool scan_file(MAPPED_FILE *mapped_file_pe);	
-        std::vector<struct file_scan_result<MAPPED_FILE> >
-        	scan_file_engine(std::vector<MAPPED_FILE *> mapped_file_pe);
+			bool scan_file_type(MAPPED_FILE * mapped_file);       
+			bool load_plugins_type(MAPPED_FILE * mapped_file);
+			file_scan_result<MAPPED_FILE_PE> & get_result()const;
+			struct MemoryBlockContext * entry_point_offset(struct MEMORY_BLOCK_PE * memoblock);
     private:
-        pe_file_controller<MAPPED_FILE> pe_type;
+        pe_file_controller<MAPPED_FILE> pe_fcol;
 
 };
 
