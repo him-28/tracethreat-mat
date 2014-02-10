@@ -6,8 +6,8 @@ template<typename MAPPED_FILE>
 std::vector<struct file_scan_result<MAPPED_FILE> * >&
 file_controller_policy<MAPPED_FILE>::scan_file_engine(file_controller_policy<MAPPED_FILE> *f_col_policy)
 {
-    std::vector<MAPPED_FILE> *mapped_file_vec =  f_col_policy->get_mapped_file();
-    std::vector<MAPPED_FILE>::iterator iter_mapped_file;
+    std::vector<MAPPED_FILE*> *mapped_file_vec =  f_col_policy->get_mapped_file();
+    std::vector<MAPPED_FILE*>::iterator iter_mapped_file;
     uint8_t result_file_count = 0;
 
     for(iter_mapped_file  = mapped_file_vec->begin();

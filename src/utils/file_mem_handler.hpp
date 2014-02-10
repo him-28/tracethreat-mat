@@ -10,15 +10,11 @@
 
 namespace util{
 	template<typename FILE_TYPE_MEMORY>
-	class file_mem_controller{
+	class file_mem_base{
 		public:
 
 		private:
 	};
-
-	template<typename FILE_TYPE_MEMORY>
-
-
 }
 
 #endif

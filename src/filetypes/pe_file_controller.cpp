@@ -20,10 +20,11 @@ namespace filetypes
 
         logger->write_info("Intial PE header...");
 
+				// PE Header conntained vector. Controller pointer by shared_ptr
         boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> > mapped_vec_shared
             = boost::make_shared<std::vector<struct IMAGE_NT_HEADERS * > >();
         pe_header_vec_shared.push_back(mapped_vec_shared);
-
+			
         struct IMAGE_DOS_HEADER *dos_header;
         struct IMAGE_NT_HEADERS *nt_header;
         size_t headers_size = 0;
@@ -32,7 +33,7 @@ namespace filetypes
 
         for(iter_mf_vec = mapped_file_vec->begin(); iter_mf_vec != mapped_file_vec->end(); ++iter_mf_vec) {
             mapped_file_ptr = *iter_mf_vec;
-
+				
             if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER)) {
                 logger->write_info("Mappper data < IMAGE_DOS_HEADER");
                 continue;
@@ -189,6 +190,15 @@ namespace filetypes
 
         return *nth_ext_shared_ptr.get();
     }
+
+
+    template<typename MAPPED_FILE>
+		bool pe_file_controller<MAPPED_FILE>::scan(std::vector<uint8_t> file_buffer_vec)
+		{
+				//PE_FILE_CONTROLLER call AC-DFS algorithms.
+
+				return true;
+		}
 
     template<typename MAPPED_FILE>
 		bool pe_file_controller<MAPPED_FILE>::convert2buffer(uint8_t   *data, size_t size){

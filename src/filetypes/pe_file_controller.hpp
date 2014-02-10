@@ -129,6 +129,7 @@ namespace filetypes
             */
             bool scan(std::<uint8_t> file_buffer_vec);
 
+
         private:
             IMAGE_NT_HEADERS *image_nt_header;
 
@@ -138,7 +139,6 @@ namespace filetypes
             // file buffer
             std::vector<uint8_t> file_buffer_vec;
 
-            //retrive_offset
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
