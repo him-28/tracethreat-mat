@@ -227,6 +227,7 @@ struct MAPPED_FILE_PE {
     uint8_t 					*data;
     uint32_t          ops_begin;
     uint32_t					ops_end;
+		unsigned char     *file_name;
 };
 
 struct MAMORY_BLOCK_PE {
@@ -252,6 +253,8 @@ typedef struct IMAGE_NT_HEADERS  *PIMAGE_NT_HEADERS ;
 struct IMAGE_NT_HEADERS_EXT {
     uint64_t      data;
     uint64_t      offset;
+		size_t        size;
+	  uint8_t       *data_offset;	
 };
 
 

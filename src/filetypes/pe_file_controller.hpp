@@ -118,7 +118,7 @@ namespace filetypes
             *
             * @return convert file completed.
             */
-            bool convert2buffer(uint8_t   *data);
+            bool convert2buffer(uint64_t   *data, size_t size);
 
             /**
             * @brief Scan file with pe type
@@ -127,9 +127,14 @@ namespace filetypes
             *
             * @return scan completed return true.
             */
-            bool scan(std::<uint8_t> file_buffer_vec);
+            bool scan(std::vector<uint64_t> file_buffer_vec);
 
-
+            /**
+            * @brief Buffer return to external class
+            *
+            * @return uint64_t byte of buffer contains on std::vector<uint64_t>
+            */
+            std::vector<uint64_t> get_file_buffer();
         private:
             IMAGE_NT_HEADERS *image_nt_header;
 
@@ -137,7 +142,7 @@ namespace filetypes
             //retrive_offset_lite
             boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS_EXT *> >  pe_offset_vec_shared_ptr;
             // file buffer
-            std::vector<uint8_t> file_buffer_vec;
+            std::vector<uint64_t> file_buffer_vec;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;

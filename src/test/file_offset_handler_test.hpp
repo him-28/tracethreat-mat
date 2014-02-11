@@ -28,9 +28,37 @@ class FileOffsetHandlerTest : public ::testing::Test
 
 };
 
+/**
+* @brief mapped_file_test, Mapped file to memory and get data and size of data.
+*
+* @param FileOffsetHandlerTest  Class initial variable when SetUp() setup value to variable.
+* @param mapped_file_test  Test file mapped to memory. Mapped file support large file on operating system.
+*/
 TEST_F(FileOffsetHandlerTest, mapped_file_test)
 {
 		file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;			
+
 		EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
+
+		std::vector<MAPPED_FILE_PE*> mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
+		typename std::vector<MAPPED_FILE_PE*>::iterator iter_mapped_file;
+		for(iter_mapped_file = mapped_file_vec_ptr.begin(); iter_mapped_file != mapped_file_vec_ptr.end(); ++iter_mapped_file)
+		{
+							MAPPED_FILE_PE * mf_pe = *iter_mapped_file;
+							unsigned char * data = mf_pe->data;
+							size_t size  = mf_pe->size; 
+						  EXPECT_GT(size,0);
+							ASSERT_TRUE(*data != NULL);
+/*
+							for(size_t count = 0; count < size; count++)
+							{
+							   printf("%x",data[count]); 
+							}	
+							printf("\n");
+*/
+		}
+
     EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
-}; 
+
+};
+ 

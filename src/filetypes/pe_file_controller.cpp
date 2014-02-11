@@ -20,11 +20,11 @@ namespace filetypes
 
         logger->write_info("Intial PE header...");
 
-				// PE Header conntained vector. Controller pointer by shared_ptr
+        // PE Header conntained vector. Controller pointer by shared_ptr
         boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> > mapped_vec_shared
             = boost::make_shared<std::vector<struct IMAGE_NT_HEADERS * > >();
         pe_header_vec_shared.push_back(mapped_vec_shared);
-			
+
         struct IMAGE_DOS_HEADER *dos_header;
         struct IMAGE_NT_HEADERS *nt_header;
         size_t headers_size = 0;
@@ -33,7 +33,7 @@ namespace filetypes
 
         for(iter_mf_vec = mapped_file_vec->begin(); iter_mf_vec != mapped_file_vec->end(); ++iter_mf_vec) {
             mapped_file_ptr = *iter_mf_vec;
-				
+
             if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER)) {
                 logger->write_info("Mappper data < IMAGE_DOS_HEADER");
                 continue;
@@ -166,17 +166,17 @@ namespace filetypes
                         nt_header->rva_block < section->VirtualAddress + section->SizeOfRawData) {
                     uint64_t  pe_offset_start = section->PointerToRawData +
                             (nt_header->rva_block - section->VirtualAddress);
-					
-                    nth_ext_shared_ptr->offset = pe_offset_start;
-										nth_ext_shared_ptr->data   = pe_map_ptr->data;
-										nth_ext_shared_ptr->size   = pe_map_ptr->size;
-			
-										logger->write_info("pe_file_controller::retrive_offset, size \n", 
-														nth_ext_shared_ptr->size);
-										logger->write_info("pe_file_controller::retrive_offset, offset \n", 
-														nth_ext_shared_ptr->offset);
 
-										return *nth_ext_shared_ptr.get();
+                    nth_ext_shared_ptr->offset 				= pe_offset_start;
+                    nth_ext_shared_ptr->data_offset   = pe_map_ptr->data;
+                    nth_ext_shared_ptr->size   				= pe_map_ptr->size;
+
+                    logger->write_info("pe_file_controller::retrive_offset, size \n",
+                            boost::lexical_cast<std::string>(nth_ext_shared_ptr->size));
+                    logger->write_info("pe_file_controller::retrive_offset, offset \n",
+                            boost::lexical_cast<std::string>(nth_ext_shared_ptr->offset));
+
+                    return *nth_ext_shared_ptr.get();
                 }
 
                 section++;
@@ -193,19 +193,22 @@ namespace filetypes
 
 
     template<typename MAPPED_FILE>
-		bool pe_file_controller<MAPPED_FILE>::scan(std::vector<uint8_t> file_buffer_vec)
-		{
-				//PE_FILE_CONTROLLER call AC-DFS algorithms.
+    bool pe_file_controller<MAPPED_FILE>::scan(std::vector<uint64_t> file_buffer_vec)
+    {
+        //PE_FILE_CONTROLLER call AC-DFS algorithms.
 
-				return true;
-		}
+        return true;
+    }
 
     template<typename MAPPED_FILE>
-		bool pe_file_controller<MAPPED_FILE>::convert2buffer(uint8_t   *data, size_t size){
-					file_buffer_vec.assign(data, data+size);		
-					if(file_buffer_vec.size() == 0) return false;
-					return true;
-		}
+    bool pe_file_controller<MAPPED_FILE>::convert2buffer(uint64_t   *data, size_t size)
+    {
+        file_buffer_vec.assign(data, data+size);
+
+        if(file_buffer_vec.size() == 0) return false;
+
+        return true;
+    }
 
     template<typename MAPPED_FILE>
     inline int16_t pe_file_controller<MAPPED_FILE>::convert_ec16(uint16_t *buff)

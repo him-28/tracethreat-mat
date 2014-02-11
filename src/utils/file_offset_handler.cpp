@@ -94,14 +94,17 @@ namespace util
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
 
-                    //logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
-                    //logger->write_info("Mapped file ptr name  ", boost::lexical_cast<std::string>(mapped_file_ptr->file));
+
                     mapped_file_ptr->data = (uint8_t *)mmap(0,
                             mapped_file_ptr->size,
                             PROT_READ,
                             MAP_PRIVATE,
                             mapped_file_ptr->file,
                             0);
+
+                    logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
+                    logger->write_info("Mapped file ptr name  ", boost::lexical_cast<std::string>(mapped_file_ptr->file));
+										logger->write_info("Mapped file data      ", boost::lexical_cast<std::string>(mapped_file_ptr->data));
 
                     if(mapped_file_ptr->data == MAP_FAILED) {
                         throw file_system_excep::offset_exception("[** File cannot map **]");
@@ -123,8 +126,7 @@ namespace util
     std::vector<MAPPED_FILE *> & file_offset_handler<FileType, MAPPED_FILE>
     ::get_mapped_file()
     {
-        //boost::shared_ptr<std::vector<MAPPED_FILE *> > * mfv_shared = mapped_file_vec_shared.back();
-        return *mapped_vec_shared.get();// mapped_file_vec_shared.at(0);
+        return *mapped_vec_shared.get();
     }
 
     template<typename FileType, typename MAPPED_FILE>

@@ -41,3 +41,4 @@ TEST_F(FilePolicyTest, pe_file_policy)
 		sf_policy.scan();	
 
 };
+
