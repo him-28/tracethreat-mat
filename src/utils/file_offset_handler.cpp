@@ -90,6 +90,9 @@ namespace util
 
                     mapped_file_ptr->file = file_offset_object.get_popen_file();
 
+                    logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
+                    logger->write_info("Mapped file ptr name  ", boost::lexical_cast<std::string>(mapped_file_ptr->file));
+
                     if(mapped_file_ptr->size == 0 || mapped_file_ptr->file == -1) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
@@ -101,9 +104,8 @@ namespace util
                             MAP_PRIVATE,
                             mapped_file_ptr->file,
                             0);
+                    logger->write_info("Mapped file with mmap success");
 
-                    logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
-                    logger->write_info("Mapped file ptr name  ", boost::lexical_cast<std::string>(mapped_file_ptr->file));
 										logger->write_info("Mapped file data      ", boost::lexical_cast<std::string>(mapped_file_ptr->data));
 
                     if(mapped_file_ptr->data == MAP_FAILED) {

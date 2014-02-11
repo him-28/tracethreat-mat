@@ -26,15 +26,18 @@ namespace policy
     {
         //scan single file only. scan_file_type support single file.
         //Member function get_pe_header and
-        std::vector<MAPPED_FILE * > mapped_file_vec;
+        std::vector<MAPPED_FILE * >  mapped_file_vec;
         mapped_file_vec.push_back(mapped_file_pe);
         //get pe header file.
         //vector send get_pe_header support multiple file.
-        std::vector<struct IMAGE_NT_HEADER *> nt_header = pe_fconl.get_pe_header(mapped_file_vec);
-        // Mapped_file_vec :  get only one file from mapped_file_vec with back() member function.
-        // Nt_header : for get header detail.
-        struct IMAGE_NT_HEADERS_EXT *nt_header_ext =
-                pe_fconl.retrive_offset(mapped_file_vec.back(), nt_header);
+        std::vector<struct IMAGE_NT_HEADERS *> nt_header = 
+					pe_fconl.get_pe_header(&mapped_file_vec);
+			
+        MAPPED_FILE * map_file =  mapped_file_vec.back();
+				struct IMAGE_NT_HEADERS * nth = nt_header.back();
+
+        struct IMAGE_NT_HEADERS_EXT nt_header_ext =
+                pe_fconl.retrive_offset(map_file, nth);
         int count_size_buffer = 0;
         bool ret = true;
 
@@ -46,7 +49,7 @@ namespace policy
         *
         * @return True, if data can insert to vector contains buffer.
         */
-        ret = pe_fconl.convert2buffer(&nt_header_ext->data, nt_header_ext->size);
+        ret = pe_fconl.convert2buffer(&nt_header_ext.data, nt_header_ext.size);
 
         if(!ret) {
             logger->write_info("pe_file_policy::scan_file_type, pe_fconl.convert2buffer cannot create buffer");
@@ -58,7 +61,7 @@ namespace policy
         if(!ret) {
             logger->write_info("pe_file_policy::scan_file_type, scan cannot scan file buffer");
         }
-
+		
         return true;// scan completed
     }
 
@@ -89,7 +92,7 @@ namespace policy
         mapped_files_vec.push_back(mapped_file);
     }
 
-    //template class pe_file_policy<struct MAPPED_FILE_PE>;
+    template class pe_file_policy<struct MAPPED_FILE_PE>;
 
 }
 

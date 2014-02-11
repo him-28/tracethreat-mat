@@ -42,7 +42,7 @@ namespace policy
         /**
         * @brief
         */
-        MAPPED_FILE  file_detail;
+     //   MAPPED_FILE  file_detail;
 
     };
 
@@ -159,7 +159,8 @@ namespace policy
 
     };
 
-    template<typename MAPPED_FILE, typename FilePolicySetterPE = pe_file_policy<MAPPED_FILE> >
+    template<typename MAPPED_FILE, 
+			typename FilePolicySetterPE = pe_file_policy<MAPPED_FILE> >
     class scan_file_policy
     {
         private:

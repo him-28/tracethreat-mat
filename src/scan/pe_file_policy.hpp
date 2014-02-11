@@ -30,9 +30,11 @@ namespace policy
     template<typename MAPPED_FILE>
     class pe_file_policy :  public file_controller_policy<MAPPED_FILE>
     {
+        public:
+
+            pe_file_policy();
 
         protected:
-            pe_file_policy();
             /**
             * @brief Add mapped file detail for scanning
             *

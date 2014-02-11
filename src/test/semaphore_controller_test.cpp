@@ -14,8 +14,10 @@
 #include "test/file_calculate_test.hpp"
 #include "test/file_offset_handler_test.hpp" // Offset
 #include "test/pe_file_controller_test.hpp"  // PE 
+#include "test/file_policy_test.hpp"         // PE fist file policy class
 
 #include "test/wrapper_rules_tests.hpp"
+
 
 
 // semaphore test suite 

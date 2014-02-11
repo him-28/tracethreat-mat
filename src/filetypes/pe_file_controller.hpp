@@ -53,7 +53,7 @@ namespace filetypes
             *
             * @return Vector contains header file of PE.
             */
-            std::vector<IMAGE_NT_HEADERS *>&
+            std::vector<struct IMAGE_NT_HEADERS *>&
             get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec);
 
             /**
