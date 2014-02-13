@@ -30,11 +30,11 @@ namespace policy
         mapped_file_vec.push_back(mapped_file_pe);
         //get pe header file.
         //vector send get_pe_header support multiple file.
-        std::vector<struct IMAGE_NT_HEADERS *> nt_header = 
-					pe_fconl.get_pe_header(&mapped_file_vec);
-			
-        MAPPED_FILE * map_file =  mapped_file_vec.back();
-				struct IMAGE_NT_HEADERS * nth = nt_header.back();
+        std::vector<struct IMAGE_NT_HEADERS *> nt_header =
+                pe_fconl.get_pe_header(&mapped_file_vec);
+
+        MAPPED_FILE *map_file =  mapped_file_vec.back();
+        struct IMAGE_NT_HEADERS *nth = nt_header.back();
 
         struct IMAGE_NT_HEADERS_EXT nt_header_ext =
                 pe_fconl.retrive_offset(map_file, nth);
@@ -44,8 +44,8 @@ namespace policy
         /**
         * @brief Convert data from offset to buffer uint64_t type.
         *
-        * @param nt_header_ext->data  Pointer data from file buffer.
-        * @param nt_header_ext->size  Size of data
+        * @param nt_header_ext.data  Pointer data from file buffer.
+        * @param nt_header_ext.size  Size of data
         *
         * @return True, if data can insert to vector contains buffer.
         */
@@ -61,7 +61,7 @@ namespace policy
         if(!ret) {
             logger->write_info("pe_file_policy::scan_file_type, scan cannot scan file buffer");
         }
-		
+
         return true;// scan completed
     }
 
@@ -90,6 +90,12 @@ namespace policy
     bool pe_file_policy<MAPPED_FILE>::set_mapped_file(MAPPED_FILE *mapped_file)
     {
         mapped_files_vec.push_back(mapped_file);
+    }
+
+    template<typename MAPPED_FILE>
+    struct file_scan_result<MAPPED_FILE>& pe_file_policy<MAPPED_FILE>::get_result()const
+    {
+
     }
 
     template class pe_file_policy<struct MAPPED_FILE_PE>;

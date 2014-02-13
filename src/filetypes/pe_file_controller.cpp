@@ -219,6 +219,11 @@ namespace filetypes
         return ret;
     }
 
+		template<typename MAPPED_FILE>
+    std::vector<uint64_t> pe_file_controller<MAPPED_FILE>::get_file_buffer(){
+
+
+		}
 
     template<typename MAPPED_FILE>
     inline int32_t pe_file_controller<MAPPED_FILE>::convert_ec32(uint16_t *buff)

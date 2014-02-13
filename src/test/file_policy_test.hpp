@@ -1,6 +1,4 @@
-
 #include "scan/file_scan_policy.hpp"
-#include "scan/pe_file_policy.hpp"
 
 #define FILE_NO 1
 
@@ -25,7 +23,7 @@ class FilePolicyTest : public ::testing::Test
 
         }
         std::list<std::string> list_file_type;
-        struct MAPPED_FILE_PE *s_mapped_fpe[FILE_SIZE];
+        struct MAPPED_FILE_PE *s_mapped_fpe[FILE_NO];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
 
 };
@@ -52,14 +50,16 @@ TEST_F(FilePolicyTest, pe_file_policy)
         // offset for scanning data
 
     }
-	  pe_file_policy<struct MAPPED_FILE_PE> * pef_policy;// =  new pe_file_policy<struct MAPPED_FILE_PE>();	
+
+	  pe_file_policy<struct MAPPED_FILE_PE>  pef_policy;// =  new pe_file_policy<struct MAPPED_FILE_PE>();	
     scan_file_policy<
 				MAPPED_FILE_PE,
 				pe_policy_is<pe_file_policy<MAPPED_FILE_PE>, MAPPED_FILE_PE> 
 				> sf_policy;
-    sf_policy.scan_pe(pef_policy);
+    sf_policy.scan_pe(&pef_policy);
 
     EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
+
 
 };
 

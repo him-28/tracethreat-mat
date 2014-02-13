@@ -9,9 +9,9 @@ lib_LIBRARIES = libscan.a
 libscan_adir = $(includedir)/scan
 
 #Header
-libscan_a_HEADERS = file_scan_policy.hpp pe_file_policy.hpp
+libscan_a_HEADERS = file_scan_policy.hpp 
 
 # library
-libscan_a_SOURCES = $(libscan_a_HEADERS) file_scan_policy.cpp pe_file_policy.cpp
+libscan_a_SOURCES = $(libscan_a_HEADERS)  file_scan_policy.cpp
 
 

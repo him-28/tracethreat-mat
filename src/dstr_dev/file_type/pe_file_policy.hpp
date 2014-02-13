@@ -1,5 +1,5 @@
-#ifndef POLICY_SCAN__PE_POLICY__HPP
-#define POLICY_SCAN__PE_POLICY__HPP
+#ifndef POLICY_PE_FILE_POLICY_HPP
+#define POLICY_PE_FILE_POLICY_HPP
 
 /*						Titles														Authors													Date
  * Scan file by select type with Policy based class
@@ -19,22 +19,26 @@ namespace policy
     using namespace filetypes;
 
     namespace h_util = hnmav_util;
-
+		
     // Forward declaration.
     template<typename MAPPED_FILE>
-    class file_controller_policy;
+    class file_scan_policy;
+		
+    template<typename MAPPED_FILE>
+    class pe_file_policy;
 
     template<typename MAPPED_FILE>
     class file_scan_result;
+		
 
     template<typename MAPPED_FILE>
-    class pe_file_policy :  public file_controller_policy<MAPPED_FILE>
+    class pe_file_policy :  public file_scan_policy<MAPPED_FILE>
     {
         public:
 
             pe_file_policy();
-
-        protected:
+					 ~pe_file_policy();
+            //protected:
             /**
             * @brief Add mapped file detail for scanning
             *
@@ -42,7 +46,10 @@ namespace policy
             *
             * @return True, If scanning completed.
             */
+            // virtual bool scan_file_type(MAPPED_FILE *mapped_file);
+            // : Cannot use virtual from file_scan_policy abstract base
             bool scan_file_type(MAPPED_FILE *mapped_file);
+
             /**
             * @brief
             *
@@ -56,7 +63,7 @@ namespace policy
             *
             * @return
             */
-            file_scan_result<struct MAPPED_FILE_PE>& get_result()const;
+            struct file_scan_result<MAPPED_FILE>& get_result()const;
             /**
             * @brief
             *
