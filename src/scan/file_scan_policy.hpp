@@ -83,12 +83,12 @@ namespace policy
             /**
             * @brief
             */
-            //typedef pe_file_policy<MAPPED_FILE> pe_scan;
+            typedef pe_file_policy<MAPPED_FILE> pe_scan;
 
             /**
             * @brief
             */
-            // file_scan_policy();
+            file_scan_policy();
 
 
             /**
@@ -102,10 +102,10 @@ namespace policy
             scan_file_engine(file_scan_policy<MAPPED_FILE> *f_col_policy);
 
 
-     				public:
+        public:
             //        protected:
 
-						
+
             /**
             * @brief
             *
@@ -122,7 +122,7 @@ namespace policy
             * @return
             */
             //  Class didn't support virtual, Abstract base
-           	virtual bool load_plugins_type(MAPPED_FILE *mapped_file) = 0;
+            virtual bool load_plugins_type(MAPPED_FILE *mapped_file) = 0;
             /**
             * @brief
             *
@@ -151,16 +151,16 @@ namespace policy
             file_scan_result<MAPPED_FILE> *fs_result;
             std::vector<struct file_scan_result<MAPPED_FILE> * >  file_scan_result_vec;
 
-						file_scan_policy<MAPPED_FILE> * f_col_policy;
+            file_scan_policy<MAPPED_FILE> *f_col_policy;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
 
     };
-    
+
     template<typename MAPPED_FILE> class default_file_policy_args :
-    virtual public file_scan_policy<MAPPED_FILE>
+        virtual public file_scan_policy<MAPPED_FILE>
     {
 
     };
@@ -169,25 +169,26 @@ namespace policy
     template<typename Policy, typename MAPPED_FILE = struct MAPPED_FILE_PE>
     class pe_policy_is : virtual public file_scan_policy<MAPPED_FILE>
     {
-    public:
-        typedef Policy pe_policy;
+        public:
+            typedef Policy pe_policy;
 
     };
 
     template<typename MAPPED_FILE,
-    	typename FilePolicySetterPE = pe_file_policy<MAPPED_FILE> >
+             typename FilePolicySetter = default_file_policy_args<MAPPED_FILE> >
     class scan_file_policy
     {
-    private:
-        typedef file_policy_selector<FilePolicySetterPE>  policy;
-    public:
-        // pe type support
-        std::vector<struct file_scan_result<MAPPED_FILE> * >& scan_pe(
-                file_scan_policy<MAPPED_FILE> *f_col_policy) {
-
-        }
+        private:
+            typedef file_policy_selector<FilePolicySetter>  policy;
+        public:
+            // pe type support
+            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+              scan_pe(
+                    file_scan_policy<MAPPED_FILE> *obj_fconl_policy) {
+                return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+            }
     };
-    
+
 
 
     //-----------------------PE File Policy --------------------------------//
@@ -215,7 +216,7 @@ namespace policy
             *
             * @param mapped_file
             *
-            * @return
+            can_file_type @return
             */
             virtual bool load_plugins_type(MAPPED_FILE *mapped_file);
             /**

@@ -18,7 +18,9 @@ namespace filetypes
     pe_file_controller<MAPPED_FILE>::get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec)
     {
 
-        logger->write_info("Intial PE header...");
+        logger->write_info("Intial PE header, pe_file_controller<MAPPED_FILE>::get_pe_header...");
+        logger->write_info_test("pe_file_controller<MAPPED_FILE>::get_pe_header, vector_size : ",
+                boost::lexical_cast<std::string>(mapped_file_vec->size()));
 
         // PE Header conntained vector. Controller pointer by shared_ptr
         boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> > mapped_vec_shared
@@ -39,10 +41,9 @@ namespace filetypes
                 continue;
             }
 
-            dos_header = (struct IMAGE_DOS_HEADER *)mapped_file_ptr->data;
+            dos_header = (PIMAGE_DOS_HEADER)mapped_file_ptr->data;
 
-            if(dos_header->e_magic != IMAGE_DOS_SIGNATURE &&
-                    dos_header->e_magic != IMAGE_DOS_SIGNATURE_BIG) {
+            if(dos_header->e_magic != IMAGE_DOS_SIGNATURE){
                 logger->write_info("Mapper e_mage != IMAGE_DOS_SIGNATURE");
                 mapped_vec_shared->push_back(nt_header);
                 continue;
@@ -54,7 +55,7 @@ namespace filetypes
                 continue;
             }
 
-            headers_size = dos_header->e_lfanew + sizeof(nt_header) + sizeof(pe_image_file_hdr);
+            headers_size = dos_header->e_lfanew + sizeof(nt_header->Signature) + sizeof(IMAGE_FILE_HEADER);
 
             if(mapped_file_ptr->size < headers_size) {
                 logger->write_info("Mapper size < headers_size");
@@ -63,16 +64,34 @@ namespace filetypes
             }
 
             // completed type get header
-            nt_header = (IMAGE_NT_HEADERS *)(mapped_file_ptr->data + dos_header->e_lfanew);
+            nt_header = (PIMAGE_NT_HEADERS)(mapped_file_ptr->data + dos_header->e_lfanew);
 
             headers_size += nt_header->FileHeader.SizeOfOptionalHeader;
 
+            logger->write_info("pe_file_controller<MAPPED_FILE>::get_pe_header, header size",
+                    boost::lexical_cast<std::string>(headers_size));
+
+            logger->write_info("pe_file_controller<MAPPED_FILE>::get_pe_header,  mapped_file_ptr->size",
+                    boost::lexical_cast<std::string>(mapped_file_ptr->size));
+
+            logger->write_info_test("pe_file_controller<MAPPED_FILE>::get_pe_header, Signature",
+                    boost::lexical_cast<std::string>(nt_header->Signature));						
+
             if(nt_header->Signature == IMAGE_NT_SIGNATURE &&
                     nt_header->FileHeader.Machine == IMAGE_FILE_MACHINE_I386 &&
-                    mapped_file_ptr->size < headers_size) {
+                    mapped_file_ptr->size > headers_size) {
                 mapped_vec_shared->push_back(nt_header);
+
+                logger->write_info_test("pe_file_controller<MAPPED_FILE>::get_pe_header, push back completed");
             }
+
+            //test only
+            //mapped_vec_shared->push_back(nt_header);
+
         }
+
+        logger->write_info_test("pe_file_controller<MAPPED_FILE>::get_pe_header, return mapped_vec_shared",
+                boost::lexical_cast<std::string>(mapped_vec_shared->size()));
 
         return *mapped_vec_shared;
     }
@@ -104,24 +123,24 @@ namespace filetypes
             // pe_map_vec_ptr(File mapped)  gurantee size of containing equal pe_header(Header)
             pe_map_ptr = pe_map_vec_ptr.at(std::distance(pe_header.begin(), iter_pe_header));
 
-            rva_block_     = nt_header->OptionalHeader32.AddressOfEntryPoint;
+            rva_block_     = nt_header->OptionalHeader.AddressOfEntryPoint;
             buffer_length_ = pe_map_ptr->size -((uint8_t *)&nt_header - pe_map_ptr->data);
 
-            nt_header->rva_block  = rva_block_;
-            nt_header->size_block = buffer_length_;
+	          nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
+            nt_headers_ext->rva_block  = rva_block_;
+            nt_headers_ext->size_block = buffer_length_;
 
             section = IMAGE_FIRST_SECTION(nt_header);
             count_offset = 0;
 
             while(count_offset < MIN(nt_header->FileHeader.NumberOfSections, 60)) {
                 if((uint8_t *)&section -
-                        (uint8_t *)&nt_header + sizeof(pe_image_section_hdr) < pe_map_ptr->size) {
-                    if(nt_header->rva_block >= section->VirtualAddress &&
-                            nt_header->rva_block < section->VirtualAddress +
+                        (uint8_t *)&nt_header + sizeof(IMAGE_SECTION_HEADER) < pe_map_ptr->size) {
+                    if(nt_headers_ext->rva_block >= section->VirtualAddress &&
+                            nt_headers_ext->rva_block < section->VirtualAddress +
                             section->SizeOfRawData) {
                         uint64_t  pe_offset_start = section->PointerToRawData + \
-                                (nt_header->rva_block - section->VirtualAddress);
-                        nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
+                                (nt_headers_ext->rva_block - section->VirtualAddress);
                         nt_headers_ext->offset = pe_offset_start;
                         pe_offset_vec_shared_ptr->push_back(	nt_headers_ext );
                     }
@@ -146,26 +165,37 @@ namespace filetypes
         nth_ext_shared_ptr = boost::make_shared<struct IMAGE_NT_HEADERS_EXT>();
 
         PIMAGE_SECTION_HEADER section;
-        PIMAGE_NT_HEADERS  nt_header;
+        //PIMAGE_NT_HEADERS  nt_header = pe_header;
         struct IMAGE_NT_HEADERS_EXT *nt_headers_ext;
 
         int count_offset;
         int count_section;
 
-        section = IMAGE_FIRST_SECTION(nt_header);
+        section = IMAGE_FIRST_SECTION(pe_header);
         count_offset = 0;
 
-        //calculate block
-        pe_header->rva_block = nt_header->OptionalHeader32.AddressOfEntryPoint;
-        pe_header->size_block = pe_map_ptr->size -((uint8_t *)nt_header - pe_map_ptr->data);
 
-        while(count_offset < MIN(nt_header->FileHeader.NumberOfSections, 60)) {
-            if((uint8_t *)section -
-                    (uint8_t *)nt_header + sizeof(pe_image_section_hdr) < pe_map_ptr->size) {
-                if(nt_header->rva_block >= section->VirtualAddress &&
-                        nt_header->rva_block < section->VirtualAddress + section->SizeOfRawData) {
+				logger->write_info_test("pe_file_controller::retrive_offset,pe_header->OptionalHeader32.AddressOfEntryPoint",
+          boost::lexical_cast<std::string>(pe_header->OptionalHeader.AddressOfEntryPoint));
+
+        //calculate block
+        nth_ext_shared_ptr->rva_block  = pe_header->OptionalHeader.AddressOfEntryPoint;
+        nth_ext_shared_ptr->size_block = pe_map_ptr->size -((uint8_t *)pe_header - pe_map_ptr->data);
+
+				printf("(RVA_BLOCK, pe_header->OptionalHeader.AddressOfEntryPoint : %d \n", pe_header->OptionalHeader.AddressOfEntryPoint);
+				
+			
+        while(count_offset < MIN(pe_header->FileHeader.NumberOfSections, 60)) {
+            if((uint8_t *)section - \
+                    (uint8_t *)pe_header + sizeof(IMAGE_SECTION_HEADER) < pe_map_ptr->size) {
+                if(nth_ext_shared_ptr->rva_block >= section->VirtualAddress &&
+                        nth_ext_shared_ptr->rva_block < section->VirtualAddress + section->SizeOfRawData) {
                     uint64_t  pe_offset_start = section->PointerToRawData +
-                            (nt_header->rva_block - section->VirtualAddress);
+                            (nth_ext_shared_ptr->rva_block - section->VirtualAddress);
+
+										logger->write_info_test("section->PointerToRawData", boost::lexical_cast<std::string>(section->PointerToRawData));
+										logger->write_info_test("nth_ext_shared_ptr->rva_block", boost::lexical_cast<std::string>(nth_ext_shared_ptr->rva_block));
+										logger->write_info_test("section->VirtualAddress", boost::lexical_cast<std::string>(section->VirtualAddress));
 
                     nth_ext_shared_ptr->offset 				= pe_offset_start;
                     nth_ext_shared_ptr->data_offset   = pe_map_ptr->data;
@@ -174,7 +204,7 @@ namespace filetypes
                     logger->write_info("pe_file_controller::retrive_offset, size \n",
                             boost::lexical_cast<std::string>(nth_ext_shared_ptr->size));
                     logger->write_info("pe_file_controller::retrive_offset, offset \n",
-                            boost::lexical_cast<std::string>(nth_ext_shared_ptr->offset));
+                            boost::lexical_cast<std::string>(pe_offset_start));
 
                     return *nth_ext_shared_ptr.get();
                 }
@@ -219,11 +249,12 @@ namespace filetypes
         return ret;
     }
 
-		template<typename MAPPED_FILE>
-    std::vector<uint64_t> pe_file_controller<MAPPED_FILE>::get_file_buffer(){
+    template<typename MAPPED_FILE>
+    std::vector<uint64_t> pe_file_controller<MAPPED_FILE>::get_file_buffer()
+    {
 
 
-		}
+    }
 
     template<typename MAPPED_FILE>
     inline int32_t pe_file_controller<MAPPED_FILE>::convert_ec32(uint16_t *buff)
@@ -242,7 +273,7 @@ namespace filetypes
     std::list<std::string> pe_file_controller<MAPPED_FILE>
     ::list_pe_header(struct IMAGE_NT_HEADERS *image_nt_header)
     {
-        struct pe_image_file_hdr *pe_file_header = &image_nt_header->FileHeader;
+        struct IMAGE_FILE_HEADER *pe_file_header = &image_nt_header->FileHeader;
 
         // Detail from pe.c
         switch(EC16(pe_file_header->Machine)) {

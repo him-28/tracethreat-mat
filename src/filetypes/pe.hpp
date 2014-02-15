@@ -1,36 +1,92 @@
 #ifndef PE__HPP
 #define PE__HPP
 
-#include "stdint.h"
-#include "stdio.h"
+/*
+ * Copyrigth(c) 2007. Victor M. Alvarez  [plusvic@gmail.com].
+ * Apache license
+ */
+
+#include <stdint.h>
+#include <stdlib.h>
 
 #define FILE_DESCRIPTOR  int
 
-/** Header for this PE file
- *   \group_pe */
-
-typedef uint8_t  BYTE;
-typedef uint16_t WORD;
-typedef uint32_t DWORD;
-typedef int32_t  LONG;
-typedef uint32_t ULONG;
+typedef uint8_t 	BYTE;
+typedef uint16_t	WORD;
+typedef uint32_t	DWORD;
+typedef	int32_t		LONG;
+typedef uint32_t	ULONG;
 
 
 #define FIELD_OFFSET(type, field)    ((size_t)&(((type *)0)->field))
 
-#define IMAGE_DOS_SIGNATURE_BIG            0x5A4D      // MZ
+#ifndef _MAC
+
+#pragma pack(push,4)                   // 4 byte packing is the default
+
+#define IMAGE_DOS_SIGNATURE                 0x5A4D      // MZ
+#define IMAGE_OS2_SIGNATURE                 0x454E      // NE
+#define IMAGE_OS2_SIGNATURE_LE              0x454C      // LE
+#define IMAGE_VXD_SIGNATURE                 0x454C      // LE
+#define IMAGE_NT_SIGNATURE                  0x00004550  // PE00
+
+#pragma pack(push,2)                   // 16 bit headers are 2 byte packed
+
+#else
+
+#pragma pack(push,1)
 
 #define IMAGE_DOS_SIGNATURE                 0x4D5A      // MZ
 #define IMAGE_OS2_SIGNATURE                 0x4E45      // NE
 #define IMAGE_OS2_SIGNATURE_LE              0x4C45      // LE
 #define IMAGE_NT_SIGNATURE                  0x50450000  // PE00
 
-#define IMAGE_FIRST_SECTION( ntheader ) ((PIMAGE_SECTION_HEADER)        \
-    ((BYTE*)ntheader +                                              \
-     FIELD_OFFSET( IMAGE_NT_HEADERS, OptionalHeader32 ) +                 \
-     ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader   \
-    ))
+#endif
 
+
+struct IMAGE_DOS_HEADER {      // DOS .EXE header
+    WORD   e_magic;                     // Magic number
+    WORD   e_cblp;                      // Bytes on last page of file
+    WORD   e_cp;                        // Pages in file
+    WORD   e_crlc;                      // Relocations
+    WORD   e_cparhdr;                   // Size of header in paragraphs
+    WORD   e_minalloc;                  // Minimum extra paragraphs needed
+    WORD   e_maxalloc;                  // Maximum extra paragraphs needed
+    WORD   e_ss;                        // Initial (relative) SS value
+    WORD   e_sp;                        // Initial SP value
+    WORD   e_csum;                      // Checksum
+    WORD   e_ip;                        // Initial IP value
+    WORD   e_cs;                        // Initial (relative) CS value
+    WORD   e_lfarlc;                    // File address of relocation table
+    WORD   e_ovno;                      // Overlay number
+    WORD   e_res[4];                    // Reserved words
+    WORD   e_oemid;                     // OEM identifier (for e_oeminfo)
+    WORD   e_oeminfo;                   // OEM information; e_oemid specific
+    WORD   e_res2[10];                  // Reserved words
+    LONG   e_lfanew;                    // File address of new exe header
+  };
+
+typedef struct IMAGE_DOS_HEADER * PIMAGE_DOS_HEADER;
+
+#ifndef _MAC
+#pragma pack(pop)             	        // Back to 4 byte packing
+#endif
+
+//
+// File header format.
+//
+
+struct IMAGE_FILE_HEADER {
+    WORD    Machine;
+    WORD    NumberOfSections;
+    DWORD   TimeDateStamp;
+    DWORD   PointerToSymbolTable;
+    DWORD   NumberOfSymbols;
+    WORD    SizeOfOptionalHeader;
+    WORD    Characteristics;
+};
+
+typedef struct IMAGE_FILE_HEADER * PIMAGE_FILE_HEADER;
 
 #define IMAGE_SIZEOF_FILE_HEADER             20
 
@@ -54,6 +110,92 @@ typedef uint32_t ULONG;
 
 #define IMAGE_FILE_MACHINE_I386              0x014c  // Intel 386.
 
+//
+// Directory format.
+//
+
+struct IMAGE_DATA_DIRECTORY {
+    DWORD   VirtualAddress;
+    DWORD   Size;
+};
+
+typedef struct IMAGE_DATA_DIRECTORY * PIMAGE_DATA_DIRECTORY;
+
+#define IMAGE_NUMBEROF_DIRECTORY_ENTRIES    16
+
+//
+// Optional header format.
+//
+
+struct IMAGE_OPTIONAL_HEADER {
+    //
+    // Standard fields.
+    //
+
+    WORD    Magic;
+    BYTE    MajorLinkerVersion;
+    BYTE    MinorLinkerVersion;
+    DWORD   SizeOfCode;
+    DWORD   SizeOfInitializedData;
+    DWORD   SizeOfUninitializedData;
+    DWORD   AddressOfEntryPoint;
+    DWORD   BaseOfCode;
+    DWORD   BaseOfData;
+
+    //
+    // NT additional fields.
+    //
+
+    DWORD   ImageBase;
+    DWORD   SectionAlignment;
+    DWORD   FileAlignment;
+    WORD    MajorOperatingSystemVersion;
+    WORD    MinorOperatingSystemVersion;
+    WORD    MajorImageVersion;
+    WORD    MinorImageVersion;
+    WORD    MajorSubsystemVersion;
+    WORD    MinorSubsystemVersion;
+    DWORD   Win32VersionValue;
+    DWORD   SizeOfImage;
+    DWORD   SizeOfHeaders;
+    DWORD   CheckSum;
+    WORD    Subsystem;
+    WORD    DllCharacteristics;
+    DWORD   SizeOfStackReserve;
+    DWORD   SizeOfStackCommit;
+    DWORD   SizeOfHeapReserve;
+    DWORD   SizeOfHeapCommit;
+    DWORD   LoaderFlags;
+    DWORD   NumberOfRvaAndSizes;
+    IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+};
+
+typedef struct IMAGE_OPTIONAL_HEADER * PIMAGE_OPTIONAL_HEADER;
+
+#define IMAGE_NT_OPTIONAL_HDR32_MAGIC      0x10b
+#define IMAGE_NT_OPTIONAL_HDR64_MAGIC      0x20b
+
+
+
+struct IMAGE_NT_HEADERS {
+    DWORD Signature;
+    IMAGE_FILE_HEADER FileHeader;
+    IMAGE_OPTIONAL_HEADER OptionalHeader;
+};
+
+typedef struct IMAGE_NT_HEADERS * PIMAGE_NT_HEADERS;
+
+
+// IMAGE_FIRST_SECTION doesn't need 32/64 versions since the file header is the same either way.
+
+#define IMAGE_FIRST_SECTION( ntheader ) ((PIMAGE_SECTION_HEADER)        \
+    ((BYTE*)ntheader +                                              \
+     FIELD_OFFSET( IMAGE_NT_HEADERS, OptionalHeader ) +                 \
+     ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader   \
+    ))
+
+// Subsystem Values
+
 #define IMAGE_SUBSYSTEM_UNKNOWN              0   // Unknown subsystem.
 #define IMAGE_SUBSYSTEM_NATIVE               1   // Image doesn't require a subsystem.
 #define IMAGE_SUBSYSTEM_WINDOWS_GUI          2   // Image runs in the Windows GUI subsystem.
@@ -62,164 +204,32 @@ typedef uint32_t ULONG;
 #define IMAGE_SUBSYSTEM_POSIX_CUI            7   // image runs in the Posix character subsystem.
 #define IMAGE_SUBSYSTEM_NATIVE_WINDOWS       8   // image is a native Win9x driver.
 
+//
+// Section header format.
+//
 
+#define IMAGE_SIZEOF_SHORT_NAME              8
 
-
-struct IMAGE_DOS_HEADER {      // DOS .EXE header
-    WORD   e_magic;                     // Magic number
-    WORD   e_cblp;                      // Bytes on last page of file
-    WORD   e_cp;                        // Pages in file
-    WORD   e_crlc;                      // Relocations
-    WORD   e_cparhdr;                   // Size of header in paragraphs
-    WORD   e_minalloc;                  // Minimum extra paragraphs needed
-    WORD   e_maxalloc;                  // Maximum extra paragraphs needed
-    WORD   e_ss;                        // Initial (relative) SS value
-    WORD   e_sp;                        // Initial SP value
-    WORD   e_csum;                      // Checksum
-    WORD   e_ip;                        // Initial IP value
-    WORD   e_cs;                        // Initial (relative) CS value
-    WORD   e_lfarlc;                    // File address of relocation table
-    WORD   e_ovno;                      // Overlay number
-    WORD   e_res[4];                    // Reserved words
-    WORD   e_oemid;                     // OEM identifier (for e_oeminfo)
-    WORD   e_oeminfo;                   // OEM information; e_oemid specific
-    WORD   e_res2[10];                  // Reserved words
-    LONG   e_lfanew;                    // File address of new exe header
+struct IMAGE_SECTION_HEADER {
+    BYTE    Name[IMAGE_SIZEOF_SHORT_NAME];
+    union {
+            DWORD   PhysicalAddress;
+            DWORD   VirtualSize;
+    } Misc;
+    DWORD   VirtualAddress;
+    DWORD   SizeOfRawData;
+    DWORD   PointerToRawData;
+    DWORD   PointerToRelocations;
+    DWORD   PointerToLinenumbers;
+    WORD    NumberOfRelocations;
+    WORD    NumberOfLinenumbers;
+    DWORD   Characteristics;
 };
 
+typedef struct IMAGE_SECTION_HEADER * PIMAGE_SECTION_HEADER;
+#define IMAGE_SIZEOF_SECTION_HEADER          40
 
-struct pe_image_file_hdr {
-    DWORD Magic;  /**< PE magic header: PE\\0\\0 */
-    WORD Machine;/**< CPU this executable runs on, see libclamav/pe.c for possible values */
-    WORD NumberOfSections;/**< Number of sections in this executable */
-    DWORD TimeDateStamp;   /**< Unreliable */
-    DWORD PointerToSymbolTable;	    /**< debug */
-    DWORD NumberOfSymbols;		    /**< debug */
-    WORD SizeOfOptionalHeader;	    /**< == 224 */
-    WORD Characteristics;
-};
-
-/** PE data directory header
- *   \group_pe */
-struct pe_image_data_dir {
-    DWORD VirtualAddress;
-    DWORD Size;
-};
-
-/** 32-bit PE optional header
- *   \group_pe */
-struct pe_image_optional_hdr32 {
-    // Standard field.
-    WORD Magic;
-    BYTE  MajorLinkerVersion;		    /**< unreliable */
-    BYTE  MinorLinkerVersion;		    /**< unreliable */
-    DWORD SizeOfCode;			    /**< unreliable */
-    DWORD SizeOfInitializedData;		    /**< unreliable */
-    DWORD SizeOfUninitializedData;		    /**< unreliable */
-    DWORD AddressOfEntryPoint;
-
-    // NT additional fields.
-    DWORD BaseOfCode;
-    DWORD BaseOfData;
-    DWORD ImageBase;				    /**< multiple of 64 KB */
-    DWORD SectionAlignment;			    /**< usually 32 or 4096 */
-    DWORD FileAlignment;			    /**< usually 32 or 512 */
-    WORD MajorOperatingSystemVersion;	    /**< not used */
-    WORD MinorOperatingSystemVersion;	    /**< not used */
-    WORD MajorImageVersion;			    /**< unreliable */
-    WORD MinorImageVersion;			    /**< unreliable */
-    WORD MajorSubsystemVersion;
-    WORD MinorSubsystemVersion;
-    DWORD Win32VersionValue;			    /*< ? */
-    DWORD SizeOfImage;
-    DWORD SizeOfHeaders;
-    DWORD CheckSum;				    /**< NT drivers only */
-    WORD Subsystem;
-    WORD DllCharacteristics;
-    DWORD SizeOfStackReserve;
-    DWORD SizeOfStackCommit;
-    DWORD SizeOfHeapReserve;
-    DWORD SizeOfHeapCommit;
-    DWORD LoaderFlags;			    /*< ? */
-    DWORD NumberOfRvaAndSizes;		    /**< unreliable */
-    struct pe_image_data_dir DataDirectory[16];
-};
-
-/** PE 64-bit optional header
- *   \group_pe */
-struct pe_image_optional_hdr64 {
-    WORD Magic;
-    BYTE  MajorLinkerVersion;		    /**< unreliable */
-    BYTE  MinorLinkerVersion;		    /**< unreliable */
-    DWORD SizeOfCode;			    /**< unreliable */
-    DWORD SizeOfInitializedData;		    /**< unreliable */
-    DWORD SizeOfUninitializedData;		    /**< unreliable */
-    DWORD AddressOfEntryPoint;
-    DWORD BaseOfCode;
-    uint64_t ImageBase;				    /**< multiple of 64 KB */
-    DWORD SectionAlignment;			    /**< usually 32 or 4096 */
-    DWORD FileAlignment;			    /**< usually 32 or 512 */
-    WORD MajorOperatingSystemVersion;	    /**< not used */
-    WORD MinorOperatingSystemVersion;	    /**< not used */
-    WORD MajorImageVersion;			    /**< unreliable */
-    WORD MinorImageVersion;			    /**< unreliable */
-    WORD MajorSubsystemVersion;
-    WORD MinorSubsystemVersion;
-    DWORD Win32VersionValue;			    /* ? */
-    DWORD SizeOfImage;
-    DWORD SizeOfHeaders;
-    DWORD CheckSum;				    /**< NT drivers only */
-    WORD Subsystem;
-    WORD DllCharacteristics;
-    uint64_t SizeOfStackReserve;
-    uint64_t SizeOfStackCommit;
-    uint64_t SizeOfHeapReserve;
-    uint64_t SizeOfHeapCommit;
-    DWORD LoaderFlags;			    /* ? */
-    DWORD NumberOfRvaAndSizes;		    /**< unreliable */
-    struct pe_image_data_dir DataDirectory[16];
-};
-
-/** PE section header
- *   \group_pe */
-#define IMAGE_SIZEOF_SHORT_NAME 8
-
-typedef struct _IMAGE_DATA_DIRECTORY {
-    DWORD PhysicalAddress;
-    DWORD VirtualSize;
-} MAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
-
-
-typedef struct  _pe_image_section_hdr {
-    BYTE Name[IMAGE_SIZEOF_SHORT_NAME];			    /**< may not end with NULL */
-    DWORD VirtualSize;
-    DWORD VirtualAddress;
-    DWORD SizeOfRawData;		    /**< multiple of FileAlignment */
-    DWORD PointerToRawData;		    /**< offset to the section's data */
-    DWORD PointerToRelocations;	    /**< object files only */
-    DWORD PointerToLinenumbers;	    /**< object files only */
-    WORD NumberOfRelocations;	    /**< object files only */
-    WORD NumberOfLinenumbers;	    /**< object files only */
-    DWORD Characteristics;
-}pe_image_section_hdr, *PIMAGE_SECTION_HEADER;
-
-/** Data for the bytecode PE hook
- *   \group_pe */
-struct cli_pe_hook_data {
-    DWORD offset;
-    DWORD ep; /**< EntryPoint as file offset */
-    WORD nsections;/**< Number of sections */
-    WORD dummy; /* align */
-    struct pe_image_file_hdr file_hdr;/**< Header for this PE file */
-    struct pe_image_optional_hdr32 opt32; /**< 32-bit PE optional header */
-    DWORD dummy2; /* align */
-    struct pe_image_optional_hdr64 opt64;/**< 64-bit PE optional header */
-    struct pe_image_data_dir dirs[16]; /**< PE data directory header */
-    DWORD e_lfanew;/**< address of new exe header */
-    DWORD overlays;/**< number of overlays */
-    LONG overlays_sz;/**< size of overlays */
-    DWORD hdr_size;/**< internally needed by rawaddr */
-};
+#pragma pack(pop)
 
 struct MAPPED_FILE_PE {
     FILE_DESCRIPTOR   file;
@@ -237,26 +247,17 @@ struct MAMORY_BLOCK_PE {
 };
 
 
-struct IMAGE_NT_HEADERS {
-    DWORD Signature;
-    struct pe_image_file_hdr  FileHeader;
-    struct pe_image_optional_hdr32  OptionalHeader32;
-    struct pe_image_optional_hdr64  OptionalHeader64;
-    //contain type
-    uint64_t          rva_block;
-    size_t            size_block;
-};
-
-typedef struct IMAGE_NT_HEADERS  *PIMAGE_NT_HEADERS ;
-
 //PE Header
 struct IMAGE_NT_HEADERS_EXT {
     uint64_t      data;
     uint64_t      offset;
 		size_t        size;
 	  uint8_t       *data_offset;	
-};
+    //contain type
+    uint64_t          rva_block;
+    size_t            size_block;
 
+};
 
 
 #endif

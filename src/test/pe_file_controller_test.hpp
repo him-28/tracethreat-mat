@@ -15,7 +15,8 @@ class PEFileControllerTest : public ::testing::Test
 
             char const *file_name_offset[FILE_SIZE];
 
-            file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/Crack.exe";
+           // file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/Crack.exe";
+            file_name_offset[0] = "/home/chatsiri/sda1/workspacemalware/lab_malwareanalysis/3/clam_ISmsi_ext.exe";
 
             for(int count_file = 0; count_file < 	FILE_SIZE; count_file++) {
                 list_file_type.push_back(file_name_offset[count_file]);

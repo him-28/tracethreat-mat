@@ -11,6 +11,7 @@ namespace policy
     template<typename MAPPED_FILE>
     pe_file_policy<MAPPED_FILE>::pe_file_policy()
     {
+			 
         //logger
         logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
@@ -27,7 +28,9 @@ namespace policy
     bool pe_file_policy<MAPPED_FILE>::
     scan_file_type(MAPPED_FILE *mapped_file_pe)
     {
-			
+	
+				logger->write_info("Start pe_file_policy<MAPPED_FILE>::scan_file_type");
+		
         //scan single file only. scan_file_type support single file.
         //Member function get_pe_header and
         std::vector<MAPPED_FILE * >  mapped_file_vec;
@@ -37,11 +40,22 @@ namespace policy
         std::vector<struct IMAGE_NT_HEADERS *> nt_header =
                 pe_fconl.get_pe_header(&mapped_file_vec);
 
-        MAPPED_FILE *map_file =  mapped_file_vec.back();
+				logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, return nt_header size ",
+						boost::lexical_cast<std::string>(nt_header.size()));
+
+        MAPPED_FILE *mapped_file =  mapped_file_vec.back();
+			  if(mapped_file == NULL)
+						logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, mapped_file is zero");
+			
         struct IMAGE_NT_HEADERS *nth = nt_header.back();
+				if(nth == NULL)
+						logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, Header is zero");
+
+				//logger->write_info("pe_file_policy<MAPPED_FILE>::scan_file_type, mapped_file data", 
+						boost::lexical_cast<std::string>(mapped_file->data);
 
         struct IMAGE_NT_HEADERS_EXT nt_header_ext =
-                pe_fconl.retrive_offset(map_file, nth);
+                pe_fconl.retrive_offset(mapped_file, nth);
         int count_size_buffer = 0;
         bool ret = true;
 
@@ -104,23 +118,23 @@ namespace policy
     
 
     //---------------------------- File Policy  ------------------------------//
-    /*
+    
     template<typename MAPPED_FILE>
     file_scan_policy<MAPPED_FILE>::file_scan_policy()
     {
     //logger
     logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
     logger = logger_ptr->get();
-    logger->write_info_test("Init logger file_scan_policy");
+    logger->write_info("Init logger file_scan_policy");
     }
-    */
+    
 
     template<typename MAPPED_FILE>
     std::vector<struct file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy)
     {
-				
-        std::vector<MAPPED_FILE *> *mapped_file_vec =  f_col_policy->get_mapped_file();
+				//logger->write_info("In file_scan_policy<MAPPED_FILE>::scan_file_engine");		  	
+        std::vector<MAPPED_FILE *> *mapped_file_vec =  fcol_policy->get_mapped_file();
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_file;
         uint8_t result_file_count = 0;
 				f_col_policy = fcol_policy;
