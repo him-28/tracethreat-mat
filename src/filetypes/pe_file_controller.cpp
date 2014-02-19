@@ -27,8 +27,8 @@ namespace filetypes
             = boost::make_shared<std::vector<struct IMAGE_NT_HEADERS * > >();
         pe_header_vec_shared.push_back(mapped_vec_shared);
 
-        struct IMAGE_DOS_HEADER *dos_header;
-        struct IMAGE_NT_HEADERS *nt_header;
+        PIMAGE_DOS_HEADER dos_header;
+        PIMAGE_NT_HEADERS nt_header;
         size_t headers_size = 0;
         typename std::vector<MAPPED_FILE *>::iterator  iter_mf_vec;
         MAPPED_FILE *mapped_file_ptr;
@@ -56,6 +56,9 @@ namespace filetypes
             }
 
             headers_size = dos_header->e_lfanew + sizeof(nt_header->Signature) + sizeof(IMAGE_FILE_HEADER);
+
+            logger->write_info("pe_file_controller<MAPPED_FILE>::get_pe_header, Step 1) header size",
+                    boost::lexical_cast<std::string>(headers_size));
 
             if(mapped_file_ptr->size < headers_size) {
                 logger->write_info("Mapper size < headers_size");
