@@ -80,27 +80,54 @@ namespace data_structure
                 		std::cout<<" Type Completed " <<std::endl;
                 }
                 */
+                // Check size of graph_
+
                 for ( ; input_it != input_end; ++input_it, where_++) {
 
                     char const& input = *input_it;
                     {
                         state_t next;
+                        printf("search, input : %c \n", input);
 
-                        while ((next = goto_(state_, input)) == AC_FAIL_STATE)
+                        while ((next = goto_(state_, input)) == AC_FAIL_STATE) {
                             state_ = fail_(state_);
+                            printf("search, fail_ state_ : %d  \n", state_);
+                        }
 
                         state_ = next;
+                        printf("search, next state_ : %d \n", next);
                     }
 
                     {
+                        printf("-- Callback --\n");
+                        printf("-- callback, state_ : %d \n", state_);
                         std::set<std::size_t> const& out_node = output_[state_];
                         typename std::set<size_t>::const_iterator output_it;
 
                         for (output_it = out_node.begin(); output_it != out_node.end(); ++output_it) {
+                            printf("-- callback, position where_ : %d \n", where_);
                             callback(*output_it, where_);
                         }
                     }
                 }
+            }
+
+            //get vector contain string, go_to and failture state to actire_parallel
+            //graph_
+
+            //output function
+            typedef std::map<state_t, std::set<size_t> >& get_output_function() {
+                return output_function;
+            }
+
+            //get graph
+            std::vector<boost::unordered_map<SymbolT, state_t> > const& get_graph() {
+                return goto_.get_nodes();
+            }
+
+            //table
+            std::vector<state_t>& get_table() {
+                return fail_.get_table();
             }
 
             // use this to start a new scan
@@ -111,7 +138,7 @@ namespace data_structure
             // main private
         private:
             typedef std::map<state_t, std::set<size_t> > output_function;
-            //-------------------------------------Class go to function---------------------------------------
+            //---------------------------Class go to function---------------------------------------
             class goto_function
             {
                 public:
@@ -142,12 +169,18 @@ namespace data_structure
 
                     state_t operator()(state_t state, SymbolT const& symbol) const {
                         //assert(state < graph_.size());
+                        printf("goto_function, Graph_ in goto_function size : %d \n", graph_.size());
+                        printf("goto_function, operator(), State : %d, Symbol : %c \n", state, symbol);
                         edges_t const& node(graph_[state]);
+                        printf("goto_function, Node from graph_ size : %d \n", node.size());
+
                         typename edges_t::const_iterator const& edge_it(node.find(symbol));
 
                         if (edge_it != node.end()) {
+                            printf("goto_function, edge_it->second : %d \n", edge_it->second);
                             return edge_it->second;
                         } else {
+                            printf("goto_function, State : %d, or AC_FAIL_STATE \n", state);
                             return (state == 0) ? 0 : AC_FAIL_STATE;
                         }
                     }
@@ -176,22 +209,31 @@ namespace data_structure
                                 graph_.resize(state + 1);
 
                             node = &graph_[state];
-                            typename edges_t::iterator edge = node->find(keyword[index]);
 
-                            if (edge == node->end()) break;
+                            typename edges_t::iterator edge = node->find(keyword[index]);
+                            printf("enter, keyword :%c, state : %d \n", keyword[index], state);
+
+                            if (edge == node->end()) {
+                                break;
+                            }
 
                             state = edge->second;
+
+
                         }
 
                         // increase graph size by the number of remaining symbols
                         graph_.resize(graph_.size() + keyword.size() - index);
                         node = &graph_[state];
 
+                        printf("enter berore for , state : %d \n", state);
+
                         // generate new symbol edges
                         for ( ; index < keyword.size(); index++) {
                             (*node)[keyword[index]] = ++newstate;
+                            printf("enter, Node : %c , NewState : %d \n", keyword[index], newstate);
                             state = newstate;
-                            node = &graph_[state];
+                            node = &graph_[state]; // Get New element for contain new map state.
                         }
 
                         assert(graph_.size() == state + 1);
@@ -199,7 +241,7 @@ namespace data_structure
 
                     nodes_t graph_;
             };
-            //-------------------------------------End of Class go to function---------------------------------------
+            //----------End of Class go to function---------------------------------------
 
             //---------------------------   failure_function -----------------------------
             class failure_function
@@ -224,13 +266,25 @@ namespace data_structure
                                 SymbolT const& a(edge.first);
                                 state_t const& s(edge.second);
 
+                                printf("failure_function, Symbol a: %c, State_t s : %d, Table r: %d \n", a, s, r);
                                 queue.push_back(s);
                                 state_t state = table_[r];
 
-                                while (_goto(state, a) == AC_FAIL_STATE)
+                                printf("failure_function, State from table : %d \n", state);
+
+                                while (_goto(state, a) == AC_FAIL_STATE) {
                                     state = table_[state];
 
+                                    printf("failure_function, while fail state on table : %d  \n", state);
+
+                                }
+
+                                printf("failure_function, a sent to goto again : %c \n", a);
+
                                 table_[s] = _goto(state, a);
+
+                                printf("failure_function, table_[s] : %d, s: %d \n", table_[s], s);
+
                                 output[s].insert(
                                         output[table_[s]].begin(),
                                         output[table_[s]].end());
@@ -239,7 +293,12 @@ namespace data_structure
                     }
 
                     state_t operator()(state_t state) const {
+                        printf("failure_function, return operator() : %d \n", table_[state]);
                         return table_[state];
+                    }
+
+                    std::vector<state_t>& get_table() {
+                        return table_;
                     }
 
                 private:
@@ -253,8 +312,9 @@ namespace data_structure
 
                         for (edge_it = node.begin(); edge_it != node.end(); ++edge_it) {
                             std::pair<SymbolT, state_t> const& edge(*edge_it);
-                            queue.push_back(edge.second);
-                            table_[edge.second] = 0;
+                            printf("queue_edges, edge_id value : %d \n", edge.second);
+                            queue.push_back(edge.second); // push_back opsition of keywords [1 and 7]
+                            table_[edge.second] = 0; // insert position of keywords [edge.second]
                         }
                     }
             };
