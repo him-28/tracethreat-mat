@@ -3,7 +3,19 @@ AM_CXXFLAGS = -I$(top_srcdir)/src -I/src/threadsyncocl -I/src/utils -I/src/rules
 
 check_PROGRAMS = test_suite
 
-test_suite_SOURCES = semaphore_controller_test.cpp thread_controller.hpp file_calculate.hpp thread_exception.hpp  thread_barrier_controller.hpp ac_tire.hpp wrapper_rules.hpp yara.h file_handler.hpp file_offset_handler.hpp pe_file_controller_test.hpp file_policy_test.hpp 
+test_suite_SOURCES = semaphore_controller_test.cpp \
+thread_controller.hpp \
+file_calculate.hpp \
+thread_exception.hpp \
+thread_barrier_controller.hpp \
+ac_tire.hpp \
+actire_parallel.hpp \
+wrapper_rules.hpp \
+yara.h \
+file_handler.hpp \
+file_offset_handler.hpp \
+pe_file_controller_test.hpp \
+file_policy_test.hpp 
 
 test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsyncocl \
  -lthreadsyncocl -lgtest -lgtest_main -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \

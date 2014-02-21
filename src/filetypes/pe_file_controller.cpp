@@ -236,7 +236,7 @@ namespace filetypes
     template<typename MAPPED_FILE>
     bool pe_file_controller<MAPPED_FILE>::convert2buffer(uint64_t   *data, size_t size)
     {
-        file_buffer_vec.assign(data, data+size);
+       // file_buffer_vec.assign(data, data+size); --error will be change
 
         if(file_buffer_vec.size() == 0) return false;
 

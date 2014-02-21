@@ -19,14 +19,15 @@ class SystemExceptionTest : public ::testing::Test
         virtual void SetUp() {
 						
 						//logger
-						logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
+						logger_ptr = &util_opt::clutil_logging<std::string, int>::get_instance();
 						logger = logger_ptr->get();
 						logger->write_info_test("Init logger for test, SystemExceptionTest");
         }
+			
 
         //logger
-        boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-        h_util::clutil_logging<std::string, int>    *logger;
+        boost::shared_ptr<util_opt::clutil_logging<std::string, int> > *logger_ptr;
+        util_opt::clutil_logging<std::string, int>    *logger;
 
 };
 

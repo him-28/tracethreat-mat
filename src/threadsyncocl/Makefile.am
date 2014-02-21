@@ -15,6 +15,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/data_structure/ac_tire.hpp \
  $(top_builddir)/src/wrapper/wrapper_rules.hpp \
  $(top_builddir)/src/data_structure/ac_tire.hpp \
+ $(top_builddir)/src/data_structure/actire_parallel.hpp \
  $(top_builddir)/src/filetypes/pe_file_controller.hpp \
  $(top_builddir)/src/scan/file_scan_policy.hpp
 
@@ -27,6 +28,7 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
 	$(top_builddir)/src/utils/file_calculate.cpp  \
 	$(top_builddir)/src/exception/failure_handler_code.cpp \
 	$(top_builddir)/src/data_structure/ac_tire.hpp \
+	$(top_builddir)/src/data_structure/actire_parallel.hpp \
 	$(top_builddir)/src/wrapper/wrapper_rules.hpp \
 	$(top_builddir)/src/filetypes/pe_file_controller.cpp \
 	$(top_builddir)/src/scan/file_scan_policy.cpp

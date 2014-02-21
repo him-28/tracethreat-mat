@@ -113,11 +113,10 @@ namespace data_structure
             }
 
             //get vector contain string, go_to and failture state to actire_parallel
-            //graph_
 
             //output function
-            typedef std::map<state_t, std::set<size_t> >& get_output_function() {
-                return output_function;
+            std::map<state_t, std::set<size_t> >& get_output_function() {
+                return output_;
             }
 
             //get graph
