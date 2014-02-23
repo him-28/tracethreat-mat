@@ -87,9 +87,12 @@ namespace data_structure
                     char const& input = *input_it;
                     {
                         state_t next;
+												printf("--- Check Search ---\n");
                         printf("search, input : %c \n", input);
 
                         while ((next = goto_(state_, input)) == AC_FAIL_STATE) {
+														printf("search, --- Check Fail ---\n");
+														printf("search, state send to file_ : %d \n", state_);
                             state_ = fail_(state_);
                             printf("search, fail_ state_ : %d  \n", state_);
                         }
@@ -168,9 +171,10 @@ namespace data_structure
 
                     state_t operator()(state_t state, SymbolT const& symbol) const {
                         //assert(state < graph_.size());
+                        printf("--- Check Goto_Function ---\n");
                         printf("goto_function, Graph_ in goto_function size : %d \n", graph_.size());
                         printf("goto_function, operator(), State : %d, Symbol : %c \n", state, symbol);
-                        edges_t const& node(graph_[state]);
+                        edges_t const& node(graph_[state]); // State for next state map
                         printf("goto_function, Node from graph_ size : %d \n", node.size());
 
                         typename edges_t::const_iterator const& edge_it(node.find(symbol));
@@ -200,12 +204,15 @@ namespace data_structure
                         if(typeid(keyword) != typeid(std::string)) {
                             std::cout<<" Is keyword " <<std::endl;
                         }
-
+												printf("--- Check Enter ---\n");
                         // follow existing symbol edges
                         for ( ; index < keyword.size(); index++) {
                             // this node won't be initialized
-                            if (state == graph_.size())
+
+                            printf("enter, graph_.size : %d , state : %d \n", graph_.size(), state);
+                            if (state == graph_.size()){
                                 graph_.resize(state + 1);
+														}
 
                             node = &graph_[state];
 
@@ -213,6 +220,7 @@ namespace data_structure
                             printf("enter, keyword :%c, state : %d \n", keyword[index], state);
 
                             if (edge == node->end()) {
+														printf("enter, break if(edge == node->end())\n");
                                 break;
                             }
 
@@ -224,7 +232,7 @@ namespace data_structure
                         // increase graph size by the number of remaining symbols
                         graph_.resize(graph_.size() + keyword.size() - index);
                         node = &graph_[state];
-
+												printf("--- Check insert data to node(ordered_map) ---\n");
                         printf("enter berore for , state : %d \n", state);
 
                         // generate new symbol edges

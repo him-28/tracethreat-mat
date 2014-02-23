@@ -1,13 +1,13 @@
 #ifndef HNMAV_KERNEL_CLUTIL_HPP
 #define HNMAV_KERNEL_CLUTIL_HPP
 
-/*                       Titles                                          Authors                        Date
+/*                       Titles                                          Authors              Date
  *-interface combine with  platdevices_info( contrain cl infomation )
- *                                                                       Chatsiri.rat                    27/08/2012
- *-Add sturct to implement on interface class                            Chatsiri.rat                    27/08/2012
- *-Change interface to base prefix name                                  Chatsiri.rat                    28/08/2012
- *-Add share_ptr_info base class                                         Chatsiri.rat                    30/08/2012
- *-Add Buffer elements                                                   Chatsiri.rat                    14/09/2012
+ *                                                                       Chatsiri.rat         27/08/2012
+ *-Add sturct to implement on interface class                            Chatsiri.rat         27/08/2012
+ *-Change interface to base prefix name                                  Chatsiri.rat         28/08/2012
+ *-Add share_ptr_info base class                                         Chatsiri.rat         30/08/2012
+ *-Add Buffer elements                                                   Chatsiri.rat         14/09/2012
  */
 
 //BOOST

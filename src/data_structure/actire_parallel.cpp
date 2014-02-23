@@ -35,17 +35,17 @@ namespace data_structure
             for(typename unordered_map::iterator iter_map_acs  = map_con_acs.begin();
                     iter_map_acs != map_con_acs.end();
                     ++iter_map_acs) {
-                //logger->write_info_test("--actire_parallel::operator= key ",
-                //        boost::lexical_cast<std::string>(iter_map_acs->first));
+                logger->write_info_test("--actire_parallel::operator= key ",
+                        boost::lexical_cast<std::string>(iter_map_acs->first));
 								//key  : Symbol
 								graph_symbol_vec.push_back(iter_map_acs->first);
 
-                //logger->write_info_test("--actire_parallel::operator= value ",
-                //        boost::lexical_cast<std::string>(iter_map_acs->second));
+                logger->write_info_test("--actire_parallel::operator= value ",
+                        boost::lexical_cast<std::string>(iter_map_acs->second));
 								//value : State
 								graph_state_vec.push_back(iter_map_acs->second);
             }
-						//logger->write_info_test("------- End state_push_back --------");
+						logger->write_info_test("------- End state_push_back --------");
 
             //count state insert to grap_state_vec
             //count_state++;
@@ -77,7 +77,6 @@ namespace data_structure
 
     }
 
-//		typedef boost::unordered_map<char, size_t> unordered_map;
 		template class actire_parallel<char, 
 																	size_t,
 																	boost::unordered_map<char, size_t>, 

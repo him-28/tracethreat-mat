@@ -1,14 +1,14 @@
 #ifndef HNMAV_KERNEL_CLUTIL_PLATFORM_HPP
 #define HNMAV_KERNEL_CLUTIL_PLATFORM_HPP
 
-/*                       Titles                                          Authors                        Date
- *-Initial utility infomation                                            Chatsiri.rat										19/08/2012
- *-Add for info device, exception                                        Chatsiri.rat										20/08/2012
+/*                       Titles                                          Authors              Date
+ *-Initial utility infomation                                            Chatsiri.rat				  19/08/2012
+ *-Add for info device, exception                                        Chatsiri.rat					20/08/2012
  *-Add  share_ptr for handling malloc memory
- *                                                                       Chatsiri.rat									  25/08/2012
- *-Base_cltuil new cl_info object                                        Chatsiri.rat	                  01/09/2012
+ *                                                                       Chatsiri.rat					25/08/2012
+ *-Base_cltuil new cl_info object                                        Chatsiri.rat	        01/09/2012
  *-Change buffer_elemtns to struct buffer_elements
- *                                                                       Chatsiri.rat										14/09/2012
+ *                                                                       Chatsiri.rat				  14/09/2012
  */
 
 //BOOST

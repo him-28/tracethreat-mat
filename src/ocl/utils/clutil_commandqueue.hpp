@@ -6,14 +6,14 @@
 
 #define  BUILD_TIRE_KERNEL "create_tire_buffer"
 
-/*                       Titles                                          Authors                        Date
+/*                       Titles                                          Authors           		Date
  *-Support command queue (Interface send/receive with vector<shared_ptr<platdevices_info> >
- *                                                                       Chatsiri.rat                   07/09/2012
+ *                                                                       Chatsiri.rat         07/09/2012
  *-Add input_str(Experimental with std::string). input_str is private variable
- * ( not plan include in struct name platdevices_info.
- *                                                                       Chatsiri.rat                   09/09/2012
+ * ( not plan include in struct name platdevices_info. )
+ *                                                                       Chatsiri.rat         09/09/2012
  *-Add  memory buffer input & output member function.
- *                                                                       Chatsiri.rat                   11/09/2012
+ *                                                                       Chatsiri.rat         11/09/2012
  */
 
 
