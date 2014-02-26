@@ -12,7 +12,7 @@ namespace hnmav_exception
     */
     const std::map<unsigned int, const char *>  gen_error_code::initial_error_code()
     {
-        const error_code_map error_cmap( begin(error_code_entry), end(error_code_entry) );
+        const error_code_map error_cmap( boost::begin(error_code_entry), boost::end(error_code_entry) );
         return  error_cmap;
     }
 

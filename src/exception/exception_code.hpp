@@ -6,8 +6,12 @@
  *
  */
 
+//External
+#include <boost/range.hpp>
+
 //STL
 #include <map>
+
 
 //container exception.
 #define  DS_INVAILD_SIZE   0
@@ -21,7 +25,7 @@
 
 namespace hnmav_exception
 {
-    using namespace boost;
+    //using namespace boost;
 
     class gen_error_code;
 

@@ -25,7 +25,7 @@
 #include "clutil_infodevice.hpp"
 
 
-namespace hnmav_kernel
+namespace kernel
 {
     using namespace boost;
     using namespace hnmav_util;
@@ -41,8 +41,8 @@ namespace hnmav_kernel
             }
 
             bool cl_create_command_queue();
-            bool cl_write_event();
-            bool cl_read_buffer();
+            //bool cl_write_event();
+            //bool cl_read_buffer();
 
             bool cl_create_kernel();
 
@@ -86,7 +86,7 @@ namespace hnmav_kernel
             shared_ptr<clutil_logging<std::string, int> > *logger_ptr;
             clutil_logging<std::string, int>   *logger;
 
-            node_data *node;
+            //node_data *node;
     };
 
 
@@ -431,7 +431,7 @@ namespace hnmav_kernel
         return true;
     }
 
-
+		/*
     bool commandqueue::cl_write_event()
     {
         logger->write_info( "#### Start cl_write_event ####", format_type::type_header );
@@ -476,14 +476,14 @@ namespace hnmav_kernel
 
         return true;
     }
-
-
+		*/
+		
     /**
     * @brief Read buffer from devices to host.
     *
     * @return True, if can read buffer of devices. False, Throws error of  clEnqueueReadBuffer.
     */
-    bool commandqueue::cl_read_buffer()
+    /*bool commandqueue::cl_read_buffer()
     {
         logger->write_info("#### Start cl_read_buffer ####", format_type::type_header);
 
@@ -547,7 +547,8 @@ namespace hnmav_kernel
         }
 
         return true;
-    }
+    }*/
+
 
     bool commandqueue::add_input_str(std::string input_str)
     {
@@ -566,8 +567,8 @@ namespace hnmav_kernel
             clutil_commandqueue() : commandqueue_util(new commandqueue()) { }
 
             bool cl_create_command_queue();
-            bool cl_write_event();
-            bool cl_read_buffer();
+            //bool cl_write_event();
+           // bool cl_read_buffer();
             bool cl_create_kernel();
 
             bool cl_enqueue_task();
@@ -620,21 +621,22 @@ namespace hnmav_kernel
     {
         return commandqueue_util->cl_create_command_queue();
     }
-
+		/*
     bool clutil_commandqueue::cl_write_event()
     {
         return commandqueue_util->cl_write_event();
     }
-
+		*/
     bool clutil_commandqueue::cl_enqueue_nd_task()
     {
         return commandqueue_util->cl_enqueue_nd_task();
     }
-
+		/*
     bool clutil_commandqueue::cl_read_buffer()
     {
         return commandqueue_util->cl_read_buffer();
     }
+		*/
 
     bool clutil_commandqueue::add_input_str(std::string input_str)
     {

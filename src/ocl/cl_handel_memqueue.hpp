@@ -3,7 +3,7 @@
  *  -- Class implements with base_clutil
  */
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     namespace handel

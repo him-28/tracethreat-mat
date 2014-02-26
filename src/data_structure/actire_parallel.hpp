@@ -11,12 +11,12 @@ namespace data_structure
 {
     namespace h_util = hnmav_util;
 
-    template<typename ContainerT>
+    template<typename SymbolT, typename StateT>
     class iparallel
     {
         public:
-            virtual	ContainerT& get_container()const = 0;
-            //virtual bool operator=(ContainerT& containerT) = 0;
+            virtual	boost::tuple<std::vector<SymbolT>,
+																 std::vector<StateT> >& get_container()const = 0;
     };
 
     /**
@@ -26,14 +26,16 @@ namespace data_structure
              typename StateT,
              typename EdgesT,
              typename ContainerT>
-    class actire_parallel : public iparallel<ContainerT>
+    class actire_parallel : public iparallel<SymbolT, StateT>
     {
         public:
-						actire_parallel();
+						typedef  boost::tuple<std::vector<StateT>,
+            											 std::vector<StateT> > tuple_vec;
+            actire_parallel();
 
             //bool operator=(ContainerT& container){ };
 
-            bool prepare_graph(const ContainerT * container);
+            bool prepare_graph(const ContainerT *container);
 
             bool set_output(std::vector<StateT, std::set<size_t> >& output_s);
 
@@ -41,14 +43,20 @@ namespace data_structure
 
             bool parallel_algorithm();
 
-            ContainerT& get_container()const { };
+             	boost::tuple<std::vector<SymbolT>,
+																 std::vector<StateT> > & get_container()const {
+									boost::tuple<std::vector<SymbolT>,
+																 std::vector<StateT> >  symbol_state_tuple = 
+																													boost::make_tuple(graph_symbol_vec, graph_state_vec);
+                return symbol_state_tuple;
+            };
         private:
 
             //Graph_
-            ContainerT * container_ac_parallel;
-            EdgesT     * edget_map;
+            ContainerT *container_ac_parallel;
+            EdgesT      *edget_map;
 
-						// graph :  std::vector<boost::unordered_map<SymbolT, state_t> >
+            // graph :  std::vector<boost::unordered_map<SymbolT, state_t> >
             // Index of vector
             std::vector<StateT>  graph_index_vec;
             // Map
@@ -57,7 +65,7 @@ namespace data_structure
             // State of map
             std::vector<StateT>  graph_state_vec;
 
-            //output_parallel : std::map<state_t, std::set<size_t>  
+            //output_parallel : std::map<state_t, std::set<size_t>
             std::vector<StateT> output_parallel;
             std::vector<StateT> output_state_vec;
             std::vector<StateT> output_setofstate_vec;

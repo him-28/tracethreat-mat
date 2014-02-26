@@ -1,5 +1,5 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src -I/src/threadsyncocl -I/src/utils -I/src/rules -I/src/filetypes \
--I/src/scan @AM_CXXFLAGS@
+-I/src/scan -I/src/ocl -I/src/exception @AM_CXXFLAGS@
 
 check_PROGRAMS = test_suite
 
@@ -14,8 +14,11 @@ wrapper_rules.hpp \
 yara.h \
 file_handler.hpp \
 file_offset_handler.hpp \
-pe_file_controller_test.hpp \
-file_policy_test.hpp 
+datastructure_exception.hpp
+
+
+#pe_file_controller_test.hpp \
+#file_policy_test.hpp 
 
 test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsyncocl \
  -lthreadsyncocl -lgtest -lgtest_main -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \
@@ -26,4 +29,5 @@ test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsync
  -lrules  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/filetypes \
  -lfiletypes -L/home/chatsiri/workspacecpp/boost-truck/stage/lib \
  -lboost_system -lboost_program_options -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan \
- -lscan $(AM_LDFLAGS)
+ -lscan -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl \
+ -locl -lOpenCL $(AM_LDFLAGS)

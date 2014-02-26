@@ -9,7 +9,7 @@
 #include <iostream>
 #include "CL/cl.h"
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     template <typename T>

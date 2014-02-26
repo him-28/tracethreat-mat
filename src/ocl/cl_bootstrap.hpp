@@ -8,28 +8,30 @@
  */
 
 //OpenCL utils
-#include "data_structure/tire.hpp"
-#include "utils/base_clutil.hpp"
-#include "utils/clutil_platform.hpp"
-#include "utils/clutil_memory.hpp"
-#include "utils/clutil_commandqueue.hpp"
+//#include "data_structure/tire.hpp"
+#include "ocl/utils/base_clutil.hpp"
+#include "ocl/utils/clutil_platform.hpp"
+#include "ocl/utils/clutil_memory.hpp"
+#include "ocl/utils/clutil_commandqueue.hpp"
 //path, log
 #include "utils/config/options_system.hpp"
 #include "utils/logger/clutil_logger.hpp"
-#include "data_structure/absalgorithms.hpp"
+//#include "data_structure/absalgorithms.hpp"
 #include "data_structure/structdef.hpp"
 // initial
-namespace hnmav_kernel
+namespace kernel
 {
 
-    namespace datastructure = hnmav_datastructure;
+    namespace datastructure = data_structure;
     namespace util = hnmav_util;
 
     namespace cl_bootstrap
     {
-        template<typename UtilPlatform, 
-					typename WorkTypes = datastructure::datastructure_def::work_groupitems, 
-					typename TireDefine = datastructure::tire<std::string, char, std::list<std::vector<datastructure::node_tire<std::string, char> > >, datastructure::worktypes<int> > >
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT = std::vector<boost::unordered_map<char, size_t> >
+                 >
         class cl_load_system
         {
             public:
@@ -44,8 +46,9 @@ namespace hnmav_kernel
 
                 bool cl_release_system();
 
-                // read data from class scan_file.cpp
-                bool cl_process_buffer(datastructure::absalgorithms<TireDefine, datastructure::datastructure_def::ntire_veclist>& buffer_node_vec);
+
+                bool cl_process_buffer(datastructure::iparallel<char, size_t>& buffer_node_vec);
+
                 // Manage command queue
                 bool cl_process_commandqueue();
 
@@ -53,7 +56,7 @@ namespace hnmav_kernel
                 std::string *opencl_file_path_;
 
                 UtilPlatform  *utilplat;
-                clutil_memory<WorkTypes, TireDefine> *memory_clutil;
+                clutil_memory<WorkTypes, TireDefine, ContainerT> *memory_clutil;
                 base_clutil   *base_memory_clutil;
                 base_clutil   *base_comqueue_clutil;
                 clutil_commandqueue *comqueue_clutil;
@@ -70,8 +73,13 @@ namespace hnmav_kernel
                 TireDefine *node_tire_output;
         };
 
-        template<typename UtilPlatform, typename WorkTypes, typename TireDefine>
-        cl_load_system<UtilPlatform, WorkTypes, TireDefine>::cl_load_system(std::string& opencl_file_path) : opencl_file_path_(&opencl_file_path)
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_load_system(std::string& opencl_file_path) :
+            opencl_file_path_(&opencl_file_path)
         {
             util::options_system& op_system = util::options_system::get_instance();
             //init logger
@@ -81,8 +89,12 @@ namespace hnmav_kernel
             logger->write_info("Load path opencl ", *opencl_file_path_);
         }
 
-        template<typename UtilPlatform, typename WorkTypes, typename TireDefine>
-        bool cl_load_system<UtilPlatform, WorkTypes, TireDefine>::init_cl_system()
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::init_cl_system()
         {
             logger->write_info("---------------------- Start Load system ----------------------", format_type::type_center);
 
@@ -108,8 +120,12 @@ namespace hnmav_kernel
             logger->write_info("---------------------- End Load system  ----------------------", format_type::type_center);
         }
 
-        template<typename UtilPlatform, typename WorkTypes, typename TireDefine>
-        bool  cl_load_system<UtilPlatform, WorkTypes, TireDefine>::cl_load_platform()
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool  cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_load_platform()
         {
 
             utilplat  = new UtilPlatform;
@@ -139,19 +155,29 @@ namespace hnmav_kernel
             return true;
         }
 
-        template<typename UtilPlatform, typename WorkTypes, typename TireDefine>
-        bool cl_load_system<UtilPlatform, WorkTypes, TireDefine>::cl_load_memory()
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_load_memory()
         {
             // Memory management  class
-            base_memory_clutil = new clutil_memory<TireDefine>();
+            base_memory_clutil = new clutil_memory<UtilPlatform, TireDefine, WorkTypes>();
             base_memory_clutil->set_platdevices_info_vec(utilplat->get_info());
-            memory_clutil = static_cast<clutil_memory<WorkTypes, TireDefine> *>(base_memory_clutil);
+            memory_clutil = static_cast<
+                    clutil_memory<WorkTypes, TireDefine, ContainerT> *
+                    >(base_memory_clutil);
             return true;
         }
 
-        template<typename UtilPlatform, typename WorkTypes, typename TireDefine>
-        bool cl_load_system<UtilPlatform, WorkTypes, TireDefine>::cl_process_buffer(datastructure::absalgorithms<TireDefine, 
-							datastructure::datastructure_def::ntire_veclist> & buffer_node_vec)
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
+        cl_process_buffer(datastructure::iparallel<char, size_t>& buffer_node_vec)
         {
             WorkTypes workloads;
             workloads.work_groups = 50;
@@ -161,8 +187,12 @@ namespace hnmav_kernel
         }
 
 
-        template<typename UtilPlatform, typename WorkTypes, typename TireDefine>
-        bool cl_load_system<UtilPlatform, WorkTypes, TireDefine>::cl_load_commandqueue()
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_load_commandqueue()
         {
             base_comqueue_clutil = new clutil_commandqueue();
             base_comqueue_clutil->set_platdevices_info_vec(utilplat->get_info());
@@ -178,8 +208,12 @@ namespace hnmav_kernel
         *
         * @return True,If processing of queury memory completed.
         */
-        template<typename UtilPlatform, typename WorkTypes, typename TireDefine>
-        bool cl_load_system<UtilPlatform, WorkTypes, TireDefine>::cl_process_commandqueue()
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_process_commandqueue()
         {
             comqueue_clutil->cl_create_command_queue();
 
@@ -187,7 +221,7 @@ namespace hnmav_kernel
 
             // comqueue_clutil->cl_enqueue_task();
 
-            comqueue_clutil->cl_read_buffer();
+            //comqueue_clutil->cl_read_buffer();
             //            comqueue_clutil->cl_write_event();
 
             //            comqueue_clutil->cl_call_kernel();
@@ -200,8 +234,12 @@ namespace hnmav_kernel
         *
         * @return  True, If processes can be releases memory and all allocator.
         */
-        template<typename UtilPlatform, typename WorkTypes, typename TireDefine>
-        bool cl_load_system<UtilPlatform, WorkTypes, TireDefine>::cl_release_system()
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_release_system()
         {
             //release buffer
             memory_clutil->cl_release_memory();

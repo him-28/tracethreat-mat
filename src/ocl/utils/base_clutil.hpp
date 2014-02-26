@@ -18,16 +18,16 @@
 #include <vector>
 #include <iostream>
 //Internal
-#include "data_structure/tire.hpp"
+//#include "data_structure/tire.hpp"
 //#include "kernels/cl/struct_tire.h"
 
 //- Data structure
 #include "data_structure/vector.hpp"
 
-namespace hnmav_kernel
+namespace kernel
 {
     using namespace boost;
-    namespace dstructure  = hnmav_datastructure;
+    namespace dstructure  = data_structure;
 
     struct platdevices_info {
 
@@ -66,7 +66,7 @@ namespace hnmav_kernel
         unsigned int * global_id;
 				
         std::vector<cl_mem> 	 *mem_copy_buffers;
-        std::vector<node_data> *node_tire_input;
+        std::vector<char> *node_tire_input;
         // buffer global size
         int					 buffer_elements;
     };

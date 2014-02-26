@@ -33,6 +33,7 @@
 #include "utils/logger/clutil_logger.hpp"
 #include "exception/system_exception.hpp"
 #include "ocl/utils/clutil_infodevice.hpp"
+#include "ocl/utils/base_clutil.hpp"
 
 #define DEFAULT_PLATFORM 0
 #define DEFAULT_USE_MAP  false
@@ -41,7 +42,7 @@
 
 #define MAX_SOURCE_SIZE (0x100000)
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     using namespace boost;
