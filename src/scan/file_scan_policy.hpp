@@ -6,6 +6,8 @@
 #include "filetypes/pe_file_controller.hpp"
 #include "filetypes/pe.hpp"
 
+//#include "data_structure/actire_parallel.hpp"
+
 //logger
 #include "utils/logger/clutil_logger.hpp"
 #include "utils/base/common.hpp"
@@ -14,7 +16,8 @@ namespace policy
 {
 
     namespace h_util = hnmav_util;
-    using namespace filetypes;
+		namespace ftypes = filetypes;
+    //using namespace filetypes;
 
     template<typename MAPPED_FILE>
     class file_scan_policy;
@@ -39,7 +42,7 @@ namespace policy
         /**
         * @brief
         */
-        unsigned char *file_name;
+        const char *file_name;
         /**
         * @brief
         */
@@ -101,6 +104,35 @@ namespace policy
             std::vector<struct file_scan_result<MAPPED_FILE> * >&
             scan_file_engine(file_scan_policy<MAPPED_FILE> *f_col_policy);
 
+            template<typename SymbolT, typename StateT>
+            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+            scan_ocl_controller(std::vector<SymbolT> *node_symbol,
+                    std::vector<StateT> *node_state) {
+                node_symbol_vec = node_symbol;
+                node_state_vec  = node_state;
+            }
+
+            template<typename SymbolT, typename StateT>
+            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+            receive_signature(boost::shared_ptr<std::vector<SymbolT> >& symbol_shared_ptr,
+                    boost::shared_ptr<std::vector<StateT> >& state_shared_ptr) {
+                //TODO:
+            }
+
+						/**
+            * @brief Set Kernel file of scanning on GPGPU system.
+            *
+            * @param kernel_file_path  Kernel file extension name .cl
+            *
+            * @return True, If file contains strings more size than zero.
+            */
+            bool set_opencl_file_path(std::string& kernel_file_path){
+												
+										if(kernel_file_path.size() == 0) return false;
+										this->kernel_file_path = &kernel_file_path;
+										return true;
+						}
+
 
         public:
             //        protected:
@@ -144,8 +176,7 @@ namespace policy
             */
             virtual bool set_mapped_file(MAPPED_FILE *mapped_file) = 0;
 
-            //virtual ~file_scan_policy();
-
+            
         private:
             //file_policy<MAPPED_FILE> *f_policy;
             file_scan_result<MAPPED_FILE> *fs_result;
@@ -156,6 +187,15 @@ namespace policy
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
+
+        protected :
+            //template<typename SymbolT>
+            std::vector<char> *node_symbol_vec;
+
+            //template<typename StateT>
+            std::vector<size_t> *node_state_vec;
+
+						std::string * kernel_file_path;
 
     };
 
@@ -183,7 +223,7 @@ namespace policy
         public:
             // pe type support
             std::vector<struct file_scan_result<MAPPED_FILE> * >&
-              scan_pe(
+            scan_pe(
                     file_scan_policy<MAPPED_FILE> *obj_fconl_policy) {
                 return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
             }
@@ -247,11 +287,38 @@ namespace policy
             * @return
             */
             virtual bool set_mapped_file(MAPPED_FILE *mapped_file);
+
+            //data_structure::iparallel<SymbolT, StateT> *ipara
+            template<typename SymbolT, typename StateT>
+            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+            scan_ocl_controller(std::vector<SymbolT> node_symbol, std::vector<StateT> node_state) {
+                //  logger->write_info_test("Call pe_file_policy::scan_ocl_controller...");
+                //	node_symbol_vec = node_symbol;
+                //	node_state_vec  = node_state;
+            }
+					
+						/**
+            * @brief Set Kernel file of scanning on GPGPU system.
+            *
+            * @param kernel_file_path  Kernel file extension name .cl
+            *
+            * @return True, If file contains strings more size than zero.
+            */
+            //set_opencl_file_path(std::string& kernel_file_path){
+
+						//}
+
+
         private:
-            pe_file_controller<MAPPED_FILE> pe_fconl;
+            ftypes::pe_file_controller<MAPPED_FILE> pe_fconl;
             // mapped_file detail
             std::vector<MAPPED_FILE * > mapped_files_vec;
 
+            //template<typename SymbolT>
+            //std::vector<char> node_symbol_vec;
+
+            //template<typename StateT>
+            //std::vector<size_t> node_state_vec;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

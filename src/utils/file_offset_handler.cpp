@@ -45,6 +45,7 @@ namespace util
         //mapped_file_vec_shared.push_back(mapped_vec_shared);
 
         const char *file_name;
+				std::string s_file_name;
         MAPPED_FILE *mapped_file_ptr;
 
         if(!file_name_list.size() || !mapped_vec_shared->size() ) {
@@ -57,12 +58,15 @@ namespace util
                 ++iter_files) {
 
             try {
-                std::string s_file_name = *iter_files;
+                s_file_name = *iter_files;
 
                 if(s_file_name.empty())
                     throw file_system_excep::offset_exception("[** File is null **]");
 
+
                 logger->write_info("File path for mmaped ", s_file_name);
+
+                //Set file name to mapped structure
 
                 file_name  = s_file_name.c_str();
 
@@ -90,8 +94,11 @@ namespace util
 
                     mapped_file_ptr->file = file_offset_object.get_popen_file();
 
-                    logger->write_info("Mapped file ptr size  ", boost::lexical_cast<std::string>(mapped_file_ptr->size));
-                    logger->write_info("Mapped file ptr name  ", boost::lexical_cast<std::string>(mapped_file_ptr->file));
+                    logger->write_info("Mapped file ptr size  ",
+                            boost::lexical_cast<std::string>(mapped_file_ptr->size));
+
+                    logger->write_info("Mapped file ptr name  ",
+                            boost::lexical_cast<std::string>(mapped_file_ptr->file));
 
                     if(mapped_file_ptr->size == 0 || mapped_file_ptr->file == -1) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
@@ -104,9 +111,18 @@ namespace util
                             MAP_PRIVATE,
                             mapped_file_ptr->file,
                             0);
+
                     logger->write_info("Mapped file with mmap success");
 
-										logger->write_info("Mapped file data      ", boost::lexical_cast<std::string>(mapped_file_ptr->data));
+										//TO-DO : Cannot set s_file_name.c_str() to mapped_file_ptr->file_name;
+										//mapped_file_ptr->file_name = s_file_name;
+                    //logger->write_info("Mapped file name ", mapped_file_ptr->file_name);
+										//mapped_file_ptr->file_name = (char*)malloc(s_file_name.size() + 1);
+										//strcpy(mapped_file_ptr->file_name, s_file_name.c_str());
+                    //logger->write_info("Mapped file name completed ", s_file_name);
+
+                    logger->write_info("Mapped file data ",
+                            boost::lexical_cast<std::string>(mapped_file_ptr->data));
 
                     if(mapped_file_ptr->data == MAP_FAILED) {
                         throw file_system_excep::offset_exception("[** File cannot map **]");
@@ -125,7 +141,7 @@ namespace util
     }
 
     template<typename FileType, typename MAPPED_FILE>
-    std::vector<MAPPED_FILE *> & file_offset_handler<FileType, MAPPED_FILE>
+    std::vector<MAPPED_FILE *>& file_offset_handler<FileType, MAPPED_FILE>
     ::get_mapped_file()
     {
         return *mapped_vec_shared.get();

@@ -1,3 +1,24 @@
+/*
+* Copyright 2014 MTSec, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles			                                                                  Authors	        Date
+ *  -Init ACTire test with data.                                                  R.Chatsiri
+ */
+
+
 #include "data_structure/ac_tire.hpp"
 #include <boost/assign/list_of.hpp>
 #include <vector>
@@ -41,12 +62,12 @@ class InitDataAc : public ::testing::Test
 TEST_F(InitDataAc , ac_add_list_str)
 {
 
-            for(int i = 0; i  < 2; i++) {
-                char *input_tmp = const_cast<char *>(&td[i].input[0]);
-                char *end_input_tmp = const_cast<char *>(&td[i].input[strlen(td[i].input)]);
-                ac_test_function(td[i].keywords,
-                        input_tmp,
-                        end_input_tmp);
-            }
+    for(int i = 0; i  < 2; i++) {
+        char *input_tmp = const_cast<char *>(&td[i].input[0]);
+        char *end_input_tmp = const_cast<char *>(&td[i].input[strlen(td[i].input)]);
+        ac_test_function(td[i].keywords,
+                input_tmp,
+                end_input_tmp);
+    }
 
 }

@@ -24,7 +24,7 @@
 //- Data structure
 #include "data_structure/vector.hpp"
 
-namespace kernel
+namespace hnmav_kernel
 {
     using namespace boost;
     namespace dstructure  = data_structure;
@@ -66,7 +66,10 @@ namespace kernel
         unsigned int * global_id;
 				
         std::vector<cl_mem> 	 *mem_copy_buffers;
-        std::vector<char> *node_tire_input;
+        //std::vector<char> *node_tire_input;
+        std::vector<char>  				node_symbol_vec;
+			  std::vector<size_t>       node_state_vec;
+				std::vector<unsigned char>  node_binary_vec;
         // buffer global size
         int					 buffer_elements;
     };

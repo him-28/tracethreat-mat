@@ -42,7 +42,7 @@
 
 #define MAX_SOURCE_SIZE (0x100000)
 
-namespace kernel
+namespace hnmav_kernel
 {
 
     using namespace boost;

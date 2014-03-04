@@ -28,13 +28,14 @@
 //- Data structure
 #include "data_structure/vector.hpp"
 // Array parallel
-//#include "data_structure/arrays_parallel.hpp"
+#include "data_structure/actire_parallel.hpp"
 // Define type
 #include "data_structure/structdef.hpp"
 // abstract algorithms
 //#include "data_structure/absalgorithms.hpp"
+#include <boost/unordered_map.hpp>
 
-namespace kernel
+namespace hnmav_kernel
 {
 
     //using namespace boost;
@@ -47,59 +48,58 @@ namespace kernel
     //  memory internal initial, write Real Object here.
     template<typename WorkTypes,
              typename TireDefine,
-             typename ContainerT = std::vector<boost::unordered_map<char, size_t> > >
-         class memory : public base_clutil
-             {
-             public:
+             typename ContainerT = std::vector<size_t> >
+    class memory : public base_clutil
+    {
+        public:
 
-                 memory();
+            memory();
 
-                 bool  cl_create_buffer(WorkTypes& worktype_loads,
-                         datastructure::iparallel<char, size_t>& ipa);
-									/*
-                 void  build_node_buffer_object(platdevices_info *plat_info,
-                         node_data *node,
-                         int count_sig_input) throw(std::runtime_error);
-									*/
+            bool  cl_create_buffer(WorkTypes& worktype_loads,
+                    datastructure::iparallel<char, size_t> & ipa,
+										std::vector<uint8_t> & binary_vec);
 
-                 bool  cl_create_subbuffer();
-                 bool  cl_check_buffer_size();
-
-                 bool  cl_release_memory();
-
-                 // Interface class
-    std::vector<boost::shared_ptr<platdevices_info> >&    get_platdevices_info_vec() {
-        return platdevices_shared_ptr;
-    }
-    void set_platdevices_info_vec(std::vector<boost::shared_ptr<platdevices_info> >& ptr_info) {
-        platdevices_shared_ptr = ptr_info;
-    }
-
-    platdevices_info *get_platdevices_data() {
-        boost::shared_ptr<platdevices_info>   plat_shared_ptr = platdevices_shared_ptr.back();
-        platdevices_info *platdevices =  plat_shared_ptr.get();
-        return platdevices;
-    }
+            void  build_node_buffer_object(platdevices_info *plat_info) throw(std::runtime_error);
 
 
-private:
+            bool  cl_create_subbuffer();
+            bool  cl_check_buffer_size();
 
-    std::size_t buffer_elements;
-    std::vector<boost::shared_ptr<platdevices_info> >  platdevices_shared_ptr;
-    // cl define
-    platdevices_info *platdevices;
+            bool  cl_release_memory();
 
-    boost::shared_ptr<util::clutil_logging<std::string, int> >    *logger_ptr;
-    util::clutil_logging<std::string, int>    *logger;
+            // Interface class
+            std::vector<boost::shared_ptr<platdevices_info> >&    get_platdevices_info_vec() {
+                return platdevices_shared_ptr;
+            }
+            void set_platdevices_info_vec(std::vector<boost::shared_ptr<platdevices_info> >& ptr_info) {
+                platdevices_shared_ptr = ptr_info;
+            }
 
-    // input open cl
-    ContainerT * container_actire_input;
-    ContainerT * container_actire_output;
+            platdevices_info *get_platdevices_data() {
+                boost::shared_ptr<platdevices_info>   plat_shared_ptr = platdevices_shared_ptr.back();
+                platdevices_info *platdevices =  plat_shared_ptr.get();
+                return platdevices;
+            }
 
-    std::vector<cl_mem> mem_object_vec;
 
-    char *sig_input;
-    //node_data *node;
+        private:
+
+            std::size_t buffer_elements;
+            std::vector<boost::shared_ptr<platdevices_info> >  platdevices_shared_ptr;
+            // cl define
+            platdevices_info *platdevices;
+
+            boost::shared_ptr<util::clutil_logging<std::string, int> >    *logger_ptr;
+            util::clutil_logging<std::string, int>    *logger;
+
+            // input open cl
+            std::vector<char> *symbol_vec;
+            ContainerT *state_vec;
+						std::vector<uint8_t> * binary_vec;		
+            std::vector<cl_mem> mem_object_vec;
+
+            char *sig_input;
+            //node_data *node;
     };
 
     template<typename WorkTypes, typename TireDefine,  typename ContainerT>
@@ -119,36 +119,55 @@ private:
     */
     template<typename WorkTypes, typename TireDefine,  typename ContainerT>
     bool memory<WorkTypes, TireDefine, ContainerT>::cl_create_buffer(WorkTypes& worktype_loads,
-            iparallel<char, size_t>& ipa)
+            datastructure::iparallel<char, size_t> & ipara,
+						std::vector<uint8_t> &    binary_vec_ptr)
     {
         logger->write_info("### Start cl_create_buffer ###", util::format_type::type_header);
+        platdevices_info *platdevices = get_platdevices_data();
+
+        //get data from tuple by boost::tie
+        /*boost::tie(platdevices->node_symbol_vec, platdevices->node_state_vec) =  ipara.get_container();
+
+        symbol_vec = platdevices->node_symbol_vec;
+        state_vec  = platdevices->node_state_vec;
+				binary_vec = binary_vec_ptr; 
+				*/
+				
+				//shared ptr get vector symbol and state.
+				platdevices->node_symbol_vec = ipara.get_symbol_shared_ptr().get();
+				platdevices->node_state_vec  = ipara.get_state_shared_ptr().get();
+				symbol_vec = platdevices->node_symbol_vec;
+				state_vec  = platdevices->node_state_vec;
+
+        logger->write_info("### memory::cl_create_buffer, symbol_vec.size()", symbol_vec->size());
+        logger->write_info("### memory::cl_create_buffer,  state_vec.size()", state_vec->size());
 
         return true;
     }
 
-		
+
     /**
     * @brief Buffer for node struct
     *
     * @param plat_info  Platform devices struct class
     * @param node  Node of struct
     */
-    /*template<typename WorkTypes, typename TireDefine,  typename ContainerT>
-    void memory<WorkTypes, TireDefine, ContainerT>::build_node_buffer_object(platdevices_info *plat_info,
-            node_data   *node,
-            int count_sig_input)throw(std::runtime_error)
+    template<typename WorkTypes, typename TireDefine,  typename ContainerT>
+    void memory<WorkTypes, TireDefine, ContainerT>::build_node_buffer_object(
+            platdevices_info *plat_info)throw(std::runtime_error)
     {
         cl_int err = CL_SUCCESS;
         int node_size = 0;
-        logger->write_info("Node size insert ", lexical_cast<std::string>(sizeof(node)));
-        logger->write_info("-- Node all size    ", lexical_cast<std::string>(count_sig_input));
-        logger->write_info("-- size of Node data    ", lexical_cast<std::string>(sizeof(node_data)));
-
+        //logger->write_info("Node size insert ", lexical_cast<std::string>(sizeof(node)));
+        //logger->write_info("-- Node all size    ", lexical_cast<std::string>(count_sig_input));
+        //logger->write_info("-- size of Node data    ", lexical_cast<std::string>(sizeof(node_data)));
+        /*
         char *data_str = (char *)malloc( count_sig_input * sizeof(char));
 
         for(int count_data = 0; count_data < count_sig_input; count_data++) {
-            data_str[count_data] = node->data[count_data];
+        data_str[count_data] = node->data[count_data];
         }
+        */
 
         try {
             // inital vector size
@@ -156,9 +175,9 @@ private:
             //Node input
             cl_mem  buffer_input = clCreateBuffer(
                     plat_info->context,
-                    CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,
-                    sizeof(node_data) * (count_sig_input),
-                    node,
+                    CL_MEM_READ_ONLY,
+                    sizeof(char) * plat_info->node_symbol_vec.size(),
+                    &plat_info->node_symbol_vec[0],
                     &err);
 
             if(err != CL_SUCCESS)
@@ -169,75 +188,30 @@ private:
 
             cl_mem  sigrc_input = clCreateBuffer(
                     plat_info->context,
-                    CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,
-                    sizeof(char) * (count_sig_input),
-                    &data_str,
+                    CL_MEM_READ_ONLY,
+                    sizeof(size_t) * plat_info->node_state_vec.size(),
+                    &plat_info->node_state_vec[0],
                     &err);
 
             if(err != CL_SUCCESS)
                 throw cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
 
             // set size of buffer input
-            // Work ID, Set default 0
             plat_info->vec_buffer.push_back(sigrc_input);
 
             // signature size
             cl_mem  buffer_input_sizes = clCreateBuffer(
                     plat_info->context,
-                    CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,
-                    sizeof(int),
-                    &count_sig_input,
+                    CL_MEM_READ_ONLY,
+                    sizeof(uint8_t) * plat_info->node_binary_vec.size(),
+                    &plat_info->node_binary_vec[0],
                     &err);
 
             if(err != CL_SUCCESS)
                 throw cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
 
             // set size of buffer input
-            // Work ID, Set default 0
-            plat_info->mem_input_buffers_sizes = count_sig_input;
             plat_info->vec_buffer.push_back(buffer_input_sizes);
-
-            plat_info->work_dim = new unsigned int[1];
-            plat_info->work_dim[0] = 5;
-            cl_mem  work_dim_value = clCreateBuffer(
-                    plat_info->context,
-                    CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,
-                    sizeof(uint),
-                    &plat_info->work_dim,
-                    &err);
-
-            if(err != CL_SUCCESS)
-                throw cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
-
-            plat_info->vec_buffer.push_back(work_dim_value);
-
-            // Global ID, Set default 0
-            plat_info->global_id = new unsigned int[1];
-            plat_info->global_id[0] = 6;
-            cl_mem  global_id_value = clCreateBuffer(
-                    plat_info->context,
-                    CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,
-                    sizeof(uint),
-                    &plat_info->global_id,
-                    &err);
-
-            if(err != CL_SUCCESS)
-                throw cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
-
-            plat_info->vec_buffer.push_back(global_id_value);
-
-            // Add unsigned char to devices
-            cl_mem  sigrc_output = clCreateBuffer(
-                    plat_info->context,
-                    CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,
-                    sizeof(char) * count_sig_input,
-                    &plat_info->global_id,
-                    &err);
-
-            if(err != CL_SUCCESS)
-                throw cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
-
-            plat_info->vec_buffer.push_back(sigrc_output);
 
         } catch(std::runtime_error&  ex) {
             logger->write_error( ex.what() );
@@ -245,7 +219,7 @@ private:
 
     }
 
-		*/
+
 
     /**
     * @brief Releases memory in buffer.
@@ -291,7 +265,7 @@ private:
         int sum_signature = 0;
 
         char *signature_input;
-        signature_input = new char[platdevices->node_tire_input->size()];
+        signature_input;// = new char[platdevices->node_tire_input->size()];
 
         if(platdevices->mem_input_buffers->size() == 0)
             return false;
@@ -316,38 +290,39 @@ private:
     */
     template<typename WorkTypes,
              typename TireDefine,
-             typename ContainerT = std::vector<boost::unordered_map<char, size_t> > 
-						>
-         class clutil_memory : public base_clutil
-             {
-             public:
-                 clutil_memory();
+             typename ContainerT = std::vector<boost::unordered_map<char, size_t> >
+             >
+    class clutil_memory : public base_clutil
+    {
+        public:
+            clutil_memory();
 
-                 void cl_create_buffer(WorkTypes& worktype_loads,
-                         datastructure::iparallel<char, size_t>&   buffer_vec_str);
+            void cl_create_buffer(WorkTypes& worktype_loads,
+                    datastructure::iparallel<char, size_t> & ipara,
+										std::vector<uint8_t> & binary_vec);
 
-                 bool cl_create_subbuffer();
-                 bool cl_check_buffer_size();
+            bool cl_create_subbuffer();
+            bool cl_check_buffer_size();
 
-                 bool cl_release_memory();
+            bool cl_release_memory();
 
-                 ~clutil_memory();
+            ~clutil_memory();
 
-    std::vector<boost::shared_ptr<platdevices_info> >&    get_platdevices_info_vec() {
-        return  memory_util->get_platdevices_info_vec();
-    }
-    void set_platdevices_info_vec(std::vector<boost::shared_ptr<platdevices_info> >& ptr_info) {
-        memory_util->set_platdevices_info_vec(ptr_info);
-    }
+            std::vector<boost::shared_ptr<platdevices_info> >&    get_platdevices_info_vec() {
+                return  memory_util->get_platdevices_info_vec();
+            }
+            void set_platdevices_info_vec(std::vector<boost::shared_ptr<platdevices_info> >& ptr_info) {
+                memory_util->set_platdevices_info_vec(ptr_info);
+            }
 
-    platdevices_info *get_platdevices_data() {
-        return memory_util->get_platdevices_data();
-    }
+            platdevices_info *get_platdevices_data() {
+                return memory_util->get_platdevices_data();
+            }
 
-private:
-    memory<WorkTypes, TireDefine> *memory_util;
+        private:
+            memory<WorkTypes, TireDefine, ContainerT> *memory_util;
 
-             };
+    };
 
     template<typename WorkTypes, typename TireDefine,  typename ContainerT>
     clutil_memory<WorkTypes, TireDefine, ContainerT>::clutil_memory()
@@ -363,9 +338,10 @@ private:
 
     template<typename WorkTypes, typename TireDefine,  typename ContainerT>
     void  clutil_memory<WorkTypes, TireDefine, ContainerT>::cl_create_buffer(WorkTypes& worktype_loads,
-            datastructure::iparallel<char, size_t>& buffer_vec_str)
+            datastructure::iparallel<char, size_t>& ipara,
+						std::vector<uint8_t> & binary_vec)
     {
-        memory_util->cl_create_buffer(worktype_loads,buffer_vec_str);
+        memory_util->cl_create_buffer(worktype_loads, ipara, binary_vec);
     }
 
     template<typename WorkTypes, typename TireDefine,  typename ContainerT>

@@ -1,5 +1,5 @@
-#ifndef PE_FILE_CONTROLLER__HPP
-#define PE_FILE_CONTROLLER__HPP
+#ifndef FILETYPES_PE_FILE_CONTROLLER__HPP
+#define FILETYPES_PE_FILE_CONTROLLER__HPP
 
 
 
@@ -16,7 +16,7 @@
 
 
 #include "filetypes/pe.hpp"
-
+#include "ocl/cl_bootstrap.hpp"
 //
 #include "utils/logger/clutil_logger.hpp"
 // Big endian supported type.
@@ -39,6 +39,8 @@ namespace filetypes
 {
 
     namespace h_util = hnmav_util;
+		namespace dstr   = data_structure;
+		namespace kernel_ocl = hnmav_kernel;
 
     template<typename MAPPED_FILE = struct MAPPED_FILE_PE>
     class pe_file_controller
@@ -118,7 +120,7 @@ namespace filetypes
             *
             * @return convert file completed.
             */
-            bool convert2buffer(uint64_t   *data, size_t size);
+            bool convert2buffer(uint8_t   *data, size_t size);
 
             /**
             * @brief Scan file with pe type
@@ -127,14 +129,28 @@ namespace filetypes
             *
             * @return scan completed return true.
             */
-            bool scan(std::vector<uint64_t> file_buffer_vec);
+            bool scan(std::vector<char> *symbol_vec,
+                    std::vector<size_t> *state_vec,
+                    std::vector<uint8_t> *file_buffer_vec);
 
             /**
             * @brief Buffer return to external class
             *
             * @return uint64_t byte of buffer contains on std::vector<uint64_t>
             */
-            std::vector<uint64_t> get_file_buffer();
+            std::vector<uint8_t>& get_file_buffer();
+
+
+            /**
+            * @brief Set opencl to load_system is opencl object
+            *
+            * @param file_path_kernel  is path of .cl file
+            *
+            * @return True, if variable contain file size more size than 0.
+            */
+            bool set_opencl_file(std::string& kernel_file_path);
+
+
         private:
             IMAGE_NT_HEADERS *image_nt_header;
 
@@ -142,7 +158,20 @@ namespace filetypes
             //retrive_offset_lite
             boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS_EXT *> >  pe_offset_vec_shared_ptr;
             // file buffer
-            std::vector<uint64_t> file_buffer_vec;
+            std::vector<uint8_t> file_buffer_vec;
+
+						//kernel file path
+						std::string * kernel_file_path_ptr;
+
+            //ocl support
+            kernel_ocl::cl_bootstrap::cl_load_system<kernel_ocl::clutil_platform,
+                   dstr::dstr_def::work_groupitems,
+                   std::vector<boost::unordered_map<char, size_t> >,
+                   dstr::actire_parallel<char,
+                   size_t,
+                   boost::unordered_map<char, size_t>,
+                   std::vector<boost::unordered_map<char, size_t> > >
+                   >	 load_system;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
@@ -152,4 +181,4 @@ namespace filetypes
 }
 
 
-#endif
+#endif /* FILETYPES_PE_FILE_CONTROLLER__HPP */

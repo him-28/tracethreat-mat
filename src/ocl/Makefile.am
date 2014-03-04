@@ -8,7 +8,7 @@ lib_LIBRARIES = libocl.a
 libocl_adir = $(includedir)/ocl
 
 #Header
-libocl_a_HEADERS = cl_bootstrap.hpp base_clutil.hpp
+libocl_a_HEADERS = cl_bootstrap.hpp 
 
 # library
-libocl_a_SOURCES = $(libocl_a_HEADERS) cl_bootstrap.hpp cl_handel_memqueue.hpp 
+libocl_a_SOURCES = $(libocl_a_HEADERS) cl_handel_memqueue.hpp 

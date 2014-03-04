@@ -3,7 +3,7 @@
 
 namespace data_structure
 {
-		
+		/*		
     template<typename SymbolT, typename StateT, typename EdgesT, typename ContainerT>
     actire_parallel<SymbolT, StateT, EdgesT, ContainerT>::actire_parallel()
     { 
@@ -13,7 +13,7 @@ namespace data_structure
         logger = logger_ptr->get();
         logger->write_info_test("Init logger actire_parallel ...");
     }
-		
+		*/
 
     template<typename SymbolT, typename StateT, typename EdgesT, typename ContainerT>
     bool actire_parallel<SymbolT, StateT, EdgesT, ContainerT>::
@@ -38,12 +38,14 @@ namespace data_structure
                 logger->write_info_test("--actire_parallel::operator= key ",
                         boost::lexical_cast<std::string>(iter_map_acs->first));
 								//key  : Symbol
-								graph_symbol_vec.push_back(iter_map_acs->first);
+								//graph_symbol_vec.push_back(iter_map_acs->first);
+								symbol_shared_ptr_vec->push_back(iter_map_acs->first);
 
                 logger->write_info_test("--actire_parallel::operator= value ",
                         boost::lexical_cast<std::string>(iter_map_acs->second));
 								//value : State
-								graph_state_vec.push_back(iter_map_acs->second);
+								//graph_state_vec.push_back(iter_map_acs->second);
+							  state_shared_ptr_vec->push_back(iter_map_acs->second);
             }
 						logger->write_info_test("------- End state_push_back --------");
 

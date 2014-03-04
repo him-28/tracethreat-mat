@@ -55,14 +55,27 @@ TEST_F(FilePolicyTest, pe_file_policy)
     //Assert
 
     //pe_file_policy<struct MAPPED_FILE_PE>  pef_policy;// =  new pe_file_policy<struct MAPPED_FILE_PE>();
+    const char str1[] = "3223223";
+		std::vector<char>  nsymbol;
+		nsymbol.insert(nsymbol.end(), str1, str1 + strlen(str1));
+		printf("nsymbol size : %d \n", nsymbol.size());
+
+		std::vector<size_t> nstate;
+		nstate.push_back(123); // test state only
+		nstate.push_back(2);
+		printf("nstate size : %d \n", nstate.size());
+
     file_scan_policy<struct MAPPED_FILE_PE> *pef_policy = new pe_file_policy<struct MAPPED_FILE_PE>();
+
+		pef_policy->scan_ocl_controller(&nsymbol, &nstate);
+
     pef_policy->set_mapped_file(mf_pe);
     scan_file_policy<
     	MAPPED_FILE_PE,
     	pe_policy_is<pe_file_policy<MAPPED_FILE_PE>, MAPPED_FILE_PE>
     	> sf_policy;
     sf_policy.scan_pe(pef_policy);
-
+		
     EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
 
 

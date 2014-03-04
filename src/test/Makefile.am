@@ -1,5 +1,6 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src -I/src/threadsyncocl -I/src/utils -I/src/rules -I/src/filetypes \
--I/src/scan -I/src/ocl -I/src/exception @AM_CXXFLAGS@
+AM_CXXFLAGS = -I$(top_srcdir)/src -I/src/threadsyncocl @AM_CXXFLAGS@
+# -I/src/utils -I/src/rules -I/src/filetypes \
+# -I/src/scan -I/src/ocl -I/src/exception -I/src/data_structure  @AM_CXXFLAGS@
 
 check_PROGRAMS = test_suite
 
@@ -16,6 +17,7 @@ file_handler.hpp \
 file_offset_handler.hpp \
 datastructure_exception.hpp
 
+#cl_bootstrap.hpp
 
 #pe_file_controller_test.hpp \
 #file_policy_test.hpp 
@@ -30,4 +32,4 @@ test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsync
  -lfiletypes -L/home/chatsiri/workspacecpp/boost-truck/stage/lib \
  -lboost_system -lboost_program_options -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan \
  -lscan -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl \
- -locl -lOpenCL $(AM_LDFLAGS)
+ -locl $(AM_LDFLAGS)

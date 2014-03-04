@@ -4,7 +4,7 @@
 // name of buildtire kernel
 //#define  BUILD_TIRE_KERNEL "buildtire"
 
-#define  BUILD_TIRE_KERNEL "create_tire_buffer"
+#define  BUILD_TIRE_KERNEL "actire_search"
 
 /*                       Titles                                          Authors           		Date
  *-Support command queue (Interface send/receive with vector<shared_ptr<platdevices_info> >
@@ -25,7 +25,7 @@
 #include "clutil_infodevice.hpp"
 
 
-namespace kernel
+namespace hnmav_kernel
 {
     using namespace boost;
     using namespace hnmav_util;
@@ -41,7 +41,7 @@ namespace kernel
             }
 
             bool cl_create_command_queue();
-            //bool cl_write_event();
+            bool cl_write_event();
             //bool cl_read_buffer();
 
             bool cl_create_kernel();
@@ -142,7 +142,7 @@ namespace kernel
 
         // get string input
         int  count_mem_object = 0;
-        char signature_input[platdevices->node_tire_input->size()];
+        char signature_input;//[platdevices->node_tire_input->size()];
 
         try {
 
@@ -175,52 +175,68 @@ namespace kernel
                         lexical_cast<std::string>(platdevices->kernels.size()));
 
 
-                //node_input arguement
+                //node symbol
                 err = clSetKernelArg(
                         platdevices->kernels[0],
                         0,
                         sizeof(cl_mem),
                         platdevices->vec_buffer.pop_index(0));
 
-                //node root and child  arguement
+                //node state
                 err = clSetKernelArg(
                         platdevices->kernels[0],
                         1,
                         sizeof(cl_mem),
                         platdevices->vec_buffer.pop_index(1));
 
-
-                //size buffer
+						
+                //size byte char compare
                 err |= clSetKernelArg(
                         platdevices->kernels[0],
                         2,
                         sizeof(int),
-                        platdevices->vec_buffer.pop_index(2));
-
-                err |= clSetKernelArg(
-                        platdevices->kernels[0],
-                        3,
-                        sizeof(cl_mem),
-                        platdevices->vec_buffer.pop_index(3));
-
-                //global id size
-                err |= clSetKernelArg(
-                        platdevices->kernels[0],
-                        4,
-                        sizeof(cl_mem),
-                        platdevices->vec_buffer.pop_index(4));
-
-                //global id size
-                err |= clSetKernelArg(
-                        platdevices->kernels[0],
-                        5,
-                        sizeof(cl_mem),
-                        platdevices->vec_buffer.pop_index(5));
-
-
+                        platdevices->vec_buffer.pop_index(2));	
 
                 if(err != CL_SUCCESS)
                     throw cl::clutil_exception(err, "clCreateKernelArg");
+
+							 // Fix get queue
+							 //Write symbol to queue	
+							 cl_mem  cl_mem_symbol = platdevices->vec_buffer[0]; 
+							 clEnqueueWriteBuffer(platdevices->queues[0], 
+																	   cl_mem_symbol,
+																		 CL_TRUE,
+																		 0,
+																		 sizeof(char) * platdevices->node_symbol_vec.size(),
+																		 (void*)&platdevices->node_symbol_vec[0],
+																		 0,
+																		 NULL,
+                                     NULL);		
+
+							 //Write state to queue	
+							 cl_mem cl_mem_state = platdevices->vec_buffer[1];
+
+							 clEnqueueWriteBuffer(platdevices->queues[0], 
+																		cl_mem_state,
+																	  CL_TRUE,
+																		 0,
+																		 sizeof(size_t) * platdevices->node_state_vec.size(),
+																		 (void*)&platdevices->node_state_vec[0],
+																		 0,
+																		 NULL,
+                                     NULL);		
+
+							 //Binary of file to queue	
+							 cl_mem cl_mem_binary = platdevices->vec_buffer[2];
+							 clEnqueueWriteBuffer(platdevices->queues[0], 
+                                     cl_mem_binary,
+																		 CL_TRUE,
+																		 0,
+																		 sizeof(size_t) * platdevices->node_binary_vec.size(),
+																		 (void*)&platdevices->node_state_vec[0],
+																		 0,
+																		 NULL,
+                                     NULL);		
 
             }
 
@@ -431,7 +447,7 @@ namespace kernel
         return true;
     }
 
-		/*
+		
     bool commandqueue::cl_write_event()
     {
         logger->write_info( "#### Start cl_write_event ####", format_type::type_header );
@@ -442,15 +458,17 @@ namespace kernel
             platdevices_info *platdevices = get_platdevices_data();
 
             int  count_input = 0;
-//            char *signature_input = new char[platdevices->node_tire_input->size()]();
-						char *signature_input = (char*)malloc(platdevices->node_tire_input->size() * sizeof(char));
-            for(typename std::vector<node_data>::iterator iter_data = platdevices->node_tire_input->begin();
+            char *signature_input;// = new char[platdevices->node_tire_input->size()]();
+						//char *signature_input = (char*)malloc(platdevices->node_tire_input->size() * sizeof(char));
+            /*
+ 						for(typename std::vector<node_data>::iterator iter_data = platdevices->node_tire_input->begin();
                     iter_data != platdevices->node_tire_input->end();
                     ++iter_data, ++count_input) {
 
                 node_data  input_data = *iter_data;
                 signature_input[count_input] = input_data.data[count_input];
             }
+						*/
 
             cl_mem buffer          = platdevices->mem_input_buffers->at(0);
             cl_command_queue queue = platdevices->queues.at(0);
@@ -476,7 +494,7 @@ namespace kernel
 
         return true;
     }
-		*/
+		
 		
     /**
     * @brief Read buffer from devices to host.
@@ -567,7 +585,7 @@ namespace kernel
             clutil_commandqueue() : commandqueue_util(new commandqueue()) { }
 
             bool cl_create_command_queue();
-            //bool cl_write_event();
+            bool cl_write_event();
            // bool cl_read_buffer();
             bool cl_create_kernel();
 
@@ -621,12 +639,12 @@ namespace kernel
     {
         return commandqueue_util->cl_create_command_queue();
     }
-		/*
+		
     bool clutil_commandqueue::cl_write_event()
     {
         return commandqueue_util->cl_write_event();
     }
-		*/
+		
     bool clutil_commandqueue::cl_enqueue_nd_task()
     {
         return commandqueue_util->cl_enqueue_nd_task();

@@ -17,6 +17,8 @@ class FileOffsetHandlerTest : public ::testing::Test
                 list_file_type.push_back(file_name_offset[count_file]);
 
 						    s_mapped_fpe[count_file]	 = (struct MAPPED_FILE_PE *)malloc(sizeof(s_mapped_fpe));
+								/*s_mapped_fpe[count_file]->file_name = 
+													(const char*)malloc(sizeof(const char*) * strlen(file_name_offset[0]));*/
                 mapped_file_vec.push_back(s_mapped_fpe[count_file]);
 
             }

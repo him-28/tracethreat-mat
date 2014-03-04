@@ -237,7 +237,8 @@ struct MAPPED_FILE_PE {
     uint8_t 					*data;
     uint32_t          ops_begin;
     uint32_t					ops_end;
-		unsigned char     *file_name;
+		//unsigned char     *file_name;
+	  char       *      file_name;
 };
 
 struct MAMORY_BLOCK_PE {

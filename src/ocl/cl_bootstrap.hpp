@@ -19,7 +19,7 @@
 //#include "data_structure/absalgorithms.hpp"
 #include "data_structure/structdef.hpp"
 // initial
-namespace kernel
+namespace hnmav_kernel
 {
 
     namespace datastructure = data_structure;
@@ -35,8 +35,9 @@ namespace kernel
         class cl_load_system
         {
             public:
-                cl_load_system(std::string& opencl_file_path);
+                cl_load_system();
 
+                bool set_opencl_file(std::string& opencl_file_path);
                 // initial load platform, memories and commandqueue
                 bool init_cl_system();
 
@@ -47,13 +48,14 @@ namespace kernel
                 bool cl_release_system();
 
 
-                bool cl_process_buffer(datastructure::iparallel<char, size_t>& buffer_node_vec);
+                bool cl_process_buffer(datastructure::iparallel<char, size_t>& buffer_node_vec,
+                        std::vector<uint8_t>& binary_vec);
 
                 // Manage command queue
                 bool cl_process_commandqueue();
 
             private:
-                std::string *opencl_file_path_;
+                std::string *opencl_file_path;
 
                 UtilPlatform  *utilplat;
                 clutil_memory<WorkTypes, TireDefine, ContainerT> *memory_clutil;
@@ -78,15 +80,34 @@ namespace kernel
                  typename WorkTypes,
                  typename ContainerT
                  >
-        cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_load_system(std::string& opencl_file_path) :
-            opencl_file_path_(&opencl_file_path)
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
+        set_opencl_file(std::string& opencl_file_path_ptr)
+        {
+            if(opencl_file_path->size() == 0) {
+                return false;
+            }
+
+            opencl_file_path = &opencl_file_path_ptr;
+            return true;
+        }
+
+
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
+        //cl_load_system(std::string& opencl_file_path)
+        cl_load_system()
+        //:opencl_file_path_(&opencl_file_path)
         {
             util::options_system& op_system = util::options_system::get_instance();
             //init logger
             logger_ptr = &util::clutil_logging<std::string, int>::get_instance();
             logger = logger_ptr->get();
 
-            logger->write_info("Load path opencl ", *opencl_file_path_);
+            logger->write_info("Load path opencl ", *opencl_file_path);
         }
 
         template<typename UtilPlatform,
@@ -96,10 +117,11 @@ namespace kernel
                  >
         bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::init_cl_system()
         {
-            logger->write_info("---------------------- Start Load system ----------------------", format_type::type_center);
+            logger->write_info("---------------------- Start Load system ----------------------",
+                    format_type::type_center);
 
             if(!cl_load_platform()) {
-                logger->write_info("!!!CANNOT LOAD PLATFORM", format_type::type_header);
+                logger->write_info("!!!CANNOT LOAD PLATFORM");
                 return true;
             }
 
@@ -117,7 +139,8 @@ namespace kernel
 
             logger->write_info("LOAD COMMANDQUEUE COMPLETED");
 
-            logger->write_info("---------------------- End Load system  ----------------------", format_type::type_center);
+            logger->write_info("---------------------- End Load system  ----------------------",
+                    format_type::type_center);
         }
 
         template<typename UtilPlatform,
@@ -136,7 +159,7 @@ namespace kernel
             util_platform->set_num_platforms_ids(0,NULL);
             util_platform->init_platforms_ids();
 
-            if(util_platform->input_kernel_source(*opencl_file_path_)) {
+            if(util_platform->input_kernel_source(*opencl_file_path)) {
 
                 util_platform->get_platforms_info(CL_PLATFORM_VENDOR, "CL_PLATFORM_VENDOR");
                 util_platform->get_device_ids(CL_DEVICE_TYPE_ALL);
@@ -177,12 +200,13 @@ namespace kernel
                  typename ContainerT
                  >
         bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
-        cl_process_buffer(datastructure::iparallel<char, size_t>& buffer_node_vec)
+        cl_process_buffer(datastructure::iparallel<char, size_t>& ipara_buffer,
+                std::vector<uint8_t>& binary_vec)
         {
             WorkTypes workloads;
             workloads.work_groups = 50;
             workloads.work_items  = 100;
-            memory_clutil->cl_create_buffer(workloads, buffer_node_vec);
+            memory_clutil->cl_create_buffer(workloads, ipara_buffer, binary_vec);
             memory_clutil->cl_check_buffer_size();
         }
 
