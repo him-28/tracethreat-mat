@@ -11,15 +11,15 @@ libthreadsyncocl_adir = $(includedir)/threadsyncocl
 #Header
 libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/utils/file_calculate.hpp \
+ $(top_builddir)/src/exception/datastructure_exception.cpp \
  $(top_builddir)/src/exception/failure_handler_code.hpp \
  $(top_builddir)/src/data_structure/ac_tire.hpp \
  $(top_builddir)/src/wrapper/wrapper_rules.hpp \
  $(top_builddir)/src/data_structure/ac_tire.hpp \
  $(top_builddir)/src/data_structure/actire_parallel.hpp \
- $(top_builddir)/src/filetypes/pe_file_controller.hpp
-# $(top_builddir)/src/scan/file_scan_policy.hpp \
-# $(top_builddir)/src/ocl/cl_bootstrap.hpp
-
+ $(top_builddir)/src/filetypes/pe_file_controller.hpp \
+ $(top_builddir)/src/scan/file_scan_policy.hpp \
+ $(top_builddir)/src/ocl/cl_bootstrap.hpp
 
 
 
@@ -28,13 +28,12 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
 libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp thread_controller.cpp buffer_sync.cpp semaphore_controller.cpp thread_barrier_controller.cpp \
 	$(top_builddir)/src/utils/file_calculate.cpp  \
 	$(top_builddir)/src/exception/failure_handler_code.cpp \
+  $(top_builddir)/src/exception/datastructure_exception.cpp \
 	$(top_builddir)/src/data_structure/ac_tire.hpp \
 	$(top_builddir)/src/data_structure/actire_parallel.hpp \
 	$(top_builddir)/src/wrapper/wrapper_rules.hpp \
-	$(top_builddir)/src/filetypes/pe_file_controller.cpp
-
-#$(top_builddir)/src/scan/file_scan_policy.cpp
-
+	$(top_builddir)/src/filetypes/pe_file_controller.cpp \
+  $(top_builddir)/src/scan/file_scan_policy.cpp
 
 
 

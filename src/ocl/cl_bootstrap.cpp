@@ -1,0 +1,226 @@
+#include "ocl/cl_bootstrap.hpp"
+
+namespace hnmav_kernel
+{
+
+//    namespace cl_bootstrap
+//    {
+
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
+        set_opencl_file(std::string& opencl_file_path_ptr)
+        {
+            if(opencl_file_path->size() == 0) {
+                return false;
+            }
+
+            opencl_file_path = &opencl_file_path_ptr;
+            return true;
+        }
+
+
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
+        //cl_load_system(std::string& opencl_file_path)
+        cl_load_system()
+        //:opencl_file_path_(&opencl_file_path)
+        {
+            util::options_system& op_system = util::options_system::get_instance();
+            //init logger
+            logger_ptr = &util::clutil_logging<std::string, int>::get_instance();
+            logger = logger_ptr->get();
+
+            logger->write_info("Load path opencl ", *opencl_file_path);
+        }
+
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::init_cl_system()
+        {
+            logger->write_info("---------------------- Start Load system ----------------------",
+                    format_type::type_center);
+
+            if(!cl_load_platform()) {
+                logger->write_info("!!!CANNOT LOAD PLATFORM");
+                return true;
+            }
+
+            logger->write_info("LOAD PLATFORM COMPLETED");
+
+            if(!cl_load_memory()) {
+                logger->write_info("!!!CANNOT LOAD MEMORY");
+            }
+
+            logger->write_info("LOAD MEMORY COMPLETED");
+
+            if(!cl_load_commandqueue()) {
+                logger->write_info("!!!CANNOT LOAD COMMANDQUEUE");
+            }
+
+            logger->write_info("LOAD COMMANDQUEUE COMPLETED");
+
+            logger->write_info("---------------------- End Load system  ----------------------",
+                    format_type::type_center);
+        }
+
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool  cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_load_platform()
+        {
+
+            utilplat  = new UtilPlatform;
+            UtilPlatform   *util_platform = static_cast<UtilPlatform *>(utilplat);
+
+            util_platform->get_info();
+
+            util_platform->set_num_platforms_ids(0,NULL);
+            util_platform->init_platforms_ids();
+
+            if(util_platform->input_kernel_source(*opencl_file_path)) {
+
+                util_platform->get_platforms_info(CL_PLATFORM_VENDOR, "CL_PLATFORM_VENDOR");
+                util_platform->get_device_ids(CL_DEVICE_TYPE_ALL);
+
+                util_platform->cl_get_devices_info();
+
+                util_platform->context_properties();
+                util_platform->cl_create_context();
+
+                util_platform->cl_create_programs_with_source();
+                util_platform->cl_build_programs();
+            } else {
+                logger->write_info("#### Cannot load kernel source ####", format_type::type_center);
+            }
+
+            return true;
+        }
+
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_load_memory()
+        {
+            // Memory management  class
+            base_memory_clutil = new clutil_memory<dstr::dstr_def::work_groupitems, std::vector<size_t> >();
+            base_memory_clutil->set_platdevices_info_vec(utilplat->get_info());
+            memory_clutil = static_cast<
+                    clutil_memory<dstr::dstr_def::work_groupitems, std::vector<size_t> > *
+                    >(base_memory_clutil);
+            return true;
+        }
+
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
+        cl_process_buffer(dstr::iparallel<char, size_t>& ipara_buffer,
+                std::vector<uint8_t>& binary_vec)
+        {
+            //WorkTypes workloads;
+            //workloads.work_groups = 50;
+            //workloads.work_items  = 100;
+            dstr::dstr_def::work_groupitems workloads;
+            memory_clutil->cl_create_buffer(workloads, ipara_buffer, binary_vec);
+            memory_clutil->cl_check_buffer_size();
+        }
+
+
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_load_commandqueue()
+        {
+            base_comqueue_clutil = new clutil_commandqueue();
+            base_comqueue_clutil->set_platdevices_info_vec(utilplat->get_info());
+            // Load  command queue
+            comqueue_clutil = static_cast<clutil_commandqueue *>(base_comqueue_clutil);
+            comqueue_clutil->cl_create_kernel();
+
+            return true;
+        }
+
+        /**
+        * @brief  Command queue memory from host to device.
+        *
+        * @return True,If processing of queury memory completed.
+        */
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_process_commandqueue()
+        {
+            comqueue_clutil->cl_create_command_queue();
+
+            comqueue_clutil->cl_enqueue_nd_task();
+
+            // comqueue_clutil->cl_enqueue_task();
+
+            //comqueue_clutil->cl_read_buffer();
+            //            comqueue_clutil->cl_write_event();
+
+            //            comqueue_clutil->cl_call_kernel();
+
+            return true;
+        }
+
+        /**
+        * @brief Releases all cl processes.
+        *
+        * @return  True, If processes can be releases memory and all allocator.
+        */
+        template<typename UtilPlatform,
+                 typename TireDefine,
+                 typename WorkTypes,
+                 typename ContainerT
+                 >
+        bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::cl_release_system()
+        {
+            //release buffer
+            memory_clutil->cl_release_memory();
+            //release kernel and command queue
+            comqueue_clutil->cl_release_kernel();
+            comqueue_clutil->cl_release_commandqueue();
+            //release programs & context;
+            utilplat->cl_release_program();
+            utilplat->cl_release_context();
+        }
+
+
+//    }
+
+	template class				 cl_load_system<clutil_platform,
+           															dstr::dstr_def::work_groupitems,
+           															std::vector<boost::unordered_map<char, size_t> >,
+           															dstr::actire_parallel<char,
+           											 															size_t,
+                                 															boost::unordered_map<char, size_t>,
+                                 															std::vector<boost::unordered_map<char, size_t> > >
+                                															>;	
+
+
+
+}
+
+

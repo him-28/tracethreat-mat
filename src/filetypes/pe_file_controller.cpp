@@ -1,5 +1,4 @@
 #include "filetypes/pe_file_controller.hpp"
-
 #include "boost/lexical_cast.hpp"
 //#include "utils/logger/format_logger.hpp"
 //#include "utils/logger/clutil_logger.hpp" 

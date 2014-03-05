@@ -4,7 +4,8 @@
 namespace hnmav_exception
 {
   
- 
+ 		class gen_error_code;
+
     /**
     * @brief Add error code to std::map
     *

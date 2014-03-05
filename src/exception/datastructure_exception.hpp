@@ -29,10 +29,11 @@ namespace hnmav_exception
 {
     using namespace boost;
 
+		class error_code_entry;
+
     class gen_error_code;
 
-    class error_code_entry;
-
+    
     //________________________ Base virtual abstract ________________________________//
     class datastructure_exception : public std::exception,  exception
     {
@@ -58,21 +59,6 @@ namespace hnmav_exception
                 gen_error_code g_error_code;
         };
 
-        /**
-        * @brief Error code defines in exception/exception_code.hpp. 
-        * Member funciton gets invalid code of 0 - 10
-        *
-        * @param error_cnumber  Define error code.
-        *
-        * @return DS_INVAILD_XXX ( XXX means size, value ,.etc ) return code meaning.
-        */
-        std::string error_code_entry::get_error_cnumber(int error_cnumber)
-        {
-            g_error_code.set_error_cnumber(error_cnumber);
-            return g_error_code.get_msg_error();
-        }
-
-
 
         //________________________ Exception of container type ________________________________//
         /**
@@ -97,14 +83,16 @@ namespace hnmav_exception
                     std::string name = "Container exception";
                     return name.c_str();
                 }
-								// Data structure size 
-                std::string message_error_size_initial() {
-                    return type_name_.append(error_codetype.get_error_cnumber( DS_INVAILD_SIZE  ));
+                // Data structure size
+                
+								std::string message_error_size_initial() {
+                    return std::string("error"); 
+										//type_name_.append(error_codetype.get_error_cnumber( DS_INVAILD_SIZE  ));
                 }
 
-							  std::string message_at_error_size(){
-										return type_name_.append(error_codetype.get_error_cnumber( AT_INVALID_SIZE ));
-								} 
+                std::string message_at_error_size() {
+                    return type_name_.append(error_codetype.get_error_cnumber( AT_INVALID_SIZE ));
+                }
 
                 ~container_exception() throw() {}
             private:

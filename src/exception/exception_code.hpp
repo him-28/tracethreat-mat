@@ -26,9 +26,7 @@
 namespace hnmav_exception
 {
     //using namespace boost;
-
-    class gen_error_code;
-
+ 
     static const std::map<unsigned int, const char *>::value_type  error_code_entry[] = {
         // 
         {0,  ", DS_INVAILD_SIZE" },

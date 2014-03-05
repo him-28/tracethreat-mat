@@ -19,6 +19,9 @@
 #include "ocl/cl_bootstrap.hpp"
 //
 #include "utils/logger/clutil_logger.hpp"
+
+//#include "filetypes/pe_file_controller.hpp"
+
 // Big endian supported type.
 union unaligned_64 {
     uint64_t una_u64;
@@ -164,7 +167,7 @@ namespace filetypes
 						std::string * kernel_file_path_ptr;
 
             //ocl support
-            kernel_ocl::cl_bootstrap::cl_load_system<kernel_ocl::clutil_platform,
+            kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
                    dstr::dstr_def::work_groupitems,
                    std::vector<boost::unordered_map<char, size_t> >,
                    dstr::actire_parallel<char,

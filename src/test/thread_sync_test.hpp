@@ -1,6 +1,7 @@
 #include "threadsyncocl/thread_sync.hpp"
 #include "threadsyncocl/buffer_sync.hpp"
 #include "utils/config/options_system.hpp"
+#include "utils/logger/clutil_logger.hpp"
 
 namespace util_opt = hnmav_util;
 

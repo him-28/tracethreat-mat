@@ -209,6 +209,8 @@ namespace policy
 
     template class file_scan_policy<struct MAPPED_FILE_PE>;
 
+    //template class pe_file_controller<struct MAPPED_FILE_PE>;
+
     //template file_scan_policy<struct MAPPED_FILE_PE>::scan_ocl_controller<char, size_t>();
 }
 

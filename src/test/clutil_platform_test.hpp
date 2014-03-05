@@ -20,9 +20,10 @@
 
 
 #include "ocl/cl_bootstrap.hpp"
+#include "data_structure/actire_parallel.hpp"
 
 namespace kernel_ocl = hnmav_kernel;
-
+namespace dstr       = data_structure;
 class InitGPUPlatformTest : public ::testing::Test
 {
     protected:
@@ -36,18 +37,18 @@ class InitGPUPlatformTest : public ::testing::Test
 
 TEST_F(InitGPUPlatformTest, load_system)
 {
-     kernel_ocl::cl_bootstrap::cl_load_system<kernel_ocl::clutil_platform,
-           data_structure::dstr_def::work_groupitems,
+     kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
+           dstr::dstr_def::work_groupitems,
            std::vector<boost::unordered_map<char, size_t> >,
-           actire_parallel<char,
-           size_t,
-           boost::unordered_map<char, size_t>,
-           std::vector<boost::unordered_map<char, size_t> > >
-           >	 load_system;
+           dstr::actire_parallel<char,
+           											 size_t,
+                                 boost::unordered_map<char, size_t>,
+                                 std::vector<boost::unordered_map<char, size_t> > >
+                                >	 load_system;
 
-					load_system.set_opencl_file(*opencl_file_path);
+					//load_system.set_opencl_file(*opencl_file_path);
 						
-					load_system.init_cl_system();
+					//load_system.init_cl_system();
 }
 
 /*
