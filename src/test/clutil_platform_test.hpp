@@ -46,9 +46,9 @@ TEST_F(InitGPUPlatformTest, load_system)
                                  std::vector<boost::unordered_map<char, size_t> > >
                                 >	 load_system;
 
-					//load_system.set_opencl_file(*opencl_file_path);
+					load_system.set_opencl_file(*opencl_file_path);
 						
-					//load_system.init_cl_system();
+					load_system.init_cl_system();
 }
 
 /*

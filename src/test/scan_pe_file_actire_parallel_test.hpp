@@ -29,7 +29,7 @@ class ScanACTireParallel : public ::testing::Test
             char const *file_name_offset[FILE_ON];
 
             file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/Crack.exe";
-						opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl";
+						opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
             for(int count_file = 0; count_file < 	FILE_ON; count_file++) {
                 list_file_type.push_back(file_name_offset[count_file]);
 

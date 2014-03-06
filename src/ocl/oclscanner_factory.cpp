@@ -41,11 +41,11 @@ void oclscanner::create_scanner(const std::string & type)
 		}
 }
 
-class pe_scanner : public oclscanner_factory{
+class pe_scanner : public oclscanner{
 
 	public:
 		~pe_scanner();
-	 
+		  
 
 };
 

@@ -29,6 +29,7 @@ namespace data_structure
             void push_back(BufferType const&   data);
             BufferType *pop_index(unsigned int index);
             BufferType& operator [](unsigned int  index_buffer)throw(exp_container::container_exception);
+            unsigned int size()const;
         private:
             int size_;
             BufferType *buffer_data_;
@@ -121,7 +122,8 @@ namespace data_structure
     * @throw exp_container::container_exception
     */
     template<typename BufferType>
-    BufferType& vector_buffer<BufferType>::operator [](unsigned int index_buffer) throw(exp_container::container_exception)
+    BufferType& vector_buffer<BufferType>::
+			operator [](unsigned int index_buffer) throw(exp_container::container_exception)
     {
         if(index_buffer > size_)
             throw exp_container::container_exception("Cannot get more size of index");
@@ -130,6 +132,11 @@ namespace data_structure
         return buffer_data_[index_buffer];
     }
 
+    template<typename BufferType>
+    unsigned int vector_buffer<BufferType>::size()const
+    {
+        return size_;
+    }
 }
 
 #endif /* HNMAV_DATASTRUCTURE_VECTOR_BUFFER_HPP */

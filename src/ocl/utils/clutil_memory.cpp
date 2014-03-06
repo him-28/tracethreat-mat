@@ -20,10 +20,16 @@ namespace hnmav_kernel
     */
     template<typename WorkTypes, typename ContainerT>
     bool memory<WorkTypes, ContainerT>::cl_create_buffer(WorkTypes& worktype_loads,
-            dstr::iparallel<char, size_t>& ipara,
+            std::vector<char>&        symbol_vec_ptr,
+            std::vector<size_t>&      state_vec_ptr,
             std::vector<uint8_t>&     binary_vec_ptr)
     {
         logger->write_info("### Start cl_create_buffer ###", util::format_type::type_header);
+        logger->write_info_test("PE File, size ", boost::lexical_cast<std::string>(binary_vec_ptr.size()));
+        logger->write_info_test("Symbol size ", boost::lexical_cast<std::string>(symbol_vec_ptr.size()));
+        logger->write_info_test("State  size ", boost::lexical_cast<std::string>(state_vec_ptr.size()));
+
+
         platdevices_info *platdevices = get_platdevices_data();
 
         //get data from tuple by boost::tie
@@ -35,15 +41,16 @@ namespace hnmav_kernel
         		*/
 
         //shared ptr get vector symbol and state.
-        platdevices->node_symbol_vec = *ipara.get_symbol_shared_ptr().get();
-        platdevices->node_state_vec  = *ipara.get_state_shared_ptr().get();
+        platdevices->node_symbol_vec = symbol_vec_ptr; // *ipara.get_symbol_shared_ptr().get();
+        platdevices->node_state_vec  = state_vec_ptr; //*ipara.get_state_shared_ptr().get();
+				platdevices->node_binary_vec = binary_vec_ptr;
         symbol_vec = &platdevices->node_symbol_vec;
         state_vec  = &platdevices->node_state_vec;
 
-        logger->write_info("### memory::cl_create_buffer, symbol_vec.size()", 
-									boost::lexical_cast<std::string>(symbol_vec->size()));
-        logger->write_info("### memory::cl_create_buffer,  state_vec.size()", 
-                  boost::lexical_cast<std::string>(state_vec->size()));
+        logger->write_info("### memory::cl_create_buffer, symbol_vec.size()",
+                boost::lexical_cast<std::string>(symbol_vec->size()));
+        logger->write_info("### memory::cl_create_buffer,  state_vec.size()",
+                boost::lexical_cast<std::string>(state_vec->size()));
 
         return true;
     }
@@ -56,27 +63,28 @@ namespace hnmav_kernel
     * @param node  Node of struct
     */
     template<typename WorkTypes, typename ContainerT>
-    void memory<WorkTypes, ContainerT>::build_node_buffer_object(
-            platdevices_info *plat_info)throw(std::runtime_error)
+    bool memory<WorkTypes, ContainerT>::
+    cl_build_node_buffer_object()throw(std::runtime_error)
     {
+        platdevices_info *plat_info = get_platdevices_data();
+
+        logger->write_info("### Start cl_build_node_buffer_object ###", util::format_type::type_header);
+
+        logger->write_info("   Symbol size    ", 
+					lexical_cast<std::string>(plat_info->node_symbol_vec.size()));
+        logger->write_info("-- State  size    ", 
+					lexical_cast<std::string>(plat_info->node_state_vec.size()));
+        logger->write_info("-- Binary Size    ", 
+					lexical_cast<std::string>(plat_info->node_binary_vec.size()));
+
         cl_int err = CL_SUCCESS;
         int node_size = 0;
-        //logger->write_info("Node size insert ", lexical_cast<std::string>(sizeof(node)));
-        //logger->write_info("-- Node all size    ", lexical_cast<std::string>(count_sig_input));
-        //logger->write_info("-- size of Node data    ", lexical_cast<std::string>(sizeof(node_data)));
-        /*
-        char *data_str = (char *)malloc( count_sig_input * sizeof(char));
-
-        for(int count_data = 0; count_data < count_sig_input; count_data++) {
-        data_str[count_data] = node->data[count_data];
-        }
-        */
 
         try {
             // inital vector size
             plat_info->vec_buffer.initial_size(6);
             //Node input
-            cl_mem  buffer_input = clCreateBuffer(
+            cl_mem  symbol_mem = clCreateBuffer(
                     plat_info->context,
                     CL_MEM_READ_ONLY,
                     sizeof(char) * plat_info->node_symbol_vec.size(),
@@ -87,9 +95,9 @@ namespace hnmav_kernel
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
 
             // Node->data initial root and child
-            plat_info->vec_buffer.push_back(buffer_input);
+            plat_info->vec_buffer.push_back(symbol_mem);
 
-            cl_mem  sigrc_input = clCreateBuffer(
+            cl_mem  state_mem = clCreateBuffer(
                     plat_info->context,
                     CL_MEM_READ_ONLY,
                     sizeof(size_t) * plat_info->node_state_vec.size(),
@@ -100,10 +108,10 @@ namespace hnmav_kernel
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
 
             // set size of buffer input
-            plat_info->vec_buffer.push_back(sigrc_input);
+            plat_info->vec_buffer.push_back(state_mem);
 
             // signature size
-            cl_mem  buffer_input_sizes = clCreateBuffer(
+            cl_mem  binaryf_mem = clCreateBuffer(
                     plat_info->context,
                     CL_MEM_READ_ONLY,
                     sizeof(uint8_t) * plat_info->node_binary_vec.size(),
@@ -114,12 +122,14 @@ namespace hnmav_kernel
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
 
             // set size of buffer input
-            plat_info->vec_buffer.push_back(buffer_input_sizes);
-
+            plat_info->vec_buffer.push_back(binaryf_mem);
+						
         } catch(std::runtime_error&  ex) {
             logger->write_error( ex.what() );
+						return false;
         }
-
+				
+				return true;
     }
 
 
@@ -169,19 +179,21 @@ namespace hnmav_kernel
 
         char *signature_input;
         signature_input;// = new char[platdevices->node_tire_input->size()];
+        logger->write_info("memory::::cl_check_buffer_size", boost::lexical_cast<std::string>(
+                platdevices->vec_buffer.size()));
 
-        if(platdevices->mem_input_buffers->size() == 0)
+        if(platdevices->vec_buffer.size() == 0)
             return false;
 
-        for(std::vector<cl_mem>::iterator iter = platdevices->mem_input_buffers->begin();
-                iter != platdevices->mem_input_buffers->end();
-                ++iter) {
-            clGetMemObjectInfo(*iter,
+        for(int count_vec = 0; count_vec <  platdevices->vec_buffer.size(); count_vec ++) {
+
+            clGetMemObjectInfo(platdevices->vec_buffer[count_vec],
                     CL_MEM_SIZE,
                     sizeof(signature_input) * platdevices->num_devices,
                     signature_input,
                     NULL);
             sum_signature++;
+
         }
 
         logger->write_info("--- buffer size ",  lexical_cast<std::string>(sum_signature));
@@ -191,8 +203,6 @@ namespace hnmav_kernel
     /**
     * @brief Handling memory in GPU or CPU selected. Interface class for API.
     */
-
-
     template<typename WorkTypes, typename ContainerT>
     clutil_memory<WorkTypes, ContainerT>::clutil_memory()
     {
@@ -207,10 +217,22 @@ namespace hnmav_kernel
 
     template<typename WorkTypes, typename ContainerT>
     void  clutil_memory<WorkTypes, ContainerT>::cl_create_buffer(WorkTypes& worktype_loads,
-            dstr::iparallel<char, size_t>& ipara,
+            std::vector<char>&    symbol_vec_ptr,
+            std::vector<size_t>& state_vec_ptr,
             std::vector<uint8_t>& binary_vec)
     {
-        memory_util->cl_create_buffer(worktype_loads, ipara, binary_vec);
+        memory_util->cl_create_buffer(worktype_loads,
+                symbol_vec_ptr,
+                state_vec_ptr,
+                binary_vec);
+    }
+
+    template<typename WorkTypes, typename ContainerT>
+    bool  clutil_memory<WorkTypes, ContainerT>::
+    cl_build_node_buffer_object() throw(std::runtime_error)
+    {
+
+        return memory_util->cl_build_node_buffer_object();
     }
 
     template<typename WorkTypes, typename ContainerT>
@@ -231,7 +253,7 @@ namespace hnmav_kernel
 
     }
 
-		template class memory<dstr::dstr_def::work_groupitems, std::vector<size_t> >;
+    template class memory<dstr::dstr_def::work_groupitems, std::vector<size_t> >;
     template class clutil_memory<dstr::dstr_def::work_groupitems, std::vector<size_t> >;
 
 

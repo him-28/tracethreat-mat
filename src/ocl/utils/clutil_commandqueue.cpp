@@ -82,8 +82,8 @@ namespace hnmav_kernel
                         lexical_cast<std::string>(command_queue));
                 logger->write_info("--- Count_queue               ",
                         lexical_cast<std::string>(count_queue));
-                logger->write_info("--- Address of mem_input_buffer  ",
-                        lexical_cast<std::string>(platdevices->mem_input_buffers->size()));
+               // logger->write_info("--- Address of mem_input_buffer  ",
+                //        lexical_cast<std::string>(platdevices->mem_input_buffers->size()));
                 logger->write_info("--- Kernel size               ",
                         lexical_cast<std::string>(platdevices->kernels.size()));
 
@@ -96,7 +96,7 @@ namespace hnmav_kernel
                         platdevices->vec_buffer.pop_index(0));
 
                 //node state
-                err = clSetKernelArg(
+                err |= clSetKernelArg(
                         platdevices->kernels[0],
                         1,
                         sizeof(cl_mem),
@@ -107,16 +107,18 @@ namespace hnmav_kernel
                 err |= clSetKernelArg(
                         platdevices->kernels[0],
                         2,
-                        sizeof(int),
+                        sizeof(cl_mem),
                         platdevices->vec_buffer.pop_index(2));
 
-                if(err != CL_SUCCESS)
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg");
                     throw cl::clutil_exception(err, "clCreateKernelArg");
+                }
 
                 // Fix get queue
                 //Write symbol to queue
                 cl_mem  cl_mem_symbol = platdevices->vec_buffer[0];
-                clEnqueueWriteBuffer(platdevices->queues[0],
+                err |= clEnqueueWriteBuffer(platdevices->queues[0],
                         cl_mem_symbol,
                         CL_TRUE,
                         0,
@@ -126,10 +128,16 @@ namespace hnmav_kernel
                         NULL,
                         NULL);
 
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue, \
+     									 Write clEnqueueWriteBuffer 01 error");
+                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                }
+
                 //Write state to queue
                 cl_mem cl_mem_state = platdevices->vec_buffer[1];
 
-                clEnqueueWriteBuffer(platdevices->queues[0],
+                err |= clEnqueueWriteBuffer(platdevices->queues[0],
                         cl_mem_state,
                         CL_TRUE,
                         0,
@@ -139,17 +147,34 @@ namespace hnmav_kernel
                         NULL,
                         NULL);
 
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue, \
+      								Write clEnqueueWriteBuffer 02 error");
+                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                }
+
                 //Binary of file to queue
                 cl_mem cl_mem_binary = platdevices->vec_buffer[2];
-                clEnqueueWriteBuffer(platdevices->queues[0],
+
+								logger->write_info_test("commandqueue::cl_create_command_queue,\
+									clEnqueueWriteBuffer, node_binary_vec size ",
+									boost::lexical_cast<std::string>(platdevices->node_binary_vec.size()));
+
+                err |= clEnqueueWriteBuffer(platdevices->queues[0],
                         cl_mem_binary,
                         CL_TRUE,
                         0,
-                        sizeof(size_t) * platdevices->node_binary_vec.size(),
-                        (void *)&platdevices->node_state_vec[0],
+                        sizeof(uint8_t) * platdevices->node_binary_vec.size(),
+                        (void *)&platdevices->node_binary_vec[0],
                         0,
                         NULL,
                         NULL);
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue,\
+											 clEnqueueWriteBuffer 03 error");
+                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                }
 
             }
 

@@ -69,7 +69,7 @@ namespace hnmav_kernel
         //std::vector<char> *node_tire_input;
         std::vector<char>  				node_symbol_vec;
 			  std::vector<size_t>       node_state_vec;
-				std::vector<unsigned char>  node_binary_vec;
+				std::vector<uint8_t>  node_binary_vec;
         // buffer global size
         int					 buffer_elements;
     };

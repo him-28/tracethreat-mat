@@ -86,8 +86,8 @@ namespace hnmav_exception
                 // Data structure size
                 
 								std::string message_error_size_initial() {
-                    return std::string("error"); 
-										//type_name_.append(error_codetype.get_error_cnumber( DS_INVAILD_SIZE  ));
+                    //return std::string("error"); 
+										//return type_name_.append(error_codetype.get_error_cnumber( DS_INVAILD_SIZE  ));
                 }
 
                 std::string message_at_error_size() {

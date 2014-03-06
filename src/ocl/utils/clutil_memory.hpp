@@ -57,13 +57,14 @@ namespace hnmav_kernel
             memory();
 
             bool  cl_create_buffer(WorkTypes& worktype_loads,
-                    dstr::iparallel<char, size_t>& ipa,
-                    std::vector<uint8_t>& binary_vec);
+										std::vector<char>   & symbol_vec_ptr,
+										std::vector<size_t> & state_vec_ptr,
+                    std::vector<uint8_t>& binary_vec_ptr);
 
-            void  build_node_buffer_object(platdevices_info *plat_info) throw(std::runtime_error);
-
+            bool  cl_build_node_buffer_object() throw(std::runtime_error);
 
             bool  cl_create_subbuffer();
+
             bool  cl_check_buffer_size();
 
             bool  cl_release_memory();
@@ -72,6 +73,7 @@ namespace hnmav_kernel
             std::vector<boost::shared_ptr<platdevices_info> >&    get_platdevices_info_vec() {
                 return platdevices_shared_ptr;
             }
+
             void set_platdevices_info_vec(std::vector<boost::shared_ptr<platdevices_info> >& ptr_info) {
                 platdevices_shared_ptr = ptr_info;
             }
@@ -95,7 +97,7 @@ namespace hnmav_kernel
 
             // input open cl
             std::vector<char> *symbol_vec;
-            ContainerT *state_vec;
+            ContainerT        *state_vec;
             std::vector<uint8_t> *binary_vec;
             std::vector<cl_mem> mem_object_vec;
 
@@ -112,11 +114,15 @@ namespace hnmav_kernel
             clutil_memory();
 
             void cl_create_buffer(WorkTypes& worktype_loads,
-                    dstr::iparallel<char, size_t>& ipara,
+                   	std::vector<char>   & symbol_vec_ptr,
+										std::vector<size_t> & state_vec_ptr,
                     std::vector<uint8_t>& binary_vec);
 
             bool cl_create_subbuffer();
+
             bool cl_check_buffer_size();
+
+						bool cl_build_node_buffer_object() throw(std::runtime_error);
 
             bool cl_release_memory();
 

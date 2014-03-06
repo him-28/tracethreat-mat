@@ -1,7 +1,7 @@
 #include "filetypes/pe_file_controller.hpp"
 #include "boost/lexical_cast.hpp"
 //#include "utils/logger/format_logger.hpp"
-//#include "utils/logger/clutil_logger.hpp" 
+//#include "utils/logger/clutil_logger.hpp"
 
 namespace filetypes
 {
@@ -35,7 +35,9 @@ namespace filetypes
         typename std::vector<MAPPED_FILE *>::iterator  iter_mf_vec;
         MAPPED_FILE *mapped_file_ptr;
 
-        for(iter_mf_vec = mapped_file_vec->begin(); iter_mf_vec != mapped_file_vec->end(); ++iter_mf_vec) {
+        for(iter_mf_vec = mapped_file_vec->begin();
+                iter_mf_vec != mapped_file_vec->end();
+                ++iter_mf_vec) {
             mapped_file_ptr = *iter_mf_vec;
 
             if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER)) {
@@ -228,27 +230,34 @@ namespace filetypes
 
 
     template<typename MAPPED_FILE>
-    bool pe_file_controller<MAPPED_FILE>::scan(std::vector<char> * symbol_vec,
-            std::vector<size_t> *  state_vec,
-            std::vector<uint8_t> * file_buffer_vec)
+    util::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
+            std::vector<size_t>   *state_vec,
+            std::vector<uint8_t> *file_buffer_vec)
     {
         //PE_FILE_CONTROLLER call AC-DFS algorithms.
-        logger->write_info("Start pe_file_controller<MAPPED_FILE>::scan...",hnmav_util::format_type::type_header);
+        logger->write_info("Start pe_file_controller<MAPPED_FILE>::scan...",
+                hnmav_util::format_type::type_header);
 
-        logger->write_info("PE File, size ", boost::lexical_cast<std::string>(file_buffer_vec->size()));
-				logger->write_info("Symbol size ", boost::lexical_cast<std::string>(symbol_vec->size()));
-				logger->write_info("State  size ", boost::lexical_cast<std::string>(state_vec->size()));
+        logger->write_info("PE File, size ",
+                boost::lexical_cast<std::string>(file_buffer_vec->size()));
+        logger->write_info("Symbol size ",
+                boost::lexical_cast<std::string>(symbol_vec->size()));
+        logger->write_info("State  size ",
+                boost::lexical_cast<std::string>(state_vec->size()));
+        logger->write_info("Send to pe_file_controller::scan, send symbol, state and binary to ocl",
+                hnmav_util::format_type::type_header);
 
-			 	logger->write_info("Send to pe_file_controller::scan, send symbol, state and binary to ocl",
-					hnmav_util::format_type::type_header);
-	
-			  //load open file kernel file
-			  this->load_system.set_opencl_file(*this->kernel_file_path_ptr);	
-				
-  				
+        //load open file kernel file
+        this->load_system.set_opencl_file(*this->kernel_file_path_ptr);
+        this->load_system.cl_load_platform();
+        this->load_system.cl_load_memory();
+        this->load_system.cl_process_buffer(*symbol_vec, *state_vec, *file_buffer_vec);
+        this->load_system.cl_build_memory();
+        this->load_system.cl_load_commandqueue();
+        this->load_system.cl_process_commandqueue();
 
 
-        return true;
+        return util::scan_file_code.FILE_FOUND;
     }
 
     template<typename MAPPED_FILE>
@@ -262,12 +271,13 @@ namespace filetypes
     }
 
 
-		template<typename MAPPED_FILE>
-		bool pe_file_controller<MAPPED_FILE>::set_opencl_file(std::string & kernel_file_path_ptr)
-		{
-				if(kernel_file_path_ptr.size() == 0) return false;
-				this->kernel_file_path_ptr = &kernel_file_path_ptr;
-		}
+    template<typename MAPPED_FILE>
+    bool pe_file_controller<MAPPED_FILE>::set_opencl_file(std::string& kernel_file_path_ptr)
+    {
+        if(kernel_file_path_ptr.size() == 0) return false;
+
+        this->kernel_file_path_ptr = &kernel_file_path_ptr;
+    }
 
     template<typename MAPPED_FILE>
     inline int16_t pe_file_controller<MAPPED_FILE>::convert_ec16(uint16_t *buff)
