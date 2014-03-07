@@ -342,7 +342,7 @@ namespace hnmav_kernel
                 NULL);
 
 				// Config size before run nd-rank
-        platforms->global_size = 100;
+        //platforms->global_size = 100;
 
         logger->write_info("--- Platform global size ", lexical_cast<std::string>(platforms->global_size));
 
@@ -354,7 +354,7 @@ namespace hnmav_kernel
                 NULL);
 
 				// Config size before run nd-rank
-        platforms->local_size = 50;
+        //platforms->local_size = 50;
 
         logger->write_info("---  Platform local size ", lexical_cast<std::string>(platforms->local_size));
 

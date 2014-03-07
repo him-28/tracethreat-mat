@@ -222,6 +222,7 @@ namespace hnmav_kernel
         return true;
     }
 
+
     bool commandqueue::cl_enqueue_nd_task()
     {
         logger->write_info("#### Start cl_enqueue_nd_task ####", format_type::type_header);
@@ -238,6 +239,9 @@ namespace hnmav_kernel
                     lexical_cast<std::string>(platdevices->local_size));
 
             std::size_t offset = 0;
+						//Calculate work size.
+					  platdevices->global_size = platdevices->node_binary_vec.size();
+						platdevices->local_size  = ;
 
             for(int count_queue = 0; count_queue < platdevices->queues.size(); count_queue++) {
                 cl_event event;
