@@ -21,9 +21,8 @@
 
 #include "utils/logger/clutil_logger.hpp"
 
-#include "utils/base/system_code.hpp
+#include "utils/base/system_code.hpp"
 
-//#include "filetypes/pe_file_controller.hpp"
 
 // Big endian supported type.
 union unaligned_64 {

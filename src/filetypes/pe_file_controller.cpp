@@ -257,7 +257,7 @@ namespace filetypes
         this->load_system.cl_process_commandqueue();
 
 
-        return util::scan_file_code.FILE_FOUND;
+        return utils::found;
     }
 
     template<typename MAPPED_FILE>

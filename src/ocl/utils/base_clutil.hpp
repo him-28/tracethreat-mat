@@ -70,6 +70,10 @@ namespace hnmav_kernel
         std::vector<char>  				node_symbol_vec;
 			  std::vector<size_t>       node_state_vec;
 				std::vector<uint8_t>  node_binary_vec;
+
+				//return symbol to host(write back)
+				char *      symbol_wb;
+
         // buffer global size
         int					 buffer_elements;
     };

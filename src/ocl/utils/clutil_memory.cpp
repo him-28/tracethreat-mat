@@ -82,7 +82,7 @@ namespace hnmav_kernel
 
         try {
             // inital vector size
-            plat_info->vec_buffer.initial_size(6);
+            plat_info->vec_buffer.initial_size(4);
             //Node input
             cl_mem  symbol_mem = clCreateBuffer(
                     plat_info->context,
@@ -123,7 +123,22 @@ namespace hnmav_kernel
 
             // set size of buffer input
             plat_info->vec_buffer.push_back(binaryf_mem);
-						
+				
+					   //Write back symbol
+            cl_mem  symbol_wb_mem = clCreateBuffer(
+                    plat_info->context,
+                    CL_MEM_READ_ONLY,
+                    sizeof(uint8_t) * plat_info->node_symbol_vec.size(),
+                    plat_info->symbol_wb,
+                    &err);
+
+            if(err != CL_SUCCESS)
+                throw except::cl::clutil_exception(err, "clCreateBuffer-Build-node-Buffer");
+
+            // set size of buffer input
+            plat_info->vec_buffer.push_back(symbol_wb_mem);
+
+		
         } catch(std::runtime_error&  ex) {
             logger->write_error( ex.what() );
 						return false;

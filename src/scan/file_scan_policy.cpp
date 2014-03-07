@@ -100,13 +100,17 @@ namespace policy
 
         if(!ret) {
             logger->write_info("pe_file_policy::scan_file_type, cannot open kernel file.");
-						return false;
+            return false;
         }
 
-        pe_fconl.scan(this->node_symbol_vec,
+        util::scan_file_code scanf_code = pe_fconl.scan(this->node_symbol_vec,
                 this->node_state_vec,
                 &pe_fconl.get_file_buffer());
-				
+
+        if(scanf_code == util::found) {
+            logger->write_info("pe_file_policy::scan_file_type, found file infected.");
+        }
+
         logger->write_info_test("Size of node_symbol ",
                 boost::lexical_cast<std::string>(this->node_symbol_vec->size()));
 
@@ -117,7 +121,7 @@ namespace policy
 
         if(!ret) {
             logger->write_info("pe_file_policy::scan_file_type, scan cannot scan file buffer");
-						return false;
+            return false;
         }
 
         return true;// scan completed

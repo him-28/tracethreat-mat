@@ -1,4 +1,5 @@
 #include "ocl/utils/clutil_commandqueue.hpp"
+#include "CL/cl.h"
 
 namespace hnmav_kernel
 {
@@ -82,7 +83,7 @@ namespace hnmav_kernel
                         lexical_cast<std::string>(command_queue));
                 logger->write_info("--- Count_queue               ",
                         lexical_cast<std::string>(count_queue));
-               // logger->write_info("--- Address of mem_input_buffer  ",
+                // logger->write_info("--- Address of mem_input_buffer  ",
                 //        lexical_cast<std::string>(platdevices->mem_input_buffers->size()));
                 logger->write_info("--- Kernel size               ",
                         lexical_cast<std::string>(platdevices->kernels.size()));
@@ -110,6 +111,13 @@ namespace hnmav_kernel
                         sizeof(cl_mem),
                         platdevices->vec_buffer.pop_index(2));
 
+                //size byte char compare
+                err |= clSetKernelArg(
+                        platdevices->kernels[0],
+                        3,
+                        sizeof(cl_mem),
+                        platdevices->vec_buffer.pop_index(3));
+
                 if(err != CL_SUCCESS) {
                     logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg");
                     throw cl::clutil_exception(err, "clCreateKernelArg");
@@ -131,7 +139,7 @@ namespace hnmav_kernel
                 if(err != CL_SUCCESS) {
                     logger->write_info("commandqueue::cl_create_command_queue, \
      									 Write clEnqueueWriteBuffer 01 error");
-                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                    throw cl::clutil_exception(err, "clEnqueueWriteBuffer");
                 }
 
                 //Write state to queue
@@ -150,15 +158,15 @@ namespace hnmav_kernel
                 if(err != CL_SUCCESS) {
                     logger->write_info("commandqueue::cl_create_command_queue, \
       								Write clEnqueueWriteBuffer 02 error");
-                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                    throw cl::clutil_exception(err, "clEnqueueWriteBuffer");
                 }
 
                 //Binary of file to queue
                 cl_mem cl_mem_binary = platdevices->vec_buffer[2];
 
-								logger->write_info_test("commandqueue::cl_create_command_queue,\
+                logger->write_info_test("commandqueue::cl_create_command_queue,\
 									clEnqueueWriteBuffer, node_binary_vec size ",
-									boost::lexical_cast<std::string>(platdevices->node_binary_vec.size()));
+                        boost::lexical_cast<std::string>(platdevices->node_binary_vec.size()));
 
                 err |= clEnqueueWriteBuffer(platdevices->queues[0],
                         cl_mem_binary,
@@ -173,8 +181,36 @@ namespace hnmav_kernel
                 if(err != CL_SUCCESS) {
                     logger->write_info("commandqueue::cl_create_command_queue,\
 											 clEnqueueWriteBuffer 03 error");
-                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                    throw cl::clutil_exception(err, "clEnqueueWriteBuffer");
                 }
+
+                
+								logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
+								platdevices->symbol_wb = (char*)malloc(sizeof(char) * platdevices->node_symbol_vec.size());
+                //write back- test only
+                err |= clEnqueueReadBuffer(platdevices->queues[0],
+                        *platdevices->vec_buffer.pop_index(3),
+                        CL_TRUE,
+                        0,
+                        sizeof(char) * platdevices->node_symbol_vec.size(),
+                        platdevices->symbol_wb,
+                        0,
+                        NULL,
+                        NULL);
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue,\
+											 clEnqueueReadBuffer  error");
+                    throw cl::clutil_exception(err, "clEnqueueReadBuffer");
+                }
+
+							int size_symbol_bw = platdevices->node_symbol_vec.size();
+							for(int count_symbol = 0; count_symbol < size_symbol_bw; count_symbol++)
+							{
+									logger->write_info("Return value ",
+ 										 boost::lexical_cast<std::string>(platdevices->symbol_wb[count_symbol]));
+							}
+
 
             }
 
