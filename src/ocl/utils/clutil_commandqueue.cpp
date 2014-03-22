@@ -182,35 +182,7 @@ namespace hnmav_kernel
                     logger->write_info("commandqueue::cl_create_command_queue,\
 											 clEnqueueWriteBuffer 03 error");
                     throw cl::clutil_exception(err, "clEnqueueWriteBuffer");
-                }
-
-                
-								logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
-								platdevices->symbol_wb = (char*)malloc(sizeof(char) * platdevices->node_symbol_vec.size());
-                //write back- test only
-                err |= clEnqueueReadBuffer(platdevices->queues[0],
-                        *platdevices->vec_buffer.pop_index(3),
-                        CL_TRUE,
-                        0,
-                        sizeof(char) * platdevices->node_symbol_vec.size(),
-                        platdevices->symbol_wb,
-                        0,
-                        NULL,
-                        NULL);
-
-                if(err != CL_SUCCESS) {
-                    logger->write_info("commandqueue::cl_create_command_queue,\
-											 clEnqueueReadBuffer  error");
-                    throw cl::clutil_exception(err, "clEnqueueReadBuffer");
-                }
-
-							int size_symbol_bw = platdevices->node_symbol_vec.size();
-							for(int count_symbol = 0; count_symbol < size_symbol_bw; count_symbol++)
-							{
-									logger->write_info("Return value ",
- 										 boost::lexical_cast<std::string>(platdevices->symbol_wb[count_symbol]));
-							}
-
+                }                
 
             }
 
@@ -239,9 +211,9 @@ namespace hnmav_kernel
                     lexical_cast<std::string>(platdevices->local_size));
 
             std::size_t offset = 0;
-						//Calculate work size.
-					  platdevices->global_size = platdevices->node_binary_vec.size();
-						platdevices->local_size  = ;
+            //Calculate work size.
+            platdevices->global_size = platdevices->node_symbol_vec.size();
+            platdevices->local_size  = platdevices->node_symbol_vec.size();
 
             for(int count_queue = 0; count_queue < platdevices->queues.size(); count_queue++) {
                 cl_event event;
@@ -263,6 +235,47 @@ namespace hnmav_kernel
                 logger->write_info("--- NDRange-Kernel ",
                         lexical_cast<std::string>(count_queue));
             }
+
+								logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
+                platdevices->symbol_wb = (char *)malloc(sizeof(char) * platdevices->node_symbol_vec.size());
+                //write back- test only
+                err |= clEnqueueReadBuffer(platdevices->queues[0],
+                        *platdevices->vec_buffer.pop_index(3),
+                        CL_TRUE,
+                        0,
+                        sizeof(char) * platdevices->node_symbol_vec.size(),
+                        platdevices->symbol_wb,
+                        0,
+                        NULL,
+                        NULL);
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue,\
+											 clEnqueueReadBuffer  error");
+                    throw cl::clutil_exception(err, "clEnqueueReadBuffer");
+                }
+
+                int size_symbol_bw = platdevices->node_symbol_vec.size();
+
+                for(int count_symbol = 0; count_symbol < size_symbol_bw; count_symbol++) {
+                    printf("Return data : %c \n", platdevices->symbol_wb[count_symbol]);
+                    logger->write_info("Return value ",
+                            boost::lexical_cast<std::string>(platdevices->symbol_wb[count_symbol]));
+
+                }
+								//Release memory
+								for(int count_mem = 0; count_mem < platdevices->vec_buffer.size(); count_mem++)
+								{
+									clReleaseMemObject(platdevices->vec_buffer[count_mem]);
+								}
+								//Release kernel
+								//clReleaseKernel(platdevices->kernel[0]);
+								cl_release_kernel();
+								cl_release_commandqueue();
+								//clReleaseCommandQueue(platdevices->queue[0]);
+								clReleaseProgram(platdevices->program);
+								clReleaseContext(platdevices->context);
+
 
             //clWaitForEvents(platdevices->events.size(), const_cast<cl_event *>(&platdevices->events[0]));
         } catch(std::runtime_error  ex) {

@@ -1,6 +1,7 @@
 
 #include "scan/file_scan_policy.hpp"
 //#include "filetypes/pe_file_controller.hpp"
+#include <sstream>
 
 namespace policy
 {
@@ -71,7 +72,18 @@ namespace policy
         *
         * @return True, if data can insert to vector contains buffer.
         */
-        ret = pe_fconl.convert2buffer(nt_header_ext.data_offset, nt_header_ext.size);
+				
+				logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, TEST only");
+        std::string value_str("a824bc647c46d04b537db2e3a33711");
+				//nt_header_ext.data_offset;
+				unsigned char data_offset[] = "a824bc647c46d04b537db2e3a33711";
+				//nt_header_ext.size
+	
+        //ret = pe_fconl.convert2buffer(nt_header_ext.data_offset, nt_header_ext.size);
+			
+				logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, Repace with nt_header_ext");
+				//test only
+        ret = pe_fconl.convert2buffer(data_offset, value_str.size());
 
         logger->write_info("pe_file_policy<MAPPED_FILE>::scan_file_type, data_offset size",
                 boost::lexical_cast<std::string>(nt_header_ext.size));
