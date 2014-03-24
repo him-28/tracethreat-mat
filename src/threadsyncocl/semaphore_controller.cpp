@@ -1,6 +1,21 @@
+/*
+* Copyright 2014 MTSec, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-/* 						Titles														Authors 												Date
- * - Semaphore define														Chatsiri.rat                    01/10/2013
+/*  Titles			                                                     Authors	          Date
+ * - Semaphore define																						Chatsiri.rat      01/10/2013
  */
 #include "threadsyncocl/semaphore_controller.hpp"
 
@@ -98,26 +113,26 @@ namespace controller
     /* mutex declared */
 #ifndef HNMAV_NO_CONTENTION_PROFILING
 
-    static sig_atomic_t mutexProfilingSampleRate = 0;
-    static MutexWaitCallback mutexProfilingCallback = 0;
+    static sig_atomic_t mutex_profiliing_sample_rate = 0;
+    static mutex_wait_callback mutex_profiling_callback  = 0;
 
-    volatile static sig_atomic_t mutexProfilingCounter = 0;
+    volatile static sig_atomic_t mutex_profiling_counter = 0;
 
-    void enableMutexProfiling(int32_t profilingSampleRate,
-            MutexWaitCallback callback)
+    void enable_mutex_profiling(int32_t profiling_sample_rate,
+            mutex_wait_callback callback)
     {
-        mutexProfilingSampleRate = profilingSampleRate;
-        mutexProfilingCallback = callback;
+        mutex_profiling_sample_rate = profiling_sample_rate;
+        mutex_profiling_callback    = callback;
     }
 
 #define PROFILE_MUTEX_START_LOCK() \
-    int64_t _lock_startTime = maybeGetProfilingStartTime();
+    int64_t _lock_startTime =   maybe_get_profiling_start_time();
 
 #define PROFILE_MUTEX_NOT_LOCKED() \
   do { \
     if (_lock_startTime > 0) { \
-      int64_t endTime = Util::currentTimeUsec(); \
-      (*mutexProfilingCallback)(this, endTime - _lock_startTime); \
+      int64_t endTime = util_thread::current_time_usec(); \
+      (*mutex_profiling_callback)(this, endTime - _lock_startTime); \
     } \
   } while (0)
 
@@ -125,7 +140,7 @@ namespace controller
   do { \
     profileTime_ = _lock_startTime; \
     if (profileTime_ > 0) { \
-      profileTime_ = Util::currentTimeUsec() - profileTime_; \
+      profileTime_ = util_thread::current_time_usec()  - profileTime_; \
     } \
   } while (0)
 
@@ -136,13 +151,13 @@ namespace controller
 #define PROFILE_MUTEX_UNLOCKED() \
   do { \
     if (_temp_profileTime > 0) { \
-      (*mutexProfilingCallback)(this, _temp_profileTime); \
+      (*mutex_profiling_callback)(this, _temp_profileTime); \
     } \
   } while (0)
 
-    static inline int64_t maybeGetProfilingStartTime()
+    static inline int64_t maybe_get_profiling_start_time()
     {
-        if (mutexProfilingSampleRate && mutexProfilingCallback) {
+        if (mutex_profiling_sample_rate && mutex_profiling_callback) {
             // This block is unsynchronized, but should produce a reasonable sampling
             // rate on most architectures.  The main race conditions are the gap
             // between the decrement and the test, the non-atomicity of decrement, and
@@ -155,11 +170,11 @@ namespace controller
             //      to its large value, causing each additional incoming thread to
             //      profile every call.  This situation is unlikely to persist for long
             //      as the critical gap is quite short, but profiling could be bursty.
-            sig_atomic_t localValue = --mutexProfilingCounter;
+            sig_atomic_t localValue = --mutex_profiling_counter;
 
             if (localValue <= 0) {
-                mutexProfilingCounter = mutexProfilingSampleRate;
-                return Util::currentTimeUsec();
+                mutex_profiling_counter = mutex_profiling_sample_rate;
+                return util_thread::current_time_usec();
             }
         }
 
@@ -179,10 +194,10 @@ namespace controller
      *
      * @version $Id:$
      */
-    class Mutex::impl
+    class mutex_controller::impl
     {
         public:
-            impl(Initializer init) : initialized_(false) {
+            impl(initializer init) : initialized_(false) {
 #ifndef HNMAV_NO_CONTENTION_PROFILING
                 profileTime_ = 0;
 #endif
@@ -214,7 +229,9 @@ namespace controller
                 PROFILE_MUTEX_START_LOCK();
 
                 struct HNMAV_TIMESPEC ts;
-                Util::toTimespec(ts, milliseconds + Util::currentTime());
+
+                util_thread::to_time_spec(ts, milliseconds + util_thread::current_time());
+
                 int ret = pthread_mutex_timedlock(&pthread_mutex_, &ts);
 
                 if (ret == 0) {
@@ -232,10 +249,10 @@ namespace controller
                 sleepytime.tv_sec = 0;
                 sleepytime.tv_nsec = 10000000L; /* 10ms */
 
-                Util::toTimespec(to, milliseconds + Util::currentTime());
+                util_thread::to_time_spec(to, milliseconds + util_thread::current_time());
 
                 while ((trylock()) == false) {
-                    Util::toTimespec(now, Util::currentTime());
+                    util_thread::to_time_spec(now, util_thread::current_time());
 
                     if (now.tv_sec >= to.tv_sec && now.tv_nsec >= to.tv_nsec) {
                         return false;
@@ -266,9 +283,9 @@ namespace controller
 #endif
     };
 
-    Mutex::Mutex(Initializer init) : impl_(new Mutex::impl(init)) {}
+    mutex_controller::mutex_controller(initializer init) : impl_(new mutex_controller::impl(init)) {}
 
-    void *Mutex::getUnderlyingImpl() const
+    void *Mutex::get_underlying_impl() const
     {
         return impl_->getUnderlyingImpl();
     }
@@ -322,7 +339,7 @@ namespace controller
 #endif
 
 #ifdef PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP
-    void Mutex::ADAPTIVE_INITIALIZER(void *arg)
+    void mutex_controller::ADAPTIVE_INITIALIZER(void *arg)
     {
         // From mysql source: mysys/my_thr_init.c
         // Set mutex type to "fast" a.k.a "adaptive"
@@ -337,7 +354,7 @@ namespace controller
 #endif
 
 #ifdef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
-    void Mutex::RECURSIVE_INITIALIZER(void *arg)
+    void mutex_controller::RECURSIVE_INITIALIZER(void *arg)
     {
         init_with_kind((pthread_mutex_t *)arg, PTHREAD_MUTEX_RECURSIVE_NP);
     }
