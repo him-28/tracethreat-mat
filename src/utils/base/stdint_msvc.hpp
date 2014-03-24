@@ -239,5 +239,7 @@ typedef uint64_t  uintmax_t;
 
 #endif  // __STDC_CONSTANT_MACROS ]
 
-
 #endif  // BASE_STDINT_MSVC_H_
+
+
+

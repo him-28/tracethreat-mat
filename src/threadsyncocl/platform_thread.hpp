@@ -26,7 +26,7 @@
 #include "utils/base/base_export.hpp"
 #include "utils/base/basictypes.hpp"
 #include "utils/base/time.hpp"
-#include "build/build_config.h"
+//#include "build/build_config.h"
 
 namespace controller{
 
