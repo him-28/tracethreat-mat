@@ -1,7 +1,25 @@
 #ifndef FILE_OFFSET_HANDLER__HPP
 #define FILE_OFFSET_HANDLER__HPP
-/*                       Titles                                          Authors                        Date
- *- File_offset_handler gets offset from file mapped.                    R.Chatsiri                     05/01/2014
+
+/*
+* Copyright 2014 MTSec, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles			                                          Authors	         Date
+ *- File_offset_handler gets offset from file mapped.  R.Chatsiri    05/01/2014
+ *- Create file_map support thread controller          R.Chatsiri    23/03/2014
  */
 
 //#define FILE_DESCRIPTOR  int
@@ -91,7 +109,8 @@ namespace util
             /**
             * @brief Ummap single file from memory.
             *
-            * @param mapped_vec  Struct MAPPED_FILE types include details for file mapped on memory area.
+            * @param mapped_vec  Struct MAPPED_FILE types include details 
+            * for file mapped on memory area.
             *
             * @return True, Success for file unmapped on memory.
             */
@@ -109,7 +128,8 @@ namespace util
 
             ifile<common_filetype> *ifh;
 						boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared;
-            //std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  mapped_file_vec_shared;
+            //std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  
+            //mapped_file_vec_shared;
             //std::vector<MAPPED_FILE *>   *mapped_vec_;
             MAPPED_FILE *mapped_file_ptr;
             //logger

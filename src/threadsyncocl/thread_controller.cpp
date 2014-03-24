@@ -10,6 +10,7 @@ namespace controller
         //	logger->write_info("thread_controller, get_data()");
     }
 		*/
+
     template<typename BufferSync>
     thread_controller<BufferSync>::thread_controller()
     {

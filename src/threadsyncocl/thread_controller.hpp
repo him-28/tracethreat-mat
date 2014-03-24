@@ -56,7 +56,24 @@ namespace controller
 
             void start();
             void *join();
-						
+				#if  USE_BOOST_THREAD
+					typedef boost::thread::id id_t;
+					
+					static inline bool is_current(id_t t) { return t == boost::this_thread::get_id(); }
+					static inline id_t get_current(){ return boost::this_thread::get_id(); }
+
+				#elif USE_STD_THREAD
+					typedef std::thread::id id_t;		
+					
+					static inline bool is_current(id_t t) { return t == std::this_thread::get_id(); }
+					static inline id_t get_current(){ return std::this_thread::get_id(); }
+				#else
+					typedef pthread_t id_t;	
+					
+					static bool is_current(id_t t){ return pthread_equal(pthread_self(), t); }
+					static inline id_t get_current(){ return pthread_self(); }
+				#endif
+							
 					
         private:
             bool detached_;
@@ -108,6 +125,18 @@ namespace controller
 
     };
 
+
+		//Thread factory
+		template<typename BufferSync>
+		class thread_factory{
+			publc:
+					virtual ~thread_factory(){ }
+					virtual boost::shared_ptr<thread<BufferSync> > 
+										new_thread(boost::shared_ptr<runnable>  runnable) const = 0;
+					static const   thread::id_t   unknow_thread_id;
+					virtual  thread::id_t  get_current_thread_id() const = 0;
+
+		}
 
 }
 
