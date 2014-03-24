@@ -25,6 +25,7 @@
 
 // STL
 #include <stdexcept>
+#include <exception>
 #include <string>
 #include <iostream>
 
@@ -58,7 +59,7 @@ namespace hnmav_exception
 
                 const char *process_name() const;
                 // return   [error data , default file path]
-                tuple<std::string, std::string> message_error_path(); 
+                tuple<std::string, std::string> message_error_path();
 
                 std::string default_path_system();
 
@@ -89,7 +90,7 @@ namespace hnmav_exception
                 clutil_exception(cl_int err, const std::string& name);
 
                 std::string add_msg_err(cl_int err, const std::string& name);
-        }; 
+        };
     }
 
     namespace file_system
@@ -104,7 +105,7 @@ namespace hnmav_exception
             private:
                 int error_cnumber_;
         };
- 
+
         class offset_exception : public system_exception
         {
             public:
@@ -112,13 +113,81 @@ namespace hnmav_exception
                 const char *what() const throw();
                 const char *process_name() const;
                 // Data structure size
-                std::string message_error_file_is_null(); 
+                std::string message_error_file_is_null();
                 ~offset_exception() throw();
             private:
                 std::string type_name_;
                 error_code_entry  error_codetype;
 
         };
+
+    }
+
+    namespace controller
+    {
+
+        class TException : public std::exception
+        {
+            public:
+                TException():
+                    message_() {}
+
+                TException(const std::string& message) :
+                    message_(message) {}
+
+                virtual ~TException() throw() {}
+
+                virtual const char *what() const throw() {
+                    if (message_.empty()) {
+                        return "Default TException.";
+                    } else {
+                        return message_.c_str();
+                    }
+                }
+
+            protected:
+                std::string message_;
+
+        };
+
+        class NoSuchTaskException : public apache::thrift::TException {};
+
+        class UncancellableTaskException : public apache::thrift::TException {};
+
+        class InvalidArgumentException : public apache::thrift::TException {};
+
+        class IllegalStateException : public apache::thrift::TException
+        {
+            public:
+                IllegalStateException() {}
+                IllegalStateException(const std::string& message) : TException(message) {}
+        };
+
+        class TimedOutException : public apache::thrift::TException
+        {
+            public:
+                TimedOutException():TException("TimedOutException") {};
+                TimedOutException(const std::string& message ) :
+                    TException(message) {}
+        };
+
+        class TooManyPendingTasksException : public apache::thrift::TException
+        {
+            public:
+                TooManyPendingTasksException():TException("TooManyPendingTasksException") {};
+                TooManyPendingTasksException(const std::string& message ) :
+                    TException(message) {}
+        };
+
+        class SystemResourceException : public apache::thrift::TException
+        {
+            public:
+                SystemResourceException() {}
+
+                SystemResourceException(const std::string& message) :
+                    TException(message) {}
+        };
+
 
     }
 
