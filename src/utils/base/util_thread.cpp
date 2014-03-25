@@ -35,13 +35,13 @@
 
 namespace util{
 
-int64_t util_thread::currentTimeTicks(int64_t ticksPerSec) {
+int64_t util_thread::current_time_ticks(int64_t ticks_per_sec) {
   int64_t result;
   struct timeval now;
   int ret = BASE_GETTIMEOFDAY(&now, NULL);
   //assert(ret == 0);
   BASE_UNUSED_VARIABLE(ret); //squelching "unused variable" warning
-  toTicks(result, now, ticksPerSec);
+  to_ticks(result, now, ticks_per_sec);
   return result;
 }
 

@@ -25,8 +25,8 @@
 namespace controller
 {
 
-    template<typename Mutex>
-    bool mutex_buffer<Mutex>::init()
+    template<typename mutex_controller>
+    bool mutex_buffer<mutex_controller>::init()
     {
         // logger
         logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
@@ -34,8 +34,8 @@ namespace controller
 
 
         if(mx_ptr_vec.size() == 0) {
-            mx_ptr ptr(new Mutex);
-            Mutex   *m = ptr.get();
+            mx_ptr ptr(new mutex_controller);
+            mutex_controller   *m = ptr.get();
 
             if(!pthread_mutex_init(&m->mutex_t, NULL)) {
                 mx_ptr_vec.push_back(ptr);
@@ -43,7 +43,7 @@ namespace controller
             }
         } else {
             mx_ptr_vec.clear();
-            mx_ptr ptr(new Mutex);
+            mx_ptr ptr(new mutex_controller);
             mx_ptr_vec.push_back(ptr);
             return true;
         }
@@ -51,12 +51,12 @@ namespace controller
         return false;
     }
 
-    template<typename Mutex>
-    bool mutex_buffer<Mutex>::lock_request()
+    template<typename mutex_controller>
+    bool mutex_buffer<mutex_controller>::lock_request()
     {
         logger->write_info(" Lock request ");
-        boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
-        Mutex *m = mx.get();
+        boost::shared_ptr<mutex_controller> mx = mx_ptr_vec.back();
+        mutex_controller *m = mx.get();
 
         if(!pthread_mutex_lock(&m->mutex_t)) {
             return true;
@@ -65,12 +65,12 @@ namespace controller
         return false;
     }
 
-    template<typename Mutex>
-    bool mutex_buffer<Mutex>::unlock_request()
+    template<typename mutex_controller>
+    bool mutex_buffer<mutex_controller>::unlock_request()
     {
         logger->write_info(" Unlock request ");
-        boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
-        Mutex *m = mx.get();
+        boost::shared_ptr<mutex_controller> mx = mx_ptr_vec.back();
+        mutex_controller *m = mx.get();
 
         if(!pthread_mutex_unlock(&m->mutex_t)) {
             return true;
@@ -79,25 +79,25 @@ namespace controller
         return false;
     }
 
-    template<typename Mutex>
-    bool mutex_buffer<Mutex>::try_lock()
+    template<typename mutex_controller>
+    bool mutex_buffer<mutex_controller>::try_lock()
     {
 
 
     }
 
-    template<typename Mutex>
-    boost::shared_ptr<Mutex> mutex_buffer<Mutex>::processes()
+    template<typename mutex_controller>
+    boost::shared_ptr<mutex_controller> mutex_buffer<Mutex>::processes()
     {
         return mx_ptr_vec.back();
     }
 
-    template<typename Mutex>
-    bool mutex_buffer<Mutex>::destruction()
+    template<typename mutex_controller>
+    bool mutex_buffer<mutex_controller>::destruction()
     {
 
-        boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
-        Mutex *m = mx.get();
+        boost::shared_ptr<mutex_controller> mx = mx_ptr_vec.back();
+        mutex_controller *m = mx.get();
 
         if(!pthread_mutex_destroy(&m->mutex_t)) {
             return true;
@@ -107,11 +107,11 @@ namespace controller
     }
 
 
-    template class mutex_buffer<Mutex>;
+    template class mutex_buffer<mutex_controller>;
 
 
     /* mutex declared */
-#ifndef HNMAV_NO_CONTENTION_PROFILING
+#ifndef BASE_NO_CONTENTION_PROFILING
 
     static sig_atomic_t mutex_profiliing_sample_rate = 0;
     static mutex_wait_callback mutex_profiling_callback  = 0;
@@ -187,10 +187,10 @@ namespace controller
 #  define PROFILE_MUTEX_LOCKED()
 #  define PROFILE_MUTEX_START_UNLOCK()
 #  define PROFILE_MUTEX_UNLOCKED()
-#endif // HNMAV_NO_CONTENTION_PROFILING
+#endif // BASE_NO_CONTENTION_PROFILING
 
     /**
-     * Implementation of Mutex class using POSIX mutex
+     * Implementation of mutex_controller class using POSIX mutex
      *
      * @version $Id:$
      */
@@ -198,7 +198,7 @@ namespace controller
     {
         public:
             impl(initializer init) : initialized_(false) {
-#ifndef HNMAV_NO_CONTENTION_PROFILING
+#ifndef BASE_NO_CONTENTION_PROFILING
                 profileTime_ = 0;
 #endif
                 init(&pthread_mutex_);
@@ -209,7 +209,7 @@ namespace controller
                 if (initialized_) {
                     initialized_ = false;
                     int ret = pthread_mutex_destroy(&pthread_mutex_);
-                    THRIFT_UNUSED_VARIABLE(ret);
+                    BASE_UNUSED_VARIABLE(ret);
                     assert(ret == 0);
                 }
             }
@@ -220,15 +220,15 @@ namespace controller
                 PROFILE_MUTEX_LOCKED();
             }
 
-            bool trylock() const {
+            bool try_lock() const {
                 return (0 == pthread_mutex_trylock(&pthread_mutex_));
             }
 
-            bool timedlock(int64_t milliseconds) const {
+            bool timed_lock(int64_t milliseconds) const {
 #if defined(_POSIX_TIMEOUTS) && _POSIX_TIMEOUTS >= 200112L
                 PROFILE_MUTEX_START_LOCK();
 
-                struct HNMAV_TIMESPEC ts;
+                struct BASE_TIMESPEC ts;
 
                 util_thread::to_time_spec(ts, milliseconds + util_thread::current_time());
 
@@ -243,7 +243,7 @@ namespace controller
                 return false;
 #else
                 /* Otherwise follow solution used by Mono for Android */
-                struct HNMAV_TIMESPEC sleepytime, now, to;
+                struct BASE_TIMESPEC sleepytime, now, to;
 
                 /* This is just to avoid a completely busy wait */
                 sleepytime.tv_sec = 0;
@@ -251,7 +251,7 @@ namespace controller
 
                 util_thread::to_time_spec(to, milliseconds + util_thread::current_time());
 
-                while ((trylock()) == false) {
+                while ((try_lock()) == false) {
                     util_thread::to_time_spec(now, util_thread::current_time());
 
                     if (now.tv_sec >= to.tv_sec && now.tv_nsec >= to.tv_nsec) {
@@ -271,46 +271,46 @@ namespace controller
                 PROFILE_MUTEX_UNLOCKED();
             }
 
-            void *getUnderlyingImpl() const {
+						void *get_underlying_impl() const{
                 return (void *) &pthread_mutex_;
             }
 
         private:
             mutable pthread_mutex_t pthread_mutex_;
             mutable bool initialized_;
-#ifndef HNMAV_NO_CONTENTION_PROFILING
+#ifndef BASE_NO_CONTENTION_PROFILING
             mutable int64_t profileTime_;
 #endif
     };
 
     mutex_controller::mutex_controller(initializer init) : impl_(new mutex_controller::impl(init)) {}
 
-    void *Mutex::get_underlying_impl() const
+    void *mutex_controller::get_underlying_impl() const
     {
-        return impl_->getUnderlyingImpl();
+        return impl_->get_underlying_impl();
     }
 
-    void Mutex::lock() const
+    void mutex_controller::lock() const
     {
         impl_->lock();
     }
 
-    bool Mutex::trylock() const
+    bool mutex_controller::try_lock() const
     {
         return impl_->trylock();
     }
 
-    bool Mutex::timedlock(int64_t ms) const
+    bool mutex_controller::timed_lock(int64_t ms) const
     {
         return impl_->timedlock(ms);
     }
 
-    void Mutex::unlock() const
+    void mutex_controller::unlock() const
     {
         impl_->unlock();
     }
 
-    void Mutex::DEFAULT_INITIALIZER(void *arg)
+    void mutex_controller::DEFAULT_INITIALIZER(void *arg)
     {
         pthread_mutex_t *pthread_mutex = (pthread_mutex_t *)arg;
         int ret = pthread_mutex_init(pthread_mutex, NULL);

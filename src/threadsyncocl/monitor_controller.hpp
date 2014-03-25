@@ -1,5 +1,5 @@
 #ifndef CONTROLLER_MONITOR_CONTROLLER_HPP
-#define CONTROLLER_MONITOR_CONTROLLER_HPP 1
+#define CONTROLLER_MONITOR_CONTROLLER_HPP
 
 /*
 * Copyright 2014 MTSec, Inc.
@@ -19,13 +19,19 @@
 
 /*  Titles			                                                     Authors	          Date
  * - Thrift apache version 2.0.
- * - Monitor support Thread_controller. Class created supports thread behaviors after add thread and 
- *   runnable class to task.                                      R.Chatsiri      24/03/2014
+ * - monitor_controller support Thread_controller. Class created supports thread behaviors after 
+ *   add thread and   runnable class to task.                                      
+ *                                                                R.Chatsiri      24/03/2014
+ * - Exception and mutex_controller_controller supported monitor_controller.
+ *                                                                R.chatsiri      25/03/2014
+ * - Rebuild code concept supports Factory class.                 R.chatsiri      25/03/2014
  */
 
 
-#include <thrift/concurrency/Exception.h>
-#include <thrift/concurrency/Mutex.h>
+//#include <thrift/concurrency/Exception.h>
+#include "exception/system_exception.hpp"
+//#include <thrift/concurrency/mutex_controller.h>
+#include "threadsynocl/semaphore_controller.hpp"
 
 #include <boost/utility.hpp>
 
@@ -34,37 +40,37 @@ namespace controller{
 /*monitor */
 /**
  * A monitor is a combination mutex and condition-event.  Waiting and
- * notifying condition events requires that the caller own the mutex.  Mutex
+ * notifying condition events requires that the caller own the mutex.  mutex_controller
  * lock and unlock operations can be performed independently of condition
  * events.  This is more or less analogous to java.lang.Object multi-thread
  * operations.
  *
- * Note the Monitor can create a new, internal mutex; alternatively, a
- * separate Mutex can be passed in and the Monitor will re-use it without
+ * Note the monitor_controller can create a new, internal mutex; alternatively, a
+ * separate mutex_controller can be passed in and the monitor_controller will re-use it without
  * taking ownership.  It's the user's responsibility to make sure that the
- * Mutex is not deallocated before the Monitor.
+ * mutex_controller is not deallocated before the monitor_controller.
  *
- * Note that all methods are const.  Monitors implement logical constness, not
+ * Note that all methods are const.  monitor_controllers implement logical constness, not
  * bit constness.  This allows const methods to call monitor methods without
  * needing to cast away constness or change to non-const signatures.
  *
  * @version $Id:$
  */
-class Monitor : boost::noncopyable {
+class monitor_controller : boost::noncopyable {
  public:
   /** Creates a new mutex, and takes ownership of it. */
-  Monitor();
+  monitor_controller();
 
   /** Uses the provided mutex without taking ownership. */
-  explicit Monitor(Mutex* mutex);
+  explicit monitor_controller(mutex_controller* mutex);
 
-  /** Uses the mutex inside the provided Monitor without taking ownership. */
-  explicit Monitor(Monitor* monitor);
+  /** Uses the mutex inside the provided monitor_controller without taking ownership. */
+  explicit monitor_controller(monitor_controller* monitor);
 
   /** Deallocates the mutex only if we own it. */
-  virtual ~Monitor();
+  virtual ~monitor_controller();
 
-  Mutex& mutex() const;
+  mutex_controller& mutex() const;
 
   virtual void lock() const;
 
@@ -76,28 +82,28 @@ class Monitor : boost::noncopyable {
    *
    * Returns 0 if condition occurs, THRIFT_ETIMEDOUT on timeout, or an error code.
    */
-  int waitForTimeRelative(int64_t timeout_ms) const;
+  int wait_for_time_relative(int64_t timeout_ms) const;
 
   /**
    * Waits until the absolute time specified using struct THRIFT_TIMESPEC.
    * Returns 0 if condition occurs, THRIFT_ETIMEDOUT on timeout, or an error code.
    */
-  int waitForTime(const THRIFT_TIMESPEC* abstime) const;
+  int wait_for_time(const THRIFT_TIMESPEC* abstime) const;
 
   /**
    * Waits until the absolute time specified using struct timeval.
    * Returns 0 if condition occurs, THRIFT_ETIMEDOUT on timeout, or an error code.
    */
-  int waitForTime(const struct timeval* abstime) const;
+  int wait_for_time(const struct timeval* abstime) const;
 
   /**
    * Waits forever until the condition occurs.
    * Returns 0 if condition occurs, or an error code otherwise.
    */
-  int waitForever() const;
+  int wait_forever() const;
 
   /**
-   * Exception-throwing version of waitForTimeRelative(), called simply
+   * Exception-throwing version of wait_for_time_relative(), called simply
    * wait(int64) for historical reasons.  Timeout is in milliseconds.
    *
    * If the condition occurs,  this function returns cleanly; on timeout or
@@ -110,22 +116,23 @@ class Monitor : boost::noncopyable {
   virtual void notify() const;
 
   /** Wakes up all waiting threads on this monitor. */
-  virtual void notifyAll() const;
+  virtual void notify_all() const;
 
  private:
 
-  class Impl;
+  class impl;
 
-  Impl* impl_;
+  impl* impl_;
 };
 
-class Synchronized {
+class synchronized {
  public:
- Synchronized(const Monitor* monitor) : g(monitor->mutex()) { }
- Synchronized(const Monitor& monitor) : g(monitor.mutex()) { }
+
+ synchronized(const monitor_controller* monitor) : g(monitor->mutex()) { }
+ synchronized(const monitor_controller& monitor) : g(monitor.mutex()) { }
 
  private:
-  Guard g;
+  guard g;
 };
 
 

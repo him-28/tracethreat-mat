@@ -21,7 +21,7 @@
 
 #include "threadsynocl/monitor_controller.hpp"
 #include "utils/base/util_thread.hpp"
-#include "utils/baes/platformsocket.hpp"
+#include "utils/base/platformsocket.hpp"
 
 #include <boost/scoped_ptr.hpp>
 
@@ -49,10 +49,10 @@ namespace controller
         public:
 
             impl()
-                : ownedMutex_(new mutex_controller()),
+                : owned_mutex_(new mutex_controller()),
                   mutex_(NULL),
                   condInitialized_(false) {
-                init(ownedMutex_.get());
+                init(owned_mutex_.get());
             }
 
             impl(mutex_controller *mutex)
@@ -82,19 +82,19 @@ namespace controller
             }
 
             /**
-             * Exception-throwing version of waitForTimeRelative(), called simply
+             * Exception-throwing version of wait_for_time_relative(), called simply
              * wait(int64) for historical reasons.  Timeout is in milliseconds.
              *
              * If the condition occurs,  this function returns cleanly; on timeout or
              * error an exception is thrown.
              */
             void wait(int64_t timeout_ms) const {
-                int result = waitForTimeRelative(timeout_ms);
+                int result = wait_for_time_relative(timeout_ms);
 
                 if (result == BASE_ETIMEDOUT) {
                     // pthread_cond_timedwait has been observed to return early on
                     // various platforms, so comment out this assert.
-                    //assert(util_thread::currentTime() >= (now + timeout));
+                    //assert(util_thread::current_time() >= (now + timeout));
                     throw TimedOutException();
                 } else if (result != 0) {
                     throw TException(
@@ -108,26 +108,26 @@ namespace controller
              *
              * Returns 0 if condition occurs, BASE_ETIMEDOUT on timeout, or an error code.
              */
-            int waitForTimeRelative(int64_t timeout_ms) const {
+            int wait_for_time_relative(int64_t timeout_ms) const {
                 if (timeout_ms == 0LL) {
-                    return waitForever();
+                    return wait_forever();
                 }
 
                 struct BASE_TIMESPEC abstime;
 
-                util_thread::toTimespec(abstime, util_thread::currentTime() + timeout_ms);
+                util_thread::to_time_spec(abstime, util_thread::current_time() + timeout_ms);
 
-                return waitForTime(&abstime);
+                return wait_for_time(&abstime);
             }
 
             /**
              * Waits until the absolute time specified using struct BASE_TIMESPEC.
              * Returns 0 if condition occurs, BASE_ETIMEDOUT on timeout, or an error code.
              */
-            int waitForTime(const BASE_TIMESPEC *abstime) const {
+            int wait_for_time(const BASE_TIMESPEC *abstime) const {
                 assert(mutex_);
                 pthread_mutex_t *muteximpl =
-                        reinterpret_cast<pthread_mutex_t *>(mutex_->getUnderlyingimpl());
+                        reinterpret_cast<pthread_mutex_t *>(mutex_->get_underlying_impl());
                 assert(muteximpl);
 
                 // XXX Need to assert that caller owns mutex
@@ -136,20 +136,20 @@ namespace controller
                         abstime);
             }
 
-            int waitForTime(const struct timeval *abstime) const {
+            int wait_for_time(const struct timeval *abstime) const {
                 struct BASE_TIMESPEC temp;
                 temp.tv_sec  = abstime->tv_sec;
                 temp.tv_nsec = abstime->tv_usec * 1000;
-                return waitForTime(&temp);
+                return wait_for_time(&temp);
             }
             /**
              * Waits forever until the condition occurs.
              * Returns 0 if condition occurs, or an error code otherwise.
              */
-            int waitForever() const {
+            int wait_forever() const {
                 assert(mutex_);
                 pthread_mutex_t *muteximpl =
-                        reinterpret_cast<pthread_mutex_t *>(mutex_->getUnderlyingimpl());
+                        reinterpret_cast<pthread_mutex_t *>(mutex_->get_underlying_impl());
                 assert(muteximpl);
                 return pthread_cond_wait(&pthread_cond_, muteximpl);
             }
@@ -162,7 +162,7 @@ namespace controller
                 assert(iret == 0);
             }
 
-            void notifyAll() {
+            void notify_all() {
                 // XXX Need to assert that caller owns mutex
                 int iret = pthread_cond_broadcast(&pthread_cond_);
                 BASE_UNUSED_VARIABLE(iret);
@@ -193,16 +193,19 @@ namespace controller
                 }
             }
 
-            scoped_ptr<mutex_controller> ownedMutex_;
+            scoped_ptr<mutex_controller> owned_mutex_;
             mutex_controller *mutex_;
 
             mutable pthread_cond_t pthread_cond_;
             mutable bool condInitialized_;
     };
 
-    monitor_controller::monitor_controller() : impl_(new monitor_controller::impl()) {}
-    monitor_controller::monitor_controller(Mutex *mutex) : impl_(new monitor_controller::impl(mutex)) {}
-    monitor_controller::monitor_controller(monitor_controller *monitor) : impl_(new monitor_controller::impl(monitor)) {}
+    monitor_controller::monitor_controller() 
+			: impl_(new monitor_controller::impl()) {}
+    monitor_controller::monitor_controller(Mutex *mutex) 
+			: impl_(new monitor_controller::impl(mutex)) {}
+    monitor_controller::monitor_controller(monitor_controller *monitor) 
+			: impl_(new monitor_controller::impl(monitor)) {}
 
     monitor_controller::~Monitor()
     {
@@ -229,24 +232,24 @@ namespace controller
         impl_->wait(timeout);
     }
 
-    int monitor_controller::waitForTime(const BASE_TIMESPEC *abstime) const
+    int monitor_controller::wait_for_time(const BASE_TIMESPEC *abstime) const
     {
-        return impl_->waitForTime(abstime);
+        return impl_->wait_for_time(abstime);
     }
 
-    int monitor_controller::waitForTime(const timeval *abstime) const
+    int monitor_controller::wait_for_time(const timeval *abstime) const
     {
-        return impl_->waitForTime(abstime);
+        return impl_->wait_for_time(abstime);
     }
 
-    int monitor_controller::waitForTimeRelative(int64_t timeout_ms) const
+    int monitor_controller::wait_for_time_relative(int64_t timeout_ms) const
     {
-        return impl_->waitForTimeRelative(timeout_ms);
+        return impl_->wait_for_time_relative(timeout_ms);
     }
 
-    int monitor_controller::waitForever() const
+    int monitor_controller::wait_forever() const
     {
-        return impl_->waitForever();
+        return impl_->wait_forever();
     }
 
     void monitor_controller::notify() const
@@ -254,9 +257,9 @@ namespace controller
         impl_->notify();
     }
 
-    void monitor_controller::notifyAll() const
+    void monitor_controller::notify_all() const
     {
-        impl_->notifyAll();
+        impl_->notify_all();
     }
 
 }// controller

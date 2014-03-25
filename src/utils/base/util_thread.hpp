@@ -65,97 +65,98 @@ class util_thread{
  public:
 
   /**
-   * Converts millisecond timestamp into a THRIFT_TIMESPEC struct
+   * Converts millisecond timestamp into a BASE_TIMESPEC struct
    *
-   * @param struct THRIFT_TIMESPEC& result
+   * @param struct BASE_TIMESPEC& result
    * @param time or duration in milliseconds
    */
-  static void toTimespec(struct THRIFT_TIMESPEC& result, int64_t value) {
+	static void to_time_spec(struct BASE_TIMESPEC& result, int64_t value) {
     result.tv_sec = value / MS_PER_S; // ms to s
     result.tv_nsec = (value % MS_PER_S) * NS_PER_MS; // ms to ns
   }
 
-  static void toTimeval(struct timeval& result, int64_t value) {
+	
+  static void to_time_val(struct timeval& result, int64_t value) {
     result.tv_sec  = static_cast<uint32_t>(value / MS_PER_S); // ms to s
     result.tv_usec = static_cast<uint32_t>((value % MS_PER_S) * US_PER_MS); // ms to us
   }
 
-  static void toTicks(int64_t& result, int64_t secs, int64_t oldTicks,
-                      int64_t oldTicksPerSec, int64_t newTicksPerSec) {
-    result = secs * newTicksPerSec;
-    result += oldTicks * newTicksPerSec / oldTicksPerSec;
+  static void to_ticks(int64_t& result, int64_t secs, int64_t old_ticks,
+                      int64_t old_ticks_per_sec, int64_t new_tick_per_sec) {
+    result = secs * new_tick_per_sec;
+    result += old_ticks * new_tick_per_sec / old_ticks_per_sec;
 
-    int64_t oldPerNew = oldTicksPerSec / newTicksPerSec;
-    if (oldPerNew && ((oldTicks % oldPerNew) >= (oldPerNew / 2))) {
+    int64_t old_pernew = old_ticks_per_sec / new_tick_per_sec;
+    if (old_pernew && ((old_ticks % oldPerNew) >= (old_pernew / 2))) {
       ++result;
     }
   }
   /**
-   * Converts struct THRIFT_TIMESPEC to arbitrary-sized ticks since epoch
+   * Converts struct BASE_TIMESPEC to arbitrary-sized ticks since epoch
    */
-  static void toTicks(int64_t& result,
-                      const struct THRIFT_TIMESPEC& value,
-                      int64_t ticksPerSec) {
-    return toTicks(result, value.tv_sec, value.tv_nsec, NS_PER_S, ticksPerSec);
+  static void to_ticks(int64_t& result,
+                      const struct BASE_TIMESPEC& value,
+                      int64_t tick_per_sec) {
+    return to_ticks(result, value.tv_sec, value.tv_nsec, NS_PER_S, tick_per_sec);
   }
 
   /**
    * Converts struct timeval to arbitrary-sized ticks since epoch
    */
-  static void toTicks(int64_t& result,
+  static void to_ticks(int64_t& result,
                       const struct timeval& value,
-                      int64_t ticksPerSec) {
-    return toTicks(result, value.tv_sec, value.tv_usec, US_PER_S, ticksPerSec);
+                      int64_t tick_per_sec) {
+    return to_ticks(result, value.tv_sec, value.tv_usec, US_PER_S, tick_per_sec);
   }
 
   /**
-   * Converts struct THRIFT_TIMESPEC to milliseconds
+   * Converts struct BASE_TIMESPEC to milliseconds
    */
-  static void toMilliseconds(int64_t& result,
-                             const struct THRIFT_TIMESPEC& value) {
-    return toTicks(result, value, MS_PER_S);
+  static void to_milliseconds(int64_t& result,
+                             const struct BASE_TIMESPEC& value) {
+    return to_ticks(result, value, MS_PER_S);
   }
 
   /**
    * Converts struct timeval to milliseconds
    */
-  static void toMilliseconds(int64_t& result,
+  static void to_milliseconds(int64_t& result,
                              const struct timeval& value) {
-    return toTicks(result, value, MS_PER_S);
+    return to_ticks(result, value, MS_PER_S);
   }
 
   /**
-   * Converts struct THRIFT_TIMESPEC to microseconds
+   * Converts struct BASE_TIMESPEC to microseconds
    */
-  static void toUsec(int64_t& result, const struct THRIFT_TIMESPEC& value) {
-    return toTicks(result, value, US_PER_S);
+  static void to_usec(int64_t& result, const struct BASE_TIMESPEC& value) {
+    return to_ticks(result, value, US_PER_S);
   }
 
   /**
    * Converts struct timeval to microseconds
    */
-  static void toUsec(int64_t& result, const struct timeval& value) {
-    return toTicks(result, value, US_PER_S);
+  static void to_usec(int64_t& result, const struct timeval& value) {
+    return to_ticks(result, value, US_PER_S);
   }
 
   /**
    * Get current time as a number of arbitrary-size ticks from epoch
    */
-  static int64_t currentTimeTicks(int64_t ticksPerSec);
+  static int64_t current_time_ticks(int64_t tick_per_sec);
 
   /**
    * Get current time as milliseconds from epoch
    */
-  static int64_t currentTime() { return currentTimeTicks(MS_PER_S); }
+  static int64_t current_time() { return current_time_ticks(MS_PER_S); }
 
   /**
    * Get current time as micros from epoch
    */
-  static int64_t currentTimeUsec() { return currentTimeTicks(US_PER_S); }
+  static int64_t current_time_usec() { return current_time_ticks(US_PER_S); }
 };
 
 
 
 }
 
-#endif // #ifndef _THRIFT_CONCURRENCY_UTIL_H_
+#endif // #ifndef _BASE_CONCURRENCY_UTIL_H_
