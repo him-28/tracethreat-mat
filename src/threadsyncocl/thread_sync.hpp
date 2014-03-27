@@ -1,17 +1,43 @@
 #ifndef THREAD_SYNC_HPP
 #define THREAD_SYNC_HPP
-/*                       Titles                                          Authors                        Date
- *  - Sync controller between Thread and OCL                             R.Chatsiri                     08/10/2013
- *  - Get file to thread multithread                                     R.Chatsiri                     08/10/2013
+
+/*
+* Copyright 2014 MTSec, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles			                                                     Authors	          Date
+ *  - Sync controller between Thread and OCL                       R.Chatsir      08/10/2013
+ *  - Get file to thread multithread                               R.Chatsiri     08/10/2013
+ *  - Add sync buffer to OCL                                       R.Chatsiri     25/03/2014
  */
 
+//standard lib
 #include <iostream>
-#include "threadsyncocl/thread_controller.hpp"
-#include "utils/file_calculate.hpp"
+#include "pthread.h"
 
-//3rd
-#include "boost/tuple/tuple.hpp"
+// 3rd
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
+// internal
+#include "threadsyncocl/buffer_sync.hpp"
+#include "threadsyncocl/semaphore_controller.hpp"
+#include "threadsyncocl/thread_barrier_controller.hpp"
+
+//
+#include "utils/logger/clutil_logger.hpp"
 
 namespace controller
 {

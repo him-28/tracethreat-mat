@@ -15,7 +15,8 @@ config/options_system.hpp \
 logger/format_logger.hpp \
 logger/clutil_logger.hpp \
 base/system_code.hpp \
-file_offset_handler.hpp 
+file_offset_handler.hpp \
+convert.hpp
 
 # library
 libutils_a_SOURCES = $(libutils_a_HEADERS) file_calculate.cpp \

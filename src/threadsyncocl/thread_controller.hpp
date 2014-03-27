@@ -1,5 +1,25 @@
-#ifndef CONTROLLER__THREAD_CONTROLLER_HPP_
-#define CONTROLLER__THREAD_CONTROLLER_HPP_
+#ifndef CONTROLLER__THREAD_CONTROLLER_HPP
+#define CONTROLLER__THREAD_CONTROLLER_HPP
+
+/*
+* Copyright 2014 MTSec, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles																													 Authors						Date
+ * - Integrated thread to multifile scanning system.              R.Chatsiri          25/03/2014
+ */
 
 //standard lib
 #include <iostream>
@@ -27,8 +47,8 @@ namespace controller
     {
         public:
             thread_controller();
-						
-        private:
+
+            // private:
 
     };
 
@@ -41,41 +61,26 @@ namespace controller
 
     };
 
+
+
     //runnable::~runnable() {};
 
 
-    // Common thread
+    /*old thread communicator */
     template<typename BufferSync>
     class thread
     {
 
         public:
-            //thread(boost::shared_ptr<runnable> run, bool detached = false);
+            thread(boost::shared_ptr<runnable> run, bool detached = false);
             thread(bool detached = false);
-						//thread();
+            thread();
 
             void start();
             void *join();
-				#if  USE_BOOST_THREAD
-					typedef boost::thread::id id_t;
-					
-					static inline bool is_current(id_t t) { return t == boost::this_thread::get_id(); }
-					static inline id_t get_current(){ return boost::this_thread::get_id(); }
 
-				#elif USE_STD_THREAD
-					typedef std::thread::id id_t;		
-					
-					static inline bool is_current(id_t t) { return t == std::this_thread::get_id(); }
-					static inline id_t get_current(){ return std::this_thread::get_id(); }
-				#else
-					typedef pthread_t id_t;	
-					
-					static bool is_current(id_t t){ return pthread_equal(pthread_self(), t); }
-					static inline id_t get_current(){ return pthread_self(); }
-				#endif
-							
-					
         private:
+
             bool detached_;
 
             thread(const thread&);
@@ -95,12 +100,14 @@ namespace controller
             void *result;
             pthread_t thread_buffer_id;
             pthread_attr_t thread_buffer_attr;
-						
-						//logger
-					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
-						h_util::clutil_logging<std::string, int>   * logger;
+
+            //logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
 
     };
+
+
 
     // communication thread buffer
     template<typename BufferSync>
@@ -119,26 +126,16 @@ namespace controller
             typename buffer_kernel::size_int  my_id;
             BufferSync *buffer_sync_;
             mutex_buffer<Mutex> *mutex_buff;
-	          //logger
-					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
-						h_util::clutil_logging<std::string, int>   * logger;
+            //logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
 
     };
 
 
-		//Thread factory
-		template<typename BufferSync>
-		class thread_factory{
-			publc:
-					virtual ~thread_factory(){ }
-					virtual boost::shared_ptr<thread<BufferSync> > 
-										new_thread(boost::shared_ptr<runnable>  runnable) const = 0;
-					static const   thread::id_t   unknow_thread_id;
-					virtual  thread::id_t  get_current_thread_id() const = 0;
 
-		}
 
 }
 
 
-#endif /* THREAD_CONTROLLER_HPP */
+#endif /* CONTROLLER_THREAD_HPP_ */

@@ -164,6 +164,10 @@ namespace filetypes
             boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS_EXT *> >  pe_offset_vec_shared_ptr;
             // file buffer
             std::vector<uint8_t> file_buffer_vec;
+					
+						// add buffer and address of file.
+						//std::vector<uint8_t*> file_buff_addr_vec;
+						std::map<uint8_t*, size_t> file_buff_addr_map;
 
 						//kernel file path
 						std::string * kernel_file_path_ptr;

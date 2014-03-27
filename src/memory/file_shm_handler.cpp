@@ -22,6 +22,51 @@
 
 namespace memory
 {
+    /*Phase-1 :  File read to string on vector-shm */
+    template<typename MAPPED_FILE>
+    bool file_shm_handler<FileAddress>::initial_shm(uint64_t full_file_size,
+            std::map<std::string, MAPPED_FILE *> files_map)
+    {
+        uint64_t  summary_file_size;
+
+        files_buff_map::const_iterator iter_files;
+
+        for(iter_files = files_map.begin(); iter_files != files_map.end(); iter_files++) {
+            MAPPED_FILE   *mf =  *iter_files;
+
+            //encode with MD5 with mf->file_name ( filename inculded path of file)
+            for(int count_data = 0; count_data < mf->size(); count_data++) {
+                mf->data[count_data];
+            }
+        }
+
+        //md5_str plan to instanst get_process_id_name
+        //boostinp::managed_shared_memory 
+        file_shm = new boost::inp::boostinp::managed_shared_memory(create_only, 
+					get_process_id_name(), 
+					summary_file_size);
+
+        char_allocator  char_alloc(shm.get_segment_manager());
+        string_allocator str_alloc(shm.get_segment_manager());
+
+        bs_shm_vec = shm.contrcut<binary_string_shm_vec>(file_name)(str_alloc);
+        bs_shm_vec//
+
+    }
+
+    template<typename MAPPED_FILE>
+    bool file_shm_handler<MAPPED_FILE>::insert_file(std::vector<uint8_t> binary_vec,
+            uint64_t     file_size,
+            const char *file_name)
+    {
+
+
+        bs_shm_vec = shm.contrcut<binary_string_shm_vec>(file_name)(str_alloc);
+
+
+    }
+
+    /*Phase-2 : File mapped set file load to shared memory
 
     template<typename MAPPED_FILE>
     bool  file_shm_handler<MAPPED_FILE>::create_mapped()
@@ -42,7 +87,8 @@ namespace memory
     {
 
 
-    }
+    } */
+
 
 }
 
