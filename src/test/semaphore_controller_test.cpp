@@ -25,7 +25,8 @@
 
 //#include "test/wrapper_rules_tests.hpp"
 
-
+//shm-read multiple fie
+#include "test/file_shm_handler_test.hpp"
 
 
 // semaphore test suite 

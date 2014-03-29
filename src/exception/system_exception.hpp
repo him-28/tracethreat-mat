@@ -143,20 +143,20 @@ namespace hnmav_exception
     namespace controller
     {
 
-        class TException : public std::exception
+        class thread_exception : public std::exception
         {
             public:
-                TException():
+                thread_exception():
                     message_() {}
 
-                TException(const std::string& message) :
+                thread_exception(const std::string& message) :
                     message_(message) {}
 
-                virtual ~TException() throw() {}
+                virtual ~thread_exception() throw() {}
 
                 virtual const char *what() const throw() {
                     if (message_.empty()) {
-                        return "Default TException.";
+                        return "Default thread_exception.";
                     } else {
                         return message_.c_str();
                     }
@@ -167,42 +167,42 @@ namespace hnmav_exception
 
         };
 
-        class NoSuchTaskException : public apache::thrift::TException {};
+        class no_such_task_exception : public thread_exception {};
 
-        class UncancellableTaskException : public apache::thrift::TException {};
+        class uncancellable_task_exception : public thread_exception {};
 
-        class InvalidArgumentException : public apache::thrift::TException {};
+        class invalid_argument_exception : public thread_exception {};
 
-        class IllegalStateException : public apache::thrift::TException
+        class illegal_state_exception : public thread_exception
         {
             public:
-                IllegalStateException() {}
-                IllegalStateException(const std::string& message) : TException(message) {}
+                illegal_state_exception() {}
+                illegal_state_exception(const std::string& message) : thread_exception(message) {}
         };
 
-        class TimedOutException : public apache::thrift::TException
+        class timed_out_exception : public thread_exception
         {
             public:
-                TimedOutException():TException("TimedOutException") {};
-                TimedOutException(const std::string& message ) :
-                    TException(message) {}
+                timed_out_exception():thread_exception("TimedOutException") {};
+                timed_out_exception(const std::string& message ) :
+                    thread_exception(message) {}
         };
 
-        class TooManyPendingTasksException : public apache::thrift::TException
+        class too_many_pending_tasks_exception : public thread_exception
         {
             public:
-                TooManyPendingTasksException():TException("TooManyPendingTasksException") {};
-                TooManyPendingTasksException(const std::string& message ) :
-                    TException(message) {}
+                too_many_pending_tasks_exception():thread_exception("TooManyPendingTasksException") {};
+                too_many_pending_tasks_exception(const std::string& message ) :
+                    thread_exception(message) {}
         };
 
-        class SystemResourceException : public apache::thrift::TException
+        class system_resource_exception : public thread_exception
         {
             public:
-                SystemResourceException() {}
+                system_resource_exception() {}
 
-                SystemResourceException(const std::string& message) :
-                    TException(message) {}
+                system_resource_exception(const std::string& message) :
+                    thread_exception(message) {}
         };
 
 

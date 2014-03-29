@@ -3,7 +3,7 @@
  * - Get fil and processes file size                                     R.Chatsiri
  */
 
-namespace util
+namespace utils
 {
 
     int compare_function(const void *valuel, const void *valuer)

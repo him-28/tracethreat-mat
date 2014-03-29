@@ -1,6 +1,6 @@
 #include "file_handler.hpp"
 
-namespace util
+namespace utils
 {
 
     template<typename FileType>

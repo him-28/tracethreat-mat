@@ -3,7 +3,7 @@
 
 #define FILE_SIZE 1
 
-using namespace util;
+using namespace utils;
 
 class FileOffsetHandlerTest : public ::testing::Test
 {
@@ -44,7 +44,9 @@ TEST_F(FileOffsetHandlerTest, mapped_file_test)
 
 		std::vector<MAPPED_FILE_PE*> mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
 		typename std::vector<MAPPED_FILE_PE*>::iterator iter_mapped_file;
-		for(iter_mapped_file = mapped_file_vec_ptr.begin(); iter_mapped_file != mapped_file_vec_ptr.end(); ++iter_mapped_file)
+		for(iter_mapped_file = mapped_file_vec_ptr.begin(); 
+				iter_mapped_file != mapped_file_vec_ptr.end(); 
+				++iter_mapped_file)
 		{
 							MAPPED_FILE_PE * mf_pe = *iter_mapped_file;
 							unsigned char * data = mf_pe->data;

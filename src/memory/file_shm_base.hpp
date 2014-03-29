@@ -20,44 +20,57 @@
 /*  Titles			                                                     Authors	          Date
  *  -File shm base for mmap file.                                    R.Chatsiri         21/03/2014
  */
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
+#include <boost/interprocess/containers/string.hpp>
+
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index/ordered_index.hpp>
 
 namespace memory
 {
+		namespace boostinp = boost::interprocess;
+	  namespace boostbmi = boost::multi_index;
 
-    typename basic_string<char, std::char_traits<char>, char_allocator> shm_string;
+		typedef boostinp::managed_shared_memory::allocator<char>::type  char_allocator;
+    typedef boostinp::basic_string<char, std::char_traits<char>, char_allocator> shm_string;
 
-    struct file_desc_shm {
+    struct file_shm_meta{
 
-        uint64_t      id;
+        uint64_t     file_name_md5;
         uint8_t      status;
         void        *mapped_addr;
         uint64_t     mapped_size;
         shm_string    name;
-        file_desc_shm( uint64_t id_,
+        file_shm_meta( uint64_t file_name_md5_,
                 uint8_t  status_,
                 void    *mapped_addr_,
                 uint64_t mapped_size_,
                 shm_string  name_,
                 const char_allocator& ca)
-            : id(id_), status(status_), mapped_addr(mapped_addr_), mapped_size(mapped_size_),name(name_, ca)
+            : file_name_md5(file_name_md5_),
+              status(status_),
+              mapped_addr(mapped_addr_),
+              mapped_size(mapped_size_),name(name_, ca)
         { }
     };
 
 
     //Tags
-    struct id{};
-		struct status{};
-		struct mapped_addr{};
-		struct mapped_size{};
-		struct name{};
+    struct file_name_md5 {};
+    struct status {};
+    struct mapped_addr {};
+    struct mapped_size {};
+    struct name {};
 
-            template<typename MAPPED_FILE>
-class file_shm_base
+    template<typename MAPPED_FILE>
+    class file_shm_base
     {
 
         public:
-            typename boost::shared_ptr<struct file_desc_shm> fdesc_shm_str;
-            virtual fdesc_shm_str file_desc()  = 0;
+            typedef boost::shared_ptr<struct file_shm_meta> fshm_meta_str;
+            virtual fshm_meta_str get_file_shm_meta(uint64_t file_name_md5)  = 0;
 
     };
 

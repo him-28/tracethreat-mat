@@ -19,7 +19,9 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/data_structure/actire_parallel.hpp \
  $(top_builddir)/src/filetypes/pe_file_controller.hpp \
  $(top_builddir)/src/scan/file_scan_policy.hpp \
- $(top_builddir)/src/ocl/cl_bootstrap.hpp
+ $(top_builddir)/src/ocl/cl_bootstrap.hpp \
+ $(top_builddir)/src/memory/file_shm_handler.hpp
+
 
 
 
@@ -33,7 +35,9 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
 	$(top_builddir)/src/data_structure/actire_parallel.hpp \
 	$(top_builddir)/src/wrapper/wrapper_rules.hpp \
 	$(top_builddir)/src/filetypes/pe_file_controller.cpp \
-  $(top_builddir)/src/scan/file_scan_policy.cpp
+  $(top_builddir)/src/scan/file_scan_policy.cpp \
+  $(top_builddir)/src/memory/file_shm_handler.cpp
+
 
 
 
@@ -44,4 +48,5 @@ $(top_builddir)/src/wrapper/libwrapper.a \
 $(top_builddir)/src/rules/librules.a  \
 $(top_builddir)/src/filetypes/libfiletypes.a  \
 $(top_builddir)/src/scan/libscan.a \
+$(top_builddir)/src/memory/libmemory.a \
 $(top_builddir)/src/ocl/libocl.a $(AM_LDFLAGS)

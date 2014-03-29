@@ -72,9 +72,9 @@ namespace controller
     {
 
         public:
-            thread(boost::shared_ptr<runnable> run, bool detached = false);
+            //thread(boost::shared_ptr<runnable> run, bool detached = false);
             thread(bool detached = false);
-            thread();
+            //thread();
 
             void start();
             void *join();

@@ -38,7 +38,7 @@
 //
 #include "utils/logger/clutil_logger.hpp"
 
-namespace util
+namespace utils
 {
     namespace h_util = hnmav_util;
 

@@ -30,19 +30,23 @@
 // 3rd
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/tuple/tuple.hpp>
 
 // internal
 #include "threadsyncocl/buffer_sync.hpp"
 #include "threadsyncocl/semaphore_controller.hpp"
 #include "threadsyncocl/thread_barrier_controller.hpp"
 
+#include "threadsyncocl/thread_controller.hpp"
+
 //
 #include "utils/logger/clutil_logger.hpp"
+#include "utils/file_calculate.hpp"
 
 namespace controller
 {
 
-    using namespace util;
+    using namespace utils;
     namespace h_util = hnmav_util;
 
     template<typename BufferSync>

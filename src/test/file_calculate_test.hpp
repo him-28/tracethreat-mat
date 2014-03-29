@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-using namespace util;
+using namespace utils;
 
 class FileCalculateTest : public ::testing::Test
 {

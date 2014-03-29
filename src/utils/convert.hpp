@@ -24,7 +24,7 @@
 //STL
 #include <iostream>
 #include <stdexcept>
-namespace hnmav_util
+namespace utils
 {
 
     namespace convert
@@ -36,7 +36,7 @@ namespace hnmav_util
                 '7', '8', '9', 'a', 'b', 'c', 'd',
                 'e', 'f'
                                  };
-        static byte_map_len = sizeof(byte_map);
+        static char byte_map_len = sizeof(byte_map);
 
         static char nibble2char(uint8_t nibble)
         {
@@ -49,11 +49,11 @@ namespace hnmav_util
         {
             char *retval;
             int count_buflen;
-            retval = malloc(buflen * 2 + 1);
+            retval = (char*)malloc(buflen * 2 + 1);
 
             for(count_buflen = 0; count_buflen < buflen; count_buflen++) {
-                retval[count_buflen * 2] = nibble2char(bytes[i] >> 4);
-                retval[count_buflen * 2 +1] = nibble2char(bytes[i] & 0x0f);
+                retval[count_buflen * 2] = nibble2char(bytes[count_buflen] >> 4);
+                retval[count_buflen * 2 +1] = nibble2char(bytes[count_buflen] & 0x0f);
             }
 
             retval[count_buflen] = '\0';
@@ -63,12 +63,12 @@ namespace hnmav_util
 
         //TDebugProtocol is byte to hex.
         //single convert byte to char
-        static std::string byte2hex(uint8_t *byte)
+        static std::string byte2hex(const uint8_t byte)
         {
             char buff[3];
-            ret = std::sprintf(buff, "%02x"2, (int)byte);
+            int ret = std::sprintf(buff, "%02x", (int)byte);
             assert(ret == 2);
-            assert(buff[2] == '\0')
+            assert(buff[2] == '\0');
             return buff;
         }
 

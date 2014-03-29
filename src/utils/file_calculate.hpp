@@ -21,7 +21,7 @@
 
 #include "gtest/gtest.h"
 
-namespace util
+namespace utils
 {
 
 

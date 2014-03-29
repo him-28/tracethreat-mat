@@ -25,8 +25,8 @@
 namespace controller
 {
 
-    template<typename mutex_controller>
-    bool mutex_buffer<mutex_controller>::init()
+    template<typename Mutex>
+    bool mutex_buffer<Mutex>::init()
     {
         // logger
         logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
@@ -34,8 +34,8 @@ namespace controller
 
 
         if(mx_ptr_vec.size() == 0) {
-            mx_ptr ptr(new mutex_controller);
-            mutex_controller   *m = ptr.get();
+            mx_ptr ptr(new Mutex);
+            Mutex   *m = ptr.get();
 
             if(!pthread_mutex_init(&m->mutex_t, NULL)) {
                 mx_ptr_vec.push_back(ptr);
@@ -43,7 +43,7 @@ namespace controller
             }
         } else {
             mx_ptr_vec.clear();
-            mx_ptr ptr(new mutex_controller);
+            mx_ptr ptr(new Mutex);
             mx_ptr_vec.push_back(ptr);
             return true;
         }
@@ -51,12 +51,12 @@ namespace controller
         return false;
     }
 
-    template<typename mutex_controller>
-    bool mutex_buffer<mutex_controller>::lock_request()
+    template<typename Mutex>
+    bool mutex_buffer<Mutex>::lock_request()
     {
         logger->write_info(" Lock request ");
-        boost::shared_ptr<mutex_controller> mx = mx_ptr_vec.back();
-        mutex_controller *m = mx.get();
+        boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
+        Mutex *m = mx.get();
 
         if(!pthread_mutex_lock(&m->mutex_t)) {
             return true;
@@ -65,12 +65,12 @@ namespace controller
         return false;
     }
 
-    template<typename mutex_controller>
-    bool mutex_buffer<mutex_controller>::unlock_request()
+    template<typename Mutex>
+    bool mutex_buffer<Mutex>::unlock_request()
     {
         logger->write_info(" Unlock request ");
-        boost::shared_ptr<mutex_controller> mx = mx_ptr_vec.back();
-        mutex_controller *m = mx.get();
+        boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
+        Mutex *m = mx.get();
 
         if(!pthread_mutex_unlock(&m->mutex_t)) {
             return true;
@@ -79,25 +79,25 @@ namespace controller
         return false;
     }
 
-    template<typename mutex_controller>
-    bool mutex_buffer<mutex_controller>::try_lock()
+    template<typename Mutex>
+    bool mutex_buffer<Mutex>::try_lock()
     {
 
 
     }
 
-    template<typename mutex_controller>
-    boost::shared_ptr<mutex_controller> mutex_buffer<Mutex>::processes()
+    template<typename Mutex>
+    boost::shared_ptr<Mutex> mutex_buffer<Mutex>::processes()
     {
         return mx_ptr_vec.back();
     }
 
-    template<typename mutex_controller>
-    bool mutex_buffer<mutex_controller>::destruction()
+    template<typename Mutex>
+    bool mutex_buffer<Mutex>::destruction()
     {
 
-        boost::shared_ptr<mutex_controller> mx = mx_ptr_vec.back();
-        mutex_controller *m = mx.get();
+        boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
+        Mutex *m = mx.get();
 
         if(!pthread_mutex_destroy(&m->mutex_t)) {
             return true;
@@ -107,6 +107,6 @@ namespace controller
     }
 
 
-    template class mutex_buffer<mutex_controller>;
+    template class mutex_buffer<Mutex>;
 
 }

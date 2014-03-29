@@ -1,5 +1,5 @@
 #include "utils/file_handler.hpp"
-using namespace util;
+using namespace utils;
 
 class FileHandlerTest : public ::testing::Test
 {

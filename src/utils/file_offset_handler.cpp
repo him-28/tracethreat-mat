@@ -3,7 +3,7 @@
 
 #include "file_offset_handler.hpp"
 
-namespace util
+namespace utils
 {
 
 

@@ -5,7 +5,7 @@
  *-
  *
  */
-namespace util
+namespace utils
 {
 
 template<typename PEFileType = struct pe_filetype>
