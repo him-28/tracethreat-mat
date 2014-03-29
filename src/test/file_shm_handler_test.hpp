@@ -93,7 +93,7 @@ TEST_F(InitFileSHMHandler, insert_multiple_file)
 	file_shm_handler<MAPPED_FILE_PE>  f_shm_handler;
 	f_shm_handler.initial_shm(sum_file_size);
 	f_shm_handler.initial_file_shm(mapped_file_vec_ptr);
-//	f_shm_handler.~f_shm_handler();//delete_file_shm();
+	f_shm_handler.delete_file_shm();
   //f_shm_handler.list_detail_shm(file_name_md5);
   //EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
 

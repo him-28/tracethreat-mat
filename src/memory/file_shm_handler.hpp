@@ -175,7 +175,9 @@ namespace memory
             bool alignment_file_shm();
 
 
-						~file_shm_handler(){ file_shm->destroy_ptr(map_str_shm_ptr); };
+						~file_shm_handler(){ 
+									//file_shm->destroy_ptr(map_str_shm_ptr);
+						 }
 
             //virtual fshm_meta_str get_shm_file_meta(uint64_t file_name_md5){ }
 
