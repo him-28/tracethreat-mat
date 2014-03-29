@@ -55,7 +55,7 @@ namespace memory
 
         //map allocator
         //map_shm_allocator  map_shm_alloc(file_shm->get_segment_manager());
-			  map_str_shm_allocator  mapstr_shm_alloc(file_shm->get_segment_manager());
+        map_str_shm_allocator  mapstr_shm_alloc(file_shm->get_segment_manager());
 
 
 
@@ -66,8 +66,8 @@ namespace memory
         //initial file-shm
         //map_shm_ptr = file_shm->construct<map_shm>("file-shm")(std::less<uint64_t>(), map_shm_alloc);
 
-        map_str_shm_ptr = file_shm->construct<map_str_shm>("file-shm")(std::less<uint64_t>(), 
-					mapstr_shm_alloc);
+        map_str_shm_ptr = file_shm->construct<map_str_shm>("file-shm")(std::less<uint64_t>(),
+                mapstr_shm_alloc);
 
         /*
         map_shm_shared_ptr =  boostinp::managed_shared_ptr(
@@ -103,11 +103,11 @@ namespace memory
             */
 
             //get detail_file_hex address from vector to binary_string_shm
-            //test: 7115022752065567031 
+            //test: 7115022752065567031
             binarystr_shm[index_file] = new binary_string_shm(char_alloc);
             *binarystr_shm[index_file] = addr_df_hex_vec[index_file];
 
-						// Test : get hex data.
+            // Test : get hex data.
             //						binary_string_shm  * bistr = binarystr_shm[index_file];
             //						for(int count_str = 0; count_str < mf->size; count_str)
             //	std::cout<<"Data : " << *bistr <<std::endl;
@@ -123,9 +123,11 @@ namespace memory
 
             //encode with MD5 with mf->file_name ( filename inculded path of file)
             const uint64_t  file_name_md5 =  utils::convert::MD5Hash(mf->data, mf->size);
-						//std::cout<<"File name md5 : " << file_name_md5 << std::endl;
-						//std::cout<<"File name path : " << mf->file_name <<std::endl;
-			
+            file_name_md5_vec.push_back(file_name_md5);
+						//file_name_md5_vec.push_back(file_name_md5);
+            //std::cout<<"File name md5 : " << file_name_md5 << std::endl;
+            //std::cout<<"File name path : " << mf->file_name <<std::endl;
+
             //Key : MD5 from detail insides file.
             //Value : insert vector contains detail of hex of file to value.
             /*map_shm_ptr->insert(std::pair<const uint64_t, binary_string_shm_vec>(
@@ -141,20 +143,46 @@ namespace memory
 
     }
 
-		template<typename MAPPED_FILE>
-		bool file_shm_handler<MAPPED_FILE>::list_detail_shm(uint64_t file_name_md5){
-			 
-			map_str_shm::iterator iter_map_shm = map_str_shm_ptr->find(file_name_md5);
-			
-			 std::pair<const uint64_t, binary_string_shm> pair_map_shm = *iter_map_shm;
+    template<typename MAPPED_FILE>
+    bool file_shm_handler<MAPPED_FILE>::list_detail_shm(const uint64_t *file_name_md5)
+    {
 
-			 const uint64_t fn_md5 = pair_map_shm.first;
-			 binary_string_shm  bistr_shm = pair_map_shm.second;
+        map_str_shm::iterator iter_map_shm = map_str_shm_ptr->find(*file_name_md5);
 
-			 //std::cout<<"fn_md5:"<< fn_md5 <<std::endl;
-			 //std::cout<<"str : "<< bistr_shm <<std::endl;		 
-			  
-		}
+        std::pair<const uint64_t, binary_string_shm> pair_map_shm = *iter_map_shm;
+
+        const uint64_t fn_md5 = pair_map_shm.first;
+        binary_string_shm  bistr_shm = pair_map_shm.second;
+
+        //std::cout<<"fn_md5:"<< fn_md5 <<std::endl;
+        //std::cout<<"str : "<< bistr_shm <<std::endl;
+
+    }
+
+    template<typename MAPPED_FILE>
+    bool file_shm_handler<MAPPED_FILE>::delete_file_shm()
+    {
+        //TODO : list file-shm detail deleted.
+        std::vector<uint64_t>::const_iterator iter_fn_md5;
+				for(iter_fn_md5 = file_name_md5_vec.begin(); 
+						iter_fn_md5 != file_name_md5_vec.end(); 
+						++iter_fn_md5)
+				{
+								map_str_shm_ptr->erase(*iter_fn_md5);
+				}
+		
+        file_shm->destroy_ptr(map_str_shm_ptr);
+    }
+
+		
+    template<typename MAPPED_FILE>
+    std::vector<uint64_t> file_shm_handler<MAPPED_FILE>::get_file_name_md5()
+    {
+        return file_name_md5_vec;
+    }
+		
+
+
     /*Phase-2 : File mapped set file load to shared memory
 
     template<typename MAPPED_FILE>

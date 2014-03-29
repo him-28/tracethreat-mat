@@ -161,15 +161,21 @@ namespace memory
             *
             * @return True, get index success. False have not index on file.
             */
-            bool list_detail_shm(uint64_t file_name_md5);
+            bool list_detail_shm(const uint64_t * file_name_md5);
+
+						bool delete_file_shm();
+				
+					  std::vector<uint64_t>  get_file_name_md5();
 
             bool status_file_shm();
 
             uint64_t size_file_shm();
 
-            bool delete_file_shm(uint64_t file_name_md5);
 
             bool alignment_file_shm();
+
+
+						~file_shm_handler(){ file_shm->destroy_ptr(map_str_shm_ptr); };
 
             //virtual fshm_meta_str get_shm_file_meta(uint64_t file_name_md5){ }
 
@@ -194,7 +200,8 @@ namespace memory
             map_str_shm *map_str_shm_ptr;
             //vector contains addresses of files sizes.
             std::vector<char *>  addr_df_hex_vec;
-
+						
+						std::vector<uint64_t>  file_name_md5_vec;
             //support multiple allocator
             boostinp::managed_shared_memory::multiallocation_chain *multi_alloca_chain;
             //managed_shared_memory::size_type * sizes; : Not supported.

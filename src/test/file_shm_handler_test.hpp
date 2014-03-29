@@ -28,7 +28,7 @@
 
 #include "utils/file_offset_handler.hpp"
 
-#define FILE_SIZE 1
+#define FILE_SIZE_MULTIPLE_SHM 2
 
 using namespace memory;
 
@@ -39,19 +39,21 @@ class InitFileSHMHandler : public ::testing::Test
 
         virtual void SetUp() {
             //multiple file name
-        char const *file_name_offset[FILE_SIZE];
+       
        file_name_offset[0] = "/home/chatsiri/sda1/workspacemalware/lab_malwareanalysis/3/clam_ISmsi_ext.exe";
+	     file_name_offset[1] = "/home/chatsiri/sda1/workspacemalware/malware_debug/vir_Win.Trojan.Zbot-15693/84612796/new_folder.exe";
 
-            for(int count_file = 0; count_file < 	FILE_SIZE; count_file++) {
+            for(int count_file = 0; count_file < 	FILE_SIZE_MULTIPLE_SHM; count_file++) {
                 list_file_type.push_back(file_name_offset[count_file]);
                 s_mapped_fpe[count_file]	 = (struct MAPPED_FILE_PE *)malloc(sizeof(s_mapped_fpe));
-                mapped_file_vec.push_back(s_mapped_fpe[count_file]);
+                 mapped_file_vec.push_back(s_mapped_fpe[count_file]);
             }
 
         }
 
+			  const char * file_name_offset[FILE_SIZE_MULTIPLE_SHM];
         std::list<std::string> list_file_type;
-        struct MAPPED_FILE_PE *s_mapped_fpe[FILE_SIZE];
+        struct MAPPED_FILE_PE * s_mapped_fpe[FILE_SIZE_MULTIPLE_SHM];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
 
 };
@@ -72,6 +74,7 @@ TEST_F(InitFileSHMHandler, insert_multiple_file)
 
 		EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
 
+		uint64_t sum_file_size;
 		std::vector<MAPPED_FILE_PE*> mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
 		typename std::vector<MAPPED_FILE_PE*>::iterator iter_mapped_file;
 		for(iter_mapped_file = mapped_file_vec_ptr.begin(); 
@@ -82,17 +85,17 @@ TEST_F(InitFileSHMHandler, insert_multiple_file)
 							unsigned char * data = mf_pe->data;
 							size_t size  = mf_pe->size; 
 						  EXPECT_GT(size,0);
+							sum_file_size += size;
 							ASSERT_TRUE(*data != NULL);
 
 		}
 
 	file_shm_handler<MAPPED_FILE_PE>  f_shm_handler;
-	uint64_t summary_file_size = 1215239;
-	f_shm_handler.initial_shm(summary_file_size);
+	f_shm_handler.initial_shm(sum_file_size);
 	f_shm_handler.initial_file_shm(mapped_file_vec_ptr);
-	uint64_t file_name_md5 = 7115022752065567031;
-  f_shm_handler.list_detail_shm(file_name_md5);
-  EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
+//	f_shm_handler.~f_shm_handler();//delete_file_shm();
+  //f_shm_handler.list_detail_shm(file_name_md5);
+  //EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
 
 }
 

@@ -114,7 +114,7 @@ namespace utils
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
 
-
+									  //mapped_file_ptr->file_name = file_name;
                     mapped_file_ptr->data = (uint8_t *)mmap(0,
                             mapped_file_ptr->size,
                             PROT_READ,
