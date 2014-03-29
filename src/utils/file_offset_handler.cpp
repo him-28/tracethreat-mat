@@ -113,9 +113,11 @@ namespace utils
                     if(mapped_file_ptr->size == 0 || mapped_file_ptr->file == -1) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
-
+										//allocated size of file name. 
 									  mapped_file_ptr->file_name = (char*)malloc(sizeof(char*) * s_file_name.size());
+										//insert file name path.
 										mapped_file_ptr->file_name = s_file_name.c_str();
+
                     mapped_file_ptr->data = (uint8_t *)mmap(0,
                             mapped_file_ptr->size,
                             PROT_READ,
