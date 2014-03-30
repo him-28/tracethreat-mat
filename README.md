@@ -1,7 +1,9 @@
-threadsyncocl
+HNMAV-OCL
 =============
 
-Pthread struct utility synchronizes with OpenCL
+- Pthread struct utility synchronizes with OpenCL.
+- Scanning with TBB(Multithread and Parallelization tasks) and OpenCL.
+- Compiler signature supported clamav signature and Yara-project.
 
 Goal
 ====
@@ -10,7 +12,31 @@ Goal
 
 Structure
 =========
-- Scanning with PE, ELF on filetype, datastructure and utils directory.
--- Exe, PDF, Word Doc, Rootkit.
-- Packet filtering source code on internet directory. 
+- scan:
+-- Scanning with PE, ELF on filetype, datastructure and utils directory.
+-- Exe, PE, ELF
+
+- filetypes:
+--PE
+
+- internet
+-- Packet filtering source code on internet directory. 
 -- Massive scanning with internet network packets.
+
+- memory:
+
+- utils:
+
+- data_structure:
+
+- exception:
+
+- ocl:
+
+-  test:
+
+- threadsyncocl:
+
+- time:
+
+- utils:
