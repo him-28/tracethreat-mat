@@ -18,7 +18,8 @@
 */
 
 /*  Titles			                                                     Authors	          Date
- *- Hash value                                                       R.Chatsiri         21/03/2014
+ * 	-Folly hash concept																				 R.Chatsiri         21/03/2014
+ *  -Hash value                                                R.Chatsiri         21/03/2014
  */
 
 #include <cstring>
@@ -197,7 +198,7 @@ namespace std
     {
         public:
             size_t operator()(const std::pair<T1, T2>& x) const {
-                return folly::hash::hash_combine(x.first, x.second);
+                return hash_combine(x.first, x.second);
             }
     };
 
