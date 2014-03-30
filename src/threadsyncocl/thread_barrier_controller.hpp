@@ -1,5 +1,25 @@
-#ifndef  CONTROLLER_BARRIER_CONTROLLER__TRAHD_BARRIER_CONTROLLER_HPP
-#define   CONTROLLER_BARRIER_CONTROLLER__TRAHD_BARRIER_CONTROLLER_HPP
+#ifndef  CONTROLLER_THREAD_BARRIER_CONTROLLER_HPP
+#define  CONTROLLER_THREAD_BARRIER_CONTROLLER_HPP
+
+/*
+* Copyright 2014 MTSec, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles			                                 Authors	          Date
+ * - Thread barrier controller support OCL    R.Chatsiri      30/03/2014
+ */
 
 #include "pthread.h"
 #include "threadsyncocl/buffer_sync.hpp"
@@ -96,6 +116,6 @@ namespace controller
     template class barrier<barrier_thread>;
 }
 
-#endif /*  CONTROLLER_BARRIER_CONTROLLER__TRAHD_BARRIER_CONTROLLER_HPP */
+#endif /*  CONTROLLER_THREAD_BARRIER_CONTROLLER_HPP */
 
 
