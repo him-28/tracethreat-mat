@@ -37,6 +37,4 @@ private:
 	
 };
 
-template<typename Input>
-
-#endif /* UTIL__CONV2HEX_HPP */
+#endif /* UTILS__FORMAT_HEX_HPP */
