@@ -19,11 +19,20 @@ namespace controller
     struct buffer_kernel;
     template<typename Buffer> class  BufferSync;
 
+		struct ocldetail_scan{
+			uint8_t status;
+			uint64_t start_point; //start point of binary file.
+			uint64_t end_point;   //end point of binary file.
+				
+		};
+
     struct buffer_kernel {
         cl_int  buffer_length;
         cl_char buffer_send;
         typedef int thread_int;
         typedef int size_int;
+				//Support buffer block status
+				std::vector<ocldetail_scan>
     };
 
     template<typename Buffer>
