@@ -120,7 +120,7 @@ namespace controller
                         thread<BufferSync>::start_thread,
                         (void *)this);
 
-                logger->write_info("Thread, ID : "); // add argument
+                logger->write_info("Thread not detacted_, ID : "); // add argument
 
                 if(status) {
                     logger->write_info(" Cannot create start_thread ");

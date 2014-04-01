@@ -174,6 +174,8 @@ namespace memory
 
             bool alignment_file_shm();
 
+						map_str_shm  get_map_str_shm();
+
 
 						~file_shm_handler(){ 
 									//file_shm->destroy_ptr(map_str_shm_ptr);

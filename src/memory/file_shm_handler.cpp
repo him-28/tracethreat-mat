@@ -124,7 +124,7 @@ namespace memory
             //encode with MD5 with mf->file_name ( filename inculded path of file)
             const uint64_t  file_name_md5 =  utils::convert::MD5Hash(mf->data, mf->size);
             file_name_md5_vec.push_back(file_name_md5);
-						//file_name_md5_vec.push_back(file_name_md5);
+            //file_name_md5_vec.push_back(file_name_md5);
             //std::cout<<"File name md5 : " << file_name_md5 << std::endl;
             //std::cout<<"File name path : " << mf->file_name <<std::endl;
 
@@ -164,23 +164,28 @@ namespace memory
     {
         //TODO : list file-shm detail deleted.
         std::vector<uint64_t>::const_iterator iter_fn_md5;
-				for(iter_fn_md5 = file_name_md5_vec.begin(); 
-						iter_fn_md5 != file_name_md5_vec.end(); 
-						++iter_fn_md5)
-				{
-								map_str_shm_ptr->erase(*iter_fn_md5);
-				}
-		
+
+        for(iter_fn_md5 = file_name_md5_vec.begin();
+                iter_fn_md5 != file_name_md5_vec.end();
+                ++iter_fn_md5) {
+            map_str_shm_ptr->erase(*iter_fn_md5);
+        }
+
         file_shm->destroy_ptr(map_str_shm_ptr);
     }
 
-		
+
     template<typename MAPPED_FILE>
     std::vector<uint64_t> file_shm_handler<MAPPED_FILE>::get_file_name_md5()
     {
         return file_name_md5_vec;
     }
-		
+
+    template<typename MAPPED_FILE>
+    map_str_shm & file_shm_handler<MAPPED_FILE>::get_map_str_shm()
+    {
+        return map_str_shm;
+    }
 
 
     /*Phase-2 : File mapped set file load to shared memory
