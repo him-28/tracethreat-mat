@@ -168,7 +168,7 @@ namespace controller
     void *comm_thread_buffer<BufferSync, MAPPED_FILE>::run()
     {
         logger->write_info("-- To critical section --");
-        mutex_buff->lock_request();
+        //mutex_buff->lock_request();
 
         //buffer_sync_->set_buffer(5, "file_name");
         
@@ -180,7 +180,7 @@ namespace controller
 			  BufferSync * buff_sync = buffer_sync_;				
 
 
-        mutex_buff->unlock_request();
+        //mutex_buff->unlock_request();
         logger->write_info("-- End of critical section --");
     }
 

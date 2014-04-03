@@ -118,8 +118,9 @@ namespace controller
                     BufferSync *const  buffer_sync) :
                 my_id(ID),
                 buffer_sync_(buffer_sync) {
-                mutex_buff = new mutex_buffer<Mutex>();
-                mutex_buff->init();
+								//Initial mutex after set buffer to buffer_sync_
+                //mutex_buff = new mutex_buffer<Mutex>();
+                //mutex_buff->init();
             }
             void *run();
         private:

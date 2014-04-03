@@ -127,7 +127,7 @@ namespace memory
             //file_name_md5_vec.push_back(file_name_md5);
             //std::cout<<"File name md5 : " << file_name_md5 << std::endl;
             //std::cout<<"File name path : " << mf->file_name <<std::endl;
-
+            
             //Key : MD5 from detail insides file.
             //Value : insert vector contains detail of hex of file to value.
             /*map_shm_ptr->insert(std::pair<const uint64_t, binary_string_shm_vec>(
@@ -138,6 +138,9 @@ namespace memory
             //Value : insert vector contains detail of hex of file to value.
             map_str_shm_ptr->insert(std::pair<const uint64_t, binary_string_shm>(
                     file_name_md5, *binarystr_shm[index_file]));
+
+						//insert filename and file size for calculate
+					   map_file_size.insert(std::make_pair(file_name_md5, mf->size));
 
         }
 
@@ -186,6 +189,13 @@ namespace memory
     {
         return *map_str_shm_ptr;
     }
+
+		template<typename MAPPED_FILE>
+		typename std::map<const uint64_t, size_t> * file_shm_handler<MAPPED_FILE>::get_map_file_size()
+		{
+				return &map_file_size;
+		}
+				
 
 
     /*Phase-2 : File mapped set file load to shared memory

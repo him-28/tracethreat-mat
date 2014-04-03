@@ -96,13 +96,16 @@ namespace controller
 
             thread_sync();
 
-            boost::shared_ptr<BufferSync>& buffer_ocl();
+            boost::shared_ptr<BufferSync>& buffer_ocl(){ 
+							//TODO: Interface supported other class.
+						};
 
             //boost::tuple<struct shm_memory::data_ocl_process<MAPPED_FILE>::size_int> get_thread_info();
 
 			      boost::tuple<uint8_t> get_thread_info();
 
             ibuffer_sync<BufferSync>& start_processes();
+											
 
             //insert file-shm mapped to create vector thread.
             std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync,MAPPED_FILE> > >&
