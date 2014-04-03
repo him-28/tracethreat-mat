@@ -26,6 +26,7 @@
 
 //
 #include "utils/logger/clutil_logger.hpp"
+#include "filetypes/pe.hpp"
 
 namespace controller
 {
@@ -35,9 +36,11 @@ namespace controller
     template<typename BarrierThread>
     class barrier_controller;
 
+		//template<typename MAPPED_FILE>
     struct barrier_thread {
         typedef pthread_barrier_t barrier_t;
-        typedef struct buffer_kernel buffer;
+        //typedef struct buffer_kernel buffer;
+        //typedef struct data_ocl_process<MAPPED_FILE>    buffer; 
         typedef pthread_condattr_t  condattr_t;
         typedef pthread_cond_t      cond_t;
         //typedef pthread_cond_   cond_wait_t;
@@ -90,8 +93,7 @@ namespace controller
     {
 
         public:
-            barrier_buffer(const typename
-                    BarrierThread::buffer::thread_int thread_num)
+            barrier_buffer(const uint64_t thread_num)
                 : thread_num_(thread_num) { }
             bool barrier_init();
             bool condition_init();
@@ -102,8 +104,9 @@ namespace controller
             typedef BarrierThread b_t;
             typename b_t::barrier_t p_barrier;
             typename b_t::condattr_t p_condattr;
-            typename b_t::buffer::thread_int const thread_num_;
             typename b_t::cond_t p_cond;
+            const uint64_t thread_num_;
+
             //b_t::cond_wait_t p_cond_wait;
             //logger
 					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;

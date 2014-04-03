@@ -110,11 +110,11 @@ namespace controller
 
 
     // communication thread buffer
-    template<typename BufferSync>
+    template<typename BufferSync, typename MAPPED_FILE>
     class comm_thread_buffer : public thread<BufferSync>
     {
         public:
-            comm_thread_buffer(typename buffer_kernel::size_int ID,
+            comm_thread_buffer(uint64_t ID,
                     BufferSync *const  buffer_sync) :
                 my_id(ID),
                 buffer_sync_(buffer_sync) {
@@ -123,9 +123,15 @@ namespace controller
             }
             void *run();
         private:
-            typename buffer_kernel::size_int  my_id;
+            //typename buffer_kernel::size_int  my_id;
+            uint64_t  my_id;
             BufferSync *buffer_sync_;
             mutex_buffer<Mutex> *mutex_buff;
+
+						//id processes_id_register for thread
+						struct slot_ocl * s_ocl;
+						struct data_ocl_process<MAPPED_FILE> * d_ocl_processes;
+						
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

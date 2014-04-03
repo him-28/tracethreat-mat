@@ -39,46 +39,46 @@
 
 #include "threadsyncocl/thread_controller.hpp"
 
+#include "memory/file_shm_handler.hpp"
+
 //
 #include "utils/logger/clutil_logger.hpp"
 #include "utils/file_calculate.hpp"
+
 
 namespace controller
 {
 
     using namespace utils;
+
     namespace h_util = hnmav_util;
+
+    namespace shm_memory = memory;
 
     template<typename BufferSync>
     class ibuffer_sync
     {
         public:
             virtual boost::shared_ptr<BufferSync>& buffer_ocl() = 0;
-            virtual std::string path()= 0;
-            virtual ibuffer_sync& sync_processes() = 0;
+            virtual ibuffer_sync& start_processes() = 0;
     };
 
-    template<typename BufferSync>
+    template<typename BufferSync, typename MAPPED_FILE>
     class thread_sync : public ibuffer_sync<BufferSync>
     {
 
         private:
             boost::shared_ptr<BufferSync> buffer_sync;
 
-            //file processes
-            file_calculate<Extension> *file_cal;
-            std::list<std::string> *list_files;
-
             //thread controller
             typedef BufferSync      buffer_sync_type;
-            typedef buffer_kernel::size_int size_type;
-            typedef boost::shared_ptr<comm_thread_buffer<buffer_sync_type> > thread_ptr;
-
-            std::string  *file_path;
+            //typedef buffer_kernel::size_int size_type;
+            typedef boost::shared_ptr<comm_thread_buffer<buffer_sync_type, MAPPED_FILE> > thread_ptr;
+            //     std::string  *file_path;
             thread_ptr   *thread_array_ptr;
             buffer_sync_type *buff_sync_internal;
 
-            size_type thread_id;
+            //size_type thread_id;
 
             std::vector<thread_ptr> thread_ptr_vec;
             // pointer handler vector of shared_ptr of threads.
@@ -88,23 +88,28 @@ namespace controller
             h_util::clutil_logging<std::string, int>    *logger;
 
 
+            typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *mapstr_shm_ptr;
+            //mapstr_shm_type mapstr_shm_ptr;
+
+
         public:
 
             thread_sync();
 
             boost::shared_ptr<BufferSync>& buffer_ocl();
 
-            std::string path();
-            void set_path(const char *path);
+            //boost::tuple<struct shm_memory::data_ocl_process<MAPPED_FILE>::size_int> get_thread_info();
 
-            //processe sync and controller
-            std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync> > >&   sync_init();
-            bool sync_buffer();
-            bool sync_check_kernel();
+			      boost::tuple<uint8_t> get_thread_info();
 
-            boost::tuple<buffer_kernel::size_int> get_thread_info();
+            ibuffer_sync<BufferSync>& start_processes();
 
-            ibuffer_sync<BufferSync>& sync_processes();
+            //insert file-shm mapped to create vector thread.
+            std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync,MAPPED_FILE> > >&
+            init_syncocl_workload(typename shm_memory::
+                    file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
+                    std::map<const uint64_t , size_t> *map_file_size);
+
 
     };
 

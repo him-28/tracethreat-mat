@@ -182,9 +182,9 @@ namespace memory
     }
 
     template<typename MAPPED_FILE>
-    map_str_shm & file_shm_handler<MAPPED_FILE>::get_map_str_shm()
+    typename file_shm_handler<MAPPED_FILE>::map_str_shm & file_shm_handler<MAPPED_FILE>::get_map_str_shm()
     {
-        return map_str_shm;
+        return *map_str_shm_ptr;
     }
 
 

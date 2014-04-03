@@ -40,7 +40,7 @@ namespace controller
 		
     // Explicitly instance
     template class thread_controller<int>;
-    template class thread_controller<BufferSync<char> >;
+    template class thread_controller<BufferSync<char, MAPPED_FILE_PE> >;
 		
 
     /* todo: For testing with runnable, Subclass extend to runnable.
@@ -164,20 +164,33 @@ namespace controller
 
 
     //-- Communication thread buffer
-    template<typename BufferSync>
-    void *comm_thread_buffer<BufferSync>::run()
+    template<typename BufferSync, typename MAPPED_FILE>
+    void *comm_thread_buffer<BufferSync, MAPPED_FILE>::run()
     {
         logger->write_info("-- To critical section --");
         mutex_buff->lock_request();
-        buffer_sync_->set_buffer(5, "file_name");
+
+        //buffer_sync_->set_buffer(5, "file_name");
+        
+				//[x]thread write status in vector of struct name slot_ocl. Intial in thread_sync
+				//[x]insert data from map_str_shm to vector of char. Intial in thread_sync 
+			
+				//[/]call opencl machanism run opencl 					
+				//[/]thread  check stust in vector result and slot_ocl have status completed.
+			  BufferSync * buff_sync = buffer_sync_;				
+
+
         mutex_buff->unlock_request();
         logger->write_info("-- End of critical section --");
     }
 
     // Explicitly instance
-    template class thread<BufferSync<buffer_kernel> >;
+    
+		typedef BufferSync<struct data_ocl_process<MAPPED_FILE_PE>, MAPPED_FILE_PE> buff_sync;
+
+    template class thread<buff_sync>;
     template class thread<int>;
-    template class comm_thread_buffer<BufferSync<buffer_kernel> >;
+    template class comm_thread_buffer<buff_sync, MAPPED_FILE_PE >;
 		
 }
 
