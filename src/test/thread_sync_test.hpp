@@ -107,18 +107,20 @@ TEST_F(ThreadSyncTest, sync_init)
 
 		EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
 
-		uint64_t sum_file_size;
-		std::vector<MAPPED_FILE_PE*> mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
+		uint64_t sum_file_size = 0;
+		std::vector<MAPPED_FILE_PE*> * mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
 		typename std::vector<MAPPED_FILE_PE*>::iterator iter_mapped_file;
-		for(iter_mapped_file = mapped_file_vec_ptr.begin(); 
-				iter_mapped_file != mapped_file_vec_ptr.end(); 
+		for(iter_mapped_file = mapped_file_vec_ptr->begin(); 
+				iter_mapped_file != mapped_file_vec_ptr->end(); 
 				++iter_mapped_file)
 		{
 							MAPPED_FILE_PE * mf_pe = *iter_mapped_file;
 							unsigned char * data = mf_pe->data;
-							size_t size  = mf_pe->size; 
-						  EXPECT_GT(size,0);
-							sum_file_size += size;
+							//uint64_t size  = mf_pe->size; 
+						  EXPECT_GT(mf_pe->size,0);
+							logger->write_info_test("Loop sync : mf_pe->size", boost::lexical_cast<std::string>(mf_pe->size));
+							logger->write_info_test("Loop sync : mf_pe->filename", boost::lexical_cast<std::string>(mf_pe->file_name));
+							sum_file_size += mf_pe->size;
 							ASSERT_TRUE(*data != NULL);
 
 		}

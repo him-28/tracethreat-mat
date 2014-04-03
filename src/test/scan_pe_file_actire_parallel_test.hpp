@@ -77,11 +77,11 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     utils::file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
     EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
 
-    std::vector<struct MAPPED_FILE_PE *> mapf_vec = fileoffset_h.get_mapped_file();
+    std::vector<struct MAPPED_FILE_PE *> * mapf_vec = fileoffset_h.get_mapped_file();
     typename std::vector<struct MAPPED_FILE_PE *>::iterator iter_mapf_vec;
     MAPPED_FILE_PE *mf_pe;
 
-    for(iter_mapf_vec = mapf_vec.begin(); iter_mapf_vec != mapf_vec.end(); ++iter_mapf_vec) {
+    for(iter_mapf_vec = mapf_vec->begin(); iter_mapf_vec != mapf_vec->end(); ++iter_mapf_vec) {
         mf_pe = *iter_mapf_vec;
         size_t data_size = mf_pe->size;
         EXPECT_GT(data_size,0);

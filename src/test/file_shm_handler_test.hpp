@@ -31,6 +31,7 @@
 #define FILE_SIZE_MULTIPLE_SHM 2
 
 using namespace memory;
+using namespace utils;
 
 class InitFileSHMHandler : public ::testing::Test
 {
@@ -75,10 +76,10 @@ TEST_F(InitFileSHMHandler, insert_multiple_file)
 		EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
 
 		uint64_t sum_file_size;
-		std::vector<MAPPED_FILE_PE*> mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
+		std::vector<MAPPED_FILE_PE*> * mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
 		typename std::vector<MAPPED_FILE_PE*>::iterator iter_mapped_file;
-		for(iter_mapped_file = mapped_file_vec_ptr.begin(); 
-				iter_mapped_file != mapped_file_vec_ptr.end(); 
+		for(iter_mapped_file = mapped_file_vec_ptr->begin(); 
+				iter_mapped_file != mapped_file_vec_ptr->end(); 
 				++iter_mapped_file)
 		{
 							MAPPED_FILE_PE * mf_pe = *iter_mapped_file;
@@ -86,6 +87,7 @@ TEST_F(InitFileSHMHandler, insert_multiple_file)
 							size_t size  = mf_pe->size; 
 						  EXPECT_GT(size,0);
 							sum_file_size += size;
+							std::cout<<" File summary size : " << sum_file_size <<", file per size : " << size <<", mf_pe->size : " << mf_pe->size <<std::endl;
 							ASSERT_TRUE(*data != NULL);
 
 		}

@@ -4,29 +4,43 @@
 #include "test/thread_controller_test.hpp"
 #include "test/thread_exception_test.hpp"
 #include "test/thread_barrier_controller_test.hpp"
+
+//shm-read multiple fie
+//#include "test/file_shm_handler_test.hpp"
+
+
 #include "test/thread_sync_test.hpp"
 
+/*
 #include "test/ac_tire_test.hpp"
 //
 #include "test/actire_parallel_test.hpp"
+
 #include "test/clutil_platform_test.hpp"
 
 #include "test/system_exception_test.hpp"
+
 #include "test/file_handler_test.hpp"
 
 
 #include "test/file_calculate_test.hpp"
-#include "test/file_offset_handler_test.hpp" // Offset
 
-#include "test/scan_pe_file_actire_parallel_test.hpp"
+
+// Offset, Uncomment with test without
+//  test/thread_sync_test.hpp  and test/file_shm_handler_test.hpp 
+// #include "test/file_offset_handler_test.hpp"
+
+// #include "test/scan_pe_file_actire_parallel_test.hpp"
+
 //#include "test/pe_file_controller_test.hpp"  // PE 
+
 //#include "test/file_policy_test.hpp"         // PE fist file policy class
+
+*/
 
 
 //#include "test/wrapper_rules_tests.hpp"
 
-//shm-read multiple fie
-#include "test/file_shm_handler_test.hpp"
 
 
 // semaphore test suite 

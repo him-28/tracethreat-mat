@@ -156,10 +156,10 @@ namespace utils
     }
 
     template<typename FileType, typename MAPPED_FILE>
-    std::vector<MAPPED_FILE *>& file_offset_handler<FileType, MAPPED_FILE>
+    std::vector<MAPPED_FILE *>  * file_offset_handler<FileType, MAPPED_FILE>
     ::get_mapped_file()
     {
-        return *mapped_vec_shared.get();
+        return mapped_vec_shared.get();//.get();
     }
 
     template<typename FileType, typename MAPPED_FILE>

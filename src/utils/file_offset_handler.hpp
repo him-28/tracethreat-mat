@@ -122,7 +122,7 @@ namespace utils
             *
             * @return Shared_ptr contains vector of MAPPED_FILE * pointer.
             */
-            std::vector<MAPPED_FILE *> & get_mapped_file();
+            std::vector<MAPPED_FILE *> * get_mapped_file();
 
         private:
 

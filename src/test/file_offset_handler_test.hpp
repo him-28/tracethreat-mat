@@ -42,10 +42,10 @@ TEST_F(FileOffsetHandlerTest, mapped_file_test)
 
 		EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
 
-		std::vector<MAPPED_FILE_PE*> mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
+		std::vector<MAPPED_FILE_PE*> * mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
 		typename std::vector<MAPPED_FILE_PE*>::iterator iter_mapped_file;
-		for(iter_mapped_file = mapped_file_vec_ptr.begin(); 
-				iter_mapped_file != mapped_file_vec_ptr.end(); 
+		for(iter_mapped_file = mapped_file_vec_ptr->begin(); 
+				iter_mapped_file != mapped_file_vec_ptr->end(); 
 				++iter_mapped_file)
 		{
 							MAPPED_FILE_PE * mf_pe = *iter_mapped_file;

@@ -43,7 +43,7 @@ namespace memory
     }
     /*Phase-1 :  File read to string on files-shm */
     template<typename MAPPED_FILE>
-    bool file_shm_handler<MAPPED_FILE>::initial_file_shm(std::vector<MAPPED_FILE *> files_map)
+    bool file_shm_handler<MAPPED_FILE>::initial_file_shm(std::vector<MAPPED_FILE *> * files_map)
     {
 
         //char allocator
@@ -60,7 +60,7 @@ namespace memory
 
 
 
-        binary_string_shm        *binarystr_shm[files_map.size()];
+        binary_string_shm        *binarystr_shm[files_map->size()];
         //binary_string_shm_vec    *binarystr_shm_vec[files_map.size()];
 
         //initial file-shm
@@ -80,9 +80,9 @@ namespace memory
 
         //char *details_file_hex;
 
-        for(iter_files = files_map.begin(); iter_files != files_map.end(); ++iter_files) {
+        for(iter_files = files_map->begin(); iter_files != files_map->end(); ++iter_files) {
             //index get from map
-            size_t index_file =  std::distance(files_map.begin(), iter_files);
+            size_t index_file =  std::distance(files_map->begin(), iter_files);
 
             //file struct got from iterator
             MAPPED_FILE   *mf =  *iter_files;

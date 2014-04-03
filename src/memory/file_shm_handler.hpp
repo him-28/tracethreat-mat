@@ -150,7 +150,7 @@ namespace memory
             *
             * @return True, initial success or false not success.
             */
-            bool initial_file_shm(std::vector<MAPPED_FILE *> files_map);
+            bool initial_file_shm(std::vector<MAPPED_FILE *> * files_map);
 
 
             // get list char on file-shm
