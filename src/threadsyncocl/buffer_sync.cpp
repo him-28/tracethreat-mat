@@ -37,14 +37,14 @@ namespace controller
 
         //intial size of vector support number of thread.
         // max size all binary file.
-        
+
         /*
         if(buff != NULL) {
             buff->binary_hex.resize(buffer_size);
             buff->index_binary_result.resize(buffer_size);
             return true;
         }
-				*/
+        		*/
 
         //if(this->buff->buffer_length >= MAX_BUFFER_SIZE)
         //    return false;
@@ -101,8 +101,8 @@ namespace controller
     {
         //check binary length
 
-        std::map<uint64_t,struct slot_ocl *>   *map_thread_id = 
-					&buff->data_ocl_process<MAPPED_FILE>::map_tidslot_ocl;
+        std::map<uint64_t,struct slot_ocl *>   *map_thread_id =
+                        &buff->data_ocl_process<MAPPED_FILE>::map_tidslot_ocl;
 
         typename data_ocl_process<MAPPED_FILE>::map_thread_id_type::iterator iter_maptid;
 
@@ -151,23 +151,32 @@ namespace controller
     {
         // file_name_md5 is thread_id
         //map_thread_id_type
-        std::map<uint64_t,struct slot_ocl *> *map_thread_id = 
-					&buff->data_ocl_process<MAPPED_FILE>::map_tidslot_ocl;
+        std::map<uint64_t,struct slot_ocl *> *map_thread_id =
+                        &buff->data_ocl_process<MAPPED_FILE>::map_tidslot_ocl;
         //map_thread_id_type
 
-        std::map<uint64_t,struct slot_ocl *>::iterator iter_tidslot_ocl = map_thread_id->find(thread_id);
+        std::pair<int, struct slot_ocl *> pair_slot;
 
-        if(iter_tidslot_ocl == map_thread_id->end()) {
-            return true;
-        }
-
-        std::pair<int, struct slot_ocl *> pair_slot = *iter_tidslot_ocl;
         pair_slot.first  = thread_id;
         struct slot_ocl   *s_ocl =  pair_slot.second;
         s_ocl = new struct slot_ocl;
         s_ocl->processes_id_register = thread_id;
 
-        return true;
+
+        //std::map<uint64_t,struct slot_ocl *>::iterator iter_tidslot_ocl = map_thread_id->find(thread_id);
+				/*
+        std::map<uint64_t,struct slot_ocl *>::iterator iter_tidslot_ocl = map_thread_id->insert(thread_id);
+
+        if(iter_tidslot_ocl == map_thread_id->end()) {
+            return true;
+        }
+				*/
+				if(!map_thread_id->insert(std::make_pair(thread_id, s_ocl)).second)
+				{
+					//TODO: thread_id(file_name_md5) has on map
+				}
+
+        return false;
     }
 
     template class BufferSync<struct data_ocl_process<MAPPED_FILE_PE>, MAPPED_FILE_PE>;

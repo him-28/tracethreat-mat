@@ -29,7 +29,7 @@ class ThreadSyncEnvironment : public testing::Environment
         explicit ThreadSyncEnvironment(int argc,char **argv) {
 
             //thread_sync_file_path_arg = command_line_arg;
-
+					  /*
             util_opt::options_system& op_system = util_opt::options_system::get_instance();
             op_system.generic_options();
             op_system.configure_options();
@@ -53,7 +53,7 @@ class ThreadSyncEnvironment : public testing::Environment
             logger->init_backend();
             logger->formatter_normal();
             logger->init_frontend();
-
+						*/
         }
 };
 
@@ -100,7 +100,7 @@ class ThreadSyncTest : public ::testing::Test
 
 TEST_F(ThreadSyncTest, sync_init)
 {
-    logger->write_info_test(" Loop sync ");
+    //logger->write_info_test(" Loop sync ");
 
     //intial file-shm
 		file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;			
@@ -118,8 +118,8 @@ TEST_F(ThreadSyncTest, sync_init)
 							unsigned char * data = mf_pe->data;
 							//uint64_t size  = mf_pe->size; 
 						  EXPECT_GT(mf_pe->size,0);
-							logger->write_info_test("Loop sync : mf_pe->size", boost::lexical_cast<std::string>(mf_pe->size));
-							logger->write_info_test("Loop sync : mf_pe->filename", boost::lexical_cast<std::string>(mf_pe->file_name));
+							//logger->write_info_test("Loop sync : mf_pe->size", boost::lexical_cast<std::string>(mf_pe->size));
+							//logger->write_info_test("Loop sync : mf_pe->filename", boost::lexical_cast<std::string>(mf_pe->file_name));
 							sum_file_size += mf_pe->size;
 							ASSERT_TRUE(*data != NULL);
 
@@ -158,7 +158,7 @@ TEST_F(ThreadSyncTest, sync_init)
 		*/
 		// delete file-shm after success compute.
 		f_shm_handler.delete_file_shm();
-    logger->write_info_test(" End Loop Sync ");
+    //logger->write_info_test(" End Loop Sync ");
 }
 
 TEST_F(ThreadSyncTest, sync_thread_check)

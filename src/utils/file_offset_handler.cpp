@@ -125,7 +125,7 @@ namespace utils
                             mapped_file_ptr->file,
                             0);
 
-                    logger->write_info("Mapped file with mmap success");
+                    logger->write_info_test("Mapped file with mmap success");
 
                     //TO-DO : Cannot set s_file_name.c_str() to mapped_file_ptr->file_name;
                     //mapped_file_ptr->file_name = s_file_name;
