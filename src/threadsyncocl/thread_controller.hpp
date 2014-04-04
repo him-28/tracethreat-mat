@@ -115,9 +115,11 @@ namespace controller
     {
         public:
             comm_thread_buffer(uint64_t ID,
-                    BufferSync *const  buffer_sync) :
+                    BufferSync *const  buffer_sync,
+										mutex_buffer<Mutex> * mutex_buff) :
                 my_id(ID),
-                buffer_sync_(buffer_sync) {
+                buffer_sync_(buffer_sync),
+							  mutex_buff(mutex_buff_) {
 								//Initial mutex after set buffer to buffer_sync_
                 //mutex_buff = new mutex_buffer<Mutex>();
                 //mutex_buff->init();
@@ -127,7 +129,7 @@ namespace controller
             //typename buffer_kernel::size_int  my_id;
             uint64_t  my_id;
             BufferSync *buffer_sync_;
-            mutex_buffer<Mutex> *mutex_buff;
+            mutex_buffer<Mutex> *mutex_buff_;
 
 						//id processes_id_register for thread
 						struct slot_ocl * s_ocl;
