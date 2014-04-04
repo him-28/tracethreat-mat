@@ -17,6 +17,7 @@
 /*  Titles			                                                     Authors	          Date
  * - Memberfunction sync changed design for supporting OCL-Sync      R.Chatsiri   25/03/2014
  * - Change to SyncOCL                                               R.Chatsiri   01/04/2014
+ * - Initial multithread run on comm_thread_buffer                   R.Chatsiri   04/04/2014
  */
 
 #include "threadsyncocl/thread_sync.hpp"
