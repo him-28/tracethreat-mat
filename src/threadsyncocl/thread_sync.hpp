@@ -72,12 +72,16 @@ namespace controller
 
             //thread controller
             typedef BufferSync      buffer_sync_type;
+						typedef mutex_buffer<Mutex>  mutex_buff;
+
             //typedef buffer_kernel::size_int size_type;
             typedef boost::shared_ptr<comm_thread_buffer<buffer_sync_type, MAPPED_FILE> > thread_ptr;
             //     std::string  *file_path;
             thread_ptr   *thread_array_ptr;
+
             buffer_sync_type *buff_sync_internal;
 
+						mutex_buff   *mutex_sync_internal;
             //size_type thread_id;
 
             std::vector<thread_ptr> thread_ptr_vec;
@@ -106,7 +110,6 @@ namespace controller
 
             ibuffer_sync<BufferSync>& start_processes();
 											
-
             //insert file-shm mapped to create vector thread.
             std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync,MAPPED_FILE> > >&
             init_syncocl_workload(typename shm_memory::

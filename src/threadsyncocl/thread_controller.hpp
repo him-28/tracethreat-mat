@@ -119,7 +119,7 @@ namespace controller
 										mutex_buffer<Mutex> * mutex_buff) :
                 my_id(ID),
                 buffer_sync_(buffer_sync),
-							  mutex_buff(mutex_buff_) {
+							  mutex_buff_(mutex_buff) {
 								//Initial mutex after set buffer to buffer_sync_
                 //mutex_buff = new mutex_buffer<Mutex>();
                 //mutex_buff->init();

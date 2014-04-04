@@ -52,7 +52,10 @@ namespace controller
             std::map<const uint64_t , size_t> *map_file_size)
     {
 
-        buff_sync_internal = new BufferSync();
+				//buffer data for multithread.
+        buff_sync_internal  = new BufferSync();
+				//mutex for multithread.
+				mutex_sync_internal = new mutex_buffer<Mutex>();
 
         if(mapstr_shm.size() == 0)
             return thread_ptr_vec;
@@ -93,7 +96,7 @@ namespace controller
             thread_ptr_vec.push_back(
                     boost::shared_ptr<comm_thread_buffer<BufferSync, MAPPED_FILE> >(
                             new comm_thread_buffer<BufferSync,MAPPED_FILE>
-                            (file_name_md5, buff_sync_internal)) //[thread_id]
+                            (file_name_md5, buff_sync_internal, mutex_sync_internal)) //[thread_id]
             );
 					  
 						
