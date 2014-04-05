@@ -115,10 +115,9 @@ namespace controller
     {
 
         logger->write_info("Thread processes ", h_util::format_type::type_center);
+
         typedef BufferSync  buffer_sync;
         typedef comm_thread_buffer<buffer_sync,MAPPED_FILE>  comm_thread_buff;
-
-			
         //define Thread run / mutex at here
         typename std::vector<thread_ptr>::iterator iter_threads;
 

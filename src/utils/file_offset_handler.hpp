@@ -1,5 +1,5 @@
-#ifndef FILE_OFFSET_HANDLER__HPP
-#define FILE_OFFSET_HANDLER__HPP
+#ifndef UTILS_FILE_OFFSET_HANDLER__HPP
+#define UTILS_FILE_OFFSET_HANDLER__HPP
 
 /*
 * Copyright 2014 MTSec, Inc.
@@ -21,7 +21,7 @@
  *- File_offset_handler gets offset from file mapped.  R.Chatsiri    05/01/2014
  *- Create file_map support thread controller          R.Chatsiri    23/03/2014
  * - Changed variable received value from mapped_file_vec_shared to shared_ptr
- *   contain struct of data in vector name vector<MAPPED_FILE*> . 
+ *   contains struct of data in vector name vector<MAPPED_FILE*> . 
  *                                                     R.Chatsiri    05/03/2014
  */
 
@@ -121,14 +121,7 @@ namespace utils
             */
             bool unmapped_file(std::vector<MAPPED_FILE * > mapped_vec);
 
-
-            /**
-            * @brief Pass by value. Shared pointer contains vector mapped_file
-            *
-            * @return Shared_ptr contains vector of MAPPED_FILE * pointer.
-            */
-            //std::vector<MAPPED_FILE *> & get_mapped_file();
-
+ 
             /**
             * @brief Pass by value. Member function returns shared_ptr constain vector
             *
@@ -139,12 +132,8 @@ namespace utils
         private:
 
             ifile<common_filetype> *ifh;
-            //boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared;
-            mapped_vec_ptr mapped_vec_shared;
 
-            //std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >
-            //mapped_file_vec_shared;
-            //std::vector<MAPPED_FILE *>   *mapped_vec_;
+            mapped_vec_ptr mapped_vec_shared;
 
             MAPPED_FILE *mapped_file_ptr;
 

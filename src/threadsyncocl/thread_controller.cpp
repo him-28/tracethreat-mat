@@ -180,7 +180,8 @@ namespace controller
 				//[/]call opencl machanism run opencl 					
 				//[/]thread  check stust in vector result and slot_ocl have status completed.
 			  BufferSync * buff_sync = buffer_sync_;				
-				
+				logger->write_info("-- MD5, Thread_id",
+					boost::lexical_cast<std::string>(my_id)); 				
 
 				//Mutex bunffer unlocks mutex 
 				mutex_buff_->unlock_request();

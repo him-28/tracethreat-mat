@@ -1,3 +1,22 @@
+/*
+* Copyright 2014 MTSec, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles			                                          Authors	         Date
+ *
+ */
 
 #include <iostream>
 
@@ -46,8 +65,6 @@ namespace utils
         std::list<std::string>::iterator iter_files;
 
         mapped_vec_shared = boost::make_shared<std::vector<MAPPED_FILE * > >();
-        //mapped_vec_shared->swap(mapped_vec);
-        //mapped_file_vec_shared.push_back(mapped_vec_shared);
 
         const char *file_name;
         std::string s_file_name;
@@ -87,11 +104,7 @@ namespace utils
                     throw file_system_excep
                     ::offset_exception("[** File cannot open path **]");
                 }
-								/*
-                mapped_file_ptr =
-                        mapped_vec_shared->at(std::distance(file_name_list.begin(),
-                                iter_files));
-								*/
+								
 								mapped_file_ptr = mapped_vec.at(std::distance(file_name_list.begin(), iter_files));
                 try {
                     if(mapped_file_ptr == NULL) {
@@ -102,8 +115,6 @@ namespace utils
                     struct stat *file_status =  file_offset_object.get_file_status();
 
                     mapped_file_ptr->size =	file_status->st_size;
-										//std::cout<<" Address map : "<< *mapped_file_ptr->size <<std::endl;
-										std::cout<<" Address map & "<< &mapped_file_ptr->size <<std::endl;
 
                     mapped_file_ptr->file = file_offset_object.get_popen_file();
 
@@ -157,17 +168,8 @@ namespace utils
             }
         }
 
-        return true; //mapped_vec_shared;
+        return true;
     }
-
-		/*
-    template<typename FileType, typename MAPPED_FILE>
-    std::vector<MAPPED_FILE *>  & file_offset_handler<FileType, MAPPED_FILE>
-    ::get_mapped_file()
-    {
-        return *mapped_vec_shared.get();//.get();
-    }
-		*/
 
     template<typename FileType, typename MAPPED_FILE>
     typename file_offset_handler<FileType, MAPPED_FILE>::mapped_vec_ptr 
@@ -189,18 +191,20 @@ namespace utils
                 iter_mapped_files != mapped_vec.end();
                 ++iter_mapped_files) {
             MAPPED_FILE *mapped_file_ptr = *iter_mapped_files;
+						/*TODO: Cannot print why ?
+						logger->write_info(" Ummaped file completed.", 
+								boost::lexical_cast<std::string>(mapped_file_ptr->file_name));
+						*/
             munmap(mapped_file_ptr->data, mapped_file_ptr->size);
             close(mapped_file_ptr->file);
 
-						logger->write_info(" Ummaped file completed.", mapped_file_ptr->file_name);
-        }
+		        }
 			return true;
     }
 
 
     template class file_offset_handler<struct common_filetype,
              struct MAPPED_FILE_PE>;
-    //    template class file_offset_handler<struct common_openfile_type, struct MAPPED_FILE_PE>;
 
 }
 
