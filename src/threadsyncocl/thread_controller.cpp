@@ -174,11 +174,16 @@ namespace controller
         
 				//[x]thread write status in vector of struct name slot_ocl. Intial in thread_sync
 				//[x]insert data from map_str_shm to vector of char. Intial in thread_sync 
-			
+
+			  //Mutex buffer locks mutex,
+				mutex_buff_->lock_request();
 				//[/]call opencl machanism run opencl 					
 				//[/]thread  check stust in vector result and slot_ocl have status completed.
 			  BufferSync * buff_sync = buffer_sync_;				
+				
 
+				//Mutex bunffer unlocks mutex 
+				mutex_buff_->unlock_request();
 
         //mutex_buff->unlock_request();
         logger->write_info("-- End of critical section --");

@@ -46,14 +46,14 @@ namespace utils
         std::list<std::string>::iterator iter_files;
 
         mapped_vec_shared = boost::make_shared<std::vector<MAPPED_FILE * > >();
-        mapped_vec_shared->swap(mapped_vec);
+        //mapped_vec_shared->swap(mapped_vec);
         //mapped_file_vec_shared.push_back(mapped_vec_shared);
 
         const char *file_name;
         std::string s_file_name;
         MAPPED_FILE *mapped_file_ptr;
 
-        if(!file_name_list.size() || !mapped_vec_shared->size() ) {
+        if(!file_name_list.size() || !mapped_vec.size() /*!mapped_vec_shared->size()*/ ) {
             logger->write_info("Not data on file_name or mapped file");
             return false;
         }
@@ -87,11 +87,12 @@ namespace utils
                     throw file_system_excep
                     ::offset_exception("[** File cannot open path **]");
                 }
-
+								/*
                 mapped_file_ptr =
                         mapped_vec_shared->at(std::distance(file_name_list.begin(),
                                 iter_files));
-
+								*/
+								mapped_file_ptr = mapped_vec.at(std::distance(file_name_list.begin(), iter_files));
                 try {
                     if(mapped_file_ptr == NULL) {
                         throw file_system_excep
@@ -101,6 +102,8 @@ namespace utils
                     struct stat *file_status =  file_offset_object.get_file_status();
 
                     mapped_file_ptr->size =	file_status->st_size;
+										//std::cout<<" Address map : "<< *mapped_file_ptr->size <<std::endl;
+										std::cout<<" Address map & "<< &mapped_file_ptr->size <<std::endl;
 
                     mapped_file_ptr->file = file_offset_object.get_popen_file();
 
@@ -121,11 +124,11 @@ namespace utils
                     mapped_file_ptr->data = (uint8_t *)mmap(0,
                             mapped_file_ptr->size,
                             PROT_READ,
-                            MAP_PRIVATE,
+                            MAP_SHARED,// MAP_PRIVED, it's not changed/shared.
                             mapped_file_ptr->file,
                             0);
 
-                    logger->write_info_test("Mapped file with mmap success");
+                    logger->write_info("Mapped file with mmap success");
 
                     //TO-DO : Cannot set s_file_name.c_str() to mapped_file_ptr->file_name;
                     //mapped_file_ptr->file_name = s_file_name;
@@ -136,6 +139,8 @@ namespace utils
 
                     logger->write_info("Mapped file data ",
                             boost::lexical_cast<std::string>(mapped_file_ptr->data));
+
+										mapped_vec_shared->push_back(mapped_file_ptr);
 
                     if(mapped_file_ptr->data == MAP_FAILED) {
                         throw file_system_excep
@@ -155,12 +160,24 @@ namespace utils
         return true; //mapped_vec_shared;
     }
 
+		/*
     template<typename FileType, typename MAPPED_FILE>
-    std::vector<MAPPED_FILE *>  * file_offset_handler<FileType, MAPPED_FILE>
+    std::vector<MAPPED_FILE *>  & file_offset_handler<FileType, MAPPED_FILE>
     ::get_mapped_file()
     {
-        return mapped_vec_shared.get();//.get();
+        return *mapped_vec_shared.get();//.get();
     }
+		*/
+
+    template<typename FileType, typename MAPPED_FILE>
+    typename file_offset_handler<FileType, MAPPED_FILE>::mapped_vec_ptr 
+			file_offset_handler<FileType, MAPPED_FILE>
+    ::get_mappedf_vec_ptr()
+    {
+        return mapped_vec_shared;
+    }
+
+
 
     template<typename FileType, typename MAPPED_FILE>
     bool  file_offset_handler<FileType, MAPPED_FILE>
@@ -174,8 +191,10 @@ namespace utils
             MAPPED_FILE *mapped_file_ptr = *iter_mapped_files;
             munmap(mapped_file_ptr->data, mapped_file_ptr->size);
             close(mapped_file_ptr->file);
-        }
 
+						logger->write_info(" Ummaped file completed.", mapped_file_ptr->file_name);
+        }
+			return true;
     }
 
 

@@ -12,6 +12,7 @@ TEST(thread_controller, thread_init)
     buffsync *buff_sync_d = new BufferSync<struct data_ocl_process<MAPPED_FILE_PE>, MAPPED_FILE_PE>();
 
     mutex_buffer<Mutex> * mutex_internal = new mutex_buffer<Mutex>;
+		mutex_internal->init();
 
     boost::shared_ptr<comm_thread_buffer<buffsync, MAPPED_FILE_PE> >  
 			thread1(new comm_thread_buffer<buffsync, MAPPED_FILE_PE>(1, buff_sync_d,  mutex_internal ));

@@ -20,6 +20,9 @@
 /*  Titles			                                          Authors	         Date
  *- File_offset_handler gets offset from file mapped.  R.Chatsiri    05/01/2014
  *- Create file_map support thread controller          R.Chatsiri    23/03/2014
+ * - Changed variable received value from mapped_file_vec_shared to shared_ptr
+ *   contain struct of data in vector name vector<MAPPED_FILE*> . 
+ *                                                     R.Chatsiri    05/03/2014
  */
 
 //#define FILE_DESCRIPTOR  int
@@ -76,6 +79,8 @@ namespace utils
     class file_offset_handler : public file_handler<FileType>, public pack_file_offset<FileType>
     {
         public:
+            typedef std::vector<MAPPED_FILE *> map_file_vec;
+            typedef boost::shared_ptr<map_file_vec> mapped_vec_ptr;
 
             file_offset_handler();
             /**
@@ -102,14 +107,14 @@ namespace utils
             *
             * @return True, success init file mapped.
             */
-             bool  mapped_file(std::list<std::string> file_name,
+            bool  mapped_file(std::list<std::string> file_name,
                     std::vector<MAPPED_FILE *> mapped_vec,
                     file_offset_handler<FileType, MAPPED_FILE>& file_offset_object);
 
             /**
             * @brief Ummap single file from memory.
             *
-            * @param mapped_vec  Struct MAPPED_FILE types include details 
+            * @param mapped_vec  Struct MAPPED_FILE types include details
             * for file mapped on memory area.
             *
             * @return True, Success for file unmapped on memory.
@@ -122,16 +127,27 @@ namespace utils
             *
             * @return Shared_ptr contains vector of MAPPED_FILE * pointer.
             */
-            std::vector<MAPPED_FILE *> * get_mapped_file();
+            //std::vector<MAPPED_FILE *> & get_mapped_file();
+
+            /**
+            * @brief Pass by value. Member function returns shared_ptr constain vector
+            *
+            * @return boost::shared_ptr<std::vector<MAPPED_FILE * > > It's contain data mapped file.
+            */
+            mapped_vec_ptr get_mappedf_vec_ptr();
 
         private:
 
             ifile<common_filetype> *ifh;
-						boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared;
-            //std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >  
+            //boost::shared_ptr<std::vector<MAPPED_FILE *> > mapped_vec_shared;
+            mapped_vec_ptr mapped_vec_shared;
+
+            //std::vector<boost::shared_ptr<std::vector<MAPPED_FILE *> > >
             //mapped_file_vec_shared;
             //std::vector<MAPPED_FILE *>   *mapped_vec_;
+
             MAPPED_FILE *mapped_file_ptr;
+
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

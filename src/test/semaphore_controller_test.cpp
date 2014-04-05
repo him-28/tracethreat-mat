@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+
 #include "threadsyncocl/semaphore_controller.hpp"
 #include "test/thread_controller_test.hpp"
 #include "test/thread_exception_test.hpp"
@@ -27,12 +28,12 @@
 
 
 // Offset, Uncomment with test without
-//  test/thread_sync_test.hpp  and test/file_shm_handler_test.hpp 
+//  test/thread_sync_test.hpp  and test/file_shm_handler_test.hpp
 // #include "test/file_offset_handler_test.hpp"
 
 // #include "test/scan_pe_file_actire_parallel_test.hpp"
 
-//#include "test/pe_file_controller_test.hpp"  // PE 
+//#include "test/pe_file_controller_test.hpp"  // PE
 
 //#include "test/file_policy_test.hpp"         // PE fist file policy class
 
@@ -41,30 +42,31 @@
 
 //#include "test/wrapper_rules_tests.hpp"
 
+#include "utils/config/options_system.hpp"
+#include "utils/logger/clutil_logger.hpp"
 
-
-// semaphore test suite 
+// semaphore test suite
 using namespace controller;
 
 TEST(semaphore_mutex_controller, mutex_controller)
 {
 
-	mutex_buffer<Mutex>  mutex_buff;
-	// init 
-	EXPECT_EQ(mutex_buff.init(), true);
-	//
-	EXPECT_EQ(mutex_buff.lock_request(), true);
+    mutex_buffer<Mutex>  mutex_buff;
+    // init
+    EXPECT_EQ(mutex_buff.init(), true);
+    //
+    EXPECT_EQ(mutex_buff.lock_request(), true);
 
-	EXPECT_EQ(mutex_buff.unlock_request(), true);
+    EXPECT_EQ(mutex_buff.unlock_request(), true);
 
-	EXPECT_EQ(mutex_buff.destruction(), true);
+    EXPECT_EQ(mutex_buff.destruction(), true);
 
 }
 
 
-GTEST_API_ int main(int argc, char ** argv)
+GTEST_API_ int main(int argc, char **argv)
 {
- testing::InitGoogleTest(&argc, argv);
- testing::AddGlobalTestEnvironment( new ThreadSyncEnvironment(argc, argv));
- return RUN_ALL_TESTS();
+    testing::InitGoogleTest(&argc, argv);
+    testing::AddGlobalTestEnvironment( new ThreadSyncEnvironment(argc, argv));
+    return RUN_ALL_TESTS();
 }

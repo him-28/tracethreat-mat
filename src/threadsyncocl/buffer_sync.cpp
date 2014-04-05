@@ -162,21 +162,13 @@ namespace controller
         s_ocl = new struct slot_ocl;
         s_ocl->processes_id_register = thread_id;
 
-
-        //std::map<uint64_t,struct slot_ocl *>::iterator iter_tidslot_ocl = map_thread_id->find(thread_id);
-				/*
-        std::map<uint64_t,struct slot_ocl *>::iterator iter_tidslot_ocl = map_thread_id->insert(thread_id);
-
-        if(iter_tidslot_ocl == map_thread_id->end()) {
-            return true;
-        }
-				*/
 				if(!map_thread_id->insert(std::make_pair(thread_id, s_ocl)).second)
 				{
 					//TODO: thread_id(file_name_md5) has on map
+					return false;
 				}
 
-        return false;
+        return true;
     }
 
     template class BufferSync<struct data_ocl_process<MAPPED_FILE_PE>, MAPPED_FILE_PE>;

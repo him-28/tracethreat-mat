@@ -56,6 +56,8 @@ namespace controller
         buff_sync_internal  = new BufferSync();
 				//mutex for multithread.
 				mutex_sync_internal = new mutex_buffer<Mutex>();
+				//initial  mutex before send to comm_thread_buffer
+				mutex_sync_internal->init();
 
         if(mapstr_shm.size() == 0)
             return thread_ptr_vec;
@@ -82,13 +84,13 @@ namespace controller
 						
             size_t size_hex = pair_file_size.second;
 
-						std::cout<<"MD5 : " << file_name_md5 <<", size char hex : " << size_hex <<std::endl;
+						//std::cout<<"MD5 : " << file_name_md5 <<", size char hex : " << size_hex <<std::endl;
 
 				    binarystr_shm = &pair_int_str.second;
 						//const char *  data_char_hex = binarystr_shm->c_str(); : get const string from file-shm
             //insert binary hex data to vector
-           	std::cout<<"thread_sync<BufferSync, MAPPED_FILE>::init_syncocl_workload,size : "<<
-							binarystr_shm->size() <<std::endl;  
+           	//std::cout<<"thread_sync<BufferSync, MAPPED_FILE>::init_syncocl_workload,size : "<<
+						//	binarystr_shm->size() <<std::endl;  
             if(buff_sync_internal->write_binary_hex(binarystr_shm->c_str(), size_hex, file_name_md5)) {
                 //TODO: problem before return
             }
@@ -116,8 +118,7 @@ namespace controller
         typedef BufferSync  buffer_sync;
         typedef comm_thread_buffer<buffer_sync,MAPPED_FILE>  comm_thread_buff;
 
-
-        /*
+			
         //define Thread run / mutex at here
         typename std::vector<thread_ptr>::iterator iter_threads;
 
@@ -129,7 +130,7 @@ namespace controller
         ct_buff->start();
         ct_buff->run();
         }
-        */
+       
 
         logger->write_info("End of Thread processes ", h_util::format_type::type_center);
     }
