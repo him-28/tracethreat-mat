@@ -124,10 +124,16 @@ namespace controller
         //Temp_start for next element (start_point + 1)
         //end_point = binary size;
         //support dynamic allocator.
+				if(setbuff_ocl(char_hex, size_hex)){
+					//TODO: If no data insert to binary_hex
+				}
+
+        /*
         buff->data_ocl_process<MAPPED_FILE>::
         binary_hex.insert(buff->data_ocl_process<MAPPED_FILE>::binary_hex.end(),
                 char_hex,
                 char_hex + size_hex); // insert  char hex to vector elements.
+        		*/
 
         // find thread_id and insert lenght, start_point and end_point
         iter_maptid = map_thread_id->find(thread_id);
@@ -137,12 +143,15 @@ namespace controller
             std::pair<uint64_t, struct slot_ocl *> pair_s_ocl = *iter_maptid;
             s_ocl  = pair_s_ocl.second;
 
-            if(temp_start ==  0)
+            //if(temp_start ==  0)
                 s_ocl->start_point = temp_start;
-            else
-                s_ocl->start_point = temp_start + 1; // end point of previous + 1.
+            //else
+            //    s_ocl->start_point = temp_start + 1; // end point of previous + 1.
 
             s_ocl->end_point   = s_ocl->start_point + size_hex;
+
+						//std::cout<<"Data : "<<buff->data_ocl_process<MAPPED_FILE>
+						//	::binary_hex[s_ocl->start_point] <<std::endl;
             return true;
         }
 
@@ -175,6 +184,27 @@ namespace controller
 
         return true;
     }
+
+    template<typename Buffer, typename MAPPED_FILE>
+    bool BufferSync<Buffer, MAPPED_FILE>::setbuff_ocl(const char *char_hex,
+            uint64_t size_hex)
+    {
+
+				if(size_hex == 0)
+					return false;
+
+        buff->data_ocl_process<MAPPED_FILE>::
+        binary_hex.insert(buff->data_ocl_process<MAPPED_FILE>::binary_hex.end(),
+                char_hex,
+                char_hex + size_hex); // insert  char hex to vector elements.
+        //uint64_t size_max = buff->data_ocl_process<MAPPED_FILE>::binary_hex.size();
+
+				//logger->write_info("Max binary sizes are",
+				//	boost::lexical_cast<std::string>(size_max));
+        return true;
+   }
+
+
 
     template class BufferSync<struct data_ocl_process<MAPPED_FILE_PE>, MAPPED_FILE_PE>;
 

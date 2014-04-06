@@ -37,7 +37,7 @@ namespace controller
 
     template<typename MAPPED_FILE>
     struct data_ocl_process {
-        typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm * mapstr_shm;
+        typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *mapstr_shm;
         typedef std::map<uint64_t,struct slot_ocl *>   map_thread_id_type;
 
         //mapstr_shm_type *mapstr_shm;   // shared_memory system.
@@ -65,7 +65,7 @@ namespace controller
             bool set_buffer(uint8_t buffer_size);
 
             //volatile Buffer *buff;
-						Buffer * buff;
+            Buffer *buff;
 
             BufferSync<Buffer, MAPPED_FILE>& operator[](uint8_t value)const;
             BufferSync<Buffer, MAPPED_FILE>& operator=(BufferSync<Buffer, MAPPED_FILE> *buffr);
@@ -79,6 +79,17 @@ namespace controller
             std::vector<int> threadbuff_result()const;
 
             bool write_binary_hex(const char *char_hex, uint64_t size_hex, uint64_t thread_id);
+
+            /**
+            * @brief Insert hex char to vector. Default char_hex is byte per file.
+            *
+            * @param char_hex  Hex representive of char type. It's binary of file.
+            * @param binary_hex  Vector contains char hex send to OCL.
+            * @param s_ocl Slot_ocl contains detail status and length of file.
+            *
+            * @return True, If not problem after inserts data to vector<char>.
+            */
+            bool setbuff_ocl(const char *char_hex, uint64_t size_hex);
 
         private:
             typename Buffer::size_int size_buff;
