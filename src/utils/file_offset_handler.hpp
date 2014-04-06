@@ -107,7 +107,7 @@ namespace utils
             *
             * @return True, success init file mapped.
             */
-            bool  mapped_file(std::list<std::string> file_name,
+            bool  mapped_file(std::vector<const char*> file_name,
                     std::vector<MAPPED_FILE *> mapped_vec,
                     file_offset_handler<FileType, MAPPED_FILE>& file_offset_object);
 

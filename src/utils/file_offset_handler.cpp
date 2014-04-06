@@ -58,11 +58,11 @@ namespace utils
 
     template<typename FileType, typename MAPPED_FILE>
     bool file_offset_handler<FileType, MAPPED_FILE>
-    ::mapped_file(std::list<std::string> file_name_list,
+    ::mapped_file(std::vector<const char*> file_name_vec,
             std::vector<MAPPED_FILE *> mapped_vec,
             file_offset_handler<FileType, MAPPED_FILE>& file_offset_object)
     {
-        std::list<std::string>::iterator iter_files;
+        std::vector<const char*>::iterator iter_files;
 
         mapped_vec_shared = boost::make_shared<std::vector<MAPPED_FILE * > >();
 
@@ -70,13 +70,13 @@ namespace utils
         std::string s_file_name;
         MAPPED_FILE *mapped_file_ptr;
 
-        if(!file_name_list.size() || !mapped_vec.size() /*!mapped_vec_shared->size()*/ ) {
+        if(!file_name_vec.size() || !mapped_vec.size() /*!mapped_vec_shared->size()*/ ) {
             logger->write_info("Not data on file_name or mapped file");
             return false;
         }
 
-        for(iter_files = file_name_list.begin();
-                iter_files != file_name_list.end();
+        for(iter_files = file_name_vec.begin();
+                iter_files != file_name_vec.end();
                 ++iter_files) {
 
             try {
@@ -105,7 +105,7 @@ namespace utils
                     ::offset_exception("[** File cannot open path **]");
                 }
 								
-								mapped_file_ptr = mapped_vec.at(std::distance(file_name_list.begin(), iter_files));
+								mapped_file_ptr = mapped_vec.at(std::distance(file_name_vec.begin(), iter_files));
                 try {
                     if(mapped_file_ptr == NULL) {
                         throw file_system_excep
@@ -139,7 +139,7 @@ namespace utils
                             mapped_file_ptr->file,
                             0);
 
-                    logger->write_info("Mapped file with mmap success");
+                    //logger->write_info("Mapped file with mmap success");
 
                     //TO-DO : Cannot set s_file_name.c_str() to mapped_file_ptr->file_name;
                     //mapped_file_ptr->file_name = s_file_name;
@@ -148,8 +148,8 @@ namespace utils
                     //strcpy(mapped_file_ptr->file_name, s_file_name.c_str());
                     //logger->write_info("Mapped file name completed ", s_file_name);
 
-                    logger->write_info("Mapped file data ",
-                            boost::lexical_cast<std::string>(mapped_file_ptr->data));
+                    //logger->write_info("Mapped file data ",
+                    //        boost::lexical_cast<std::string>(mapped_file_ptr->data));
 
 										mapped_vec_shared->push_back(mapped_file_ptr);
 
@@ -167,7 +167,7 @@ namespace utils
                 }
             }
         }
-
+			  file_name_vec.clear(); // clear file name on list
         return true;
     }
 

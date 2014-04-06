@@ -168,20 +168,33 @@ namespace controller
     void *comm_thread_buffer<BufferSync, MAPPED_FILE>::run()
     {
         logger->write_info("-- To critical section --");
-        //mutex_buff->lock_request();
 
-        //buffer_sync_->set_buffer(5, "file_name");
-        
 				//[x]thread write status in vector of struct name slot_ocl. Intial in thread_sync
 				//[x]insert data from map_str_shm to vector of char. Intial in thread_sync 
+				//[/]call opencl machanism run opencl 					
+				//[/]thread  check stust in vector result and slot_ocl have status completed.
 
 			  //Mutex buffer locks mutex,
 				mutex_buff_->lock_request();
-				//[/]call opencl machanism run opencl 					
-				//[/]thread  check stust in vector result and slot_ocl have status completed.
-			  BufferSync * buff_sync = buffer_sync_;				
+
 				logger->write_info("-- MD5, Thread_id",
 					boost::lexical_cast<std::string>(my_id)); 				
+
+			  BufferSync * buff_sync = buffer_sync_;
+			  struct data_ocl_process<MAPPED_FILE> * dbocl_processes = buff_sync->buff;
+				struct data_ocl_process<MAPPED_FILE>::map_thread_id_type  map_tid = 
+						dbocl_processes->map_tidslot_ocl;
+
+				std::map<uint64_t, struct slot_ocl*>::iterator iter_tid =  map_tid.find(my_id);
+				if(iter_tid != map_tid.end())
+				{
+					 std::pair<uint64_t, struct slot_ocl*>  pair_tid = *iter_tid;
+					 struct slot_ocl * s_ocl = pair_tid.second;
+					 s_ocl->start_point;
+					 s_ocl->end_point;
+					 logger->write_info("Scan start point ", boost::lexical_cast<std::string>(s_ocl->start_point));
+					 logger->write_info("Scan  end  point ", boost::lexical_cast<std::string>(s_ocl->end_point));
+				}
 
 				//Mutex bunffer unlocks mutex 
 				mutex_buff_->unlock_request();

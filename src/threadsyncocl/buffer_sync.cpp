@@ -116,6 +116,7 @@ namespace controller
 
             if(temp_start < s_ocl->end_point) {
                 temp_start = s_ocl->end_point;
+                std::cout<<" Temp_start is : "<< temp_start <<std::endl;
             }
 
         }
@@ -132,10 +133,15 @@ namespace controller
         iter_maptid = map_thread_id->find(thread_id);
 
         // insert lenght of binary hex char to s_ocl that it's contains in value of map.
-        if(iter_maptid == map_thread_id->end()) {
+        if(iter_maptid != map_thread_id->end()) {
             std::pair<uint64_t, struct slot_ocl *> pair_s_ocl = *iter_maptid;
             s_ocl  = pair_s_ocl.second;
-            s_ocl->start_point = temp_start + 1; // end point of previous + 1.
+
+            if(temp_start ==  0)
+                s_ocl->start_point = temp_start;
+            else
+                s_ocl->start_point = temp_start + 1; // end point of previous + 1.
+
             s_ocl->end_point   = s_ocl->start_point + size_hex;
             return true;
         }
@@ -162,11 +168,10 @@ namespace controller
         s_ocl = new struct slot_ocl;
         s_ocl->processes_id_register = thread_id;
 
-				if(!map_thread_id->insert(std::make_pair(thread_id, s_ocl)).second)
-				{
-					//TODO: thread_id(file_name_md5) has on map
-					return false;
-				}
+        if(!map_thread_id->insert(std::make_pair(thread_id, s_ocl)).second) {
+            //TODO: thread_id(file_name_md5) has on map
+            return false;
+        }
 
         return true;
     }
