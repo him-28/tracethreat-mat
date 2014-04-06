@@ -27,7 +27,7 @@ namespace controller
         // logger
         logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
         logger = logger_ptr->get();
-        logger->write_info("BufferSync, init size of size_buff");
+        //logger->write_info("BufferSync, init size of size_buff");
     }
 
 
