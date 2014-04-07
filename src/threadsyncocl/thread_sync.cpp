@@ -87,6 +87,7 @@ namespace controller
 						//std::cout<<"MD5 : " << file_name_md5 <<", size char hex : " << size_hex <<std::endl;
 
 				    binarystr_shm = &pair_int_str.second;
+
 						//const char *  data_char_hex = binarystr_shm->c_str(); : get const string from file-shm
             //insert binary hex data to vector
            	//std::cout<<"thread_sync<BufferSync, MAPPED_FILE>::init_syncocl_workload,size : "<<
@@ -95,6 +96,7 @@ namespace controller
                 //TODO: problem before return
             }
 
+						//TODO: Implement thread_id (Not file_name_md5 ) 
             thread_ptr_vec.push_back(
                     boost::shared_ptr<comm_thread_buffer<BufferSync, MAPPED_FILE> >(
                             new comm_thread_buffer<BufferSync,MAPPED_FILE>
@@ -103,9 +105,18 @@ namespace controller
 					  
 						
 
-        }
+        }//end for loop
+
+				// controll multithread scanning.
+				thread_ocl_ptr_vec.push_back(
+												boost::shared_ptr<slot_ocl_thread<BufferSync, MAPPED_FILE> >(
+														new slot_ocl_thread<BufferSync, MAPPED_FILE>
+														(buff_sync_internal, mutex_sync_internal))
+			  );
 
         thread_pv_ptr = &thread_ptr_vec;
+				thread_ocl_pv_ptr = &thread_ocl_ptr_vec;
+
         return thread_ptr_vec;
     }
 
@@ -127,9 +138,19 @@ namespace controller
         // get thread prompt.
         boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
         ct_buff->start();
-        ct_buff->run();
+				//ct_buff->join();
+        //ct_buff->run();
         }
        
+   for(iter_threads = thread_pv_ptr->begin();
+        iter_threads != thread_pv_ptr->end();
+        ++iter_threads) {
+        // get thread prompt.
+        boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
+       // ct_buff->start();
+				ct_buff->join();
+        ct_buff->run();
+        }
 
         logger->write_info("End of Thread processes ", h_util::format_type::type_center);
     }

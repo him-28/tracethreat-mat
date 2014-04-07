@@ -19,6 +19,7 @@
 
 /*  Titles																													 Authors						Date
  * - Integrated thread to multifile scanning system.              R.Chatsiri          25/03/2014
+ * - Add slot_ocl_thread for manage ocl and multithread scanning  R.Chatsiri          07/04/2014
  */
 
 //standard lib
@@ -72,6 +73,7 @@ namespace controller
     {
 
         public:
+           
             //thread(boost::shared_ptr<runnable> run, bool detached = false);
             thread(bool detached = false);
             //thread();
@@ -80,6 +82,7 @@ namespace controller
             void *join();
 
         private:
+            typedef pthread_t id_t;
 
             bool detached_;
 
@@ -96,11 +99,15 @@ namespace controller
             static void *start_thread_runnable(void *p_void);
             static void *start_thread(void   *p_void);
 
+
+						inline bool is_current(id_t t);
+
+						id_t get_thread_id();
+						
             //BufferSync buffer_sync;
             void *result;
-            pthread_t thread_buffer_id;
             pthread_attr_t thread_buffer_attr;
-
+						id_t  thread_buffer_id;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
@@ -116,11 +123,11 @@ namespace controller
         public:
             comm_thread_buffer(uint64_t ID,
                     BufferSync *const  buffer_sync,
-										mutex_buffer<Mutex> * mutex_buff) :
+                    mutex_buffer<Mutex> *mutex_buff) :
                 my_id(ID),
                 buffer_sync_(buffer_sync),
-							  mutex_buff_(mutex_buff) {
-								//Initial mutex after set buffer to buffer_sync_
+                mutex_buff_(mutex_buff) {
+                //Initial mutex after set buffer to buffer_sync_
                 //mutex_buff = new mutex_buffer<Mutex>();
                 //mutex_buff->init();
             }
@@ -131,10 +138,10 @@ namespace controller
             BufferSync *buffer_sync_;
             mutex_buffer<Mutex> *mutex_buff_;
 
-						//id processes_id_register for thread
-						struct slot_ocl * s_ocl;
-						struct data_ocl_process<MAPPED_FILE> * d_ocl_processes;
-						
+            //id processes_id_register for thread
+            struct slot_ocl *s_ocl;
+            struct data_ocl_process<MAPPED_FILE> *d_ocl_processes;
+
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
@@ -142,6 +149,32 @@ namespace controller
     };
 
 
+    template<typename BufferSync, typename MAPPED_FILE>
+    class slot_ocl_thread : public thread<BufferSync>
+    {
+        public:
+            slot_ocl_thread(BufferSync *const  buffer_sync,
+                    mutex_buffer<Mutex> *mutex_buff) :
+                buffer_sync_(buffer_sync),
+                mutex_buff_(mutex_buff) {
+
+            }
+            void *run();
+        private:
+            //typename buffer_kernel::size_int  my_id;
+            uint64_t  my_id;
+            BufferSync *buffer_sync_;
+            mutex_buffer<Mutex> *mutex_buff_;
+
+            //id processes_id_register for thread
+            struct slot_ocl *s_ocl;
+            struct data_ocl_process<MAPPED_FILE> *d_ocl_processes;
+
+            //logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
+
+    };
 
 
 }

@@ -76,6 +76,8 @@ namespace controller
 
             //typedef buffer_kernel::size_int size_type;
             typedef boost::shared_ptr<comm_thread_buffer<buffer_sync_type, MAPPED_FILE> > thread_ptr;
+						typedef boost::shared_ptr<slot_ocl_thread<buffer_sync_type, MAPPED_FILE> > thread_ocl_ptr;
+
             //     std::string  *file_path;
             thread_ptr   *thread_array_ptr;
 
@@ -87,6 +89,11 @@ namespace controller
             std::vector<thread_ptr> thread_ptr_vec;
             // pointer handler vector of shared_ptr of threads.
             std::vector<thread_ptr> *thread_pv_ptr;
+
+						//Slot ocl thread
+						std::vector<thread_ocl_ptr> thread_ocl_ptr_vec;
+						std::vector<thread_ocl_ptr> *thread_ocl_pv_ptr;
+
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

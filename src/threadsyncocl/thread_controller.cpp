@@ -63,7 +63,7 @@ namespace controller
         //logger
         logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
         logger = logger_ptr->get();
-        logger->write_info("Thread, Thread init/ not start ", h_util::format_type::type_header);
+        //logger->write_info("Thread, Thread init/ not start ", h_util::format_type::type_header);
     }
 		
 
@@ -101,6 +101,7 @@ namespace controller
     void thread<BufferSync>::start()
     {
         logger->write_info("Thread, start() ");
+					
         int status = pthread_attr_init(&thread_buffer_attr);
 
         if(status) {
@@ -120,7 +121,8 @@ namespace controller
                         thread<BufferSync>::start_thread,
                         (void *)this);
 
-                logger->write_info("Thread not detacted_, ID : "); // add argument
+                logger->write_info("Thread not detacted_, ID",
+											boost::lexical_cast<std::string>(get_thread_id())); // add argument
 
                 if(status) {
                     logger->write_info(" Cannot create start_thread ");
@@ -163,10 +165,26 @@ namespace controller
     }
 
 
+		template<typename BufferSync>
+		typename thread<BufferSync>::id_t thread<BufferSync>::get_thread_id()
+		{
+			return pthread_self();
+		}
+
+		template<typename BufferSync>
+		inline bool thread<BufferSync>::is_current(thread<BufferSync>::id_t t)
+		{
+				return pthread_equal(pthread_self(), t);
+
+		}
+
     //-- Communication thread buffer
     template<typename BufferSync, typename MAPPED_FILE>
     void *comm_thread_buffer<BufferSync, MAPPED_FILE>::run()
     {
+			int data = 40;
+			while(data){
+				data--;
         logger->write_info("-- To critical section --");
 
 				//[x]thread write status in vector of struct name slot_ocl. Intial in thread_sync
@@ -174,6 +192,7 @@ namespace controller
 				//[/]call opencl machanism run opencl 					
 				//[/]thread  check stust in vector result and slot_ocl have status completed.
 
+			
 			  //Mutex buffer locks mutex,
 				mutex_buff_->lock_request();
 
@@ -195,13 +214,23 @@ namespace controller
 					 logger->write_info("Scan start point ", boost::lexical_cast<std::string>(s_ocl->start_point));
 					 logger->write_info("Scan  end  point ", boost::lexical_cast<std::string>(s_ocl->end_point));
 				}
-
+				//sleep(100);
 				//Mutex bunffer unlocks mutex 
 				mutex_buff_->unlock_request();
 
         //mutex_buff->unlock_request();
         logger->write_info("-- End of critical section --");
+			}
     }
+
+    template<typename BufferSync, typename MAPPED_FILE>
+    void * slot_ocl_thread<BufferSync, MAPPED_FILE>::run(){
+				//[] start OCL and call function sends data to buffer of OCL.
+				
+				//[] check thread completed. check from size of thread. and map contain slot_ocl structure.
+				
+
+		}
 
     // Explicitly instance
     
@@ -210,7 +239,8 @@ namespace controller
     template class thread<buff_sync>;
     template class thread<int>;
     template class comm_thread_buffer<buff_sync, MAPPED_FILE_PE >;
-		
+		template class slot_ocl_thread<buff_sync, MAPPED_FILE_PE >;
+
 }
 
 

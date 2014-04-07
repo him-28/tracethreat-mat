@@ -197,10 +197,14 @@ namespace controller
         binary_hex.insert(buff->data_ocl_process<MAPPED_FILE>::binary_hex.end(),
                 char_hex,
                 char_hex + size_hex); // insert  char hex to vector elements.
-        //uint64_t size_max = buff->data_ocl_process<MAPPED_FILE>::binary_hex.size();
-
-				//logger->write_info("Max binary sizes are",
+        uint64_t size_max = buff->data_ocl_process<MAPPED_FILE>::binary_hex.size();
+				
+				//Resize supported result from OCL write back.		
+				buff->data_ocl_process<MAPPED_FILE>::index_binary_result.resize(size_max);
+				
+      	//logger->write_info("Max binary sizes are",
 				//	boost::lexical_cast<std::string>(size_max));
+
         return true;
    }
 

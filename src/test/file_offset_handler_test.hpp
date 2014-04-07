@@ -24,7 +24,7 @@ class FileOffsetHandlerTest : public ::testing::Test
             }
 
         }
-        std::list<std::string> list_file_type;
+        std::vector<const char*> list_file_type;
         struct MAPPED_FILE_PE *s_mapped_fpe[FILE_SIZE];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
 
@@ -42,7 +42,14 @@ TEST_F(FileOffsetHandlerTest, mapped_file_test)
 
 		EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
 
-		std::vector<MAPPED_FILE_PE*> * mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
+		//std::vector<MAPPED_FILE_PE*> * mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
+
+    boost::shared_ptr<std::vector<MAPPED_FILE_PE * > > mappedf_vec_ptr =
+            fileoffset_h.get_mappedf_vec_ptr();
+
+    std::vector<MAPPED_FILE_PE *> *mapped_file_vec_ptr = mappedf_vec_ptr.get();
+
+
 		typename std::vector<MAPPED_FILE_PE*>::iterator iter_mapped_file;
 		for(iter_mapped_file = mapped_file_vec_ptr->begin(); 
 				iter_mapped_file != mapped_file_vec_ptr->end(); 
