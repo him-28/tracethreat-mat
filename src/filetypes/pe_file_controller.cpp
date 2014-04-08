@@ -230,7 +230,7 @@ namespace filetypes
 
 
     template<typename MAPPED_FILE>
-    util::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
+    utils::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
             std::vector<size_t>   *state_vec,
             std::vector<uint8_t> *file_buffer_vec)
     {
@@ -257,7 +257,7 @@ namespace filetypes
         this->load_system.cl_process_commandqueue();
 
 
-        return utils::found;
+        return utils::infected_found;
     }
 
     template<typename MAPPED_FILE>

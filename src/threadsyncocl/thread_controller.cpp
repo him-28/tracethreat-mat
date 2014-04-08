@@ -188,7 +188,6 @@ namespace controller
         //[/]thread  check stust in vector result and slot_ocl have status completed.
 
         //Mutex buffer locks mutex,
-        mutex_buff_->lock_request();
 
         logger->write_info("-- To critical section --");
 
@@ -196,7 +195,8 @@ namespace controller
         //loop thread check
         while(true) {
 
-    
+         mutex_buff_->lock_request();
+   
             BufferSync *buff_sync = buffer_sync_;
             struct data_ocl_process<MAPPED_FILE> *docl_processes = buff_sync->buff;
             struct data_ocl_process<MAPPED_FILE>::map_thread_id_type  map_tid =
@@ -229,23 +229,26 @@ namespace controller
                 for(;; ++iter_nresult) {
                     size_t index = iter_nresult - index_result.begin();
                     uint64_t value = *iter_nresult;
-
-                    logger->write_info("comm_thread_buffer::run(), status is zero");
-
-                    if((value != 0) || (index == s_ocl->end_point)) {
-                        s_ocl->status = 1;
-                        logger->write_info("comm_thread_buffer::run(), status changed to one");
+											
+                    //logger->write_info("comm_thread_buffer::run(), status is zero");
+										if(value != 0){
+												s_ocl->status = 1; break;
+												logger->write_info("comm_thread_buffer::run(), status changed to one");
+										}
+                    if(index == s_ocl->end_point) {
+                        logger->write_info_test("comm_thread_buffer::run(), end_point check");
                         break;
                     }
                 }
 
             }//if find map
 
+        //Mutex bunffer unlocks mutex
+        mutex_buff_->unlock_request();
+
         }//while(true) loop
 
 
-        //Mutex bunffer unlocks mutex
-        mutex_buff_->unlock_request();
 
         logger->write_info("-- End of critical section --");
 

@@ -115,11 +115,11 @@ namespace policy
             return false;
         }
 
-        util::scan_file_code scanf_code = pe_fconl.scan(this->node_symbol_vec,
+        utils::scan_file_code scanf_code = pe_fconl.scan(this->node_symbol_vec,
                 this->node_state_vec,
                 &pe_fconl.get_file_buffer());
 
-        if(scanf_code == util::found) {
+        if(scanf_code == utils::infected_found) {
             logger->write_info("pe_file_policy::scan_file_type, found file infected.");
         }
 

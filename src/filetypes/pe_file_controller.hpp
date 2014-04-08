@@ -46,7 +46,7 @@ namespace filetypes
     namespace h_util = hnmav_util;
 		namespace dstr   = data_structure;
 		namespace kernel_ocl = hnmav_kernel;
-		namespace utils  = util;
+		//namespace utils  = util;
     template<typename MAPPED_FILE = struct MAPPED_FILE_PE>
     class pe_file_controller
     {
@@ -134,7 +134,7 @@ namespace filetypes
             *
             * @return scan completed return true.
             */
-            util::scan_file_code scan(std::vector<char> *symbol_vec,
+            utils::scan_file_code scan(std::vector<char> *symbol_vec,
                     std::vector<size_t> *state_vec,
                     std::vector<uint8_t> *file_buffer_vec);
 
