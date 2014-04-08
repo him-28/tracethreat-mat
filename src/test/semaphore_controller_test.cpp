@@ -9,7 +9,7 @@
 //shm-read multiple fie
 //#include "test/file_shm_handler_test.hpp"
 
-#include "test/file_offset_handler_test.hpp"
+//#include "test/file_offset_handler_test.hpp"
 
 
 #include "test/thread_sync_test.hpp"

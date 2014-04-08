@@ -182,45 +182,73 @@ namespace controller
     template<typename BufferSync, typename MAPPED_FILE>
     void *comm_thread_buffer<BufferSync, MAPPED_FILE>::run()
     {
-			int data = 40;
-			while(data){
-				data--;
+			  //[x]thread write status in vector of struct name slot_ocl. Intial in thread_sync
+        //[x]insert data from map_str_shm to vector of char. Intial in thread_sync
+        //[/]call opencl machanism run opencl
+        //[/]thread  check stust in vector result and slot_ocl have status completed.
+
+        //Mutex buffer locks mutex,
+        mutex_buff_->lock_request();
+
         logger->write_info("-- To critical section --");
 
-				//[x]thread write status in vector of struct name slot_ocl. Intial in thread_sync
-				//[x]insert data from map_str_shm to vector of char. Intial in thread_sync 
-				//[/]call opencl machanism run opencl 					
-				//[/]thread  check stust in vector result and slot_ocl have status completed.
 
-			
-			  //Mutex buffer locks mutex,
-				mutex_buff_->lock_request();
+        //loop thread check
+        while(true) {
 
-				logger->write_info("-- MD5, Thread_id",
-					boost::lexical_cast<std::string>(my_id)); 				
+    
+            BufferSync *buff_sync = buffer_sync_;
+            struct data_ocl_process<MAPPED_FILE> *docl_processes = buff_sync->buff;
+            struct data_ocl_process<MAPPED_FILE>::map_thread_id_type  map_tid =
+                            docl_processes->map_tidslot_ocl;
 
-			  BufferSync * buff_sync = buffer_sync_;
-			  struct data_ocl_process<MAPPED_FILE> * dbocl_processes = buff_sync->buff;
-				struct data_ocl_process<MAPPED_FILE>::map_thread_id_type  map_tid = 
-						dbocl_processes->map_tidslot_ocl;
+            std::map<uint64_t, struct slot_ocl *>::iterator iter_tid;
+            iter_tid =  map_tid.find(my_id);
 
-				std::map<uint64_t, struct slot_ocl*>::iterator iter_tid =  map_tid.find(my_id);
-				if(iter_tid != map_tid.end())
-				{
-					 std::pair<uint64_t, struct slot_ocl*>  pair_tid = *iter_tid;
-					 struct slot_ocl * s_ocl = pair_tid.second;
-					 s_ocl->start_point;
-					 s_ocl->end_point;
-					 logger->write_info("Scan start point ", boost::lexical_cast<std::string>(s_ocl->start_point));
-					 logger->write_info("Scan  end  point ", boost::lexical_cast<std::string>(s_ocl->end_point));
-				}
-				//sleep(100);
-				//Mutex bunffer unlocks mutex 
-				mutex_buff_->unlock_request();
+		        logger->write_info("comm_thread_buffer::run(), Pthread_self",
+                    boost::lexical_cast<std::string>(pthread_self()));
 
-        //mutex_buff->unlock_request();
+            logger->write_info("comm_thread_buffer::run(), MD5_Specific Thread",
+                    boost::lexical_cast<std::string>(my_id));
+
+
+            if(iter_tid != map_tid.end()) {
+                std::pair<uint64_t, struct slot_ocl *>  pair_tid = *iter_tid;
+                struct slot_ocl *s_ocl = pair_tid.second;
+
+                logger->write_info("Scan start point ",
+                        boost::lexical_cast<std::string>(s_ocl->start_point));
+                logger->write_info("Scan  end  point ",
+                        boost::lexical_cast<std::string>(s_ocl->end_point));
+
+                std::vector<uint64_t> index_result = docl_processes->index_binary_result;
+                //check on ranking of star_point to end_point
+                std::vector<uint64_t>::iterator iter_nresult = index_result.begin();
+                std::advance(iter_nresult, s_ocl->start_point);
+
+                for(;; ++iter_nresult) {
+                    size_t index = iter_nresult - index_result.begin();
+                    uint64_t value = *iter_nresult;
+
+                    logger->write_info("comm_thread_buffer::run(), status is zero");
+
+                    if((value != 0) || (index == s_ocl->end_point)) {
+                        s_ocl->status = 1;
+                        logger->write_info("comm_thread_buffer::run(), status changed to one");
+                        break;
+                    }
+                }
+
+            }//if find map
+
+        }//while(true) loop
+
+
+        //Mutex bunffer unlocks mutex
+        mutex_buff_->unlock_request();
+
         logger->write_info("-- End of critical section --");
-			}
+
     }
 
     template<typename BufferSync, typename MAPPED_FILE>

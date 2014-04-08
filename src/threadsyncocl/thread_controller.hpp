@@ -94,7 +94,7 @@ namespace controller
 
             void set_completed();
 
-            void *run() { }
+            virtual void *run() { }
 
             static void *start_thread_runnable(void *p_void);
             static void *start_thread(void   *p_void);
@@ -131,7 +131,7 @@ namespace controller
                 //mutex_buff = new mutex_buffer<Mutex>();
                 //mutex_buff->init();
             }
-            void *run();
+            virtual void *run();
         private:
             //typename buffer_kernel::size_int  my_id;
             uint64_t  my_id;
@@ -159,7 +159,7 @@ namespace controller
                 mutex_buff_(mutex_buff) {
 
             }
-            void *run();
+            virtual void *run();
         private:
             //typename buffer_kernel::size_int  my_id;
             uint64_t  my_id;

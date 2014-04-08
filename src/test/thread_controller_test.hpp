@@ -13,17 +13,19 @@ TEST(thread_controller, thread_init)
 
     mutex_buffer<Mutex> * mutex_internal = new mutex_buffer<Mutex>;
 		mutex_internal->init();
-
+		/*
     boost::shared_ptr<comm_thread_buffer<buffsync, MAPPED_FILE_PE> >  
 			thread1(new comm_thread_buffer<buffsync, MAPPED_FILE_PE>(1, buff_sync_d,  mutex_internal ));
 		thread1->start();
-		thread1->run();		
+		//thread1->run();		
 
     boost::shared_ptr<comm_thread_buffer<buffsync, MAPPED_FILE_PE> >  
-			thread2(new comm_thread_buffer<buffsync, MAPPED_FILE_PE>(1, buff_sync_d, mutex_internal ));
+			thread2(new comm_thread_buffer<buffsync, MAPPED_FILE_PE>(2, buff_sync_d, mutex_internal ));
 		thread2->start();
-		thread2->run();		
-
+		//thread2->run();		
+		thread1->join();
+		thread2->join();
+		*/
 }
 
 
