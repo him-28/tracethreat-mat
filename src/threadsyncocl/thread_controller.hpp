@@ -43,13 +43,10 @@ namespace controller
 
     namespace h_util = hnmav_util;
 
-    template<typename BufferSync>
     class thread_controller
     {
         public:
-            thread_controller();
-
-            // private:
+						virtual pthread_t get_thread_id() = 0;
 
     };
 

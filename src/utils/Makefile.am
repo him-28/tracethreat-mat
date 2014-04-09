@@ -17,7 +17,8 @@ logger/clutil_logger.hpp \
 base/system_code.hpp \
 file_offset_handler.hpp \
 convert.hpp \
-md5_hash.hpp
+md5_hash.hpp \
+uuid_generator.hpp
 
 # library
 libutils_a_SOURCES = $(libutils_a_HEADERS) file_calculate.cpp \
@@ -26,6 +27,7 @@ config/options_system.cpp \
 logger/format_logger.cpp \
 logger/clutil_logger.cpp \
 file_offset_handler.cpp \
-md5_hash.cpp
+md5_hash.cpp \
+uuid_generator.cpp
 
 

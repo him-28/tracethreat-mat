@@ -22,8 +22,9 @@
  */
 
 // File scanning
-#define INFECTED_FOUND 								0   /* Scan infected file found */
-#define INFECTED_NOT_FOUND 						-1   /* Scan infected file not found */
+#define INFECTED_NOT_FOUND 						0   /* Scan infected file not found */
+#define INFECTED_FOUND 								1   /* Scan infected file found */
+#define INFECTED_FIRST_STEP           -2   /* Except is infected file. */
 
 // system scanning
 #define NEXT_SCANNING                -20 /* Scanning next method */
@@ -51,7 +52,8 @@ namespace utils
 {
     typedef	enum SCAN_FILE_CODE {
         infected_found = INFECTED_FOUND ,
-        infected_not_found = INFECTED_NOT_FOUND
+        infected_not_found = INFECTED_NOT_FOUND,
+				infected_fist_step = INFECTED_FIRST_STEP
     } scan_file_code;
 
     typedef enum SCAN_FILE_SYSTEM_CODE {
