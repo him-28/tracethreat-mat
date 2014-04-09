@@ -94,6 +94,9 @@ namespace controller
 						std::vector<thread_ocl_ptr> thread_ocl_ptr_vec;
 						std::vector<thread_ocl_ptr> *thread_ocl_pv_ptr;
 
+						//task_id (thread_t)
+						std::vector<pthread_t> p_tid_task_vec;
+
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

@@ -128,27 +128,68 @@ namespace controller
         logger->write_info("Start, thread_sync::::start_processes() ", h_util::format_type::type_center);
 
         typedef BufferSync  buffer_sync;
-        typedef comm_thread_buffer<buffer_sync,MAPPED_FILE>  comm_thread_buff;
+        //Comm_thread_buffer
+        typedef comm_thread_buffer<buffer_sync, MAPPED_FILE>  comm_thread_buff;
         //define Thread run / mutex at here
         typename std::vector<thread_ptr>::iterator iter_threads;
 
+        //Slot_ocl
+        typedef slot_ocl_thread<buffer_sync, MAPPED_FILE>     slot_ocl_thread;
+        //define iter run
+        typename std::vector<thread_ocl_ptr>::iterator iter_ocl_thread;
+
+
+        //intial worker
+        for(iter_ocl_thread = thread_ocl_pv_ptr->begin();
+                iter_ocl_thread != thread_ocl_pv_ptr->end();
+                ++iter_ocl_thread) {
+            boost::shared_ptr<slot_ocl_thread> s_ocl = *iter_ocl_thread;
+            //s_ocl->set_tid_task(p_tid_task_vec);
+            s_ocl->start();
+            //s_ocl->join();
+        }
+
+        logger->write_info("thread_sync::::start_processes(), Start worker success.");
+
+        //start threads
         for(iter_threads = thread_pv_ptr->begin();
                 iter_threads != thread_pv_ptr->end();
                 ++iter_threads) {
             // get thread prompt.
             boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
             ct_buff->start();
+            //ct_buff->join();
+            //get thread id send is task_id for worker name : slot_ocl_thread.
+            p_tid_task_vec.push_back(ct_buff->get_thread_id());
         }
 
-        logger->write_info("thread_sync::::start_processes() , to join() ");
+        //intial worker/ Join
+        /*
+        for(iter_ocl_thread = thread_ocl_pv_ptr->begin();
+                iter_ocl_thread != thread_ocl_pv_ptr->end();
+                ++iter_ocl_thread) {
+            boost::shared_ptr<slot_ocl_thread> s_ocl = *iter_ocl_thread;
+            //s_ocl->set_tid_task(p_tid_task_vec);
+            //s_ocl->start();
+            //s_ocl->join();
+						//break;
+        }
+				*/
 
+        //logger->write_info("thread_sync::::start_processes(), Start task success.");
+
+        //join threads/ Join
         for(iter_threads = thread_pv_ptr->begin();
                 iter_threads != thread_pv_ptr->end();
                 ++iter_threads) {
             // get thread prompt.
             boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
             ct_buff->join();
+            break;
+            logger->write_info("thread_sync::::start_processes(), end join() ");
         }
+
+
 
         logger->write_info("End, thread_sync::::start_processes() ", h_util::format_type::type_center);
     }

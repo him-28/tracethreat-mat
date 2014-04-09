@@ -21,7 +21,6 @@
 
 #include "threadsyncocl/thread_controller.hpp"
 //#include "utils/file_calculate.hpp"
-#include "utils/system_code.hpp"
 
 namespace controller
 {
@@ -33,15 +32,17 @@ namespace controller
     }
     */
 
+    /*
     template<typename BufferSync>
     thread_controller<BufferSync>::thread_controller()
     {
     }
+    */
 
 
     // Explicitly instance
-    template class thread_controller<int>;
-    template class thread_controller<BufferSync<char, MAPPED_FILE_PE> >;
+    //template class thread_controller<int>;
+    //template class thread_controller<BufferSync<char, MAPPED_FILE_PE> >;
 
 
     /* todo: For testing with runnable, Subclass extend to runnable.
@@ -96,6 +97,22 @@ namespace controller
         thread_ptr->result = thread_ptr->run();
         //logger->write_info("Thread, start_thread"); // todo: Staitc cannot run with static_cast
         return thread_ptr->result;
+    }
+
+    template<typename BufferSync>
+    bool thread<BufferSync>::thread_cancel()
+    {
+        if(is_current(get_thread_id())) {
+            logger->write_info("Thread cancle, ID",
+                    boost::lexical_cast<std::string>(get_thread_id()));
+            pthread_cancel(get_thread_id());
+            return true;
+        }
+
+        logger->write_info("Thread cannot cancle, ID",
+                boost::lexical_cast<std::string>(get_thread_id()));
+
+        return false;
     }
 
     template<typename BufferSync>
@@ -167,7 +184,7 @@ namespace controller
 
 
     template<typename BufferSync>
-    typename thread<BufferSync>::id_t thread<BufferSync>::get_thread_id()
+    typename thread<BufferSync>::id_t  thread<BufferSync>::get_thread_id()
     {
         return pthread_self();
     }
@@ -192,6 +209,8 @@ namespace controller
 
         logger->write_info("-- To critical section --");
 
+            uint64_t found_size = 0;
+            uint8_t  summary_status = 0;
 
         //loop thread check
         while(true) {
@@ -212,7 +231,8 @@ namespace controller
             logger->write_info("comm_thread_buffer::run(), MD5_Specific Thread",
                     boost::lexical_cast<std::string>(my_id));
 
-            uint64_t found_size;
+            //uint64_t found_size;
+            //uint8_t  summary_status;
 
             if(iter_tid != map_tid.end()) {
                 std::pair<uint64_t, struct slot_ocl *>  pair_tid = *iter_tid;
@@ -234,17 +254,24 @@ namespace controller
                     uint8_t value = *iter_nresult;
 
                     //logger->write_info("comm_thread_buffer::run(), status is zero");
-                    if(value == utils::scan_file_code::infected_found) {
-                        logger->write_info_test("comm_thread_buffer::run(), status changed to one");
+                    if(value == utils::infected_found) {
+                        //logger->write_info_test("comm_thread_buffer::run(), status changed to one");
                         found_size++;
                         //break;
                     }
 
                     if(index == s_ocl->end_point) {
-												//TODO: Take loggic for check with another method.
-												logger->write_info_("comm_thread_buffer::run(), found size",
-													boost::lexical_cast<std::string>(found_size));
-                        s_ocl->status = utils::scan_file_code::infected_fist_step;
+                        //TODO: Take loggic for check with another method.
+                        logger->write_info_test("comm_thread_buffer::run(), found size",
+                                boost::lexical_cast<std::string>(found_size));
+
+                        //Make condition when found data.
+                        s_ocl->status = utils::infected_fist_step;
+
+                        //control state success or not.
+                        ++summary_status;
+												//TODO: Thread wait, this->thread_cancel();
+
                         logger->write_info_test("comm_thread_buffer::run(), end_point check");
                         break;
                     }
@@ -252,14 +279,18 @@ namespace controller
 
             }//if find map
 
-            //Mutex bunffer unlocks mutex
-            mutex_buff_->unlock_request();
+             mutex_buff_->unlock_request();
+
+		         logger->write_info("-- comm_thread_buffer::run(), End of critical section --");
+
+            if(summary_status == map_tid.size()) {
+
+                logger->write_info("---comm_thread_buffer::run(), End Tasks completed jobs ---");
+                this->thread_cancel();
+                break;
+            } 
 
         }//while(true) loop
-
-
-
-        logger->write_info("-- End of critical section --");
 
     }
 
@@ -267,10 +298,47 @@ namespace controller
     void *slot_ocl_thread<BufferSync, MAPPED_FILE>::run()
     {
         //[] start OCL and call function sends data to buffer of OCL.
-
         //[] check thread completed. check from size of thread. and map contain slot_ocl structure.
+        uint64_t thread_size = 0;
 
+        while(true) {
+            mutex_buff_->lock_request();
 
+            BufferSync *buff_sync = buffer_sync_;
+            struct data_ocl_process<MAPPED_FILE> *docl_processes = buff_sync->buff;
+            struct data_ocl_process<MAPPED_FILE>::map_thread_id_type  map_tid =
+                            docl_processes->map_tidslot_ocl;
+
+            std::map<uint64_t, struct slot_ocl *>::iterator iter_tid;
+
+            thread_size = map_tid.size();
+
+            for(iter_tid = map_tid.begin(); iter_tid != map_tid.end(); ++iter_tid) {
+                //logger->write_info_test("slot_ocl_thread::run()");
+                std::pair<uint64_t, struct slot_ocl *>  pair_tid =  *iter_tid;
+
+                struct slot_ocl *s_ocl = pair_tid.second;
+
+                logger->write_info("slot_ocl_thread::run(), slot_ocl struct.",
+                        boost::lexical_cast<std::string>(s_ocl->status));
+
+                if(s_ocl->status == utils::infected_fist_step) {
+                    //delete thread from thread_id ( file_name_md5)
+                    --thread_size;
+                    logger->write_info_test("substract...");
+                }
+
+            }
+
+            mutex_buff_->unlock_request();
+
+            if(thread_size == 0) {
+                logger->write_info("slot_ocl_thread::run(), Thread break, Success.");
+                this->thread_cancel();
+                break;
+            }
+
+        }
     }
 
     // Explicitly instance

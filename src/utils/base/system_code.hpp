@@ -24,15 +24,15 @@
 // File scanning
 #define INFECTED_NOT_FOUND 						0   /* Scan infected file not found */
 #define INFECTED_FOUND 								1   /* Scan infected file found */
-#define INFECTED_FIRST_STEP           -2   /* Except is infected file. */
+#define INFECTED_FIRST_STEP           2   /* Except is infected file. */
 
 // system scanning
-#define NEXT_SCANNING                -20 /* Scanning next method */
-#define FILE_ERROR                   -21 /* File input error check */
+#define NEXT_SCANNING                20 /* Scanning next method */
+#define FILE_ERROR                   21 /* File input error check */
 
 //OpenCL code
-#define KERNEL_NOT_LOAD           -50  /* OpenCL cannot load  .cl extension file */
-#define BUFFER_NOT_LOAD						-51  /* KernelArg cannot load buffer */
+#define KERNEL_NOT_LOAD           50  /* OpenCL cannot load  .cl extension file */
+#define BUFFER_NOT_LOAD						51  /* KernelArg cannot load buffer */
 //Certificate code
 
 

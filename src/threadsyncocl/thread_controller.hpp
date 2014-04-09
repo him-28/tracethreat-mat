@@ -37,6 +37,7 @@
 
 //
 #include "utils/logger/clutil_logger.hpp"
+#include "utils/base/system_code.hpp"
 
 namespace controller
 {
@@ -46,8 +47,8 @@ namespace controller
     class thread_controller
     {
         public:
-						virtual pthread_t get_thread_id() = 0;
-
+						virtual pthread_t & get_thread_id() = 0;
+						//virtual pthread_t & get_thread_id() = 0;
     };
 
     // Runnable run threads
@@ -70,7 +71,7 @@ namespace controller
     {
 
         public:
-           
+                      
             //thread(boost::shared_ptr<runnable> run, bool detached = false);
             thread(bool detached = false);
             //thread();
@@ -78,8 +79,16 @@ namespace controller
             void start();
             void *join();
 
+				//protected:
+					  typedef pthread_t id_t;
+
+						id_t  get_thread_id();
+
+						inline bool is_current(id_t t);
+
+						bool thread_cancel();
+
         private:
-            typedef pthread_t id_t;
 
             bool detached_;
 
@@ -95,11 +104,6 @@ namespace controller
 
             static void *start_thread_runnable(void *p_void);
             static void *start_thread(void   *p_void);
-
-
-						inline bool is_current(id_t t);
-
-						id_t get_thread_id();
 						
             //BufferSync buffer_sync;
             void *result;
@@ -157,11 +161,20 @@ namespace controller
 
             }
             virtual void *run();
+
+						bool set_tid_task(std::vector<pthread_t> p_tid_task_vec){ 
+									this->p_tid_task_vec = p_tid_task_vec;
+						 }
+
         private:
             //typename buffer_kernel::size_int  my_id;
             uint64_t  my_id;
             BufferSync *buffer_sync_;
             mutex_buffer<Mutex> *mutex_buff_;
+
+						//insert all task_id  for worker controls tasks. 
+						//pthread_t ** task_p_tid;
+						std::vector<pthread_t> p_tid_task_vec;
 
             //id processes_id_register for thread
             struct slot_ocl *s_ocl;
