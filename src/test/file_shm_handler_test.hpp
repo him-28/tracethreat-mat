@@ -14,12 +14,16 @@
 * limitations under the License.
 */
 
-/*  Titles			                                                     Authors	          Date
- * - File SHM handler test by get source file from setup member at InitFileSHMHandler class.
+/*  Titles			                                          Authors	         Date
+
+ * - File SHM handler test by get source file from setup member 
+ *   at InitFileSHMHandler class.
  * - MAPPED_FILE is detail of file.
- * - File-shm is shared_memory insert binary file for supporting multithread scans malwares on file.
- *   File-shm have map structure that keys contain MD5 is filename. Value of map is binary file.
- *                                                                 R.Chatsiri       28/04/2014
+ * - File-shm is shared_memory insert binary file for supporting 
+ *   multithread scans malwares on file.
+ *   File-shm have map structure that keys contain MD5 is filename. 
+ *   Value of map is binary file.
+ *                                                   R.Chatsiri       28/04/2014
  */
 
 

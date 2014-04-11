@@ -22,7 +22,7 @@ namespace hnmav_kernel
     bool memory<WorkTypes, ContainerT>::cl_create_buffer(WorkTypes& worktype_loads,
             std::vector<char>&        symbol_vec_ptr,
             std::vector<size_t>&      state_vec_ptr,
-            std::vector<uint8_t>&     binary_vec_ptr)
+            std::vector<char>&     binary_vec_ptr)
     {
         logger->write_info("### Start cl_create_buffer ###", util::format_type::type_header);
         logger->write_info_test("PE File, size ", boost::lexical_cast<std::string>(binary_vec_ptr.size()));
@@ -234,7 +234,7 @@ namespace hnmav_kernel
     void  clutil_memory<WorkTypes, ContainerT>::cl_create_buffer(WorkTypes& worktype_loads,
             std::vector<char>&    symbol_vec_ptr,
             std::vector<size_t>& state_vec_ptr,
-            std::vector<uint8_t>& binary_vec)
+            std::vector<char>& binary_vec)
     {
         memory_util->cl_create_buffer(worktype_loads,
                 symbol_vec_ptr,

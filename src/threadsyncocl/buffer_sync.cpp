@@ -1,5 +1,5 @@
 #include "buffer_sync.hpp"
-#define MAX_BUFFER_SIZE 500000
+//#define MAX_BUFFER_SIZE 500000
 
 namespace controller
 {
@@ -22,11 +22,12 @@ namespace controller
 
         //this->size_buff = 0;
         this->buff = new Buffer;
+				this->sig_processes     = new data_sig_process; 
         //this->buff->buffer_length = 0;
 
         // logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
-        logger = logger_ptr->get();
+        //logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        //logger = logger_ptr->get();
         //logger->write_info("BufferSync, init size of size_buff");
     }
 
@@ -116,7 +117,9 @@ namespace controller
 
             if(temp_start < s_ocl->end_point) {
                 temp_start = s_ocl->end_point;
-                std::cout<<" Temp_start is : "<< temp_start <<std::endl;
+                //std::cout<<" Temp_start is : "<< temp_start <<std::endl;
+								logger->write_info("BufferSync::write_binary_hex(), Temp start point ", 
+										boost::lexical_cast<std::string>(temp_start));
             }
 
         }
@@ -128,13 +131,7 @@ namespace controller
 					//TODO: If no data insert to binary_hex
 				}
 
-        /*
-        buff->data_ocl_process<MAPPED_FILE>::
-        binary_hex.insert(buff->data_ocl_process<MAPPED_FILE>::binary_hex.end(),
-                char_hex,
-                char_hex + size_hex); // insert  char hex to vector elements.
-        		*/
-
+     
         // find thread_id and insert lenght, start_point and end_point
         iter_maptid = map_thread_id->find(thread_id);
 
@@ -143,15 +140,10 @@ namespace controller
             std::pair<uint64_t, struct slot_ocl *> pair_s_ocl = *iter_maptid;
             s_ocl  = pair_s_ocl.second;
 
-            //if(temp_start ==  0)
                 s_ocl->start_point = temp_start;
-            //else
-            //    s_ocl->start_point = temp_start + 1; // end point of previous + 1.
 
             s_ocl->end_point   = s_ocl->start_point + size_hex;
 
-						//std::cout<<"Data : "<<buff->data_ocl_process<MAPPED_FILE>
-						//	::binary_hex[s_ocl->start_point] <<std::endl;
             return true;
         }
 

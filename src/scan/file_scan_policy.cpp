@@ -23,6 +23,7 @@ namespace policy
     template<typename MAPPED_FILE>
     pe_file_policy<MAPPED_FILE>::~pe_file_policy() { }
 
+
     // scan_file_type member function have arguement supported single parameter.
     // We plant to supported std::vector<MAPPED_FILE> contains multiple mapped files.
     template<typename MAPPED_FILE>
@@ -72,17 +73,17 @@ namespace policy
         *
         * @return True, if data can insert to vector contains buffer.
         */
-				
-				logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, TEST only");
+
+        logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, TEST only");
         std::string value_str("a824bc647c46d04b537db2e3a33711");
-				//nt_header_ext.data_offset;
-				unsigned char data_offset[] = "a824bc647c46d04b537db2e3a33711";
-				//nt_header_ext.size
-	
+        //nt_header_ext.data_offset;
+        unsigned char data_offset[] = "a824bc647c46d04b537db2e3a33711";
+        //nt_header_ext.size
+
         //ret = pe_fconl.convert2buffer(nt_header_ext.data_offset, nt_header_ext.size);
-			
-				logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, Repace with nt_header_ext");
-				//test only
+
+        logger->write_info_test("pe_file_policy<MAPPED_FILE>::scan_file_type, Repace with nt_header_ext");
+        //test only
         ret = pe_fconl.convert2buffer(data_offset, value_str.size());
 
         logger->write_info("pe_file_policy<MAPPED_FILE>::scan_file_type, data_offset size",
@@ -114,11 +115,11 @@ namespace policy
             logger->write_info("pe_file_policy::scan_file_type, cannot open kernel file.");
             return false;
         }
-
+				
         utils::scan_file_code scanf_code = pe_fconl.scan(this->node_symbol_vec,
                 this->node_state_vec,
                 &pe_fconl.get_file_buffer());
-
+				
         if(scanf_code == utils::infected_found) {
             logger->write_info("pe_file_policy::scan_file_type, found file infected.");
         }
@@ -138,6 +139,26 @@ namespace policy
 
         return true;// scan completed
     }
+
+
+    /**
+    * @brief scan_file_type supported vector contains multiple files scanning with OCL
+    *
+    * @param mapped_file_pe_vec False, If cannot scanning completed.
+    */
+    template<typename MAPPED_FILE>
+    bool pe_file_policy<MAPPED_FILE>::
+    scan_file_type(std::vector<MAPPED_FILE *> *mapped_file_pe_vec)
+    {
+				//Plan-00003 : Retrun result is array.
+				pe_fconl.scan(this->node_symbol_vec, 
+							this->node_state_vec, 
+							mapped_file_pe_vec,
+              this->kernel_file_path);
+				//Plan-00004 : read result and match with internal arena.
+    }
+
+
 
     template<typename MAPPED_FILE>
     bool pe_file_policy<MAPPED_FILE>::
@@ -183,7 +204,6 @@ namespace policy
         logger->write_info("Init logger file_scan_policy");
     }
 
-
     template<typename MAPPED_FILE>
     std::vector<struct file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy)
@@ -195,6 +215,7 @@ namespace policy
         f_col_policy = fcol_policy;
         f_col_policy->get_result();
 
+        //Policy single and mulitple scanning file TBB.
         for(iter_mapped_file  = mapped_file_vec->begin();
                 iter_mapped_file != mapped_file_vec->end();
                 ++iter_mapped_file) {
@@ -219,16 +240,36 @@ namespace policy
 
             // TO-DO
             //f_col_policy->load_plugins_type(mapp_file, pl_result);
-        }
+        }// End-for loop
 
     }
+	
+    template<typename MAPPED_FILE>
+    std::vector<struct file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
+    scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
+            std::vector<MAPPED_FILE *> *mapped_file_vec)
+    {
+        logger->write_info("In file_scan_policy<MAPPED_FILE>::scan_file_engine");
+
+        uint8_t result_file_count = 0;
+        f_col_policy = fcol_policy;
+        f_col_policy->get_result();
+
+        //return scanning completed all files.
+        if(f_col_policy->scan_file_type(mapped_file_vec)) {
+
+            logger->write_info("file_scan_policy::scan_file_engine, Scan found, but unname of file");
+        }// end if
+
+        // TO-DO
+        //f_col_policy->load_plugins_type(mapp_file, pl_result);
+
+    }
+
 
     template class pe_file_policy<struct MAPPED_FILE_PE>;
 
     template class file_scan_policy<struct MAPPED_FILE_PE>;
 
-    //template class pe_file_controller<struct MAPPED_FILE_PE>;
-
-    //template file_scan_policy<struct MAPPED_FILE_PE>::scan_ocl_controller<char, size_t>();
 }
 

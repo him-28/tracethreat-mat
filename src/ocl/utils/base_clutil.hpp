@@ -69,7 +69,7 @@ namespace hnmav_kernel
         //std::vector<char> *node_tire_input;
         std::vector<char>  				node_symbol_vec;
 			  std::vector<size_t>       node_state_vec;
-				std::vector<uint8_t>  node_binary_vec;
+				std::vector<char>  node_binary_vec; //uint8_t
 
 				//return symbol to host(write back)
 				char *      symbol_wb;

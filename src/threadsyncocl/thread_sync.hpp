@@ -45,15 +45,46 @@
 #include "utils/logger/clutil_logger.hpp"
 #include "utils/file_calculate.hpp"
 
+#include "ocl/cl_bootstrap.hpp"
+
+//PE SCANNING
+//#include "filetypes/pe_file_controller.hpp"
+
+namespace controller
+{
+    template<typename MAPPED_FILE>
+    struct data_ocl_process;
+
+    template<typename Buffer, typename MAPPED_FILE>
+    class  BufferSync;
+
+    template<typename BufferSync, typename MAPPED_FILE>
+    class thread_sync;
+}
+
+/*
+namespace filetypes
+{
+
+    template<typename MAPPED_FILE>
+    class pe_file_controller;
+
+
+}
+*/
 
 namespace controller
 {
 
     using namespace utils;
+		using namespace filetypes;
 
     namespace h_util = hnmav_util;
 
     namespace shm_memory = memory;
+
+    namespace dstr   = data_structure;
+    namespace kernel_ocl = hnmav_kernel;
 
     template<typename BufferSync>
     class ibuffer_sync
@@ -102,11 +133,26 @@ namespace controller
             h_util::clutil_logging<std::string, int>    *logger;
 
 
-            typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *mapstr_shm_ptr;
-            //mapstr_shm_type mapstr_shm_ptr;
-
-
+						
+						 
         public:
+
+						//ocl support
+            typedef kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
+                    dstr::dstr_def::work_groupitems,
+                    std::vector<boost::unordered_map<char, size_t> >,
+                    dstr::actire_parallel<char,
+                    size_t,
+                    boost::unordered_map<char, size_t>,
+                    std::vector<boost::unordered_map<char, size_t> > >
+                    >	 load_ocl_system_type;
+
+            typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *
+                mapstr_shm_ptr;
+            //mapstr_shm_type mapstr_shm_ptr;
+						typename thread_sync<BufferSync, MAPPED_FILE>::load_ocl_system_type * 
+								load_ocl_system;
+	
 
             thread_sync();
 
@@ -125,7 +171,12 @@ namespace controller
             init_syncocl_workload(typename shm_memory::
                     file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
                     std::map<const uint64_t , size_t> *map_file_size);
-
+						//signature 
+						bool add_sig_process(std::vector<char> * symbol_vec, std::vector<size_t> * state_vec);
+						//OCL send to slot_ocl_thread
+						bool add_load_ocl_system(typename thread_sync<BufferSync, MAPPED_FILE>::
+							load_ocl_system_type * load_ocl_system,
+							std::string * kernel_file_path_ptr);
 
     };
 

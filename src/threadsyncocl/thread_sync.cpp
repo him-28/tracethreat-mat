@@ -37,14 +37,6 @@ namespace controller
         //thread_id = 0;
     }
 
-    /*
-    template<typename BufferSync, typename MAPPED_FILE>
-    boost::shared_ptr<BufferSync, MAPPED_FILE>& thread_sync<BufferSync, MAPPED_FILE>::buffer_ocl()
-    {
-    return buffer_sync;
-    }
-    */
-
     template<typename BufferSync, typename MAPPED_FILE>
     std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync, MAPPED_FILE> > >&
     thread_sync<BufferSync, MAPPED_FILE>::init_syncocl_workload(typename shm_memory::
@@ -84,13 +76,10 @@ namespace controller
 
             size_t size_hex = pair_file_size.second;
 
-            //std::cout<<"MD5 : " << file_name_md5 <<", size char hex : " << size_hex <<std::endl;
-
             binarystr_shm = &pair_int_str.second;
 
             //const char *  data_char_hex = binarystr_shm->c_str(); : get const string from file-shm
             //insert binary hex data to vector
-            //std::cout<<"thread_sync<BufferSync, MAPPED_FILE>::init_syncocl_workload,size : "<<
             //	binarystr_shm->size() <<std::endl;
             if(buff_sync_internal->write_binary_hex(binarystr_shm->c_str(), size_hex, file_name_md5)) {
                 //TODO: problem before return
@@ -111,7 +100,7 @@ namespace controller
         thread_ocl_ptr_vec.push_back(
                 boost::shared_ptr<slot_ocl_thread<BufferSync, MAPPED_FILE> >(
                         new slot_ocl_thread<BufferSync, MAPPED_FILE>
-                        (buff_sync_internal, mutex_sync_internal))
+                        (this->load_ocl_system, buff_sync_internal, mutex_sync_internal))
         );
 
         thread_pv_ptr = &thread_ptr_vec;
@@ -158,25 +147,9 @@ namespace controller
             // get thread prompt.
             boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
             ct_buff->start();
-            //ct_buff->join();
             //get thread id send is task_id for worker name : slot_ocl_thread.
             p_tid_task_vec.push_back(ct_buff->get_thread_id());
         }
-
-        //intial worker/ Join
-        /*
-        for(iter_ocl_thread = thread_ocl_pv_ptr->begin();
-                iter_ocl_thread != thread_ocl_pv_ptr->end();
-                ++iter_ocl_thread) {
-            boost::shared_ptr<slot_ocl_thread> s_ocl = *iter_ocl_thread;
-            //s_ocl->set_tid_task(p_tid_task_vec);
-            //s_ocl->start();
-            //s_ocl->join();
-						//break;
-        }
-				*/
-
-        //logger->write_info("thread_sync::::start_processes(), Start task success.");
 
         //join threads/ Join
         for(iter_threads = thread_pv_ptr->begin();
@@ -199,6 +172,42 @@ namespace controller
     thread_sync<BufferSync,MAPPED_FILE>::get_thread_info()
     {
         return 	boost::tuple<uint8_t>(thread_ptr_vec.size());
+    }
+
+    template<typename BufferSync, typename MAPPED_FILE>
+    bool  thread_sync<BufferSync, MAPPED_FILE>::add_load_ocl_system(
+            typename thread_sync<BufferSync, MAPPED_FILE>::load_ocl_system_type
+            *load_ocl_system,
+            std::string *kernel_file_path_ptr)
+    {
+        this->load_ocl_system = load_ocl_system;
+        this->load_ocl_system->set_opencl_file(*kernel_file_path_ptr);
+        this->load_ocl_system->cl_load_platform();
+        this->load_ocl_system->cl_load_memory();
+        //next steps load symbol and state with add_sig_process member function.
+        return true;
+    }
+
+
+    template<typename BufferSync, typename MAPPED_FILE>
+    bool thread_sync<BufferSync, MAPPED_FILE>::add_sig_process(
+            std::vector<char> *symbol_vec,
+            std::vector<size_t>   *state_vec)
+    {
+        if(this->load_ocl_system == NULL) {
+            logger->write_info("thread_sync::add_sig_process(), Load OCL System is NULL");
+            return false;
+        }
+				
+        this->load_ocl_system->cl_process_buffer(*symbol_vec,
+                *state_vec,
+                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex,
+                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result);
+				
+        this->load_ocl_system->cl_build_memory();
+        this->load_ocl_system->cl_load_commandqueue();
+
+        return true;
     }
 
     template class controller::thread_sync<

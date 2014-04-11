@@ -24,6 +24,10 @@
 #include "utils/base/system_code.hpp"
 
 
+#include "memory/file_shm_handler.hpp"
+
+#include "threadsyncocl/thread_sync.hpp"
+
 // Big endian supported type.
 union unaligned_64 {
     uint64_t una_u64;
@@ -40,18 +44,52 @@ union unaligned_16 {
     int16_t una_s16;
 } __attribute__((packed));
 
+namespace controller
+{
+    template<typename MAPPED_FILE>
+    struct data_ocl_process;
+
+    template<typename Buffer, typename MAPPED_FILE>
+    class  BufferSync;
+
+    template<typename BufferSync, typename MAPPED_FILE>
+    class thread_sync;
+}
+
 namespace filetypes
 {
 
+    template<typename MAPPED_FILE>
+    class pe_file_controller;
+
+
+}
+
+namespace filetypes
+{
+
+
     namespace h_util = hnmav_util;
-		namespace dstr   = data_structure;
-		namespace kernel_ocl = hnmav_kernel;
-		//namespace utils  = util;
+    namespace dstr   = data_structure;
+    namespace kernel_ocl = hnmav_kernel;
+    //using namespace  controller;
+    //namespace utils  = util;
     template<typename MAPPED_FILE = struct MAPPED_FILE_PE>
     class pe_file_controller
     {
 
         public:
+            //ocl support
+            typedef kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
+                    dstr::dstr_def::work_groupitems,
+                    std::vector<boost::unordered_map<char, size_t> >,
+                    dstr::actire_parallel<char,
+                    size_t,
+                    boost::unordered_map<char, size_t>,
+                    std::vector<boost::unordered_map<char, size_t> > >
+                    >	 load_ocl_system_type;
+
+
             pe_file_controller();
             /**
             * @brief Get PE Header file from file system.
@@ -134,9 +172,26 @@ namespace filetypes
             *
             * @return scan completed return true.
             */
+						
             utils::scan_file_code scan(std::vector<char> *symbol_vec,
                     std::vector<size_t> *state_vec,
                     std::vector<uint8_t> *file_buffer_vec);
+						
+            /**
+            * @brief Insert signature and thread_sync for compute with GPGPU.
+            *
+            * @param symbol_vec Symbol vector
+            * @param state_vec  State vector
+            * @param tsync   thread sync file with GPGPU. Start() member function calls in
+            *  pe_file_controller.scan() member function.
+            * @param ocl_load_system   OCL system object send to slot_ocl_thread.
+            *
+            * @return Vector contain end result.
+            */
+            utils::scan_file_code scan(std::vector<char> *symbol_vec,
+                    std::vector<size_t> *state_vec,
+                    std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
+										std::string * kernel_file_path_ptr);
 
             /**
             * @brief Buffer return to external class
@@ -164,23 +219,28 @@ namespace filetypes
             boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS_EXT *> >  pe_offset_vec_shared_ptr;
             // file buffer
             std::vector<uint8_t> file_buffer_vec;
-					
-						// add buffer and address of file.
-						//std::vector<uint8_t*> file_buff_addr_vec;
-						std::map<uint8_t*, size_t> file_buff_addr_map;
 
-						//kernel file path
-						std::string * kernel_file_path_ptr;
+            // add buffer and address of file.
+            //std::vector<uint8_t*> file_buff_addr_vec;
+            std::map<uint8_t *, size_t> file_buff_addr_map;
 
-            //ocl support
-            kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
-                   dstr::dstr_def::work_groupitems,
-                   std::vector<boost::unordered_map<char, size_t> >,
-                   dstr::actire_parallel<char,
-                   size_t,
-                   boost::unordered_map<char, size_t>,
-                   std::vector<boost::unordered_map<char, size_t> > >
-                   >	 load_system;
+            //kernel file path
+            std::string *kernel_file_path_ptr;
+
+
+            //set file_shm
+            memory::file_shm_handler<MAPPED_FILE>  f_shm_handler;
+
+            typedef controller::thread_sync<controller::BufferSync<
+            struct controller::data_ocl_process<MAPPED_FILE>,
+                    MAPPED_FILE >,
+                    MAPPED_FILE
+                    > tsync_type;
+
+
+            tsync_type tsync;
+
+            typename pe_file_controller<MAPPED_FILE>::load_ocl_system_type load_ocl_system;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;

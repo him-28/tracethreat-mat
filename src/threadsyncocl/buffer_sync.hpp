@@ -23,6 +23,7 @@ namespace controller
     //struct buffer_kernel;
 
     struct slot_ocl;
+    struct data_sig_process;
     template<typename MAPPED_FILE> struct data_ocl_process;
     template<typename Buffer, typename MAPPED_FILE> class  BufferSync;
 
@@ -33,6 +34,17 @@ namespace controller
         uint64_t end_point;   //end point of binary file.
         uint64_t processes_id_register; //insert processes thread_id;
         uint64_t file_map_md5; // check md5 match with file-shm mapping index.
+    };
+
+    /**
+    * @brief Plan-0003 : Support single signature scanning.
+    */
+    struct data_sig_process {
+        const char *sig_name;  //signature name
+        uint8_t      sig_type; //signature type
+        uint64_t     start_index_scan; // index start scanning.
+        std::vector<uint8_t> symbol_vec; //TODO: Plan-00004 : Support arena size.
+        std::vector<size_t>  state_vec;  //TODO: Plan-00004 : Support arena size.
     };
 
     template<typename MAPPED_FILE>
@@ -64,8 +76,10 @@ namespace controller
             //legacy concept.
             bool set_buffer(uint8_t buffer_size);
 
-            //volatile Buffer *buff;
+            //TODO: Plan-00004: volatile Buffer *buff;
             Buffer *buff;
+            //TODO: Plan-00004: Multiple name search virus.
+            data_sig_process *sig_processes;
 
             BufferSync<Buffer, MAPPED_FILE>& operator[](uint8_t value)const;
             BufferSync<Buffer, MAPPED_FILE>& operator=(BufferSync<Buffer, MAPPED_FILE> *buffr);

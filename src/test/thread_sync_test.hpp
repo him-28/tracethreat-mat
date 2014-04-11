@@ -66,11 +66,14 @@ class ThreadSyncTest : public ::testing::Test
             //initial file for file-shm
             file_name_offset[1] = "/home/chatsiri/sda1/workspacemalware/lab_malwareanalysis/3/clam_ISmsi_ext.exe";
 
-						file_name_offset[2] = "/home/chatsiri/sda1/workspacemalware/malware_debug/infected_01.exe";
+            file_name_offset[2] = "/home/chatsiri/sda1/workspacemalware/malware_debug/infected_01.exe";
 
-            for(int count_file = 0; count_file < 	FILE_SIZE_MULTIPLE_SHM; count_file++) {
+            for(int count_file = 0;
+                    count_file < 	FILE_SIZE_MULTIPLE_SHM;
+                    count_file++) {
                 file_type_vec.push_back(file_name_offset[count_file]);
-                s_mapped_fpe[count_file]	 = (struct MAPPED_FILE_PE *)malloc(sizeof(s_mapped_fpe));
+                s_mapped_fpe[count_file]	 =
+                        (struct MAPPED_FILE_PE *)malloc(sizeof(s_mapped_fpe));
                 mapped_file_vec.push_back(s_mapped_fpe[count_file]);
                 logger->write_info_test("file_path insert",
                         boost::lexical_cast<std::string>(file_name_offset[count_file]));
@@ -81,7 +84,7 @@ class ThreadSyncTest : public ::testing::Test
 
         //initial flies insert to file-shm
         const char *file_name_offset[FILE_SIZE_MULTIPLE_SHM];
-        std::vector<const char*> file_type_vec;
+        std::vector<const char *> file_type_vec;
         struct MAPPED_FILE_PE *s_mapped_fpe[FILE_SIZE_MULTIPLE_SHM];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
 

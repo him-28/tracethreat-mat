@@ -157,7 +157,8 @@ namespace hnmav_kernel
     bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
     cl_process_buffer(std::vector<char>& symbol_vec_ptr,
             std::vector<size_t>&         state_vec_ptr,
-            std::vector<uint8_t>&        binary_vec)
+            std::vector<char>&           binary_vec,
+						std::vector<uint64_t>&       result_vec)
     {
         //WorkTypes workloads;
         //workloads.work_groups = 50;

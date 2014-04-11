@@ -16,7 +16,7 @@ namespace policy
 {
 
     namespace h_util = hnmav_util;
-		namespace ftypes = filetypes;
+    namespace ftypes = filetypes;
     //using namespace filetypes;
 
     template<typename MAPPED_FILE>
@@ -104,6 +104,10 @@ namespace policy
             std::vector<struct file_scan_result<MAPPED_FILE> * >&
             scan_file_engine(file_scan_policy<MAPPED_FILE> *f_col_policy);
 
+            std::vector<struct file_scan_result<MAPPED_FILE>* >&
+            scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
+                    std::vector<MAPPED_FILE *> *mapped_file_vec);
+
             template<typename SymbolT, typename StateT>
             std::vector<struct file_scan_result<MAPPED_FILE> * >&
             scan_ocl_controller(std::vector<SymbolT> *node_symbol,
@@ -119,19 +123,20 @@ namespace policy
                 //TODO:
             }
 
-						/**
+            /**
             * @brief Set Kernel file of scanning on GPGPU system.
             *
             * @param kernel_file_path  Kernel file extension name .cl
             *
             * @return True, If file contains strings more size than zero.
             */
-            bool set_opencl_file_path(std::string& kernel_file_path){
-												
-										if(kernel_file_path.size() == 0) return false;
-										this->kernel_file_path = &kernel_file_path;
-										return true;
-						}
+            bool set_opencl_file_path(std::string& kernel_file_path) {
+
+                if(kernel_file_path.size() == 0) return false;
+
+                this->kernel_file_path = &kernel_file_path;
+                return true;
+            }
 
 
         public:
@@ -146,6 +151,14 @@ namespace policy
             * @return
             */
             virtual bool scan_file_type(MAPPED_FILE *mapped_file) = 0;
+            /**
+            * @brief
+            *
+            * @param mapped_file
+            *
+            * @return
+            */
+            virtual bool scan_file_type(std::vector<MAPPED_FILE *> *mapped_file) = 0;
             /**
             * @brief
             *
@@ -176,7 +189,7 @@ namespace policy
             */
             virtual bool set_mapped_file(MAPPED_FILE *mapped_file) = 0;
 
-            
+
         private:
             //file_policy<MAPPED_FILE> *f_policy;
             file_scan_result<MAPPED_FILE> *fs_result;
@@ -195,7 +208,7 @@ namespace policy
             //template<typename StateT>
             std::vector<size_t> *node_state_vec;
 
-						std::string * kernel_file_path;
+            std::string *kernel_file_path;
 
     };
 
@@ -221,11 +234,33 @@ namespace policy
         private:
             typedef file_policy_selector<FilePolicySetter>  policy;
         public:
+            enum scanning_mode { MULTIPLE_OCL_MODE = 1, MULTIPLE_TBB_MODE = 2, MULTIPLE_OCL_TBB_MODE = 3 };
             // pe type support
             std::vector<struct file_scan_result<MAPPED_FILE> * >&
-            scan_pe(
-                    file_scan_policy<MAPPED_FILE> *obj_fconl_policy) {
-                return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+            scan_pe(file_scan_policy<MAPPED_FILE> *obj_fconl_policy) {
+
+                //TODO: test only
+                scan_file_policy::scanning_mode smode = scan_file_policy::MULTIPLE_OCL_MODE;
+
+                //Policy multiple scanning file with-OCL
+                switch(smode) {
+
+                case scan_file_policy::MULTIPLE_OCL_MODE : //multiple scanning on OCL
+                    //get data, size mapped_file for API system.
+                    std::vector<MAPPED_FILE *> *mapped_file_vec = obj_fconl_policy->get_mapped_file();
+                    //Send ot Multiple file OCL mode.
+                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy,&mapped_file_vec);
+
+                case scan_file_policy::MULTIPLE_TBB_MODE : //multiple scanning on TBB
+
+                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+
+
+                case scan_file_policy::MULTIPLE_OCL_TBB_MODE : //Priority OCL before TBB mode.
+                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+                }
+
+
             }
     };
 
@@ -236,6 +271,10 @@ namespace policy
     class pe_file_policy :  public file_scan_policy<MAPPED_FILE>
     {
         public:
+
+            typedef controller::BufferSync<
+            struct controller::data_ocl_process<MAPPED_FILE>,
+                    MAPPED_FILE> buffer_sync;
 
             pe_file_policy();
             ~pe_file_policy();
@@ -251,6 +290,8 @@ namespace policy
             // : Cannot use virtual from file_scan_policy abstract base
             virtual bool scan_file_type(MAPPED_FILE *mapped_file);
 
+            virtual bool scan_file_type(std::vector<MAPPED_FILE *> *mapped_file);
+
             /**
             * @brief
             *
@@ -264,7 +305,7 @@ namespace policy
             *
             * @return
             */
-            virtual struct file_scan_result<MAPPED_FILE>& get_result()const;
+    virtual struct file_scan_result<MAPPED_FILE>& get_result()const;
             /**
             * @brief
             *
@@ -296,8 +337,8 @@ namespace policy
                 //	node_symbol_vec = node_symbol;
                 //	node_state_vec  = node_state;
             }
-					
-						/**
+
+            /**
             * @brief Set Kernel file of scanning on GPGPU system.
             *
             * @param kernel_file_path  Kernel file extension name .cl
@@ -306,7 +347,7 @@ namespace policy
             */
             //set_opencl_file_path(std::string& kernel_file_path){
 
-						//}
+            //}
 
 
         private:
@@ -314,11 +355,6 @@ namespace policy
             // mapped_file detail
             std::vector<MAPPED_FILE * > mapped_files_vec;
 
-            //template<typename SymbolT>
-            //std::vector<char> node_symbol_vec;
-
-            //template<typename StateT>
-            //std::vector<size_t> node_state_vec;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

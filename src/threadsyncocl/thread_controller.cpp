@@ -301,6 +301,8 @@ namespace controller
         //[] check thread completed. check from size of thread. and map contain slot_ocl structure.
         uint64_t thread_size = 0;
 
+				this->load_ocl_system_->cl_process_commandqueue();
+
         while(true) {
             mutex_buff_->lock_request();
 

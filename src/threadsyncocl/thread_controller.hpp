@@ -39,16 +39,32 @@
 #include "utils/logger/clutil_logger.hpp"
 #include "utils/base/system_code.hpp"
 
+#include "ocl/cl_bootstrap.hpp"
+
+//#include "filetypes/pe_file_controller.hpp"
+namespace filetypes
+{
+
+    template<typename MAPPED_FILE>
+    class pe_file_controller;
+}
+
 namespace controller
 {
 
+
+
     namespace h_util = hnmav_util;
+    //using namespace filetypes;
+
+    namespace dstr   = data_structure;
+    namespace kernel_ocl = hnmav_kernel;
 
     class thread_controller
     {
         public:
-						virtual pthread_t & get_thread_id() = 0;
-						//virtual pthread_t & get_thread_id() = 0;
+            virtual pthread_t& get_thread_id() = 0;
+            //virtual pthread_t & get_thread_id() = 0;
     };
 
     // Runnable run threads
@@ -71,7 +87,7 @@ namespace controller
     {
 
         public:
-                      
+
             //thread(boost::shared_ptr<runnable> run, bool detached = false);
             thread(bool detached = false);
             //thread();
@@ -79,14 +95,14 @@ namespace controller
             void start();
             void *join();
 
-				//protected:
-					  typedef pthread_t id_t;
+            //protected:
+            typedef pthread_t id_t;
 
-						id_t  get_thread_id();
+            id_t  get_thread_id();
 
-						inline bool is_current(id_t t);
+            inline bool is_current(id_t t);
 
-						bool thread_cancel();
+            bool thread_cancel();
 
         private:
 
@@ -104,11 +120,11 @@ namespace controller
 
             static void *start_thread_runnable(void *p_void);
             static void *start_thread(void   *p_void);
-						
+
             //BufferSync buffer_sync;
             void *result;
             pthread_attr_t thread_buffer_attr;
-						id_t  thread_buffer_id;
+            id_t  thread_buffer_id;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
@@ -154,17 +170,31 @@ namespace controller
     class slot_ocl_thread : public thread<BufferSync>
     {
         public:
-            slot_ocl_thread(BufferSync *const  buffer_sync,
+					
+				 typedef kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
+                    dstr::dstr_def::work_groupitems,
+                    std::vector<boost::unordered_map<char, size_t> >,
+                    dstr::actire_parallel<char,
+                    size_t,
+                    boost::unordered_map<char, size_t>,
+                    std::vector<boost::unordered_map<char, size_t> > >
+                    >	 load_ocl_system_type;
+
+					public:
+            slot_ocl_thread(typename slot_ocl_thread<BufferSync, MAPPED_FILE>::
+                    load_ocl_system_type *load_ocl_system,
+                    BufferSync *const  buffer_sync,
                     mutex_buffer<Mutex> *mutex_buff) :
-                buffer_sync_(buffer_sync),
-                mutex_buff_(mutex_buff) {
+                load_ocl_system_(load_ocl_system), // OCL command queue.
+                buffer_sync_(buffer_sync), // Internal buffer of binary file.
+                mutex_buff_(mutex_buff) {  // Mutex
 
             }
             virtual void *run();
 
-						bool set_tid_task(std::vector<pthread_t> p_tid_task_vec){ 
-									this->p_tid_task_vec = p_tid_task_vec;
-						 }
+            bool set_tid_task(std::vector<pthread_t> p_tid_task_vec) {
+                this->p_tid_task_vec = p_tid_task_vec;
+            }
 
         private:
             //typename buffer_kernel::size_int  my_id;
@@ -172,14 +202,15 @@ namespace controller
             BufferSync *buffer_sync_;
             mutex_buffer<Mutex> *mutex_buff_;
 
-						//insert all task_id  for worker controls tasks. 
-						//pthread_t ** task_p_tid;
-						std::vector<pthread_t> p_tid_task_vec;
+            //insert all task_id  for worker controls tasks.
+            //pthread_t ** task_p_tid;
+            std::vector<pthread_t> p_tid_task_vec;
 
             //id processes_id_register for thread
             struct slot_ocl *s_ocl;
             struct data_ocl_process<MAPPED_FILE> *d_ocl_processes;
-
+            typename slot_ocl_thread<BufferSync, MAPPED_FILE>::
+            load_ocl_system_type *load_ocl_system_;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
