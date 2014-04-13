@@ -54,7 +54,7 @@ namespace controller
 
         //mapstr_shm_type *mapstr_shm;   // shared_memory system.
         std::vector<char> binary_hex;  // input hex of char type.
-        std::vector<uint64_t>  index_binary_result; // index of vector binaries are hex of char type.
+        std::vector<uint8_t>  index_binary_result; // index of vector binaries are hex of char type.
         map_thread_id_type map_tidslot_ocl;
 
         //migrate from : struct name buffer_kernel.

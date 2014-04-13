@@ -6,9 +6,6 @@
 
 #include "memory/file_shm_handler.hpp"
 
-
-#include "memory/file_shm_handler.hpp"
-
 #include "utils/file_offset_handler.hpp"
 
 #include "threadsyncocl/buffer_sync.hpp"
@@ -103,7 +100,6 @@ class ThreadSyncTest : public ::testing::Test
 
 TEST_F(ThreadSyncTest, sync_init)
 {
-    //logger->write_info_test(" Loop sync ");
 
     //intial file-shm
     utils::file_offset_handler<struct utils::common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
@@ -116,9 +112,6 @@ TEST_F(ThreadSyncTest, sync_init)
             fileoffset_h.get_mappedf_vec_ptr();
 
     std::vector<MAPPED_FILE_PE *> *mapped_file_vec_ptr = mappedf_vec_ptr.get();
-
-    //fileoffset_h.get_mapped_file();
-
 
     typename std::vector<MAPPED_FILE_PE *>::iterator iter_mapped_file;
 
@@ -145,39 +138,18 @@ TEST_F(ThreadSyncTest, sync_init)
     f_shm_handler.initial_file_shm(mapped_file_vec_ptr);
 
 
-
-
-    //intial threads
-
-    //typedef BufferSync<buffer_kernel>  buffer_sync;
     typedef controller::comm_thread_buffer<buffer_sync, MAPPED_FILE_PE>  comm_thread_buff;
 
     std::vector<boost::shared_ptr<comm_thread_buff> > thread_ptr_vec;
-    //    thread_ptr_vec = t.sync_init();
+
     thread_ptr_vec = tsync.init_syncocl_workload(f_shm_handler.get_map_str_shm(),
             f_shm_handler.get_map_file_size());
 
     tsync.start_processes();
 
-
-
-    /*
-    ASSERT_NE(0, thread_ptr_vec.size());
-
-    typename std::vector<boost::shared_ptr<comm_thread_buff> >::iterator iter;
-
-    for(iter = thread_ptr_vec.begin(); iter != thread_ptr_vec.end(); ++iter) {
-    boost::shared_ptr<comm_thread_buff> ct_buff = *iter;
-    ct_buff->start();
-    ct_buff->run();
-    }
-
-    tsync.sync_processes();
-    */
     // delete file-shm after success compute.
     f_shm_handler.delete_file_shm();
     fileoffset_h.unmapped_file(*mapped_file_vec_ptr);
-    //logger->write_info_test(" End Loop Sync ");
 
 }
 

@@ -3,9 +3,6 @@
 namespace hnmav_kernel
 {
 
-    //    namespace cl_bootstrap
-    //    {
-
     template<typename UtilPlatform,
              typename TireDefine,
              typename WorkTypes,
@@ -137,15 +134,16 @@ namespace hnmav_kernel
     bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
     cl_build_memory()
     {
-				//TODO: Check memory buffer before build 
+        //TODO: Check memory buffer before build
 
         bool ret = memory_clutil->cl_build_node_buffer_object();
-				//memory_clutil->cl_check_buffer_size();
+        //memory_clutil->cl_check_buffer_size();
 
         if(!ret) {
             logger->write_info("cl_load_system::cl_init_memory, cannot build node buffer object");
             return false;
         }
+
         return true;
     }
 
@@ -158,7 +156,7 @@ namespace hnmav_kernel
     cl_process_buffer(std::vector<char>& symbol_vec_ptr,
             std::vector<size_t>&         state_vec_ptr,
             std::vector<char>&           binary_vec,
-						std::vector<uint64_t>&       result_vec)
+            std::vector<uint8_t>&       result_vec)
     {
         //WorkTypes workloads;
         //workloads.work_groups = 50;
@@ -171,11 +169,15 @@ namespace hnmav_kernel
                 boost::lexical_cast<std::string>(state_vec_ptr.size()));
         logger->write_info_test("cl_load_system::cl_process_buffer, File binary size",
                 boost::lexical_cast<std::string>(binary_vec.size()));
+				logger->write_info_test("cl_load_system::cl_process_buffer,  reuslt inex size",
+								boost::lexical_cast<std::string>(result_vec.size()));
 
-
-
-        memory_clutil->cl_create_buffer(workloads, symbol_vec_ptr, state_vec_ptr, binary_vec);
-     }
+        memory_clutil->cl_create_buffer(workloads,
+                symbol_vec_ptr, // symbol of signature.
+                state_vec_ptr, // state of symbol.
+                binary_vec,  // File binary char hex type.
+                result_vec); // result array index.
+    }
 
 
     template<typename UtilPlatform,
@@ -246,7 +248,6 @@ namespace hnmav_kernel
     }
 
 
-    //    }
 
     template class				 cl_load_system<clutil_platform,
                        dstr::dstr_def::work_groupitems,

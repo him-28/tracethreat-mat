@@ -25,8 +25,6 @@ namespace hnmav_kernel
     namespace dstr = data_structure;
     namespace util = hnmav_util;
 
-    //namespace cl_bootstrap
-    //{
     template<typename UtilPlatform,
              typename TireDefine,
              typename WorkTypes,
@@ -55,7 +53,7 @@ namespace hnmav_kernel
             bool cl_process_buffer(std::vector<char>& symbol_vec_tr,
                     std::vector<size_t>&  state_vec_ptr,
                     std::vector<char>& binary_vec,
-										std::vector<uint64_t> & result_vec);
+										std::vector<uint8_t> & result_vec);
 
             // Manage command queue
             bool cl_process_commandqueue();
@@ -80,8 +78,6 @@ namespace hnmav_kernel
             TireDefine *node_tire_input;
             TireDefine *node_tire_output;
     };
-
-    // }
 
 }
 

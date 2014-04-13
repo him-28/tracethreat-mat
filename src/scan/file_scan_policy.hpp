@@ -190,6 +190,15 @@ namespace policy
             virtual bool set_mapped_file(MAPPED_FILE *mapped_file) = 0;
 
 
+            /**
+            * @brief
+            *
+            * @param mapped_file
+            *
+            * @return
+            */
+            virtual bool set_mapped_file(std::vector<MAPPED_FILE *>  *mapped_file) = 0;
+
         private:
             //file_policy<MAPPED_FILE> *f_policy;
             file_scan_result<MAPPED_FILE> *fs_result;
@@ -245,19 +254,21 @@ namespace policy
                 //Policy multiple scanning file with-OCL
                 switch(smode) {
 
-                case scan_file_policy::MULTIPLE_OCL_MODE : //multiple scanning on OCL
+                case scan_file_policy::MULTIPLE_OCL_MODE : { //multiple scanning on OCL
                     //get data, size mapped_file for API system.
                     std::vector<MAPPED_FILE *> *mapped_file_vec = obj_fconl_policy->get_mapped_file();
                     //Send ot Multiple file OCL mode.
-                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy,&mapped_file_vec);
+                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy, mapped_file_vec);
+                }
 
-                case scan_file_policy::MULTIPLE_TBB_MODE : //multiple scanning on TBB
-
+                case scan_file_policy::MULTIPLE_TBB_MODE : { //multiple scanning on TBB
                     return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+                }
 
-
-                case scan_file_policy::MULTIPLE_OCL_TBB_MODE : //Priority OCL before TBB mode.
+                case scan_file_policy::MULTIPLE_OCL_TBB_MODE : { //Priority OCL before TBB mode.
                     return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+                }
+
                 }
 
 
@@ -328,6 +339,17 @@ namespace policy
             * @return
             */
             virtual bool set_mapped_file(MAPPED_FILE *mapped_file);
+
+
+            /**
+            * @brief
+            *
+            * @param mapped_file
+            *
+            * @return
+            */
+            virtual bool set_mapped_file(std::vector<MAPPED_FILE *> *mapped_file);
+
 
             //data_structure::iparallel<SymbolT, StateT> *ipara
             template<typename SymbolT, typename StateT>

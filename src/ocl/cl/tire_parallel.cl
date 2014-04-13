@@ -7,7 +7,8 @@ __kernel void  actire_search(
 __global uchar  *node_symbol,
 __global uint  *node_state,
 __global uchar *infected_str,
-__global uchar *symbol_wb)
+__global uchar *symbol_wb,
+__global uint  *result)
 {
 
 	uint id_sym       = get_global_id(0);

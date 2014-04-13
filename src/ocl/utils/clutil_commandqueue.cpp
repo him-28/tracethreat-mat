@@ -1,6 +1,13 @@
 #include "ocl/utils/clutil_commandqueue.hpp"
 #include "CL/cl.h"
 
+//GPU OCL new namespace
+namespace gpuocl
+{
+
+
+}
+
 namespace hnmav_kernel
 {
 
@@ -118,6 +125,14 @@ namespace hnmav_kernel
                         sizeof(cl_mem),
                         platdevices->vec_buffer.pop_index(3));
 
+								//size byte result compare
+                err |= clSetKernelArg(
+                        platdevices->kernels[0],
+                        4,
+                        sizeof(cl_mem),
+                        platdevices->vec_buffer.pop_index(4));
+
+
                 if(err != CL_SUCCESS) {
                     logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg");
                     throw cl::clutil_exception(err, "clCreateKernelArg");
@@ -183,6 +198,31 @@ namespace hnmav_kernel
 											 clEnqueueWriteBuffer 03 error");
                     throw cl::clutil_exception(err, "clEnqueueWriteBuffer");
                 }                
+
+
+					    cl_mem cl_mem_result = platdevices->vec_buffer[3];
+
+				      logger->write_info_test("commandqueue::cl_create_command_queue,\
+									clEnqueueWriteBuffer, node_result_vec size ",
+                        boost::lexical_cast<std::string>(platdevices->node_result_vec.size()));
+
+
+               err |= clEnqueueWriteBuffer(platdevices->queues[0],
+                        cl_mem_result,
+                        CL_TRUE,
+                        0,
+                        sizeof(uint8_t) * platdevices->node_result_vec.size(),
+                        (void *)&platdevices->node_result_vec[0],
+                        0,
+                        NULL,
+                        NULL);
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue,\
+											 clEnqueueWriteBuffer 04 error");
+                    throw cl::clutil_exception(err, "clEnqueueWriteBuffer");
+                }                
+
 
             }
 
@@ -276,8 +316,6 @@ namespace hnmav_kernel
 								clReleaseProgram(platdevices->program);
 								clReleaseContext(platdevices->context);
 
-
-            //clWaitForEvents(platdevices->events.size(), const_cast<cl_event *>(&platdevices->events[0]));
         } catch(std::runtime_error  ex) {
             logger->write_error( ex.what() );
             return false;
@@ -379,8 +417,12 @@ namespace hnmav_kernel
         try {
             cl_int err = CL_SUCCESS;
 
-            logger->write_info("--- Mem copy check size   ", lexical_cast<std::string>((sizeof(cl_char) * platdevices->buffer_elements  * platdevices->num_devices)));
-            logger->write_info("--- Queue size            ", lexical_cast<std::string>(platdevices->queues.back()));
+            logger->write_info("--- Mem copy check size   ", 
+											lexical_cast<std::string>((sizeof(cl_char) * 
+																platdevices->buffer_elements  * 
+																platdevices->num_devices)));
+            logger->write_info("--- Queue size            ", 
+																lexical_cast<std::string>(platdevices->queues.back()));
 
             mapped_memory  =  clEnqueueMapBuffer(
                     platdevices->queues.back(),
@@ -449,17 +491,8 @@ namespace hnmav_kernel
             platdevices_info *platdevices = get_platdevices_data();
 
             int  count_input = 0;
-            char *signature_input;// = new char[platdevices->node_tire_input->size()]();
-            //char *signature_input = (char*)malloc(platdevices->node_tire_input->size() * sizeof(char));
-            /*
-            			for(typename std::vector<node_data>::iterator iter_data = platdevices->node_tire_input->begin();
-                    iter_data != platdevices->node_tire_input->end();
-                    ++iter_data, ++count_input) {
+            char *signature_input;
 
-                node_data  input_data = *iter_data;
-                signature_input[count_input] = input_data.data[count_input];
-            }
-            			*/
 
             cl_mem buffer          = platdevices->mem_input_buffers->at(0);
             cl_command_queue queue = platdevices->queues.at(0);

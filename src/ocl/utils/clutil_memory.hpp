@@ -57,9 +57,10 @@ namespace hnmav_kernel
             memory();
 
             bool  cl_create_buffer(WorkTypes& worktype_loads,
-										std::vector<char>   & symbol_vec_ptr,
-										std::vector<size_t> & state_vec_ptr,
-                    std::vector<char>& binary_vec_ptr);
+										std::vector<char>   & 		symbol_vec_ptr,
+										std::vector<size_t> & 		state_vec_ptr,
+                    std::vector<char>		& 		binary_vec_ptr,
+										std::vector<uint8_t> &    result_vec_ptr);
 
             bool  cl_build_node_buffer_object() throw(std::runtime_error);
 
@@ -116,7 +117,8 @@ namespace hnmav_kernel
             void cl_create_buffer(WorkTypes& worktype_loads,
                    	std::vector<char>   & symbol_vec_ptr,
 										std::vector<size_t> & state_vec_ptr,
-                    std::vector<char>& binary_vec);
+                    std::vector<char>& binary_vec,
+										std::vector<uint8_t> & result_vec);
 
             bool cl_create_subbuffer();
 

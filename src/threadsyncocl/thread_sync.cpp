@@ -116,14 +116,9 @@ namespace controller
 
         logger->write_info("Start, thread_sync::::start_processes() ", h_util::format_type::type_center);
 
-        typedef BufferSync  buffer_sync;
-        //Comm_thread_buffer
-        typedef comm_thread_buffer<buffer_sync, MAPPED_FILE>  comm_thread_buff;
         //define Thread run / mutex at here
         typename std::vector<thread_ptr>::iterator iter_threads;
 
-        //Slot_ocl
-        typedef slot_ocl_thread<buffer_sync, MAPPED_FILE>     slot_ocl_thread;
         //define iter run
         typename std::vector<thread_ocl_ptr>::iterator iter_ocl_thread;
 
@@ -132,7 +127,7 @@ namespace controller
         for(iter_ocl_thread = thread_ocl_pv_ptr->begin();
                 iter_ocl_thread != thread_ocl_pv_ptr->end();
                 ++iter_ocl_thread) {
-            boost::shared_ptr<slot_ocl_thread> s_ocl = *iter_ocl_thread;
+            boost::shared_ptr<s_ocl_thread_worker> s_ocl = *iter_ocl_thread;
             //s_ocl->set_tid_task(p_tid_task_vec);
             s_ocl->start();
             //s_ocl->join();
@@ -180,6 +175,7 @@ namespace controller
             *load_ocl_system,
             std::string *kernel_file_path_ptr)
     {
+				logger->write_info("thread_sync::add_load_ocl_system(), Path-OCL-file ", *kernel_file_path_ptr);
         this->load_ocl_system = load_ocl_system;
         this->load_ocl_system->set_opencl_file(*kernel_file_path_ptr);
         this->load_ocl_system->cl_load_platform();

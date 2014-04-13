@@ -77,7 +77,7 @@ namespace controller
 {
 
     using namespace utils;
-		using namespace filetypes;
+    using namespace filetypes;
 
     namespace h_util = hnmav_util;
 
@@ -103,41 +103,41 @@ namespace controller
 
             //thread controller
             typedef BufferSync      buffer_sync_type;
-						typedef mutex_buffer<Mutex>  mutex_buff;
+            typedef mutex_buffer<Mutex>  mutex_buff;
 
             //typedef buffer_kernel::size_int size_type;
             typedef boost::shared_ptr<comm_thread_buffer<buffer_sync_type, MAPPED_FILE> > thread_ptr;
-						typedef boost::shared_ptr<slot_ocl_thread<buffer_sync_type, MAPPED_FILE> > thread_ocl_ptr;
+            typedef boost::shared_ptr<slot_ocl_thread<buffer_sync_type, MAPPED_FILE> > thread_ocl_ptr;
 
             //     std::string  *file_path;
             thread_ptr   *thread_array_ptr;
 
             buffer_sync_type *buff_sync_internal;
 
-						mutex_buff   *mutex_sync_internal;
+            mutex_buff   *mutex_sync_internal;
             //size_type thread_id;
 
             std::vector<thread_ptr> thread_ptr_vec;
             // pointer handler vector of shared_ptr of threads.
             std::vector<thread_ptr> *thread_pv_ptr;
 
-						//Slot ocl thread
-						std::vector<thread_ocl_ptr> thread_ocl_ptr_vec;
-						std::vector<thread_ocl_ptr> *thread_ocl_pv_ptr;
+            //Slot ocl thread
+            std::vector<thread_ocl_ptr> thread_ocl_ptr_vec;
+            std::vector<thread_ocl_ptr> *thread_ocl_pv_ptr;
 
-						//task_id (thread_t)
-						std::vector<pthread_t> p_tid_task_vec;
+            //task_id (thread_t)
+            std::vector<pthread_t> p_tid_task_vec;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
 
 
-						
-						 
+
+
         public:
 
-						//ocl support
+            //ocl support
             typedef kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
                     dstr::dstr_def::work_groupitems,
                     std::vector<boost::unordered_map<char, size_t> >,
@@ -147,36 +147,43 @@ namespace controller
                     std::vector<boost::unordered_map<char, size_t> > >
                     >	 load_ocl_system_type;
 
+            //typedef BufferSync  buffer_sync;
+            //Comm_thread_buffer
+            typedef comm_thread_buffer<BufferSync, MAPPED_FILE>  comm_thread_buff;
+
+            //Slot_ocl
+            typedef slot_ocl_thread<BufferSync, MAPPED_FILE>     s_ocl_thread_worker;
+
             typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *
-                mapstr_shm_ptr;
+            mapstr_shm_ptr;
             //mapstr_shm_type mapstr_shm_ptr;
-						typename thread_sync<BufferSync, MAPPED_FILE>::load_ocl_system_type * 
-								load_ocl_system;
-	
+            typename thread_sync<BufferSync, MAPPED_FILE>::load_ocl_system_type *
+            load_ocl_system;
+
 
             thread_sync();
 
-            boost::shared_ptr<BufferSync>& buffer_ocl(){ 
-							//TODO: Interface supported other class.
-						};
+            boost::shared_ptr<BufferSync>& buffer_ocl() {
+                //TODO: Interface supported other class.
+            };
 
             //boost::tuple<struct shm_memory::data_ocl_process<MAPPED_FILE>::size_int> get_thread_info();
 
-			      boost::tuple<uint8_t> get_thread_info();
+            boost::tuple<uint8_t> get_thread_info();
 
             ibuffer_sync<BufferSync>& start_processes();
-											
+
             //insert file-shm mapped to create vector thread.
             std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync,MAPPED_FILE> > >&
             init_syncocl_workload(typename shm_memory::
                     file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
                     std::map<const uint64_t , size_t> *map_file_size);
-						//signature 
-						bool add_sig_process(std::vector<char> * symbol_vec, std::vector<size_t> * state_vec);
-						//OCL send to slot_ocl_thread
-						bool add_load_ocl_system(typename thread_sync<BufferSync, MAPPED_FILE>::
-							load_ocl_system_type * load_ocl_system,
-							std::string * kernel_file_path_ptr);
+            //signature
+            bool add_sig_process(std::vector<char> *symbol_vec, std::vector<size_t> *state_vec);
+            //OCL send to slot_ocl_thread
+            bool add_load_ocl_system(typename thread_sync<BufferSync, MAPPED_FILE>::
+                    load_ocl_system_type *load_ocl_system,
+                    std::string *kernel_file_path_ptr);
 
     };
 

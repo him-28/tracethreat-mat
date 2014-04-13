@@ -243,9 +243,9 @@ namespace controller
                 logger->write_info("Scan  end  point ",
                         boost::lexical_cast<std::string>(s_ocl->end_point));
 
-                std::vector<uint64_t> index_result = docl_processes->index_binary_result;
+                std::vector<uint8_t> index_result = docl_processes->index_binary_result;
                 //check on ranking of star_point to end_point
-                std::vector<uint64_t>::iterator iter_nresult = index_result.begin();
+                std::vector<uint8_t>::iterator iter_nresult = index_result.begin();
 
                 std::advance(iter_nresult, s_ocl->start_point);
 
@@ -297,6 +297,7 @@ namespace controller
     template<typename BufferSync, typename MAPPED_FILE>
     void *slot_ocl_thread<BufferSync, MAPPED_FILE>::run()
     {
+				logger->write_info("slot_ocl_thread::run(), start...");
         //[] start OCL and call function sends data to buffer of OCL.
         //[] check thread completed. check from size of thread. and map contain slot_ocl structure.
         uint64_t thread_size = 0;

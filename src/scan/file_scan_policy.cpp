@@ -115,11 +115,11 @@ namespace policy
             logger->write_info("pe_file_policy::scan_file_type, cannot open kernel file.");
             return false;
         }
-				
+
         utils::scan_file_code scanf_code = pe_fconl.scan(this->node_symbol_vec,
                 this->node_state_vec,
                 &pe_fconl.get_file_buffer());
-				
+
         if(scanf_code == utils::infected_found) {
             logger->write_info("pe_file_policy::scan_file_type, found file infected.");
         }
@@ -150,12 +150,15 @@ namespace policy
     bool pe_file_policy<MAPPED_FILE>::
     scan_file_type(std::vector<MAPPED_FILE *> *mapped_file_pe_vec)
     {
-				//Plan-00003 : Retrun result is array.
-				pe_fconl.scan(this->node_symbol_vec, 
-							this->node_state_vec, 
-							mapped_file_pe_vec,
-              this->kernel_file_path);
-				//Plan-00004 : read result and match with internal arena.
+				logger->write_info("pe_file_policy::scan_file_type(), multiple scanning with ocl");
+
+        pe_fconl.set_opencl_file(*this->kernel_file_path);
+        //Plan-00003 : Retrun result is array.
+        pe_fconl.scan(this->node_symbol_vec,
+                this->node_state_vec,
+                mapped_file_pe_vec,
+                this->kernel_file_path);
+        //Plan-00004 : read result and match with internal arena.
     }
 
 
@@ -185,6 +188,16 @@ namespace policy
     bool pe_file_policy<MAPPED_FILE>::set_mapped_file(MAPPED_FILE *mapped_file)
     {
         mapped_files_vec.push_back(mapped_file);
+        return true;
+    }
+
+    template<typename MAPPED_FILE>
+    bool pe_file_policy<MAPPED_FILE>::set_mapped_file(std::vector<MAPPED_FILE *> *mapped_file)
+    {
+        mapped_files_vec.insert(mapped_files_vec.begin(),
+                mapped_file->begin(),
+                mapped_file->end());
+        return true;
     }
 
     template<typename MAPPED_FILE>
@@ -243,7 +256,7 @@ namespace policy
         }// End-for loop
 
     }
-	
+
     template<typename MAPPED_FILE>
     std::vector<struct file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
