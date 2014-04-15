@@ -4,29 +4,31 @@
 
 /* Create Buffer */
 __kernel void  actire_search(
-__global uchar  *node_symbol,
+__global uchar *node_symbol,
 __global uint  *node_state,
 __global uchar *infected_str,
 __global uchar *symbol_wb,
 __global uint  *result)
 {
 
-	uint id_sym       = get_global_id(0);
-	uint id_inf          = get_global_id(1);
-	symbol_wb[id_sym] = infected_str[id_sym];
-	uint sig_len = 10;
-
-	if(node_symbol[0] == infected_str[id_sym])
+	uint id_sym0 = get_global_id(0);
+	//uint id_sym1 = get_global_id(1);
+	//symbol_wb[id_sym0] = infected_str[id_sym0];
+						
+	if(infected_str[id_sym0] == node_symbol[0])
 	{
-			 symbol_wb[id_sym] = 'v';
-			for(int i = 1; i < sig_len; i++)
+		int count_symbol = 1;
+		for(int j = id_sym0+1; j < id_sym0+10; j++)
+		{
+			if(infected_str[j] != node_symbol[count_symbol])
 			{
-						if(node_symbol[i] == infected_str[id_sym+i])
-									symbol_wb[id_sym] = node_symbol[i];
+				break;
+			}else{
+					symbol_wb[j] = 'x';// infected_str[j];
 			}
-
+			count_symbol++;
+		}
 	}
-
 
 }
 

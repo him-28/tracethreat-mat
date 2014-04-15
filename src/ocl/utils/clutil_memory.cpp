@@ -1,4 +1,6 @@
+#include <numeric>
 #include "ocl/utils/clutil_memory.hpp"
+//#include "boost/range/algorithm_ext/iota.hpp"
 
 //GPU OCL new namespace
 namespace gpuocl
@@ -52,8 +54,20 @@ namespace hnmav_kernel
         platdevices->node_symbol_vec = symbol_vec_ptr; // *ipara.get_symbol_shared_ptr().get();
         platdevices->node_state_vec  = state_vec_ptr; //*ipara.get_state_shared_ptr().get();
         platdevices->node_binary_vec = binary_vec_ptr;
+				std::cout<<"---- Simple binary ----"<<std::endl;
+				std::vector<char>::iterator iter_bin;
+				for(iter_bin = binary_vec_ptr.begin(); std::distance(binary_vec_ptr.begin(), iter_bin) != 20; ++iter_bin)
+				{
+						std::cout<<*iter_bin;
+				}
+				std::cout<<std::endl;
+				//set result node. Value sets are zero.
+				std::fill(result_vec_ptr.begin(), result_vec_ptr.end(), 1);
+				//memset(&result_vec_ptr[0], 0, result_vec_ptr.size() * sizeof(result_vec_ptr[0]));
         platdevices->node_result_vec = result_vec_ptr;
-
+				
+				
+					
         symbol_vec = &platdevices->node_symbol_vec;
         state_vec  = &platdevices->node_state_vec;
 
@@ -160,7 +174,7 @@ namespace hnmav_kernel
             //Write back index found.
             cl_mem  result_mem = clCreateBuffer(
                     plat_info->context,
-                    CL_MEM_READ_WRITE,
+                    CL_MEM_WRITE_ONLY,
                     sizeof(uint8_t) * plat_info->node_result_vec.size(),
                     &plat_info->node_result_vec[0],
                     &err);

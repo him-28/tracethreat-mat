@@ -183,7 +183,9 @@ namespace controller
             //OCL send to slot_ocl_thread
             bool add_load_ocl_system(typename thread_sync<BufferSync, MAPPED_FILE>::
                     load_ocl_system_type *load_ocl_system,
-                    std::string *kernel_file_path_ptr);
+                    std::string *kernel_file_path_ptr,
+                    std::vector<char> *symbol_vec,
+                    std::vector<size_t>   *state_vec);
 
     };
 

@@ -43,8 +43,8 @@ namespace hnmav_kernel
         public:
 
             commandqueue() {
-                logger_ptr = &clutil_logging<std::string, int>::get_instance();
-                logger = logger_ptr->get();
+                //logger_ptr = &clutil_logging<std::string, int>::get_instance();
+                //logger = logger_ptr->get();
             }
 
             bool cl_create_command_queue();

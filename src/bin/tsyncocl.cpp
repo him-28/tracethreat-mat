@@ -9,7 +9,7 @@
 
 using namespace data_structure;
 using namespace policy;
-using namespace util;
+using namespace utils;
 
 typedef struct {
     std::vector<std::string> keywords;

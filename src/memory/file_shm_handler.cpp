@@ -36,10 +36,22 @@ namespace memory
     template<typename MAPPED_FILE>
     bool file_shm_handler<MAPPED_FILE>::initial_shm(uint64_t full_file_size)
     {
+				//TODO: Plant-00004 :Change to memory menagement size system.
+				uint64_t shm_initial_size = full_file_size * 64;
         // Managed_shared_memory created SHM.
         file_shm = new boostinp::managed_shared_memory(
-                boostinp::create_only, utils::get_process_id_name(), full_file_size * 8);
-        //map_shm_ptr = new map_shm;
+                boostinp::create_only, utils::get_process_id_name(), shm_initial_size);
+				if(file_shm->get_size() == shm_initial_size){
+
+					logger->write_info("file_shm_handler::initial_shm(), shm-size ",
+						boost::lexical_cast<std::string>(shm_initial_size));
+
+					logger->write_info("file_shm_handler::initial_shm(), processes_id ",
+							boost::lexical_cast<std::string>(utils::get_process_id_name()));
+
+					return true;
+				}
+				return false;
     }
     /*Phase-1 :  File read to string on files-shm */
     template<typename MAPPED_FILE>
@@ -165,6 +177,9 @@ namespace memory
     template<typename MAPPED_FILE>
     bool file_shm_handler<MAPPED_FILE>::delete_file_shm()
     {
+				if(map_str_shm_ptr->size() ==  0)
+						return true;
+		
         //TODO : list file-shm detail deleted.
         std::vector<uint64_t>::const_iterator iter_fn_md5;
 
@@ -175,6 +190,7 @@ namespace memory
         }
 
         file_shm->destroy_ptr(map_str_shm_ptr);
+				return true;
     }
 
 

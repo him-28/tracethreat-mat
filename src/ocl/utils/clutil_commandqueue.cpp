@@ -200,16 +200,17 @@ namespace hnmav_kernel
                 }                
 
 
-					    cl_mem cl_mem_result = platdevices->vec_buffer[3];
+					    cl_mem cl_mem_result = platdevices->vec_buffer[4];
 
 				      logger->write_info_test("commandqueue::cl_create_command_queue,\
 									clEnqueueWriteBuffer, node_result_vec size ",
                         boost::lexical_cast<std::string>(platdevices->node_result_vec.size()));
-
+							logger->write_info_test("commandqueue::cl_create_command_queue, result [0] ",
+												boost::lexical_cast<std::string>(platdevices->node_result_vec[0]));
 
                err |= clEnqueueWriteBuffer(platdevices->queues[0],
                         cl_mem_result,
-                        CL_TRUE,
+                        CL_FALSE,
                         0,
                         sizeof(uint8_t) * platdevices->node_result_vec.size(),
                         (void *)&platdevices->node_result_vec[0],
@@ -278,6 +279,7 @@ namespace hnmav_kernel
 
 								logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
                 platdevices->symbol_wb = (char *)malloc(sizeof(char) * platdevices->node_symbol_vec.size());
+
                 //write back- test only
                 err |= clEnqueueReadBuffer(platdevices->queues[0],
                         *platdevices->vec_buffer.pop_index(3),
@@ -297,10 +299,16 @@ namespace hnmav_kernel
 
                 int size_symbol_bw = platdevices->node_symbol_vec.size();
 
-                for(int count_symbol = 0; count_symbol < size_symbol_bw; count_symbol++) {
-                    printf("Return data : %c \n", platdevices->symbol_wb[count_symbol]);
-                    logger->write_info("Return value ",
+                for(int count_symbol = 0; 
+												count_symbol < platdevices->node_binary_vec.size(); 
+												count_symbol++) {
+                    //printf("Return data : %c \n", platdevices->symbol_wb[count_symbol]);
+                    if(platdevices->symbol_wb[count_symbol] == 'x'){
+                     logger->write_info("Return value ",
                             boost::lexical_cast<std::string>(platdevices->symbol_wb[count_symbol]));
+										 logger->write_info("Index of value ", 
+														boost::lexical_cast<std::string>(count_symbol));
+										}
 
                 }
 								//Release memory

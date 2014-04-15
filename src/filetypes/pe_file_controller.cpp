@@ -297,9 +297,19 @@ namespace filetypes
         tsync.init_syncocl_workload(f_shm_handler.get_map_str_shm(),
                 f_shm_handler.get_map_file_size());
 
-        tsync.add_load_ocl_system(&load_ocl_system, kernel_file_path_ptr);
+        logger->write_info("pe_file_policy::scan_file_type(), Initial OCL workload completed.");
 
-        tsync.add_sig_process(symbol_vec, state_vec);
+        tsync.add_load_ocl_system(&load_ocl_system, kernel_file_path_ptr, symbol_vec, state_vec);
+
+        //logger->write_info("pe_file_policy::scan_file_type(), OCL workload completed.");
+
+        //tsync.add_sig_process(symbol_vec, state_vec);
+
+        logger->write_info("pe_file_policy::scan_file_type(), Add signature completed.");
+
+				tsync.start_processes();
+
+        logger->write_info("pe_file_policy::scan_file_type(), Processes completed.");
 
         //tsync.get_slot_ocl_result();
 

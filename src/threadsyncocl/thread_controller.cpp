@@ -207,7 +207,7 @@ namespace controller
 
         //Mutex buffer locks mutex,
 
-        logger->write_info("-- To critical section --");
+        logger->write_info("-- comm_thread_buffer::run(), Before to critical section --");
 
             uint64_t found_size = 0;
             uint8_t  summary_status = 0;
@@ -302,7 +302,7 @@ namespace controller
         //[] check thread completed. check from size of thread. and map contain slot_ocl structure.
         uint64_t thread_size = 0;
 
-				this->load_ocl_system_->cl_process_commandqueue();
+				//this->load_ocl_system_->cl_process_commandqueue();
 
         while(true) {
             mutex_buff_->lock_request();

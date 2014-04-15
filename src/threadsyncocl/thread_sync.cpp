@@ -31,8 +31,8 @@ namespace controller
     thread_sync<BufferSync, MAPPED_FILE>::thread_sync()
     {
         // logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
-        logger = logger_ptr->get();
+        //logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        //logger = logger_ptr->get();
         //init value
         //thread_id = 0;
     }
@@ -43,6 +43,7 @@ namespace controller
             file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
             std::map<const uint64_t , size_t> *map_file_size)
     {
+				logger->write_info("thread_sync::init_syncocl_workload(), Start initial workload");
 
         //buffer data for multithread.
         buff_sync_internal  = new BufferSync();
@@ -84,6 +85,8 @@ namespace controller
             if(buff_sync_internal->write_binary_hex(binarystr_shm->c_str(), size_hex, file_name_md5)) {
                 //TODO: problem before return
             }
+						 
+	    			logger->write_info("thread_sync::init_syncocl_workload(), write binary file completed.");
 
             //TODO: Implement thread_id (Not file_name_md5 )
             thread_ptr_vec.push_back(
@@ -92,6 +95,7 @@ namespace controller
                             (file_name_md5, buff_sync_internal, mutex_sync_internal)) //[thread_id]
             );
 
+				logger->write_info("thread_sync::init_syncocl_workload(), Push thread task completed.");
 
 
         }//end for loop
@@ -102,6 +106,8 @@ namespace controller
                         new slot_ocl_thread<BufferSync, MAPPED_FILE>
                         (this->load_ocl_system, buff_sync_internal, mutex_sync_internal))
         );
+
+				logger->write_info("thread_sync::init_syncocl_workload(), Push worker controller completed.");
 
         thread_pv_ptr = &thread_ptr_vec;
         thread_ocl_pv_ptr = &thread_ocl_ptr_vec;
@@ -173,7 +179,9 @@ namespace controller
     bool  thread_sync<BufferSync, MAPPED_FILE>::add_load_ocl_system(
             typename thread_sync<BufferSync, MAPPED_FILE>::load_ocl_system_type
             *load_ocl_system,
-            std::string *kernel_file_path_ptr)
+            std::string *kernel_file_path_ptr,
+            std::vector<char> *symbol_vec,
+            std::vector<size_t>   *state_vec)
     {
 				logger->write_info("thread_sync::add_load_ocl_system(), Path-OCL-file ", *kernel_file_path_ptr);
         this->load_ocl_system = load_ocl_system;
@@ -181,6 +189,16 @@ namespace controller
         this->load_ocl_system->cl_load_platform();
         this->load_ocl_system->cl_load_memory();
         //next steps load symbol and state with add_sig_process member function.
+
+        this->load_ocl_system->cl_process_buffer(*symbol_vec,
+                *state_vec,
+                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex,
+                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result);
+				
+        this->load_ocl_system->cl_build_memory();
+        this->load_ocl_system->cl_load_commandqueue();
+				this->load_ocl_system->cl_process_commandqueue();
+
         return true;
     }
 
@@ -194,7 +212,7 @@ namespace controller
             logger->write_info("thread_sync::add_sig_process(), Load OCL System is NULL");
             return false;
         }
-				
+/*				
         this->load_ocl_system->cl_process_buffer(*symbol_vec,
                 *state_vec,
                 buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex,
@@ -202,7 +220,8 @@ namespace controller
 				
         this->load_ocl_system->cl_build_memory();
         this->load_ocl_system->cl_load_commandqueue();
-
+				this->load_ocl_system->cl_process_commandqueue();
+*/
         return true;
     }
 

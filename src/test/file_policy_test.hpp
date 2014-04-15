@@ -1,15 +1,21 @@
 #include "scan/file_scan_policy.hpp"
 #include "utils/file_offset_handler.hpp"
 
-#define FILE_SIZE_POLICY 1
+#define FILE_SIZE_POLICY 2
 class FilePolicyTest : public ::testing::Test
 {
     protected:
         virtual void SetUp() {
 
 
-            file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/Crack.exe";
-						opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
+            opencl_file_path    =
+                    "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
+            //file_name_offset[0]    =
+            //            "/home/chatsiri/sda1/workspacemalware/lab_malwareanalysis/3/yara_scan_old.sh";
+            file_name_offset[0] =
+                    "/home/chatsiri/sda1/workspacemalware/lab_malwareanalysis/3/clam_ISmsi_ext.exe";
+            file_name_offset[1] =
+                    "/home/chatsiri/sda1/workspacemalware/malware_debug/infected_01.exe";
 
             for(int count_file = 0; count_file < 	FILE_SIZE_POLICY; count_file++) {
                 file_type_vec.push_back(file_name_offset[count_file]);
@@ -27,15 +33,15 @@ class FilePolicyTest : public ::testing::Test
         std::vector<const char *> file_type_vec;
         struct MAPPED_FILE_PE *s_mapped_fpe[FILE_SIZE_POLICY];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
-				std::string opencl_file_path;
+        std::string opencl_file_path;
 };
 
 
 TEST_F(FilePolicyTest, pe_file_policy)
 {
-	
+
     using namespace policy;
-    
+
     utils::file_offset_handler<struct utils::common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
 
     EXPECT_TRUE(fileoffset_h.mapped_file(file_type_vec, mapped_file_vec, fileoffset_h));
@@ -71,11 +77,12 @@ TEST_F(FilePolicyTest, pe_file_policy)
     //Assert
 
     //pe_file_policy<struct MAPPED_FILE_PE>  pef_policy;// =  new pe_file_policy<struct MAPPED_FILE_PE>();
-    const char str1[] = "3223223";
+    //4d5a9000030000000400";
+    const char str1[] = "30000000400";
     std::vector<char>  nsymbol;
     nsymbol.insert(nsymbol.end(), str1, str1 + strlen(str1));
     printf("nsymbol size : %d \n", nsymbol.size());
-	
+
     std::vector<size_t> nstate;
     nstate.push_back(123); // test state only
     nstate.push_back(2);
@@ -85,7 +92,7 @@ TEST_F(FilePolicyTest, pe_file_policy)
     //get signature base.
     pef_policy->scan_ocl_controller(&nsymbol, &nstate);
 
-		pef_policy->set_opencl_file_path(opencl_file_path);
+    pef_policy->set_opencl_file_path(opencl_file_path);
 
     //get mapped file.
     pef_policy->set_mapped_file(mapped_file_vec_ptr);
@@ -96,10 +103,10 @@ TEST_F(FilePolicyTest, pe_file_policy)
     > sf_policy;
 
     sf_policy.scan_pe(pef_policy);
-	
-	/*
+
+    /*
     EXPECT_TRUE(fileoffset_h.unmapped_file(*mapped_file_vec_ptr));
-	*/
+    */
 
 };
 
