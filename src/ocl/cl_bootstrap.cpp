@@ -154,7 +154,7 @@ namespace hnmav_kernel
              >
     bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
     cl_process_buffer(std::vector<char>& symbol_vec_ptr,
-            std::vector<size_t>&         state_vec_ptr,
+            std::vector<int>&            state_vec_ptr,
             std::vector<char>&           binary_vec,
             std::vector<uint8_t>&       result_vec)
     {

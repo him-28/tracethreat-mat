@@ -212,9 +212,9 @@ namespace policy
     file_scan_policy<MAPPED_FILE>::file_scan_policy()
     {
         //logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
-        logger = logger_ptr->get();
-        logger->write_info("Init logger file_scan_policy");
+        //logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
+        //logger = logger_ptr->get();
+        //logger->write_info("Init logger file_scan_policy");
     }
 
     template<typename MAPPED_FILE>

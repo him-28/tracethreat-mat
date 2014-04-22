@@ -5,6 +5,7 @@ AM_CXXFLAGS = -I$(top_srcdir)/src -I/src/threadsyncocl @AM_CXXFLAGS@
 check_PROGRAMS = test_suite
 
 test_suite_SOURCES = semaphore_controller_test.cpp \
+environment_test.hpp \
 thread_controller.hpp \
 file_calculate.hpp \
 thread_exception.hpp \

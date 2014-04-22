@@ -233,7 +233,7 @@ namespace filetypes
         return *nth_ext_shared_ptr.get();
     }
 
-		
+
     template<typename MAPPED_FILE>
     utils::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
             std::vector<size_t>   *state_vec,
@@ -251,8 +251,8 @@ namespace filetypes
                 boost::lexical_cast<std::string>(state_vec->size()));
         logger->write_info("Send to pe_file_controller::scan, send symbol, state and binary to ocl",
                 hnmav_util::format_type::type_header);
-			/*
-				std::vector<uint64_t>  result_vec;
+        /*
+        	std::vector<uint64_t>  result_vec;
         //load open file kernel file
         load_ocl_system.set_opencl_file(*this->kernel_file_path_ptr);
         load_ocl_system.cl_load_platform();
@@ -261,7 +261,7 @@ namespace filetypes
         load_ocl_system.cl_build_memory();
         load_ocl_system.cl_load_commandqueue();
         load_ocl_system.cl_process_commandqueue();
-			*/
+        */
 
         return utils::infected_found;
     }
@@ -269,21 +269,22 @@ namespace filetypes
     template<typename MAPPED_FILE>
     utils::scan_file_code  pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
             std::vector<size_t> *state_vec,
-						std::vector<MAPPED_FILE*> * mapped_file_pe_vec,
-						std::string * kernel_file_path_ptr)
+            std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
+            std::string *kernel_file_path_ptr)
     {
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
-				uint64_t summary_file_size = 0;
+        uint64_t summary_file_size = 0;
+
         //summary file size of all
         for(iter_mapped_files = mapped_file_pe_vec->begin();
                 iter_mapped_files != mapped_file_pe_vec->end();
                 ++iter_mapped_files) {
-						MAPPED_FILE  * mf_pe = *iter_mapped_files;
-						summary_file_size += mf_pe->size;
+            MAPPED_FILE   *mf_pe = *iter_mapped_files;
+            summary_file_size += mf_pe->size;
         }//end-for loop
 
-				logger->write_info("pe_file_policy::scan_file_type(), Initial file-shm size completed.");
+        logger->write_info("pe_file_policy::scan_file_type(), Initial file-shm size completed.");
 
         f_shm_handler.initial_shm(summary_file_size);
         f_shm_handler.initial_file_shm(mapped_file_pe_vec);
@@ -299,7 +300,10 @@ namespace filetypes
 
         logger->write_info("pe_file_policy::scan_file_type(), Initial OCL workload completed.");
 
-        tsync.add_load_ocl_system(&load_ocl_system, kernel_file_path_ptr, symbol_vec, state_vec);
+        tsync.add_load_ocl_system(&load_ocl_system,
+                kernel_file_path_ptr,
+                symbol_vec,
+                state_vec);
 
         //logger->write_info("pe_file_policy::scan_file_type(), OCL workload completed.");
 
@@ -307,7 +311,7 @@ namespace filetypes
 
         logger->write_info("pe_file_policy::scan_file_type(), Add signature completed.");
 
-				tsync.start_processes();
+        tsync.start_processes();
 
         logger->write_info("pe_file_policy::scan_file_type(), Processes completed.");
 

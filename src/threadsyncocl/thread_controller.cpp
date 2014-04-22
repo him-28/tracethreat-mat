@@ -103,13 +103,13 @@ namespace controller
     bool thread<BufferSync>::thread_cancel()
     {
         if(is_current(get_thread_id())) {
-            logger->write_info("Thread cancle, ID",
+            logger->write_info("Thread cancel, ID",
                     boost::lexical_cast<std::string>(get_thread_id()));
             pthread_cancel(get_thread_id());
             return true;
         }
 
-        logger->write_info("Thread cannot cancle, ID",
+        logger->write_info("Thread cannot cancel, ID",
                 boost::lexical_cast<std::string>(get_thread_id()));
 
         return false;
@@ -285,8 +285,8 @@ namespace controller
 
             if(summary_status == map_tid.size()) {
 
-                logger->write_info("---comm_thread_buffer::run(), End Tasks completed jobs ---");
-                this->thread_cancel();
+                logger->write_info("---comm_thread_buffer::run(), Task end, completed jobs ---");
+                //this->thread_cancel();
                 break;
             } 
 
@@ -336,8 +336,8 @@ namespace controller
             mutex_buff_->unlock_request();
 
             if(thread_size == 0) {
-                logger->write_info("slot_ocl_thread::run(), Thread break, Success.");
-                this->thread_cancel();
+                logger->write_info("slot_ocl_thread::run(), Worker break, completed jobs.");
+                //this->thread_cancel();
                 break;
             }
 

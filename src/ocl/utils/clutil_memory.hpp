@@ -49,7 +49,7 @@ namespace hnmav_kernel
 
     //  memory internal initial, write Real Object here.
     template<typename WorkTypes,
-             typename ContainerT = std::vector<size_t> >
+             typename ContainerT = std::vector<int> >
      class memory : public base_clutil
     {
         public:
@@ -58,7 +58,7 @@ namespace hnmav_kernel
 
             bool  cl_create_buffer(WorkTypes& worktype_loads,
 										std::vector<char>   & 		symbol_vec_ptr,
-										std::vector<size_t> & 		state_vec_ptr,
+										std::vector<int>    & 		state_vec_ptr,
                     std::vector<char>		& 		binary_vec_ptr,
 										std::vector<uint8_t> &    result_vec_ptr);
 
@@ -98,7 +98,8 @@ namespace hnmav_kernel
 
             // input open cl
             std::vector<char> *symbol_vec;
-            ContainerT        *state_vec;
+//            ContainerT        *state_vec;
+            std::vector<int>  *state_vec;
             std::vector<uint8_t> *binary_vec;
             std::vector<cl_mem> mem_object_vec;
 
@@ -116,7 +117,7 @@ namespace hnmav_kernel
 
             void cl_create_buffer(WorkTypes& worktype_loads,
                    	std::vector<char>   & symbol_vec_ptr,
-										std::vector<size_t> & state_vec_ptr,
+										std::vector<int> & state_vec_ptr,
                     std::vector<char>& binary_vec,
 										std::vector<uint8_t> & result_vec);
 

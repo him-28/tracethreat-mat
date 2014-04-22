@@ -30,7 +30,7 @@ namespace hnmav_kernel
     template<typename WorkTypes, typename ContainerT>
     bool memory<WorkTypes, ContainerT>::cl_create_buffer(WorkTypes& worktype_loads,
             std::vector<char>&        symbol_vec_ptr,
-            std::vector<size_t>&      state_vec_ptr,
+            std::vector<int>&         state_vec_ptr,
             std::vector<char>&       	binary_vec_ptr,
             std::vector<uint8_t>&    	result_vec_ptr)
     {
@@ -115,7 +115,7 @@ namespace hnmav_kernel
 
         try {
             // inital vector size
-            plat_info->vec_buffer.initial_size(5);
+            plat_info->vec_buffer.initial_size(6);
             //Node input
             cl_mem  symbol_mem = clCreateBuffer(
                     plat_info->context,
@@ -133,7 +133,7 @@ namespace hnmav_kernel
             cl_mem  state_mem = clCreateBuffer(
                     plat_info->context,
                     CL_MEM_READ_ONLY,
-                    sizeof(size_t) * plat_info->node_state_vec.size(),
+                    sizeof(int) * plat_info->node_state_vec.size(),
                     &plat_info->node_state_vec[0],
                     &err);
 
@@ -161,7 +161,7 @@ namespace hnmav_kernel
             cl_mem  symbol_wb_mem = clCreateBuffer(
                     plat_info->context,
                     CL_MEM_READ_ONLY,
-                    sizeof(uint8_t) * plat_info->node_symbol_vec.size(),
+                    sizeof(char) * plat_info->node_binary_vec.size(),
                     plat_info->symbol_wb,
                     &err);
 
@@ -185,6 +185,19 @@ namespace hnmav_kernel
             // set size of write back index found matching.
             plat_info->vec_buffer.push_back(result_mem);
 
+            //Write back symbol
+            cl_mem  state_wb_mem = clCreateBuffer(
+                    plat_info->context,
+                    CL_MEM_READ_ONLY,
+                    sizeof(int) * plat_info->node_binary_vec.size(),
+                    plat_info->state_wb,
+                    &err);
+
+            if(err != CL_SUCCESS)
+                throw except::cl::clutil_exception(err, "clCreateBuffer-Build-symbol_wb");
+
+            // set size of buffer input
+            plat_info->vec_buffer.push_back(state_wb_mem);
 
         } catch(std::runtime_error&  ex) {
             logger->write_error( ex.what() );
@@ -280,7 +293,7 @@ namespace hnmav_kernel
     template<typename WorkTypes, typename ContainerT>
     void  clutil_memory<WorkTypes, ContainerT>::cl_create_buffer(WorkTypes& worktype_loads,
             std::vector<char>&    symbol_vec_ptr,
-            std::vector<size_t>& state_vec_ptr,
+            std::vector<int>& state_vec_ptr,
             std::vector<char>& binary_vec,
 					  std::vector<uint8_t> & result_vec)
     {

@@ -20,8 +20,10 @@
  * - Initial multithread run on comm_thread_buffer                   R.Chatsiri   04/04/2014
  */
 
-#include "threadsyncocl/thread_sync.hpp"
+#include <string>
+#include <iostream>
 
+#include "threadsyncocl/thread_sync.hpp"
 
 namespace controller
 {
@@ -136,7 +138,6 @@ namespace controller
             boost::shared_ptr<s_ocl_thread_worker> s_ocl = *iter_ocl_thread;
             //s_ocl->set_tid_task(p_tid_task_vec);
             s_ocl->start();
-            //s_ocl->join();
         }
 
         logger->write_info("thread_sync::::start_processes(), Start worker success.");
@@ -149,9 +150,9 @@ namespace controller
             boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
             ct_buff->start();
             //get thread id send is task_id for worker name : slot_ocl_thread.
-            p_tid_task_vec.push_back(ct_buff->get_thread_id());
+            //p_tid_task_vec.push_back(ct_buff->get_thread_id());
         }
-
+				
         //join threads/ Join
         for(iter_threads = thread_pv_ptr->begin();
                 iter_threads != thread_pv_ptr->end();
@@ -159,10 +160,16 @@ namespace controller
             // get thread prompt.
             boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
             ct_buff->join();
-            break;
-            logger->write_info("thread_sync::::start_processes(), end join() ");
+						break;
         }
-
+			
+			 for(iter_ocl_thread = thread_ocl_pv_ptr->begin();
+                iter_ocl_thread != thread_ocl_pv_ptr->end();
+                ++iter_ocl_thread) {
+            boost::shared_ptr<s_ocl_thread_worker> s_ocl = *iter_ocl_thread;
+            //s_ocl->set_tid_task(p_tid_task_vec);
+            s_ocl->join();
+        }
 
 
         logger->write_info("End, thread_sync::::start_processes() ", h_util::format_type::type_center);
@@ -189,9 +196,22 @@ namespace controller
         this->load_ocl_system->cl_load_platform();
         this->load_ocl_system->cl_load_memory();
         //next steps load symbol and state with add_sig_process member function.
-
+				//convert state size_t to int for ocl
+				//Plan-00004 : Take fast speed convert from size_t to int type.
+				std::vector<int>  state_vec_convert;
+				//state_vec_convert.resize(state_vec->size());
+				std::vector<size_t>::iterator iter_state_vec;
+				for(iter_state_vec = state_vec->begin();
+						iter_state_vec != state_vec->end();
+						++iter_state_vec)
+				{
+					std::string state_str = boost::lexical_cast<std::string>(*iter_state_vec);
+				  logger->write_info("thread_sync::add_load_ocl_system(), state convert ",
+										state_str);
+				   state_vec_convert.push_back(boost::lexical_cast<int>(state_str));	
+				} 
         this->load_ocl_system->cl_process_buffer(*symbol_vec,
-                *state_vec,
+                state_vec_convert,
                 buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex,
                 buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result);
 				

@@ -78,14 +78,17 @@ TEST_F(FilePolicyTest, pe_file_policy)
 
     //pe_file_policy<struct MAPPED_FILE_PE>  pef_policy;// =  new pe_file_policy<struct MAPPED_FILE_PE>();
     //4d5a9000030000000400";
-    const char str1[] = "30000000400";
+    const char str1[] = "e1fba0e00b409cd21b8014ccd215468";
     std::vector<char>  nsymbol;
     nsymbol.insert(nsymbol.end(), str1, str1 + strlen(str1));
     printf("nsymbol size : %d \n", nsymbol.size());
 
     std::vector<size_t> nstate;
-    nstate.push_back(123); // test state only
-    nstate.push_back(2);
+		for(int count_state = 0; count_state < 30; count_state++)
+		{
+				nstate.push_back(count_state);
+		}
+    //nstate.push_back(1); // test state only
     printf("nstate size : %d \n", nstate.size());
 
     file_scan_policy<struct MAPPED_FILE_PE> *pef_policy = new pe_file_policy<struct MAPPED_FILE_PE>();

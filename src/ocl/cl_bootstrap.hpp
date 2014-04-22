@@ -51,7 +51,7 @@ namespace hnmav_kernel
 
 
             bool cl_process_buffer(std::vector<char>& symbol_vec_tr,
-                    std::vector<size_t>&  state_vec_ptr,
+                    std::vector<int>&  state_vec_ptr,
                     std::vector<char>& binary_vec,
 										std::vector<uint8_t> & result_vec);
 
