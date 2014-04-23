@@ -45,7 +45,7 @@ namespace controller
             file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
             std::map<const uint64_t , size_t> *map_file_size)
     {
-				logger->write_info("thread_sync::init_syncocl_workload(), Start initial workload");
+        logger->write_info("thread_sync::init_syncocl_workload(), Start initial workload");
 
         //buffer data for multithread.
         buff_sync_internal  = new BufferSync();
@@ -87,8 +87,8 @@ namespace controller
             if(buff_sync_internal->write_binary_hex(binarystr_shm->c_str(), size_hex, file_name_md5)) {
                 //TODO: problem before return
             }
-						 
-	    			logger->write_info("thread_sync::init_syncocl_workload(), write binary file completed.");
+
+            logger->write_info("thread_sync::init_syncocl_workload(), write binary file completed.");
 
             //TODO: Implement thread_id (Not file_name_md5 )
             thread_ptr_vec.push_back(
@@ -97,7 +97,7 @@ namespace controller
                             (file_name_md5, buff_sync_internal, mutex_sync_internal)) //[thread_id]
             );
 
-				logger->write_info("thread_sync::init_syncocl_workload(), Push thread task completed.");
+            logger->write_info("thread_sync::init_syncocl_workload(), Push thread task completed.");
 
 
         }//end for loop
@@ -109,7 +109,7 @@ namespace controller
                         (this->load_ocl_system, buff_sync_internal, mutex_sync_internal))
         );
 
-				logger->write_info("thread_sync::init_syncocl_workload(), Push worker controller completed.");
+        logger->write_info("thread_sync::init_syncocl_workload(), Push worker controller completed.");
 
         thread_pv_ptr = &thread_ptr_vec;
         thread_ocl_pv_ptr = &thread_ocl_ptr_vec;
@@ -152,7 +152,7 @@ namespace controller
             //get thread id send is task_id for worker name : slot_ocl_thread.
             //p_tid_task_vec.push_back(ct_buff->get_thread_id());
         }
-				
+
         //join threads/ Join
         for(iter_threads = thread_pv_ptr->begin();
                 iter_threads != thread_pv_ptr->end();
@@ -160,10 +160,10 @@ namespace controller
             // get thread prompt.
             boost::shared_ptr<comm_thread_buff> ct_buff = *iter_threads;
             ct_buff->join();
-						break;
+            break;
         }
-			
-			 for(iter_ocl_thread = thread_ocl_pv_ptr->begin();
+
+        for(iter_ocl_thread = thread_ocl_pv_ptr->begin();
                 iter_ocl_thread != thread_ocl_pv_ptr->end();
                 ++iter_ocl_thread) {
             boost::shared_ptr<s_ocl_thread_worker> s_ocl = *iter_ocl_thread;
@@ -190,34 +190,54 @@ namespace controller
             std::vector<char> *symbol_vec,
             std::vector<size_t>   *state_vec)
     {
-				logger->write_info("thread_sync::add_load_ocl_system(), Path-OCL-file ", *kernel_file_path_ptr);
+        logger->write_info("thread_sync::add_load_ocl_system(), Path-OCL-file ", *kernel_file_path_ptr);
         this->load_ocl_system = load_ocl_system;
         this->load_ocl_system->set_opencl_file(*kernel_file_path_ptr);
         this->load_ocl_system->cl_load_platform();
         this->load_ocl_system->cl_load_memory();
         //next steps load symbol and state with add_sig_process member function.
-				//convert state size_t to int for ocl
-				//Plan-00004 : Take fast speed convert from size_t to int type.
-				std::vector<int>  state_vec_convert;
-				//state_vec_convert.resize(state_vec->size());
-				std::vector<size_t>::iterator iter_state_vec;
-				for(iter_state_vec = state_vec->begin();
-						iter_state_vec != state_vec->end();
-						++iter_state_vec)
-				{
-					std::string state_str = boost::lexical_cast<std::string>(*iter_state_vec);
-				  logger->write_info("thread_sync::add_load_ocl_system(), state convert ",
-										state_str);
-				   state_vec_convert.push_back(boost::lexical_cast<int>(state_str));	
-				} 
+        //convert state size_t to int for ocl
+        //Plan-00004 : Take fast speed convert from size_t to int type.
+        std::vector<int>  state_vec_convert;
+        //state_vec_convert.resize(state_vec->size());
+        std::vector<size_t>::iterator iter_state_vec;
+
+        for(iter_state_vec = state_vec->begin();
+                iter_state_vec != state_vec->end();
+                ++iter_state_vec) {
+            std::string state_str = boost::lexical_cast<std::string>(*iter_state_vec);
+            logger->write_info("thread_sync::add_load_ocl_system(), state convert ",
+                    state_str);
+            state_vec_convert.push_back(boost::lexical_cast<int>(state_str));
+        }
+
+        std::vector<char>   binary_hex =
+                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex;
+        std::vector<uint8_t> *  binary_result =
+                &buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result;
+
         this->load_ocl_system->cl_process_buffer(*symbol_vec,
                 state_vec_convert,
-                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex,
-                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result);
+                binary_hex,
+								*binary_result);
+				
 				
         this->load_ocl_system->cl_build_memory();
         this->load_ocl_system->cl_load_commandqueue();
-				this->load_ocl_system->cl_process_commandqueue();
+        this->load_ocl_system->cl_process_commandqueue(binary_result);
+			
+				/*	
+				std::vector<uint8_t>::iterator iter_bresult;
+				for(iter_bresult = binary_result->begin();
+						iter_bresult != binary_result->end();
+						++iter_bresult)
+				{
+						if(*iter_bresult == 1){
+							  std::cout<<" Index : " << std::distance(binary_result->begin(), iter_bresult)
+								<<", data : " << *iter_bresult <<std::endl;
+						}
+				}
+				*/
 
         return true;
     }
@@ -232,16 +252,17 @@ namespace controller
             logger->write_info("thread_sync::add_sig_process(), Load OCL System is NULL");
             return false;
         }
-/*				
-        this->load_ocl_system->cl_process_buffer(*symbol_vec,
-                *state_vec,
-                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex,
-                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result);
-				
-        this->load_ocl_system->cl_build_memory();
-        this->load_ocl_system->cl_load_commandqueue();
-				this->load_ocl_system->cl_process_commandqueue();
-*/
+
+        /*
+                this->load_ocl_system->cl_process_buffer(*symbol_vec,
+                        *state_vec,
+                        buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex,
+                        buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result);
+
+                this->load_ocl_system->cl_build_memory();
+                this->load_ocl_system->cl_load_commandqueue();
+        				this->load_ocl_system->cl_process_commandqueue();
+        */
         return true;
     }
 

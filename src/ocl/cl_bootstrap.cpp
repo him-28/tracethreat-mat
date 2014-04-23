@@ -208,21 +208,13 @@ namespace hnmav_kernel
              typename ContainerT
              >
     bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
-    cl_process_commandqueue()
+    cl_process_commandqueue(std::vector<uint8_t> * result_vec)
     {
         comqueue_clutil->cl_create_command_queue();
-
-        comqueue_clutil->cl_enqueue_nd_task();
-
-        // comqueue_clutil->cl_enqueue_task();
-
-        //comqueue_clutil->cl_read_buffer();
-        //            comqueue_clutil->cl_write_event();
-
-        //            comqueue_clutil->cl_call_kernel();
-
+        comqueue_clutil->cl_enqueue_nd_task(result_vec);
         return true;
     }
+
 
     /**
     * @brief Releases all cl processes.

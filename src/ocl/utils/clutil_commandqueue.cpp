@@ -243,7 +243,7 @@ namespace hnmav_kernel
     }
 
 
-    bool commandqueue::cl_enqueue_nd_task()
+    bool commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> *result_vec)
     {
         logger->write_info("#### Start cl_enqueue_nd_task ####", format_type::type_header);
 
@@ -373,43 +373,46 @@ namespace hnmav_kernel
             }
             }
             */
-						/*
+            /*
             for(int count_symbol = 129;
-                    count_symbol < 180;//platdevices->node_binary_vec.size();
-                    count_symbol++) {
+            count_symbol < 180;//platdevices->node_binary_vec.size();
+            count_symbol++) {
 
-                //if( platdevices->state_wb[count_symbol] > 0){
-                printf("print value int : %d, index : %d \n",
-                        platdevices->state_wb[count_symbol],
-                        count_symbol);
-                //}
+            //if( platdevices->state_wb[count_symbol] > 0){
+            printf("print value int : %d, index : %d \n",
+            platdevices->state_wb[count_symbol],
+            count_symbol);
+            //}
 
             }//for
-						*/
-						
+            */
+
             std::vector<char>::iterator iter_symbol;
+
             int count_symbol_size = 0;
+            //Threshold leves for mathcing string lenght. Less than real string size, Must not detailed.
+            uint64_t threshold_levels = 2;
+            uint64_t symbol_size = platdevices->node_symbol_vec.size();
+            threshold_levels = symbol_size - threshold_levels;
 
             for(iter_symbol = platdevices->node_binary_vec.begin();
                     iter_symbol != platdevices->node_binary_vec.end();
                     ++iter_symbol) {
-								int index_symbol = std::distance(platdevices->node_binary_vec.begin(), iter_symbol);
+                int index_symbol = std::distance(platdevices->node_binary_vec.begin(), iter_symbol);
+
                 if(platdevices->symbol_wb[index_symbol] == *iter_symbol) {
 
-                    if(count_symbol_size > 10) {
-                        printf("print value : %c, index : %d\n",
-                                platdevices->symbol_wb[index_symbol],
-                                index_symbol);
-											//1) symbol_wb writes to vector_result
-											//2) Get rank of file. and set found infected string to struct.
+                    if(count_symbol_size == threshold_levels) {
+                        std::fill_n(result_vec->begin() + index_symbol, symbol_size, 1);
+
                     }
+
                     count_symbol_size++;
                 } else {
                     count_symbol_size = 0;
                 }
 
             }//for
-
 
             //Release memory
             for(int count_mem = 0; count_mem < platdevices->vec_buffer.size(); count_mem++) {
@@ -428,6 +431,7 @@ namespace hnmav_kernel
 
         return true;
     }
+
 
 
 
@@ -735,11 +739,12 @@ namespace hnmav_kernel
     {
         return commandqueue_util->cl_write_event();
     }
-
-    bool clutil_commandqueue::cl_enqueue_nd_task()
+   
+    bool clutil_commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> * result_vec)
     {
-        return commandqueue_util->cl_enqueue_nd_task();
+    return commandqueue_util->cl_enqueue_nd_task(result_vec);
     }
+   
     /*
     bool clutil_commandqueue::cl_read_buffer()
     {

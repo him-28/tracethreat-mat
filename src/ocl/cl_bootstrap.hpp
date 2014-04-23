@@ -56,7 +56,7 @@ namespace hnmav_kernel
 										std::vector<uint8_t> & result_vec);
 
             // Manage command queue
-            bool cl_process_commandqueue();
+            bool cl_process_commandqueue(std::vector<uint8_t> * result_vec);
 
         private:
             std::string *opencl_file_path;

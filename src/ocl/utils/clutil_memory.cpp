@@ -54,15 +54,9 @@ namespace hnmav_kernel
         platdevices->node_symbol_vec = symbol_vec_ptr; // *ipara.get_symbol_shared_ptr().get();
         platdevices->node_state_vec  = state_vec_ptr; //*ipara.get_state_shared_ptr().get();
         platdevices->node_binary_vec = binary_vec_ptr;
-				std::cout<<"---- Simple binary ----"<<std::endl;
-				std::vector<char>::iterator iter_bin;
-				for(iter_bin = binary_vec_ptr.begin(); std::distance(binary_vec_ptr.begin(), iter_bin) != 20; ++iter_bin)
-				{
-						std::cout<<*iter_bin;
-				}
-				std::cout<<std::endl;
+
 				//set result node. Value sets are zero.
-				std::fill(result_vec_ptr.begin(), result_vec_ptr.end(), 1);
+				std::fill(result_vec_ptr.begin(), result_vec_ptr.end(), 0);
 				//memset(&result_vec_ptr[0], 0, result_vec_ptr.size() * sizeof(result_vec_ptr[0]));
         platdevices->node_result_vec = result_vec_ptr;
 				

@@ -57,7 +57,8 @@ namespace hnmav_kernel
             bool cl_release_commandqueue();
 
             bool cl_enqueue_task();
-            bool cl_enqueue_nd_task();
+            bool cl_enqueue_nd_task(std::vector<uint8_t> * result_vec);
+            //bool cl_enqueue_nd_task();
 
             bool cl_enqueue_copy_buffer();
             bool cl_enqueue_map_buffer();
@@ -108,7 +109,7 @@ namespace hnmav_kernel
             bool cl_create_kernel();
 
             bool cl_enqueue_task();
-            bool cl_enqueue_nd_task();
+            bool cl_enqueue_nd_task(std::vector<uint8_t> * result_vec);
 
             bool cl_enqueue_copy_buffer();
             bool cl_enqueue_map_buffer();
