@@ -1,5 +1,5 @@
-#ifndef DISASM_COMMON_HPP
-#define DISASM_COMMON_HPP
+#ifndef DISASMS__DISASM_COMMON_HPP
+#define DISASMS__DISASM_COMMON_HPP
 
 /*
 * Copyright 2014 MTSec, Inc.
@@ -21,7 +21,7 @@
  * - Sourcefire, Inc, GNU license.                              
  */
 
-namespace disasm
+namespace disasms
 {
 
     /** @file */

@@ -15,17 +15,17 @@
 */
 
 /*  Titles			                                                     Authors	          Date
- * - Sourcefire, Inc, GNU license.                              
+ * - Sourcefire, Inc, GNU license.
  */
 
 #include "decompiler/asm_x86/disasmx86_controller.hpp"
+#include <stdint.h>
 
-namespace disasm
+namespace disasms
 {
 
-    inline static void disasmx86_controller::spam_x86(struct DISASMED *s, char *hr)
+    static void spam_x86(struct DISASMED *s, char *hr)
     {
-
         int i;
         char comma[2]= {'\0','\0'};
 
@@ -94,16 +94,18 @@ namespace disasm
 
             comma[0]=',';
         }
-
-
     }
 
 
-    static const uint8_t *disasmx86_controller::disams_x86(const uint8_t *command,
+#define INVALIDATE {s->table_op=OP_INVALID; s->state=STATE_ERROR; goto disasm_failed;}
+#define GETBYTE(X) if(len--) {X=*command; command++;} else INVALIDATE;
+#define GETSIZE(X) (x86ops[table][s->table_op].X!=SIZE_WD?x86ops[table][s->table_op].X:((s->opsize)?SIZE_WORD:SIZE_DWORD))
+
+
+    static const uint8_t disasm_x86(const uint8_t *command,
             unsigned int len,
             struct DISASMED *s)
     {
-
         unsigned int reversed=0, i;
         uint8_t b;
         unsigned int table = 0;
@@ -134,8 +136,7 @@ namespace disasm
                     break;
 
                 case OP_PREFIX_SEGMENT:
-                    assert(x86ops[table][s->table_op].dmethod>=ADDR_REG_ES &&
-                            x86ops[table][s->table_op].dmethod<=ADDR_REG_GS);
+                    assert(x86ops[table][s->table_op].dmethod>=ADDR_REG_ES && x86ops[table][s->table_op].dmethod<=ADDR_REG_GS);
                     s->segment = regmap[SIZE_WORD][x86ops[table][s->table_op].dmethod];
                     break;
 
@@ -172,7 +173,7 @@ namespace disasm
 
                     case X87_ONE:
                         s->args[reversed].access = ACCESS_REG;
-                        s->args[reversed].reg = REG_ST0 + (rm&7);
+                        s->args[reversed].reg = static_cast<X86REGS>(REG_ST0 + (rm&7));
                         break;
 
                     case X87_NONE:
@@ -205,12 +206,12 @@ namespace disasm
 
                         s->args[0].arg.marg.scale = 1<<scale;
 
-                        if((s->args[0].arg.marg.r2=mrm_regmap[SIZED][base])==REG_EBP && mod==0) {
+                        if((s->args[0].arg.marg.r2= static_cast<X86REGS>(mrm_regmap[SIZED][base]))==REG_EBP && mod==0) {
                             s->args[0].arg.marg.r2=REG_INVALID;
                             mod=2;
                         }
 
-                        if((s->args[0].arg.marg.r1=mrm_regmap[SIZED][idx])==REG_ESP) {
+                        if((s->args[0].arg.marg.r1= static_cast<X86REGS>(mrm_regmap[SIZED][idx]))==REG_ESP) {
                             s->args[0].arg.marg.r1=s->args[0].arg.marg.r2;
                             s->args[0].arg.marg.scale = (s->args[0].arg.marg.r2!=REG_INVALID);
                             s->args[0].arg.marg.r2=REG_INVALID;
@@ -221,7 +222,7 @@ namespace disasm
                             s->args[0].arg.marg.r1=REG_INVALID;
                         } else {
                             s->args[0].arg.marg.scale=1;
-                            s->args[0].arg.marg.r1=mrm_regmap[SIZED][rm];
+                            s->args[0].arg.marg.r1= static_cast<X86REGS>(mrm_regmap[SIZED][rm]);
                         }
 
                         s->args[0].arg.marg.r2=REG_INVALID;
@@ -271,8 +272,7 @@ namespace disasm
                 case ADDR_REG_EBP:
                 case ADDR_REG_ESI:
                 case ADDR_REG_EDI:
-                    assert(x86ops[table][s->table_op].dsize!=SIZE_BYTE &&
-                            x86ops[table][s->table_op].dsize!=SIZE_BYTEH);
+                    assert(x86ops[table][s->table_op].dsize!=SIZE_BYTE && x86ops[table][s->table_op].dsize!=SIZE_BYTEH);
 
                 case ADDR_REG_EAX:
                 case ADDR_REG_ECX:
@@ -280,7 +280,7 @@ namespace disasm
                 case ADDR_REG_EBX:
                     assert(x86ops[table][s->table_op].dsize<=SIZE_WD);
                     s->args[0].access = ACCESS_REG;
-                    s->args[0].reg = regmap[GETSIZE(dsize)][x86ops[table][s->table_op].dmethod];
+                    s->args[0].reg = static_cast<X86REGS>(regmap[GETSIZE(dsize)][x86ops[table][s->table_op].dmethod]);
                     s->state = STATE_CHECKSTYPE;
                     continue;
 
@@ -297,11 +297,11 @@ namespace disasm
                 case ADDR_RELJ:
                 case ADDR_IMMED: {
                     uint8_t sz;
-                    s->args[0].access = x86ops[table][s->table_op].dmethod-ADDR_IMMED+ACCESS_IMM;
+                    s->args[0].access = static_cast<DIS_ACCESS>(x86ops[table][s->table_op].dmethod-ADDR_IMMED+ACCESS_IMM);
                     assert(x86ops[table][s->table_op].dsize<SIZE_NOSIZE && s->opsize<2);
                     sz=sizemap[x86ops[table][s->table_op].dsize][s->opsize];
                     assert(sz!=255);
-                    s->args[0].size = sz>>1;	/* FIXME: size does matter - 6aff vs 666aff :( */
+                    s->args[0].size = static_cast<DIS_SIZE>(sz>>1);	/* FIXME: size does matter - 6aff vs 666aff :( */
 
                     for (i=0; i<sz; i++) {
                         GETBYTE(b);
@@ -373,10 +373,10 @@ namespace disasm
                         break;
 
                     case SIZE_WD:
-                        s->args[reversed].size+=(s->opsize==0);
+                        s->args[reversed].size = static_cast<DIS_SIZE>(s->args[reversed].size + (s->opsize==0));
 
                     case SIZE_WORD:
-                        s->args[reversed].size++;
+                        s->args[reversed].size = static_cast<DIS_SIZE>(s->args[reversed].size + 1);
 
                     case SIZE_BYTE:
                         break;
@@ -387,23 +387,23 @@ namespace disasm
 
                     s->args[reversed^1].access = ACCESS_REG;
 
-                    if ((s->args[reversed^1].reg = p[s->args[reversed].size][rop]) == REG_INVALID) INVALIDATE;
+                    if ((s->args[reversed^1].reg = static_cast<X86REGS>(p[s->args[reversed].size][rop])) == REG_INVALID) INVALIDATE;
 
                     /* MOVZX size fixxup */
                     if(s->real_op == OP_MOVZX || s->real_op == OP_MOVSX)
-                        s->args[reversed].size = SIZEB + (s->table_op & 1);
+                        s->args[reversed].size = static_cast<DIS_SIZE>(SIZEB + (s->table_op & 1));
 
                     if(mod==3) {
-                        if(x86ops[table][s->table_op].dmethod==ADDR_MRM_GEN_GM ||
-                                x86ops[table][s->table_op].dmethod==ADDR_MRM_EXTRA_1A_M) INVALIDATE;
+                        if(x86ops[table][s->table_op].dmethod==ADDR_MRM_GEN_GM 
+                             || x86ops[table][s->table_op].dmethod==ADDR_MRM_EXTRA_1A_M) INVALIDATE;
 
                         s->args[reversed].access = ACCESS_REG;
-                        s->args[reversed].reg = mrm_regmap[s->args[reversed].size][rm];
+                        s->args[reversed].reg = static_cast<X86REGS>(mrm_regmap[s->args[reversed].size][rm]);
 
                         if(x86ops[table][s->table_op].dmethod==ADDR_MRM_EXTRA_1A) {
                             uint8_t opcache = s->real_op;
                             assert(opcache<(sizeof(extra_1a)/sizeof(extra_1a[0][0])));
-                            s->args[0].size+=extra_1a[opcache][rop].addsz;
+                            s->args[0].size = static_cast<DIS_SIZE>(s->args[0].size + extra_1a[opcache][rop].addsz);
 
                             if((s->real_op=extra_1a[opcache][rop].op)==OP_INVALID) INVALIDATE;
 
@@ -447,7 +447,7 @@ namespace disasm
                                 s->args[reversed].arg.marg.r1=REG_INVALID;
                             } else {
                                 s->args[reversed].arg.marg.scale=1;
-                                s->args[reversed].arg.marg.r1=mrm_regmap[SIZED][rm];
+                                s->args[reversed].arg.marg.r1 = mrm_regmap[SIZED][rm];
                             }
 
                             s->args[reversed].arg.marg.r2=REG_INVALID;
@@ -483,8 +483,7 @@ namespace disasm
                         s->args[reversed].arg.marg.disp=shiftme>>((8-mod)*8);
                     }
 
-                    if(x86ops[table][s->table_op].dmethod==ADDR_MRM_EXTRA_1A ||
-                            x86ops[table][s->table_op].dmethod==ADDR_MRM_EXTRA_1A_M) {
+                    if(x86ops[table][s->table_op].dmethod==ADDR_MRM_EXTRA_1A || x86ops[table][s->table_op].dmethod==ADDR_MRM_EXTRA_1A_M) {
                         uint8_t opcache = s->real_op;
                         assert(opcache<(sizeof(extra_1a)/sizeof(extra_1a[0][0])));
                         s->args[0].size+=extra_1a[opcache][rop].addsz;
@@ -507,8 +506,7 @@ namespace disasm
                 case ADDR_OFFSET: {
                     uint8_t sz;
                     s->args[0].access = ACCESS_MEM;
-                    assert((x86ops[table][s->table_op].dsize==SIZE_BYTE ||
-                            x86ops[table][s->table_op].dsize==SIZE_WD) && s->adsize<2);
+                    assert((x86ops[table][s->table_op].dsize==SIZE_BYTE || x86ops[table][s->table_op].dsize==SIZE_WD) && s->adsize<2);
                     sz=sizemap[SIZE_WD][s->adsize];
                     assert(sz!=255);
                     assert(s->opsize<2);
@@ -543,8 +541,7 @@ namespace disasm
                 case ADDR_IMMED: {
                     uint8_t sz;
                     s->args[s->cur].access = ACCESS_IMM;
-                    assert((x86ops[table][s->table_op].ssize==SIZE_WD ||
-                            x86ops[table][s->table_op].ssize==SIZE_BYTE) && s->opsize<2);
+                    assert((x86ops[table][s->table_op].ssize==SIZE_WD || x86ops[table][s->table_op].ssize==SIZE_BYTE) && s->opsize<2);
                     sz=sizemap[x86ops[table][s->table_op].ssize][s->opsize];
                     s->args[s->cur].size = sz>>1;
 
@@ -578,8 +575,7 @@ namespace disasm
                 case ADDR_OFFSET: {
                     uint8_t sz;
                     s->args[1].access = ACCESS_MEM;
-                    assert((x86ops[table][s->table_op].ssize==SIZE_BYTE ||
-                            x86ops[table][s->table_op].ssize==SIZE_WD) && s->adsize<2);
+                    assert((x86ops[table][s->table_op].ssize==SIZE_BYTE || x86ops[table][s->table_op].ssize==SIZE_WD) && s->adsize<2);
                     sz=sizemap[SIZE_WD][s->adsize];
                     assert(sz!=255);
                     assert(s->opsize<2);
@@ -615,8 +611,79 @@ disasm_failed:
                 assert("INVALID STATE"==0);
             }
         }
+    }
 
+    const uint8_t *disasmx86_controller::cli_disasm_one(const uint8_t *buff,
+            unsigned int len,
+            struct DISASM_RESULT *w, int spam)
+    {
+        struct DISASMED s;
+        int i;
 
+        memset(&w->extra[0], 0, sizeof(w->extra));
+        buff = disasm_x86(buff, len, &s);
+
+        if (!buff)
+            return NULL;
+
+        if (spam) {
+            char hr[128];
+            spam_x86(&s, hr);
+           // cli_dbgmsg("%s\n", hr);
+        }
+
+        w->real_op = le16_to_host(s.real_op);
+        w->opsize = s.opsize;
+        w->adsize = s.adsize;
+        w->segment = s.segment;
+
+        for (i=0; i<3; i++) {
+            w->arg[i][0] = s.args[i].access;
+            w->arg[i][1] = s.args[i].size;
+
+            switch(s.args[i].access) {
+            case ACCESS_MEM:
+                w->arg[i][2]=s.args[i].arg.marg.r1;
+                w->arg[i][3]=s.args[i].arg.marg.r2;
+                w->arg[i][4]=s.args[i].arg.marg.scale;
+                w->arg[i][5]=0;
+                cli_writeint32(&w->arg[i][6], s.args[i].arg.marg.disp);
+                break;
+
+            case ACCESS_REG:
+                w->arg[i][1] = s.args[i].reg;
+
+            default:
+                cli_writeint32(&w->arg[i][2], s.args[i].arg.q);
+                cli_writeint32(&w->arg[i][6], s.args[i].arg.q>>32);
+            }
+        }
+
+        return buff;
+    }
+
+    int disasmx86_controller::disasmbuf(const uint8_t *buff, unsigned int len, int fd)
+    {
+        const uint8_t *next = buff;
+        unsigned int counter=0;
+        int gotsome=0;
+        struct DISASM_RESULT w;
+        memset(&w.extra[0], 0, sizeof(w.extra));
+
+        while(len && counter++<200) {
+            if(!(next = cli_disasm_one(next, len, &w, 1))) {
+                /* TODO: invd opcode or buff over */
+                return gotsome;
+            }
+
+            len -= next-buff;
+            buff=next;
+
+            //cli_writen(fd, &w, sizeof(w));
+            gotsome = 1;
+        }
+
+        return gotsome;
     }
 
 }

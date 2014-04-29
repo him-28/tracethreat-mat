@@ -1,0 +1,3 @@
+[submodule "src/clibasewrapper"]
+	path = src/clibasewrapper
+	url = git@github.com:Chatsiri/clibasewrapper.git

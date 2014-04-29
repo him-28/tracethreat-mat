@@ -58,6 +58,7 @@ AC_CONFIG_FILES([src/memory/Makefile])
 AC_CONFIG_FILES([src/scan/Makefile])
 AC_CONFIG_FILES([src/rules/Makefile])
 AC_CONFIG_FILES([src/bin/Makefile])
+AC_CONFIG_FILES([src/decompiler/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
 AC_OUTPUT

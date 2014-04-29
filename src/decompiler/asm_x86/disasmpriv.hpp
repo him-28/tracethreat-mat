@@ -1,5 +1,5 @@
-#ifndef DISASMPRIV_HPP
-#define DISASMPRIV_HPP
+#ifndef DISASMS_DISASMPRIV_HPP
+#define DISASMS_DISASMPRIV_HPP
 
 /*
 * Copyright 2014 MTSec, Inc.
@@ -21,10 +21,11 @@
  * - Sourcefire, Inc, GNU license.                              
  */
 
-#include "disasm_common.hpp"
+#include "decompiler/asm_x86/disasm_common.hpp"
 
-namespace disasm
+namespace disasms
 {
+//    enum DIS_ACCESS;
 
     enum DIS_STATE {
         STATE_GETOP,

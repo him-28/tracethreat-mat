@@ -172,11 +172,11 @@ namespace filetypes
             *
             * @return scan completed return true.
             */
-						
+
             utils::scan_file_code scan(std::vector<char> *symbol_vec,
                     std::vector<size_t> *state_vec,
                     std::vector<uint8_t> *file_buffer_vec);
-						
+
             /**
             * @brief Insert signature and thread_sync for compute with GPGPU.
             *
@@ -191,7 +191,7 @@ namespace filetypes
             utils::scan_file_code scan(std::vector<char> *symbol_vec,
                     std::vector<size_t> *state_vec,
                     std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
-										std::string * kernel_file_path_ptr);
+                    std::string *kernel_file_path_ptr);
 
             /**
             * @brief Buffer return to external class
