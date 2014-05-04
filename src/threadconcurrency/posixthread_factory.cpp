@@ -143,15 +143,18 @@ namespace controller
                 }
 
                 struct sched_param sched_param;
-
+		
+								/*
 								//Scheduler not supported.
-                //sched_param.sched_priority = SCHED_RR;//priority_;
-								//int ret = pthread_attr_setschedparam(&thread_attr, &sched_param);
-								//printf("Return value : %d \n", ret);
-                // Set thread priority
-                //if (pthread_attr_setschedparam(&thread_attr, &sched_param) != 0) {
-                //    throw exceptions::system_resource_exception("pthread_attr_setschedparam failed");
-                //}
+                sched_param.sched_priority = priority_;
+                // Set thread priority : Return code 22 is incorrect.
+                // * http://stackoverflow.com/questions/21095234/pthread-create-warning-on-android
+                // * http://stackoverflow.com/questions/14989708/
+                //   pthread-create-not-working-properly-with-pthread-attr-setschedparam
+                if (pthread_attr_setschedparam(&thread_attr, &sched_param) != 0) {
+                    throw exceptions::system_resource_exception("pthread_attr_setschedparam failed");
+                }
+								*/
 
                 // Create reference
                 shared_ptr<pthread_thread> *selfRef = new shared_ptr<pthread_thread>();
