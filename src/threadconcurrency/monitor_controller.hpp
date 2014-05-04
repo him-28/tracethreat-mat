@@ -30,8 +30,11 @@
 
 //#include <thrift/concurrency/Exception.h>
 #include "exception/system_exception.hpp"
-//#include <thrift/concurrency/mutex_controller.h>
-#include "threadsynocl/semaphore_controller.hpp"
+#include "threadconcurrency/mutex_controller.hpp"
+#include "utils/base/platform_socket.hpp"
+
+//#include "utils/base/platform_socket.hpp"
+
 
 #include <boost/utility.hpp>
 
@@ -88,7 +91,7 @@ class monitor_controller : boost::noncopyable {
    * Waits until the absolute time specified using struct THRIFT_TIMESPEC.
    * Returns 0 if condition occurs, THRIFT_ETIMEDOUT on timeout, or an error code.
    */
-  int wait_for_time(const THRIFT_TIMESPEC* abstime) const;
+  int wait_for_time(const TIMESPEC* abstime) const;
 
   /**
    * Waits until the absolute time specified using struct timeval.

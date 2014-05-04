@@ -10,7 +10,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 
-#AC_PROG_CXX
+AC_PROG_CXX
 AC_PROG_RANLIB
 
 #AC_PROG_CC
@@ -59,6 +59,7 @@ AC_CONFIG_FILES([src/scan/Makefile])
 AC_CONFIG_FILES([src/bin/Makefile])
 AC_CONFIG_FILES([src/decompiler/Makefile])
 AC_CONFIG_FILES([src/clibasewrapper/Makefile])
+AC_CONFIG_FILES([src/threadconcurrency/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
 AC_OUTPUT

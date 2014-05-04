@@ -30,15 +30,15 @@
 #include <stdint.h>
 #include <time.h>
 
-#ifdef HAVE_SYS_TIME_H
+//#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
-#endif
+//#endif
 
 //#include <thrift/transport/PlatformSocket.h>
 
-#include "utils/base/platformsocket.hpp"
+#include "utils/base/platform_socket.hpp"
 
-namespace util{
+namespace controller{
 
 /**
  * Utility methods
@@ -65,12 +65,12 @@ class util_thread{
  public:
 
   /**
-   * Converts millisecond timestamp into a BASE_TIMESPEC struct
+   * Converts millisecond timestamp into a TIMESPEC struct
    *
-   * @param struct BASE_TIMESPEC& result
+   * @param struct TIMESPEC& result
    * @param time or duration in milliseconds
    */
-	static void to_time_spec(struct BASE_TIMESPEC& result, int64_t value) {
+	static void to_time_spec(struct TIMESPEC& result, int64_t value) {
     result.tv_sec = value / MS_PER_S; // ms to s
     result.tv_nsec = (value % MS_PER_S) * NS_PER_MS; // ms to ns
   }
@@ -87,7 +87,7 @@ class util_thread{
     result += old_ticks * new_tick_per_sec / old_ticks_per_sec;
 
     int64_t old_pernew = old_ticks_per_sec / new_tick_per_sec;
-    if (old_pernew && ((old_ticks % oldPerNew) >= (old_pernew / 2))) {
+    if (old_pernew && ((old_ticks % old_pernew) >= (old_pernew / 2))) {
       ++result;
     }
   }
@@ -95,7 +95,7 @@ class util_thread{
    * Converts struct BASE_TIMESPEC to arbitrary-sized ticks since epoch
    */
   static void to_ticks(int64_t& result,
-                      const struct BASE_TIMESPEC& value,
+                      const struct TIMESPEC& value,
                       int64_t tick_per_sec) {
     return to_ticks(result, value.tv_sec, value.tv_nsec, NS_PER_S, tick_per_sec);
   }
@@ -113,7 +113,7 @@ class util_thread{
    * Converts struct BASE_TIMESPEC to milliseconds
    */
   static void to_milliseconds(int64_t& result,
-                             const struct BASE_TIMESPEC& value) {
+                             const struct TIMESPEC& value) {
     return to_ticks(result, value, MS_PER_S);
   }
 
@@ -128,7 +128,7 @@ class util_thread{
   /**
    * Converts struct BASE_TIMESPEC to microseconds
    */
-  static void to_usec(int64_t& result, const struct BASE_TIMESPEC& value) {
+  static void to_usec(int64_t& result, const struct TIMESPEC& value) {
     return to_ticks(result, value, US_PER_S);
   }
 

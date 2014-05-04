@@ -14,14 +14,15 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/exception/datastructure_exception.cpp \
  $(top_builddir)/src/exception/failure_handler_code.hpp \
  $(top_builddir)/src/data_structure/ac_tire.hpp \
- $(top_builddir)/src/wrapper/wrapper_rules.hpp \
- $(top_builddir)/src/data_structure/ac_tire.hpp \
  $(top_builddir)/src/data_structure/actire_parallel.hpp \
  $(top_builddir)/src/filetypes/pe_file_controller.hpp \
  $(top_builddir)/src/scan/file_scan_policy.hpp \
  $(top_builddir)/src/ocl/cl_bootstrap.hpp \
- $(top_builddir)/src/memory/file_shm_handler.hpp
-
+ $(top_builddir)/src/memory/file_shm_handler.hpp \
+ $(top_builddir)/src/threadconcurrency/thread_manager.hpp \
+ $(top_builddir)/src/threadconcurrency/platformthread_factory.hpp \
+ $(top_builddir)/src/threadconcurrency/monitor_controller.hpp \
+ $(top_builddir)/src/threadconcurrency/posixthread_factory.hpp
 
 
 
@@ -33,10 +34,13 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/exception/datastructure_exception.cpp \
 	$(top_builddir)/src/data_structure/ac_tire.hpp \
 	$(top_builddir)/src/data_structure/actire_parallel.hpp \
-	$(top_builddir)/src/wrapper/wrapper_rules.hpp \
 	$(top_builddir)/src/filetypes/pe_file_controller.cpp \
   $(top_builddir)/src/scan/file_scan_policy.cpp \
-  $(top_builddir)/src/memory/file_shm_handler.cpp
+  $(top_builddir)/src/memory/file_shm_handler.cpp \
+  $(top_builddir)/src/threadconcurrency/thread_manager.cpp \
+  $(top_builddir)/src/threadconcurrency/monitor_controller.cpp \
+  $(top_builddir)/src/threadconcurrency/posixthread_factory.cpp
+
 
 
 
@@ -45,8 +49,8 @@ libthreadsyncocl_a_LIBADD = $(top_builddir)/src/utils/libutils.a \
 $(top_builddir)/src/exception/libexception.a \
 $(top_builddir)/src/data_structure/libdstr.a \
 $(top_builddir)/src/wrapper/libwrapper.a \
-$(top_builddir)/src/rules/librules.a  \
 $(top_builddir)/src/filetypes/libfiletypes.a  \
 $(top_builddir)/src/scan/libscan.a \
 $(top_builddir)/src/memory/libmemory.a \
+$(top_builddir)/src/threadconcurrency/libthreadconcurrency.a \
 $(top_builddir)/src/ocl/libocl.a $(AM_LDFLAGS)

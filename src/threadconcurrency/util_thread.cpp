@@ -23,7 +23,7 @@
 // #include <thrift/thrift-config.h>
 
 // #include <thrift/Thrift.h>
-#include "utils/base/util_thread.hpp"
+#include "threadconcurrency/util_thread.hpp"
 
 #define BASE_UNUSED_VARIABLE(x) ((void)(x))
 
@@ -33,12 +33,12 @@
 #endif
 
 
-namespace util{
+namespace controller{
 
 int64_t util_thread::current_time_ticks(int64_t ticks_per_sec) {
   int64_t result;
   struct timeval now;
-  int ret = BASE_GETTIMEOFDAY(&now, NULL);
+  int ret = GETTIMEOFDAY(&now, NULL);
   //assert(ret == 0);
   BASE_UNUSED_VARIABLE(ret); //squelching "unused variable" warning
   to_ticks(result, now, ticks_per_sec);

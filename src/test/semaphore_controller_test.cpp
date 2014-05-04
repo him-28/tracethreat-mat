@@ -11,9 +11,10 @@
 
 //#include "test/file_offset_handler_test.hpp"
 
+#include "test/cliprescan_pe_task_test.hpp"
 
-//#2
-#include "test/file_policy_test.hpp"         // PE fist file policy class
+//#2 -stable
+//#include "test/file_policy_test.hpp"         // PE fist file policy class
 
 //#1
 //#include "test/thread_sync_test.hpp"

@@ -157,7 +157,7 @@ namespace controller
                     }
                 }
             }
-            ~Guard() {
+            ~guard() {
                 if (mutex_) {
                     mutex_->unlock();
                 }

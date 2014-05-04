@@ -1,5 +1,5 @@
-#ifndef CONTROLLER__THREAD_CONTROLLER_HPP_
-#define CONTROLLER__THREAD_CONTROLLER_HPP_
+#ifndef CONTROLLER_THREAD_CONTROLLER_HPP
+#define CONTROLLER_THREAD_CONTROLLER_HPP
 
 //standard lib
 #include <iostream>
@@ -10,136 +10,29 @@
 #include <boost/make_shared.hpp>
 
 // internal
-#include "threadsyncocl/buffer_sync.hpp"
-#include "threadsyncocl/semaphore_controller.hpp"
-#include "threadsyncocl/thread_barrier_controller.hpp"
+#include "threadconcurrency/thread.hpp"
 
 //
 #include "utils/logger/clutil_logger.hpp"
 
 namespace controller
 {
-
-
-    class runnable
-    {
-        public:
-            virtual ~runnable() { }
-            virtual void run() = 0;
-
-
-            virtual boost::shared_ptr<thread> thread_() {
-                return thread_.lock();
-            }
-
-            virtual void thread(boost::shared_ptr<thread> value) {
-                thread_ = value;
-            }
-
-        private:
-            boost::weak_ptr<thread> thread_;
-
-    };
-
-
-    // Common thread
-    //template<typename BufferSync>
-    class thread
-    {
-
-        public:
-            //thread(boost::shared_ptr<runnable> run, bool detached = false);
-            //thread(bool detached = false);
-            //thread();
-
-            //void start();
-            //void *join();
-#if  USE_BOOST_THREAD
-            typedef boost::thread::id id_t;
-
-            static inline bool is_current(id_t t) {
-                return t == boost::this_thread::get_id();
-            }
-            static inline id_t get_current() {
-                return boost::this_thread::get_id();
-            }
-
-#elif USE_STD_THREAD
-            typedef std::thread::id id_t;
-
-            static inline bool is_current(id_t t) {
-                return t == std::this_thread::get_id();
-            }
-            static inline id_t get_current() {
-                return std::this_thread::get_id();
-            }
-#else
-            typedef pthread_t id_t;
-
-            static bool is_current(id_t t) {
-                return pthread_equal(pthread_self(), t);
-            }
-            static inline id_t get_current() {
-                return pthread_self();
-            }
-#endif
-
-            virtual ~Thread() { };
-
-            virtual void start() = 0;
-
-            virtual void join() = 0;
-
-            virtual id_t getId() = 0;
-
-
-            virtual boost::shared_ptr<runnable> runnable() const {
-                return runnable_;
-            }
-        protected:
-
-            virtual boost::shared_ptr<runnable> runnable(boost::shared_ptr<runnable>  value) const {
-                return runnable_ = value;
-            }
-
-        private:
-            boost::shared_ptr<runnable> runnable_;
-
-            const thread& operator=(const thread&);
-            //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
-
-    };
-
-    //Thread factory
-    template<typename BufferSync>
-    class thread_factory
-    {
-        publc:
-            virtual ~thread_factory() { }
-            virtual boost::shared_ptr<thread<BufferSync> >
-            new_thread(boost::shared_ptr<runnable>  runnable) const = 0;
-            static const   thread::id_t   unknow_thread_id;
-            virtual  thread::id_t  get_current_thread_id() const = 0;
-
-    }
+		class thread_manager;
 
     // Thread Manager
-    template<typename BufferSync>
     class thread_manager
     {
-
+				protected:
+					 thread_manager(){ }
         public:
             class task;
-            typedef boost::function<void(boost::shared_ptr<runnable>)> expire_callback;
-            //thread(boost::shared_ptr<runnable> run, bool detached = false);
-            thread_manager(bool detached = false);
-            //thread();
+            typedef boost::function<void(boost::shared_ptr<Runnable>)> expire_callback;
+
+						virtual ~thread_manager(){ }
 
             virtual void start() = 0;
             virtual void stop()  = 0;
-            virtual void *join() = 0;
+            virtual void join() = 0;
 
             enum STATE {
                 UNINITIALIZED,
@@ -152,9 +45,9 @@ namespace controller
 
             virtual STATE state() const = 0;
 
-            virtual boost::shared_ptr<thread_factory>  thread_factory_sptr() const = 0;
+            virtual boost::shared_ptr<Thread_factory>  thread_factory() const = 0;
 
-            virtual void thread_factory(boost::shared_ptr<thread_factory>  value) = 0;
+            virtual void thread_factory(boost::shared_ptr<Thread_factory>  value) = 0;
 
             virtual void add_worker(size_t value = 1 ) = 0;
 
@@ -189,7 +82,7 @@ namespace controller
             * @param expiration  when non zero, the number of milliseconds the task is valid to be return; if
             * exceeded, the task will be dropped off the queue and not run.
             */
-            virtual void add(boost::shared_ptr<runnable> task,
+            virtual void add(boost::shared_ptr<Runnable> task,
                     int64_t timeout=0LL,
                     int64_t expiration=0LL) = 0;
 
@@ -237,10 +130,21 @@ namespace controller
 
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            //boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            //h_util::clutil_logging<std::string, int>    *logger;
 
     };
+
+           //boost::shared_ptr<thread_manager>  thread_manager::new_thread_manager();
+
+            /**
+             * Creates a simple thread manager the uses count number of worker threads and has
+             * a pendingTaskCountMax maximum pending tasks. The default, 0, specified no limit
+             * on pending tasks
+             */
+            //boost::shared_ptr<thread_manager>
+            //::new_simple_thread_manager(size_t count=4, size_t pending_task_count_max=0);
+
 
 
 }

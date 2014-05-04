@@ -143,6 +143,28 @@ namespace hnmav_exception
     namespace controller
     {
 
+		class t_exception : public std::exception {
+ public:
+  t_exception():
+    message_() {}
+
+  t_exception(const std::string& message) :
+    message_(message) {}
+
+  virtual ~t_exception() throw() {}
+
+  virtual const char* what() const throw() {
+    if (message_.empty()) {
+      return "Default TException.";
+    } else {
+      return message_.c_str();
+    }
+  }
+
+ protected:
+  std::string message_;
+
+};
         class thread_exception : public std::exception
         {
             public:

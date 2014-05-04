@@ -19,9 +19,11 @@
  *  - Mutex support semaphore_controller.hpp                     R.chatsiri       24/03/2014 
  */
 
-#include "threadsynocl/monitor_controller.hpp"
-#include "utils/base/util_thread.hpp"
-#include "utils/base/platformsocket.hpp"
+#define BASE_UNUSED_VARIABLE(x) ((void)(x))
+
+#include "threadconcurrency/monitor_controller.hpp"
+
+#include "threadconcurrency/util_thread.hpp"
 
 #include <boost/scoped_ptr.hpp>
 
@@ -32,12 +34,13 @@
 #include <pthread.h>
 
 
-#define BASE_UNUSED_VARIABLE(x) ((void)(x))
+
+//#include <sys/errno.h>
 
 namespace controller
 {
     using boost::scoped_ptr;
-
+		namespace exceptions = hnmav_exception::controller;
     /**
      * monitor_controller implementation using the POSIX pthread library
      *
@@ -91,13 +94,13 @@ namespace controller
             void wait(int64_t timeout_ms) const {
                 int result = wait_for_time_relative(timeout_ms);
 
-                if (result == BASE_ETIMEDOUT) {
+                if (result == ETIMEDOUT) {
                     // pthread_cond_timedwait has been observed to return early on
                     // various platforms, so comment out this assert.
                     //assert(util_thread::current_time() >= (now + timeout));
-                    throw TimedOutException();
+                    throw exceptions::timed_out_exception();//TimedOutException();
                 } else if (result != 0) {
-                    throw TException(
+                    throw exceptions::t_exception(
                             "pthread_cond_wait() or pthread_cond_timedwait() failed");
                 }
             }
@@ -113,7 +116,7 @@ namespace controller
                     return wait_forever();
                 }
 
-                struct BASE_TIMESPEC abstime;
+                struct TIMESPEC abstime;
 
                 util_thread::to_time_spec(abstime, util_thread::current_time() + timeout_ms);
 
@@ -124,7 +127,7 @@ namespace controller
              * Waits until the absolute time specified using struct BASE_TIMESPEC.
              * Returns 0 if condition occurs, BASE_ETIMEDOUT on timeout, or an error code.
              */
-            int wait_for_time(const BASE_TIMESPEC *abstime) const {
+            int wait_for_time(const TIMESPEC *abstime) const {
                 assert(mutex_);
                 pthread_mutex_t *muteximpl =
                         reinterpret_cast<pthread_mutex_t *>(mutex_->get_underlying_impl());
@@ -137,7 +140,7 @@ namespace controller
             }
 
             int wait_for_time(const struct timeval *abstime) const {
-                struct BASE_TIMESPEC temp;
+                struct TIMESPEC temp;
                 temp.tv_sec  = abstime->tv_sec;
                 temp.tv_nsec = abstime->tv_usec * 1000;
                 return wait_for_time(&temp);
@@ -180,7 +183,7 @@ namespace controller
 
                 if (!condInitialized_) {
                     cleanup();
-                    throw SystemResourceException();
+                    throw exceptions::system_resource_exception();
                 }
             }
 
@@ -202,12 +205,12 @@ namespace controller
 
     monitor_controller::monitor_controller() 
 			: impl_(new monitor_controller::impl()) {}
-    monitor_controller::monitor_controller(Mutex *mutex) 
+    monitor_controller::monitor_controller(mutex_controller *mutex) 
 			: impl_(new monitor_controller::impl(mutex)) {}
     monitor_controller::monitor_controller(monitor_controller *monitor) 
 			: impl_(new monitor_controller::impl(monitor)) {}
 
-    monitor_controller::~Monitor()
+    monitor_controller::~monitor_controller()
     {
         delete impl_;
     }
@@ -232,7 +235,7 @@ namespace controller
         impl_->wait(timeout);
     }
 
-    int monitor_controller::wait_for_time(const BASE_TIMESPEC *abstime) const
+    int monitor_controller::wait_for_time(const TIMESPEC *abstime) const
     {
         return impl_->wait_for_time(abstime);
     }

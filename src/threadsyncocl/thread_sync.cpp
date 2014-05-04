@@ -226,19 +226,6 @@ namespace controller
         this->load_ocl_system->cl_load_commandqueue();
         this->load_ocl_system->cl_process_commandqueue(binary_result);
 			
-				/*	
-				std::vector<uint8_t>::iterator iter_bresult;
-				for(iter_bresult = binary_result->begin();
-						iter_bresult != binary_result->end();
-						++iter_bresult)
-				{
-						if(*iter_bresult == 1){
-							  std::cout<<" Index : " << std::distance(binary_result->begin(), iter_bresult)
-								<<", data : " << *iter_bresult <<std::endl;
-						}
-				}
-				*/
-
         return true;
     }
 

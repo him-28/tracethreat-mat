@@ -1,5 +1,10 @@
-#include "threadsyncocl/thread_controller.hpp"
-#include "utils/file_calculate.hpp"
+
+#include "threadconcurrency/thread_manager.hpp"
+#include "threadconcurrency/monitor_controller.hpp"
+#include "threadconcurrency/mutex_controller.hpp"
+#include "threadconcurrency/util_thread.hpp"
+
+#include <queue>
 
 namespace controller
 {
@@ -7,7 +12,7 @@ namespace controller
     //thread_manager
     using boost::shared_ptr;
     using boost::dynamic_pointer_cast;
-
+		namespace exceptions = hnmav_exception::controller;
     /**
      * thread_manager class
      *
@@ -39,23 +44,23 @@ namespace controller
             void start();
 
             void stop() {
-                stopimpl(false);
+                stop_impl(false);
             }
 
             void join() {
-                stopimpl(true);
+                stop_impl(true);
             }
 
             thread_manager::STATE state() const {
                 return state_;
             }
 
-            boost::shared_ptr<thread_factory> thread_factory_sptr() const {
+            boost::shared_ptr<Thread_factory> thread_factory() const {
                 synchronized s(monitor_);
                 return thread_factory_;
             }
 
-            void thread_factory(boost::shared_ptr<thread_factory> value) {
+            void thread_factory(boost::shared_ptr<Thread_factory> value) {
                 synchronized s(monitor_);
                 thread_factory_ = value;
             }
@@ -65,7 +70,7 @@ namespace controller
             void remove_worker(size_t value);
 
             size_t idle_worker_count() const {
-                return idleCount_;
+                return idle_count_;
             }
 
             size_t worker_count() const {
@@ -80,7 +85,7 @@ namespace controller
 
             size_t total_task_count() const {
                 synchronized s(monitor_);
-                return tasks_.size() + worker_count_ - idleCount_;
+                return tasks_.size() + worker_count_ - idle_count_;
             }
 
             size_t pending_task_count_max() const {
@@ -100,20 +105,20 @@ namespace controller
                 pending_task_count_max_ = value;
             }
 
-            bool canSleep();
+            bool can_sleep();
 
-            void add(boost::shared_ptr<runnable> value, int64_t timeout, int64_t expiration);
+            void add(boost::shared_ptr<Runnable> value, int64_t timeout, int64_t expiration);
 
-            void remove(boost::shared_ptr<runnable> task);
+            void remove(boost::shared_ptr<Runnable> task);
 
-            boost::shared_ptr<runnable> remove_next_pending();
+            boost::shared_ptr<Runnable> remove_next_pending();
 
             void remove_expired_tasks();
 
-            void set_expire_callback(expire_call_back expire_call_back);
+            void set_expire_callback(expire_callback expire_call_back);
 
         private:
-            void stopimpl(bool join);
+            void stop_impl(bool join);
 
             size_t worker_count_;
             size_t worker_max_count_;
@@ -123,11 +128,11 @@ namespace controller
             expire_callback expire_callback_;
 
             thread_manager::STATE state_;
-            boost::shared_ptr<thread_factory> thread_factory_;
+            boost::shared_ptr<Thread_factory> thread_factory_;
 
 
             friend class thread_manager::task;
-            std::queue<shared_ptr<task> > tasks_;
+            std::queue<boost::shared_ptr<task> > tasks_;
             mutex_controller mutex_;
             monitor_controller monitor_;
             monitor_controller max_monitor_;
@@ -139,7 +144,7 @@ namespace controller
             std::map<const Thread::id_t, boost::shared_ptr<Thread> > idMap_;
     };
 
-    class thread_manager::task : public runnable
+    class thread_manager::task : public Runnable
     {
 
         public:
@@ -150,7 +155,7 @@ namespace controller
                 COMPLETE
             };
 
-            task(boost::shared_ptr<runnable> runnable, int64_t expiration=0LL)  :
+            task(boost::shared_ptr<Runnable> runnable, int64_t expiration=0LL)  :
                 runnable_(runnable),
                 state_(WAITING),
                 expire_time_(expiration != 0LL ?
@@ -165,7 +170,7 @@ namespace controller
                 }
             }
 
-            boost::shared_ptr<runnable> get_runnable() {
+            boost::shared_ptr<Runnable> get_runnable() {
                 return runnable_;
             }
 
@@ -174,13 +179,13 @@ namespace controller
             }
 
         private:
-            boost::shared_ptr<runnable> runnable_;
+            boost::shared_ptr<Runnable> runnable_;
             friend class thread_manager::worker;
             STATE state_;
             int64_t expire_time_;
     };
 
-    class thread_manager::worker: public runnable
+    class thread_manager::worker: public Runnable
     {
             enum STATE {
                 UNINITIALIZED,
@@ -258,12 +263,12 @@ namespace controller
                         active = is_active();
 
                         while (active && manager_->tasks_.empty()) {
-                            manager_->idleCount_++;
+                            manager_->idle_count_++;
                             idle_ = true;
                             manager_->monitor_.wait();
                             active = is_active();
                             idle_ = false;
-                            manager_->idleCount_--;
+                            manager_->idle_count_--;
                         }
 
                         if (active) {
@@ -326,12 +331,12 @@ namespace controller
     };
 
 
-    void thread_manager::impl::addworker(size_t value)
+    void thread_manager::impl::add_worker(size_t value)
     {
         std::set<boost::shared_ptr<Thread> > new_threads;
 
         for (size_t ix = 0; ix < value; ix++) {
-            bost::shared_ptr<thread_manager::worker> worker =
+            boost::shared_ptr<thread_manager::worker> worker =
                     boost::shared_ptr<thread_manager::worker>(
                             new thread_manager::worker(this));
 
@@ -349,11 +354,11 @@ namespace controller
                 ix++) {
             boost::shared_ptr<thread_manager::worker> worker =
                     dynamic_pointer_cast<thread_manager::worker,
-                    runnable>((*ix)->runnable());
+                    Runnable>((*ix)->runnable());
             worker->state_ = thread_manager::worker::STARTING;
             (*ix)->start();
-            idMap_.insert(std::pair<const thread_manager::id_t, boost::shared_ptr<thread_manager> >
-                    ((*ix)->getId(), *ix));
+            idMap_.insert(std::pair<const Thread::id_t, boost::shared_ptr<Thread> >
+                    ((*ix)->get_id(), *ix));
         }
 
         {
@@ -377,7 +382,7 @@ namespace controller
 
             if (state_ == thread_manager::UNINITIALIZED) {
                 if (!thread_factory_) {
-                    throw InvalidArgumentException();
+                    throw exceptions::invalid_argument_exception();
                 }
 
                 state_ = thread_manager::STARTED;
@@ -424,14 +429,14 @@ namespace controller
 
     }
 
-    void thread_manager::impl::removeworker(size_t value)
+    void thread_manager::impl::remove_worker(size_t value)
     {
         std::set<shared_ptr<Thread> > removed_threads;
         {
             synchronized s(monitor_);
 
             if (value > worker_max_count_) {
-                throw InvalidArgumentException();
+                throw exceptions::invalid_argument_exception();
             }
 
             worker_max_count_ -= value;
@@ -441,7 +446,7 @@ namespace controller
                     monitor_.notify();
                 }
             } else {
-                monitor_.notifyAll();
+                monitor_.notify_all();
             }
         }
 
@@ -452,14 +457,14 @@ namespace controller
                 worker_monitor_.wait();
             }
 
-            for (std::set<boost::shared_ptr<thread> >::iterator ix = dead_workers_.begin();
+            for (std::set<boost::shared_ptr<Thread> >::iterator ix = dead_workers_.begin();
                     ix != dead_workers_.end();
                     ix++) {
-                id_map_.erase((*ix)->get_id());
+                idMap_.erase((*ix)->get_id());
                 workers_.erase(*ix);
             }
 
-            deadworkers_.clear();
+            dead_workers_.clear();
         }
     }
 
@@ -469,18 +474,18 @@ namespace controller
         return idMap_.find(id) == idMap_.end();
     }
 
-    void thread_manager::impl::add(boost::shared_ptr<runnable> value,
+    void thread_manager::impl::add(boost::shared_ptr<Runnable> value,
             int64_t timeout,
             int64_t expiration)
     {
         guard g(mutex_, timeout);
 
         if (!g) {
-            throw TimedOutException();
+            throw exceptions::timed_out_exception();
         }
 
         if (state_ != thread_manager::STARTED) {
-            throw IllegalStateException("thread_manager::impl::add ThreadManager "
+            throw exceptions::illegal_state_exception("thread_manager::impl::add ThreadManager "
                     "not started");
         }
 
@@ -493,41 +498,41 @@ namespace controller
                     max_monitor_.wait(timeout);
                 }
             } else {
-                throw TooManyPendingtasksException();
+                throw exceptions::too_many_pending_tasks_exception();
             }
         }
 
-        tasks_.push(boost::shared_ptr<thread_manager::task>(new thread_manager::Task(value, expiration)));
+        tasks_.push(boost::shared_ptr<thread_manager::task>(new thread_manager::task(value, expiration)));
 
         // If idle thread is available notify it, otherwise all worker threads are
         // running and will get around to this task in time.
-        if (idleCount_ > 0) {
+        if (idle_count_ > 0) {
             monitor_.notify();
         }
     }
 
-    void thread_manager::impl::remove(shared_ptr<runnable> task)
+    void thread_manager::impl::remove(shared_ptr<Runnable> task)
     {
         (void) task;
         synchronized s(monitor_);
 
         if (state_ != thread_manager::STARTED) {
-            throw IllegalStateException("thread_manager::impl::remove ThreadManager not "
+            throw exceptions::illegal_state_exception("thread_manager::impl::remove ThreadManager not "
                     "started");
         }
     }
 
-    boost::shared_ptr<runnable> thread_manager::impl::remove_next_pending()
+    boost::shared_ptr<Runnable> thread_manager::impl::remove_next_pending()
     {
         guard g(mutex_);
 
         if (state_ != thread_manager::STARTED) {
-            throw IllegalStateException("thread_manager::impl::removeNextPending "
+            throw exceptions::illegal_state_exception("thread_manager::impl::removeNextPending "
                     "thread_manager not started");
         }
 
         if (tasks_.empty()) {
-            return boost::shared_ptr<runnable>();
+            return boost::shared_ptr<Runnable>();
         }
 
         boost::shared_ptr<thread_manager::task> task = tasks_.front();
@@ -603,7 +608,7 @@ namespace controller
     boost::shared_ptr<thread_manager> thread_manager
     ::new_simple_thread_manager(size_t count, size_t pending_task_count_max)
     {
-        return boost::shared_ptr<thread_manager>(new simple_thread_manager(count, pending_task_count_max));
+        return boost::shared_ptr<thread_manager>(new simplethread_manager(count, pending_task_count_max));
     }
 
 }

@@ -17,10 +17,11 @@
 /*  Titles			                                                     Authors	          Date
  * - Semaphore define																						Chatsiri.rat      01/10/2013
  */
-#include "threadsyncocl/mutex_controller.hpp"
+#include "threadconcurrency/mutex_controller.hpp"
 
-#include "utils/base/util_thread.hpp"
+#include "threadconcurrency/util_thread.hpp"
 
+#define BASE_UNUSED_VARIABLE(x) ((void)(x))
 
 namespace controller
 {
@@ -36,7 +37,7 @@ namespace controller
     void enable_mutex_profiling(int32_t profiling_sample_rate,
             mutex_wait_callback callback)
     {
-        mutex_profiling_sample_rate = profiling_sample_rate;
+        mutex_profiliing_sample_rate = profiling_sample_rate;
         mutex_profiling_callback    = callback;
     }
 
@@ -72,7 +73,7 @@ namespace controller
 
     static inline int64_t maybe_get_profiling_start_time()
     {
-        if (mutex_profiling_sample_rate && mutex_profiling_callback) {
+        if (mutex_profiliing_sample_rate && mutex_profiling_callback) {
             // This block is unsynchronized, but should produce a reasonable sampling
             // rate on most architectures.  The main race conditions are the gap
             // between the decrement and the test, the non-atomicity of decrement, and
@@ -88,7 +89,7 @@ namespace controller
             sig_atomic_t localValue = --mutex_profiling_counter;
 
             if (localValue <= 0) {
-                mutex_profiling_counter = mutex_profiling_sample_rate;
+                mutex_profiling_counter = mutex_profiliing_sample_rate;
                 return util_thread::current_time_usec();
             }
         }
@@ -143,7 +144,7 @@ namespace controller
 #if defined(_POSIX_TIMEOUTS) && _POSIX_TIMEOUTS >= 200112L
                 PROFILE_MUTEX_START_LOCK();
 
-                struct BASE_TIMESPEC ts;
+                struct TIMESPEC ts;
 
                 util_thread::to_time_spec(ts, milliseconds + util_thread::current_time());
 
@@ -158,7 +159,7 @@ namespace controller
                 return false;
 #else
                 /* Otherwise follow solution used by Mono for Android */
-                struct BASE_TIMESPEC sleepytime, now, to;
+                struct TIMESPEC sleepytime, now, to;
 
                 /* This is just to avoid a completely busy wait */
                 sleepytime.tv_sec = 0;
@@ -212,12 +213,12 @@ namespace controller
 
     bool mutex_controller::try_lock() const
     {
-        return impl_->trylock();
+        return impl_->try_lock();
     }
 
     bool mutex_controller::timed_lock(int64_t ms) const
     {
-        return impl_->timedlock(ms);
+        return impl_->timed_lock(ms);
     }
 
     void mutex_controller::unlock() const
@@ -229,7 +230,7 @@ namespace controller
     {
         pthread_mutex_t *pthread_mutex = (pthread_mutex_t *)arg;
         int ret = pthread_mutex_init(pthread_mutex, NULL);
-        THRIFT_UNUSED_VARIABLE(ret);
+        BASE_UNUSED_VARIABLE(ret);
         assert(ret == 0);
     }
 
@@ -249,7 +250,7 @@ namespace controller
 
         ret = pthread_mutexattr_destroy(&mutexattr);
         assert(ret == 0);
-        THRIFT_UNUSED_VARIABLE(ret);
+        BASE_UNUSED_VARIABLE(ret);
     }
 #endif
 
