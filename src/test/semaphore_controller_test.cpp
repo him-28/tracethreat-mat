@@ -11,6 +11,8 @@
 
 //#include "test/file_offset_handler_test.hpp"
 
+#include "test/cli_scanner_wrapper_test.hpp"
+
 #include "test/cliprescan_pe_task_test.hpp"
 
 //#2 -stable

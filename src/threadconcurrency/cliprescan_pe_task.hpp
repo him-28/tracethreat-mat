@@ -6,6 +6,8 @@
 #include "threadconcurrency/platformthread_factory.hpp"
 #include "threadconcurrency/util_thread.hpp"
 
+#include "clibasewrapper/cliwrapper/cli_scanner_wrapper.h"
+//
 namespace controller
 {
 		namespace exceptions = hnmav_exception::controller;

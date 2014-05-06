@@ -1,8 +1,10 @@
-#include "threadconcurrency/cliprescan_pe_task.hpp"
+
 #include "exception/system_exception.hpp"
+#include "threadconcurrency/cliprescan_pe_task.hpp"
 
 namespace controller
 {
+		using namespace wrapper;
 
     cliprescan_pe_task::cliprescan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout) :
         _monitor(monitor),
@@ -13,6 +15,17 @@ namespace controller
     void cliprescan_pe_task::run()
     {
 
+
+        struct optstruct *opts_ = (struct optstruct *)malloc(sizeof(optstruct *));
+
+        cli_scanner_wrapper  cli_swrapper;
+				//cli_swrapper.init_engine_wrapper();
+				int fd = 0;
+				char * file_sigdb = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
+        // /home/chatsiri/Dropbox/reversing_engineer/reversing_files_test";
+				char * file_scanpath = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext.exe";
+				cli_swrapper.set_filename_path(file_scanpath);
+				cli_swrapper.prepare_scandesc_wrapper(file_sigdb);
 
         _startTime = util_thread::current_time();
 

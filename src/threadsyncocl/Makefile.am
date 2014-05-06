@@ -1,5 +1,5 @@
 # debug, optimized
-AM_CXXFLAGS   = -I$(top_srcdir)/src  @AM_CXXFLAGS@
+AM_CXXFLAGS   = -I$(top_srcdir)/src -I/home/chatsiri/sda1/workspacecpp/clamav-devel-hnmav  @AM_CXXFLAGS@
 
 # Make src file 
 # libarries for control threads
@@ -22,7 +22,13 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/threadconcurrency/thread_manager.hpp \
  $(top_builddir)/src/threadconcurrency/platformthread_factory.hpp \
  $(top_builddir)/src/threadconcurrency/monitor_controller.hpp \
- $(top_builddir)/src/threadconcurrency/posixthread_factory.hpp
+ $(top_builddir)/src/threadconcurrency/posixthread_factory.hpp \
+ $(top_builddir)/src/threadconcurrency/cliprescan_pe_task.hpp \
+ $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.h \
+ $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.h \
+ $(top_builddir)/src/clibasewrapper/cliwrapper/global_wrapper.h
+
+
 
 
 
@@ -39,7 +45,10 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/memory/file_shm_handler.cpp \
   $(top_builddir)/src/threadconcurrency/thread_manager.cpp \
   $(top_builddir)/src/threadconcurrency/monitor_controller.cpp \
-  $(top_builddir)/src/threadconcurrency/posixthread_factory.cpp
+  $(top_builddir)/src/threadconcurrency/posixthread_factory.cpp \
+  $(top_builddir)/src/threadconcurrency/cliprescan_pe_task.cpp \
+  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.cpp \
+  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp
 
 
 
@@ -53,4 +62,5 @@ $(top_builddir)/src/filetypes/libfiletypes.a  \
 $(top_builddir)/src/scan/libscan.a \
 $(top_builddir)/src/memory/libmemory.a \
 $(top_builddir)/src/threadconcurrency/libthreadconcurrency.a \
+$(top_builddir)/src/clibasewrapper/libclibasewrapper.a \
 $(top_builddir)/src/ocl/libocl.a $(AM_LDFLAGS)

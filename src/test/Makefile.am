@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src -I/src/threadsyncocl @AM_CXXFLAGS@
+AM_CXXFLAGS = -I$(top_srcdir)/src -I/src/threadsyncocl -I/src/clibasewrapper @AM_CXXFLAGS@
 # -I/src/utils -I/src/rules -I/src/filetypes \
 # -I/src/scan -I/src/ocl -I/src/exception -I/src/data_structure  @AM_CXXFLAGS@
 
@@ -16,7 +16,9 @@ wrapper_rules.hpp \
 yara.h \
 file_handler.hpp \
 file_offset_handler.hpp \
-datastructure_exception.hpp
+datastructure_exception.hpp \
+libclamav/clamav.h \
+shared/optparser.h
 
 #cl_bootstrap.hpp
 
@@ -34,4 +36,5 @@ test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsync
  -lscan -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/memory \
  -lmemory -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl \
  -locl -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadconcurrency \
- -lthreadconcurrency $(AM_LDFLAGS)
+ -lthreadconcurrency -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/clibasewrapper \
+ -lclibasewrapper $(AM_LDFLAGS)
