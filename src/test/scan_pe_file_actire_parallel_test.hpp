@@ -27,9 +27,9 @@ class ScanACTireParallel : public ::testing::Test
         virtual void SetUp() {
             //load binary file pe.
             char const *file_name_offset[FILE_ON];
-
             file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/Crack.exe";
 						opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
+						file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
             for(int count_file = 0; count_file < 	FILE_ON; count_file++) {
                 list_file_type.push_back(file_name_offset[count_file]);
 
@@ -48,7 +48,8 @@ class ScanACTireParallel : public ::testing::Test
         std::list<std::string> list_file_type;
         struct MAPPED_FILE_PE *s_mapped_fpe[FILE_ON];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
-				
+			  const char *file_sig;
+			
         //test with actire_parallel
         typedef boost::unordered_map<char, size_t>  unordered_map;
         dstr::actire_parallel<char, size_t, unordered_map, std::vector<unordered_map> > acp;
@@ -75,7 +76,7 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     // Second, Send Symbol and State vector to  file_scan_policy
     // list_file_tye insert file name, s_mapped_fpe inserted  file_type details.
     utils::file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
-    EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h));
+    EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h, file_sig));
 
     std::vector<struct MAPPED_FILE_PE *> * mapf_vec = fileoffset_h.get_mapped_file();
     typename std::vector<struct MAPPED_FILE_PE *>::iterator iter_mapf_vec;

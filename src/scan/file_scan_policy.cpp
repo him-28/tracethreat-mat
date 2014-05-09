@@ -14,9 +14,9 @@ namespace policy
     {
 
         //logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
-        logger = logger_ptr->get();
-        logger->write_info_test("Init logger pe_file_policy");
+        //logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
+        //logger = logger_ptr->get();
+        //logger->write_info_test("Init logger pe_file_policy");
 
     }
 
@@ -150,7 +150,7 @@ namespace policy
     bool pe_file_policy<MAPPED_FILE>::
     scan_file_type(std::vector<MAPPED_FILE *> *mapped_file_pe_vec)
     {
-				logger->write_info("pe_file_policy::scan_file_type(), multiple scanning with ocl");
+				//logger->write_info("pe_file_policy::scan_file_type(), multiple scanning with ocl");
 
         pe_fconl.set_opencl_file(*this->kernel_file_path);
         //Plan-00003 : Retrun result is array.
@@ -233,12 +233,12 @@ namespace policy
                 iter_mapped_file != mapped_file_vec->end();
                 ++iter_mapped_file) {
             MAPPED_FILE *mapp_file  =  *iter_mapped_file;
-
+						std::cout<<"File name send to scan_file_type : " << mapp_file->file_name <<std::endl;
             if(f_col_policy->scan_file_type(mapp_file)) {
                 //Mapp_file instant mapped_file
                 if(mapp_file->file_name == NULL) {
-                    logger->write_info("file_scan_policy::scan_file_engine, Scan found infected file ",
-                            boost::lexical_cast<std::string>(mapp_file->file_name));
+                    //logger->write_info("file_scan_policy::scan_file_engine, Scan found infected file ",
+                    //        boost::lexical_cast<std::string>(mapp_file->file_name->c_str()));
 
                     //create struct file scan result contain on vector.
                     fs_result = new file_scan_result<MAPPED_FILE>();
@@ -246,7 +246,7 @@ namespace policy
                     file_scan_result_vec[result_file_count]->file_name = mapp_file->file_name;
                 }
 
-                logger->write_info("file_scan_policy::scan_file_engine, Scan found, but unname of file");
+                //logger->write_info("file_scan_policy::scan_file_engine, Scan found, but unname of file");
                 //count result size of vector
                 result_file_count++;
             }
@@ -262,7 +262,7 @@ namespace policy
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
             std::vector<MAPPED_FILE *> *mapped_file_vec)
     {
-        logger->write_info("In file_scan_policy<MAPPED_FILE>::scan_file_engine");
+        //logger->write_info("In file_scan_policy<MAPPED_FILE>::scan_file_engine");
 
         uint8_t result_file_count = 0;
         f_col_policy = fcol_policy;
@@ -271,7 +271,7 @@ namespace policy
         //return scanning completed all files.
         if(f_col_policy->scan_file_type(mapped_file_vec)) {
 
-            logger->write_info("file_scan_policy::scan_file_engine, Scan found, but unname of file");
+            //logger->write_info("file_scan_policy::scan_file_engine, Scan found, but unname of file");
         }// end if
 
         // TO-DO

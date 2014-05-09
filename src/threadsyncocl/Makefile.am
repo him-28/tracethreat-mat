@@ -24,6 +24,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/threadconcurrency/monitor_controller.hpp \
  $(top_builddir)/src/threadconcurrency/posixthread_factory.hpp \
  $(top_builddir)/src/threadconcurrency/cliprescan_pe_task.hpp \
+ $(top_builddir)/src/threadconcurrency/cliprescan_pe_controller.hpp \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.h \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.h \
  $(top_builddir)/src/clibasewrapper/cliwrapper/global_wrapper.h
@@ -38,8 +39,8 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
 	$(top_builddir)/src/utils/file_calculate.cpp  \
 	$(top_builddir)/src/exception/failure_handler_code.cpp \
   $(top_builddir)/src/exception/datastructure_exception.cpp \
-	$(top_builddir)/src/data_structure/ac_tire.hpp \
-	$(top_builddir)/src/data_structure/actire_parallel.hpp \
+	$(top_builddir)/src/data_structure/ac_tire.cpp \
+	$(top_builddir)/src/data_structure/actire_parallel.cpp \
 	$(top_builddir)/src/filetypes/pe_file_controller.cpp \
   $(top_builddir)/src/scan/file_scan_policy.cpp \
   $(top_builddir)/src/memory/file_shm_handler.cpp \
@@ -47,6 +48,7 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/threadconcurrency/monitor_controller.cpp \
   $(top_builddir)/src/threadconcurrency/posixthread_factory.cpp \
   $(top_builddir)/src/threadconcurrency/cliprescan_pe_task.cpp \
+  $(top_builddir)/src/threadconcurrency/cliprescan_pe_controller.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp
 

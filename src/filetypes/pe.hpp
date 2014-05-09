@@ -231,6 +231,9 @@ typedef struct IMAGE_SECTION_HEADER * PIMAGE_SECTION_HEADER;
 
 #pragma pack(pop)
 
+
+#include "boost/scoped_array.hpp"
+
 struct MAPPED_FILE_PE {
     FILE_DESCRIPTOR   file;
     size_t            size;
@@ -238,7 +241,8 @@ struct MAPPED_FILE_PE {
     uint32_t          ops_begin;
     uint32_t					ops_end;
 		//unsigned char     *file_name;
-	  const char        *file_name;
+	  char *  file_name;
+	  char *  file_sig;
 };
 
 struct MAMORY_BLOCK_PE {

@@ -31,7 +31,7 @@ namespace hnmav_kernel
     cl_load_system()
     //:opencl_file_path_(&opencl_file_path)
     {
-        util::options_system& op_system = util::options_system::get_instance();
+        //util::options_system& op_system = util::options_system::get_instance();
         //init logger
         logger_ptr = &util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();

@@ -2,17 +2,20 @@
 #include "boost/lexical_cast.hpp"
 //#include "utils/logger/format_logger.hpp"
 //#include "utils/logger/clutil_logger.hpp"
+#include "threadconcurrency/cliprescan_pe_controller.hpp"
+
+using namespace controller;
 
 namespace filetypes
 {
-
+	
     template<typename MAPPED_FILE>
     pe_file_controller<MAPPED_FILE>::pe_file_controller()
     {
         //logger
         logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
-        logger->write_info_test("Init logger pe_file_controller");
+       // logger->write_info_test("Init logger pe_file_controller");
     }
 
     template<typename MAPPED_FILE>
@@ -275,7 +278,7 @@ namespace filetypes
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
         uint64_t summary_file_size = 0;
-
+	
         //summary file size of all
         for(iter_mapped_files = mapped_file_pe_vec->begin();
                 iter_mapped_files != mapped_file_pe_vec->end();
@@ -284,12 +287,21 @@ namespace filetypes
             summary_file_size += mf_pe->size;
         }//end-for loop
 
-        logger->write_info("pe_file_policy::scan_file_type(), Initial file-shm size completed.");
 
+        //logger->write_info("pe_file_policy::scan_file_type(), Initial file-shm size completed.");
+
+
+				//pre-scan
+				size_t timeout_scan = 1000LL;
+				controller::cliprescan_pe_controller<MAPPED_FILE>  prescan_pe;
+				prescan_pe.initial_task_size(mapped_file_pe_vec->size(), timeout_scan, mapped_file_pe_vec);
+				prescan_pe.task_start();
+
+				//post-scan
         f_shm_handler.initial_shm(summary_file_size);
         f_shm_handler.initial_file_shm(mapped_file_pe_vec);
 
-        logger->write_info("pe_file_policy::scan_file_type(), Intial  file-shm data completed.");
+        //logger->write_info("pe_file_policy::scan_file_type(), Intial  file-shm data completed.");
 
         //Send thread pointer to pe_file_controler::scan. Binary file add to tsync before call start()
         //member function of comm_thread_buff.
@@ -298,7 +310,7 @@ namespace filetypes
         tsync.init_syncocl_workload(f_shm_handler.get_map_str_shm(),
                 f_shm_handler.get_map_file_size());
 
-        logger->write_info("pe_file_policy::scan_file_type(), Initial OCL workload completed.");
+        //logger->write_info("pe_file_policy::scan_file_type(), Initial OCL workload completed.");
 
         tsync.add_load_ocl_system(&load_ocl_system,
                 kernel_file_path_ptr,
@@ -309,11 +321,11 @@ namespace filetypes
 
         //tsync.add_sig_process(symbol_vec, state_vec);
 
-        logger->write_info("pe_file_policy::scan_file_type(), Add signature completed.");
+        //logger->write_info("pe_file_policy::scan_file_type(), Add signature completed.");
 
         tsync.start_processes();
 
-        logger->write_info("pe_file_policy::scan_file_type(), Processes completed.");
+        //logger->write_info("pe_file_policy::scan_file_type(), Processes completed.");
 
         //tsync.get_slot_ocl_result();
 

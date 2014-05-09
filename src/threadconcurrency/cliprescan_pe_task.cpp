@@ -4,13 +4,27 @@
 
 namespace controller
 {
-		using namespace wrapper;
+    using namespace wrapper;
 
-    cliprescan_pe_task::cliprescan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout) :
+    cliprescan_pe_task::cliprescan_pe_task(monitor_controller& monitor, 
+				size_t& count, 
+				int64_t timeout) :
         _monitor(monitor),
         _count(count),
         _timeout(timeout),
         _done(false) {}
+
+    bool cliprescan_pe_task::set_file_scanpath(const char *file_scanpath)
+    {
+        this->file_scanpath = file_scanpath;
+        return true;
+    }
+
+    bool cliprescan_pe_task::set_file_sigdb(const char *file_sigdb)
+    {
+        this->file_sigdb = file_sigdb;
+        return true;
+    }
 
     void cliprescan_pe_task::run()
     {
@@ -19,13 +33,12 @@ namespace controller
         struct optstruct *opts_ = (struct optstruct *)malloc(sizeof(optstruct *));
 
         cli_scanner_wrapper  cli_swrapper;
-				//cli_swrapper.init_engine_wrapper();
-				int fd = 0;
-				char * file_sigdb = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
+        //char * file_sigdb = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
         // /home/chatsiri/Dropbox/reversing_engineer/reversing_files_test";
-				char * file_scanpath = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext.exe";
-				cli_swrapper.set_filename_path(file_scanpath);
-				cli_swrapper.prepare_scandesc_wrapper(file_sigdb);
+        //char * file_scanpath = "/home/chatsiri/Dropbox/reversing_engineer/
+        //reversing_files_test/clam_ISmsi_ext.exe";
+        cli_swrapper.set_filename_path(file_scanpath);
+        cli_swrapper.prepare_scandesc_wrapper(file_sigdb);
 
         _startTime = util_thread::current_time();
 
@@ -53,7 +66,7 @@ namespace controller
             _count--;
 
             if (_count == 0) {
-
+								std::cout<<" Thread notify...: "<<std::endl;
                 _monitor.notify();
             }
         }

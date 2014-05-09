@@ -65,6 +65,8 @@ class ThreadSyncTest : public ::testing::Test
 
             file_name_offset[2] = "/home/chatsiri/sda1/workspacemalware/malware_debug/infected_01.exe";
 
+						file_sig = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
+
             for(int count_file = 0;
                     count_file < 	FILE_SIZE_MULTIPLE_SHM;
                     count_file++) {
@@ -84,7 +86,7 @@ class ThreadSyncTest : public ::testing::Test
         std::vector<const char *> file_type_vec;
         struct MAPPED_FILE_PE *s_mapped_fpe[FILE_SIZE_MULTIPLE_SHM];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
-
+				const char * file_sig;
 
         //logger
         boost::shared_ptr<hnmav_util::clutil_logging<std::string, int> > *logger_ptr;
@@ -104,7 +106,7 @@ TEST_F(ThreadSyncTest, sync_init)
     //intial file-shm
     utils::file_offset_handler<struct utils::common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
 
-    EXPECT_TRUE(fileoffset_h.mapped_file(file_type_vec, mapped_file_vec, fileoffset_h));
+    EXPECT_TRUE(fileoffset_h.mapped_file(file_type_vec, mapped_file_vec, fileoffset_h, file_sig));
 
     uint64_t sum_file_size = 0;
 

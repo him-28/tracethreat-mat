@@ -259,7 +259,7 @@ namespace policy
                 switch(smode) {
 
                 case scan_file_policy::MULTIPLE_OCL_MODE : { //multiple scanning on OCL
-										 logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_mode");
+										 //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_mode");
                     //get data, size mapped_file for API system.
                     std::vector<MAPPED_FILE *> *mapped_file_vec = obj_fconl_policy->get_mapped_file();
                     //Send ot Multiple file OCL mode.
@@ -267,13 +267,13 @@ namespace policy
                 }
 
                 case scan_file_policy::MULTIPLE_TBB_MODE : { //multiple scanning on TBB
- 										 logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_tbb_mode");
+ 										 //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_tbb_mode");
 
                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
                 }
 
                 case scan_file_policy::MULTIPLE_OCL_TBB_MODE : { //Priority OCL before TBB mode.
-										 logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_tbb_mode");
+										 //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_tbb_mode");
 
                     return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
                 }

@@ -36,26 +36,38 @@ namespace memory
     template<typename MAPPED_FILE>
     bool file_shm_handler<MAPPED_FILE>::initial_shm(uint64_t full_file_size)
     {
-				//TODO: Plant-00004 :Change to memory menagement size system.
-				uint64_t shm_initial_size = full_file_size * 64;
-        // Managed_shared_memory created SHM.
-        file_shm = new boostinp::managed_shared_memory(
-                boostinp::create_only, utils::get_process_id_name(), shm_initial_size);
-				if(file_shm->get_size() == shm_initial_size){
+        try {
 
-					logger->write_info("file_shm_handler::initial_shm(), shm-size ",
-						boost::lexical_cast<std::string>(shm_initial_size));
+            //TODO: Plant-00004 :Change to memory menagement size system.
+            uint64_t shm_initial_size = full_file_size * 64;
+            std::string fshm_name = "file-shm";
+            boostinp::shared_memory_object::remove(fshm_name.c_str());
+            // Managed_shared_memory created SHM.
+            file_shm = new boostinp::managed_shared_memory(
+                    boostinp::create_only, fshm_name.c_str(), shm_initial_size);
 
-					logger->write_info("file_shm_handler::initial_shm(), processes_id ",
-							boost::lexical_cast<std::string>(utils::get_process_id_name()));
+            if(file_shm->get_size() == shm_initial_size) {
 
-					return true;
-				}
-				return false;
+                //logger->write_info("file_shm_handler::initial_shm(), shm-size ",
+                //        boost::lexical_cast<std::string>(shm_initial_size));
+
+                //logger->write_info("file_shm_handler::initial_shm(), processes_id ",
+                //        boost::lexical_cast<std::string>(utils::get_process_id_name()));
+
+                return true;
+            }
+
+        } catch(boostinp::bad_alloc& ex) {
+            std::cerr<< ex.what() << std::endl;
+						return false;
+        }
+
+      return false;
+
     }
     /*Phase-1 :  File read to string on files-shm */
     template<typename MAPPED_FILE>
-    bool file_shm_handler<MAPPED_FILE>::initial_file_shm(std::vector<MAPPED_FILE *> * files_map)
+    bool file_shm_handler<MAPPED_FILE>::initial_file_shm(std::vector<MAPPED_FILE *> *files_map)
     {
 
         //char allocator
@@ -101,7 +113,7 @@ namespace memory
 
             //MD5 variable mallocs supported mf->data converts from MD5Hash.
             //details_file_hex = (char*)malloc(sizeof(char) * mf->size);
-
+            //printf("File name : %c ", mf->file_name);
             // insert addresses of hex char.
             char *hex_ptr = utils::convert::byte2hexstr(mf->data, mf->size);
             addr_df_hex_vec.push_back(hex_ptr);
@@ -139,7 +151,7 @@ namespace memory
             //file_name_md5_vec.push_back(file_name_md5);
             //std::cout<<"File name md5 : " << file_name_md5 << std::endl;
             //std::cout<<"File name path : " << mf->file_name <<std::endl;
-            
+
             //Key : MD5 from detail insides file.
             //Value : insert vector contains detail of hex of file to value.
             /*map_shm_ptr->insert(std::pair<const uint64_t, binary_string_shm_vec>(
@@ -151,8 +163,8 @@ namespace memory
             map_str_shm_ptr->insert(std::pair<const uint64_t, binary_string_shm>(
                     file_name_md5, *binarystr_shm[index_file]));
 
-						//insert filename and file size for calculate
-					   map_file_size.insert(std::make_pair(file_name_md5, mf->size));
+            //insert filename and file size for calculate
+            map_file_size.insert(std::make_pair(file_name_md5, mf->size));
 
         }
 
@@ -177,9 +189,9 @@ namespace memory
     template<typename MAPPED_FILE>
     bool file_shm_handler<MAPPED_FILE>::delete_file_shm()
     {
-				if(map_str_shm_ptr->size() ==  0)
-						return true;
-		
+        if(map_str_shm_ptr->size() ==  0)
+            return true;
+
         //TODO : list file-shm detail deleted.
         std::vector<uint64_t>::const_iterator iter_fn_md5;
 
@@ -190,7 +202,7 @@ namespace memory
         }
 
         file_shm->destroy_ptr(map_str_shm_ptr);
-				return true;
+        return true;
     }
 
 
@@ -201,17 +213,17 @@ namespace memory
     }
 
     template<typename MAPPED_FILE>
-    typename file_shm_handler<MAPPED_FILE>::map_str_shm & file_shm_handler<MAPPED_FILE>::get_map_str_shm()
+    typename file_shm_handler<MAPPED_FILE>::map_str_shm& file_shm_handler<MAPPED_FILE>::get_map_str_shm()
     {
         return *map_str_shm_ptr;
     }
 
-		template<typename MAPPED_FILE>
-		typename std::map<const uint64_t, size_t> * file_shm_handler<MAPPED_FILE>::get_map_file_size()
-		{
-				return &map_file_size;
-		}
-				
+    template<typename MAPPED_FILE>
+    typename std::map<const uint64_t, size_t> *file_shm_handler<MAPPED_FILE>::get_map_file_size()
+    {
+        return &map_file_size;
+    }
+
 
 
     /*Phase-2 : File mapped set file load to shared memory

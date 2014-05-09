@@ -34,7 +34,7 @@ namespace utils
         //logger
         logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
-        logger->write_info_test("Init logger fileoffset");
+        //logger->write_info_test("Init logger fileoffset");
     }
 
 
@@ -60,7 +60,8 @@ namespace utils
     bool file_offset_handler<FileType, MAPPED_FILE>
     ::mapped_file(std::vector<const char*> file_name_vec,
             std::vector<MAPPED_FILE *> mapped_vec,
-            file_offset_handler<FileType, MAPPED_FILE>& file_offset_object)
+            file_offset_handler<FileType, MAPPED_FILE>& file_offset_object,
+						const char * file_sig)
     {
         std::vector<const char*>::iterator iter_files;
 
@@ -68,6 +69,7 @@ namespace utils
 
         const char *file_name;
         std::string s_file_name;
+				std::string s_file_sig = file_sig;
         MAPPED_FILE *mapped_file_ptr;
 
         if(!file_name_vec.size() || !mapped_vec.size() /*!mapped_vec_shared->size()*/ ) {
@@ -117,20 +119,29 @@ namespace utils
                     mapped_file_ptr->size =	file_status->st_size;
 
                     mapped_file_ptr->file = file_offset_object.get_popen_file();
-
+										/*
                     logger->write_info("Mapped file ptr size  ",
                             boost::lexical_cast<std::string>(mapped_file_ptr->size));
 
                     logger->write_info("Mapped file ptr name  ",
                             boost::lexical_cast<std::string>(mapped_file_ptr->file));
-
+										*/
                     if(mapped_file_ptr->size == 0 || mapped_file_ptr->file == -1) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
-										//allocated size of file name. 
-									  mapped_file_ptr->file_name = (char*)malloc(sizeof(char*) * s_file_name.size());
-										//insert file name path.
-										mapped_file_ptr->file_name = s_file_name.c_str();
+
+
+							  mapped_file_ptr->file_name = (char*)malloc(s_file_name.size() + 1);
+
+								mapped_file_ptr->file_sig = (char*)malloc(s_file_sig.size() + 1);
+
+								
+								strcpy(mapped_file_ptr->file_name, s_file_name.c_str());
+ 						
+								strcpy(mapped_file_ptr->file_sig, s_file_sig.c_str());
+
+
+
 
                     mapped_file_ptr->data = (uint8_t *)mmap(0,
                             mapped_file_ptr->size,
@@ -141,11 +152,7 @@ namespace utils
 
                     //logger->write_info("Mapped file with mmap success");
 
-                    //TO-DO : Cannot set s_file_name.c_str() to mapped_file_ptr->file_name;
-                    //mapped_file_ptr->file_name = s_file_name;
-                    //logger->write_info("Mapped file name ", mapped_file_ptr->file_name);
-                    //mapped_file_ptr->file_name = (char*)malloc(s_file_name.size() + 1);
-                    //strcpy(mapped_file_ptr->file_name, s_file_name.c_str());
+                    
                     //logger->write_info("Mapped file name completed ", s_file_name);
 
                     //logger->write_info("Mapped file data ",
