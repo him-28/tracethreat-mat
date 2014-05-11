@@ -8,11 +8,16 @@
 
 namespace controller
 {
+
+		namespace h_util = hnmav_util;
+
     template<typename MAPPED_FILE>
     class cliprescan_pe_controller
     {
 
         public:
+						cliprescan_pe_controller();
+
             bool initial_task_size(size_t thread_count,
                     int64_t timeout,
                     std::vector<MAPPED_FILE *> * mappe_file_pe_vec);
@@ -31,6 +36,9 @@ namespace controller
             std::set<boost::shared_ptr<cliprescan_pe_task> > tasks_scan_pe;
             //monitoring controller
             monitor_controller monitor;
+						//logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
 
     };
 

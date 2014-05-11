@@ -326,9 +326,6 @@ namespace controller
 
                 struct slot_ocl *s_ocl = pair_tid.second;
 
-                logger->write_info("slot_ocl_thread::run(), slot_ocl struct.",
-                        boost::lexical_cast<std::string>(s_ocl->status));
-
                 if(s_ocl->status == utils::infected_fist_step) {
                     //delete thread from thread_id ( file_name_md5)
                     --thread_size;

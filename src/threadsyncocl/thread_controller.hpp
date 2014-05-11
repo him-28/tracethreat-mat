@@ -35,7 +35,7 @@
 #include "threadsyncocl/semaphore_controller.hpp"
 #include "threadsyncocl/thread_barrier_controller.hpp"
 
-//
+//Logging
 #include "utils/logger/clutil_logger.hpp"
 #include "utils/base/system_code.hpp"
 

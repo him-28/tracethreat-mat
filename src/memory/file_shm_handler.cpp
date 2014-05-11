@@ -20,9 +20,10 @@
  * - File details convert to MD5 and send to meta data.           R.Chatsiri         25/04/2014
  */
 
+//external
+#include "boost/functional/hash.hpp"
+
 //internal
-
-
 #include "memory/file_shm_handler.hpp"
 #include "utils/get_process_id_name.hpp"
 
@@ -158,7 +159,9 @@ namespace memory
             */
 
             //encode with MD5 with mf->file_name ( filename inculded path of file)
-            const uint64_t  file_name_md5 =  utils::convert::MD5Hash(mf->data, mf->size);
+            //Plan-00004 : const uint64_t  file_name_md5 =  utils::convert::MD5Hash(mf->data, mf->size);
+            boost::hash<char*> hash_file_name;
+            const uint64_t file_name_md5 =  hash_file_name(mf->file_name);
             file_name_md5_vec.push_back(file_name_md5);
             //file_name_md5_vec.push_back(file_name_md5);
             //std::cout<<"File name md5 : " << file_name_md5 << std::endl;
