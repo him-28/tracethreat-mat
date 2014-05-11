@@ -339,10 +339,10 @@ namespace hnmav_kernel
 
             //int size_symbol_bw = platdevices->node_symbol_vec.size();
 
-            const char *binary_test = "e1fba0e00b409cd21b8014ccd215468";
-            const char *binary_end  = binary_test + strlen(binary_test);
-            std::vector<char>  data_check;
-            data_check.insert(data_check.end(), binary_test, binary_end);
+            //const char *binary_test = "e1fba0e00b409cd21b8014ccd215468";
+            //const char *binary_end  = binary_test + strlen(binary_test);
+            //std::vector<char>  data_check;
+            //data_check.insert(data_check.end(), binary_test, binary_end);
 
             /*
             for(int count_bin = 129; count_bin < 140; count_bin++)

@@ -45,7 +45,7 @@ namespace controller
             file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
             std::map<const uint64_t , size_t> *map_file_size)
     {
-        //logger->write_info("thread_sync::init_syncocl_workload(), Start initial workload");
+        logger->write_info("thread_sync::init_syncocl_workload(), Start initial workload");
 
         //buffer data for multithread.
         buff_sync_internal  = new BufferSync();
@@ -88,7 +88,7 @@ namespace controller
                 //TODO: problem before return
             }
 
-            //logger->write_info("thread_sync::init_syncocl_workload(), write binary file completed.");
+            logger->write_info("thread_sync::init_syncocl_workload(), write binary file completed.");
 
             //TODO: Implement thread_id (Not file_name_md5 )
             thread_ptr_vec.push_back(
@@ -97,7 +97,8 @@ namespace controller
                             (file_name_md5, buff_sync_internal, mutex_sync_internal)) //[thread_id]
             );
 
-            //logger->write_info("thread_sync::init_syncocl_workload(), Push thread task completed.");
+             logger->write_info("thread_sync::init_syncocl_workload(), Push thread task completed.",
+																boost::lexical_cast<std::string>(file_name_md5));
 
 
         }//end for loop
@@ -122,7 +123,7 @@ namespace controller
     ibuffer_sync<BufferSync>& thread_sync<BufferSync, MAPPED_FILE>::start_processes()
     {
 
-        //logger->write_info("Start, thread_sync::::start_processes() ", h_util::format_type::type_center);
+        logger->write_info("Start, thread_sync::::start_processes() ", h_util::format_type::type_center);
 
         //define Thread run / mutex at here
         typename std::vector<thread_ptr>::iterator iter_threads;
@@ -140,7 +141,7 @@ namespace controller
             s_ocl->start();
         }
 
-        //logger->write_info("thread_sync::::start_processes(), Start worker success.");
+        logger->write_info("thread_sync::::start_processes(), Start worker success.");
 
         //start threads
         for(iter_threads = thread_pv_ptr->begin();
@@ -152,6 +153,8 @@ namespace controller
             //get thread id send is task_id for worker name : slot_ocl_thread.
             //p_tid_task_vec.push_back(ct_buff->get_thread_id());
         }
+
+				logger->write_info("thread_sync::::start_processes(), Start threader success.");
 
         //join threads/ Join
         for(iter_threads = thread_pv_ptr->begin();
@@ -172,7 +175,7 @@ namespace controller
         }
 
 
-        //logger->write_info("End, thread_sync::::start_processes() ", h_util::format_type::type_center);
+        logger->write_info("End, thread_sync::::start_processes() ", h_util::format_type::type_center);
     }
 
     template<typename BufferSync, typename MAPPED_FILE>
@@ -190,7 +193,7 @@ namespace controller
             std::vector<char> *symbol_vec,
             std::vector<size_t>   *state_vec)
     {
-        //logger->write_info("thread_sync::add_load_ocl_system(), Path-OCL-file ", *kernel_file_path_ptr);
+        logger->write_info("thread_sync::add_load_ocl_system(), Path-OCL-file ", *kernel_file_path_ptr);
         this->load_ocl_system = load_ocl_system;
         this->load_ocl_system->set_opencl_file(*kernel_file_path_ptr);
         this->load_ocl_system->cl_load_platform();
@@ -206,8 +209,8 @@ namespace controller
                 iter_state_vec != state_vec->end();
                 ++iter_state_vec) {
             std::string state_str = boost::lexical_cast<std::string>(*iter_state_vec);
-          //  logger->write_info("thread_sync::add_load_ocl_system(), state convert ",
-          //          state_str);
+            logger->write_info("thread_sync::add_load_ocl_system(), state convert ",
+                    state_str);
             state_vec_convert.push_back(boost::lexical_cast<int>(state_str));
         }
 

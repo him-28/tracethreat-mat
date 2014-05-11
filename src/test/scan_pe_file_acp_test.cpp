@@ -27,9 +27,9 @@ class ScanACTireParallel : public ::testing::Test
 
         virtual void SetUp() {
             //load binary file pe.
-                file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/Crack.exe";
+            file_name_offset[0] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_int.exe";
 						opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
-						file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
+						file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.hdb";
             for(int count_file = 0; count_file < 	FILE_ON; count_file++) {
                 list_file_type.push_back(file_name_offset[count_file]);
 

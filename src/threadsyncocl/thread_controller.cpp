@@ -207,10 +207,11 @@ namespace controller
 
         //Mutex buffer locks mutex,
 
-        logger->write_info("-- comm_thread_buffer::run(), Before to critical section --");
+        logger->write_info("Comm_thread_buffer::run(), Before to critical section.", 
+					h_util::format_type::type_center);
 
-            uint64_t found_size = 0;
-            uint8_t  summary_status = 0;
+        uint64_t found_size = 0;
+        uint8_t  summary_status = 0;
 
         //loop thread check
         while(true) {
@@ -255,8 +256,11 @@ namespace controller
 
                     //logger->write_info("comm_thread_buffer::run(), status is zero");
                     if(value == utils::infected_found) {
-                        //logger->write_info_test("comm_thread_buffer::run(), status changed to one");
                         found_size++;
+
+                        logger->write_info_test("comm_thread_buffer::run(), index_matching",
+													boost::lexical_cast<std::string>(found_size));
+
                         //break;
                     }
 
@@ -270,7 +274,7 @@ namespace controller
 
                         //control state success or not.
                         ++summary_status;
-												//TODO: Thread wait, this->thread_cancel();
+                        //TODO: Thread wait, this->thread_cancel();
 
                         logger->write_info_test("comm_thread_buffer::run(), end_point check");
                         break;
@@ -279,16 +283,16 @@ namespace controller
 
             }//if find map
 
-             mutex_buff_->unlock_request();
+            mutex_buff_->unlock_request();
 
-		         logger->write_info("-- comm_thread_buffer::run(), End of critical section --");
+            logger->write_info("-- comm_thread_buffer::run(), End of critical section --");
 
             if(summary_status == map_tid.size()) {
 
-                logger->write_info("---comm_thread_buffer::run(), Task end, completed jobs ---");
+                logger->write_info("Comm_thread_buffer::run(), Task end, completed jobs",h_util::format_type::type_center);
                 //this->thread_cancel();
                 break;
-            } 
+            }
 
         }//while(true) loop
 
@@ -297,12 +301,12 @@ namespace controller
     template<typename BufferSync, typename MAPPED_FILE>
     void *slot_ocl_thread<BufferSync, MAPPED_FILE>::run()
     {
-				logger->write_info("slot_ocl_thread::run(), start...");
+        logger->write_info("slot_ocl_thread::run(), start...");
         //[] start OCL and call function sends data to buffer of OCL.
         //[] check thread completed. check from size of thread. and map contain slot_ocl structure.
         uint64_t thread_size = 0;
 
-				//this->load_ocl_system_->cl_process_commandqueue();
+        //this->load_ocl_system_->cl_process_commandqueue();
 
         while(true) {
             mutex_buff_->lock_request();

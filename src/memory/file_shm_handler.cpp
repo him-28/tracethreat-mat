@@ -31,15 +31,27 @@
 
 #include "filetypes/pe.hpp"
 
+#define EXTENED_SIZE_SHM  64 /*Issues: Plan-00004 : Investigate SHM-Sizes should equal filel sizes.*/
+
 namespace memory
 {
+
+		template<typename MAPPED_FILE>
+		file_shm_handler<MAPPED_FILE>::file_shm_handler(){
+
+				logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        logger = logger_ptr->get();
+
+
+		}
+
     template<typename MAPPED_FILE>
     bool file_shm_handler<MAPPED_FILE>::initial_shm(uint64_t full_file_size)
     {
         try {
 
             //TODO: Plant-00004 :Change to memory menagement size system.
-            uint64_t shm_initial_size = full_file_size * 64;
+            uint64_t shm_initial_size = full_file_size * EXTENED_SIZE_SHM;
             std::string fshm_name = "file-shm";
             boostinp::shared_memory_object::remove(fshm_name.c_str());
             // Managed_shared_memory created SHM.
@@ -48,11 +60,11 @@ namespace memory
 
             if(file_shm->get_size() == shm_initial_size) {
 
-                //logger->write_info("file_shm_handler::initial_shm(), shm-size ",
-                //        boost::lexical_cast<std::string>(shm_initial_size));
+                logger->write_info("file_shm_handler::initial_shm(), shm-size ",
+                        boost::lexical_cast<std::string>(shm_initial_size));
 
-                //logger->write_info("file_shm_handler::initial_shm(), processes_id ",
-                //        boost::lexical_cast<std::string>(utils::get_process_id_name()));
+                logger->write_info("file_shm_handler::initial_shm(), processes_id ",
+                        boost::lexical_cast<std::string>(utils::get_process_id_name()));
 
                 return true;
             }
@@ -183,7 +195,10 @@ namespace memory
 
         //std::cout<<"fn_md5:"<< fn_md5 <<std::endl;
         //std::cout<<"str : "<< bistr_shm <<std::endl;
-
+				logger->write_info("file_shm_handler::list_detail_shm, list fn_md",
+						boost::lexical_cast<std::string>(fn_md5));
+				logger->write_info("file_shm_handler::list_detail_shm, binary_string_shm",
+						boost::lexical_cast<std::string>(bistr_shm));
     }
 
     template<typename MAPPED_FILE>

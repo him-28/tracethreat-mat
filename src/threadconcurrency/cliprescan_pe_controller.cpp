@@ -6,7 +6,7 @@ namespace controller
     template<typename MAPPED_FILE>
     bool cliprescan_pe_controller<MAPPED_FILE>::
     initial_task_size(size_t thread_count,
-            size_t timeout,
+            int64_t timeout,
             std::vector<MAPPED_FILE *> * mapped_file_pe_vec)
     {
 
@@ -35,11 +35,14 @@ namespace controller
         boost::shared_ptr<thread_manager> thread_m =
                 thread_manager::new_simple_thread_manager(worker_count);
         //set thread factory
+        /*
         boost::shared_ptr<platformthread_factory> thread_factory =
-                boost::shared_ptr<platformthread_factory>(
+                boost::make_shared<platformthread_factory>(
                         new platformthread_factory());
+				*/
         //thread manager add thread factory
-        thread_m->thread_factory(thread_factory);
+        thread_m->thread_factory(boost::shared_ptr<platformthread_factory>(
+                        new platformthread_factory()));
         //thread start.
         thread_m->start();
 

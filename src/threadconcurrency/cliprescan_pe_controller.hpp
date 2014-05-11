@@ -14,7 +14,7 @@ namespace controller
 
         public:
             bool initial_task_size(size_t thread_count,
-                    size_t timeout,
+                    int64_t timeout,
                     std::vector<MAPPED_FILE *> * mappe_file_pe_vec);
 
             bool task_start();

@@ -29,16 +29,16 @@ namespace controller
     void cliprescan_pe_task::run()
     {
 
+				int ret = 0; //result from scanning.
 
-        struct optstruct *opts_ = (struct optstruct *)malloc(sizeof(optstruct *));
+        //struct optstruct *opts_ = (struct optstruct *)malloc(sizeof(optstruct *));
 
         cli_scanner_wrapper  cli_swrapper;
-        //char * file_sigdb = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
-        // /home/chatsiri/Dropbox/reversing_engineer/reversing_files_test";
-        //char * file_scanpath = "/home/chatsiri/Dropbox/reversing_engineer/
-        //reversing_files_test/clam_ISmsi_ext.exe";
+
         cli_swrapper.set_filename_path(file_scanpath);
-        cli_swrapper.prepare_scandesc_wrapper(file_sigdb);
+        ret = cli_swrapper.prepare_scandesc_wrapper(file_sigdb);
+				const char * rec = cli_swrapper.result_code(ret);
+				std::cout<<"Result code : " << rec << "In prescanning." <<std::endl;
 
         _startTime = util_thread::current_time();
 

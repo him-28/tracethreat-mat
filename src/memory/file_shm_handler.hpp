@@ -77,6 +77,9 @@ namespace memory
             };
             */
 
+						file_shm_handler();
+
+
             //char allocator
             typedef boostinp::allocator<char,
                     boostinp::managed_shared_memory::segment_manager> char_allocator;

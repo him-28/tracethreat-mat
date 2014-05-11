@@ -82,3 +82,25 @@ scan_pe_file_acp_test_LDADD   = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/s
  -locl -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadconcurrency \
  -lthreadconcurrency -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/clibasewrapper \
  -lclibasewrapper $(AM_LDFLAGS)
+
+
+#Thread Sync
+TEST += thread_sync_test
+check_PROGRAMS += thread_sync_test
+
+thread_sync_test_SOURCES = thread_sync_test.cpp \
+environment_test.hpp
+
+thread_sync_test_LDADD   = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsyncocl \
+ -lthreadsyncocl -lgtest -lgtest_main -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \
+ -lutils -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/exception \
+ -lexception -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/data_structure \
+ -ldstr -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/wrapper \
+ -lwrapper  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/filetypes \
+ -lfiletypes -L/home/chatsiri/workspacecpp/boost-truck/stage/lib \
+ -lboost_system -lboost_program_options -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan \
+ -lscan -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/memory \
+ -lmemory -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl \
+ -locl -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadconcurrency \
+ -lthreadconcurrency -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/clibasewrapper \
+ -lclibasewrapper $(AM_LDFLAGS)
