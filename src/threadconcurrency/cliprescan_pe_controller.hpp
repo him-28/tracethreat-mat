@@ -16,7 +16,7 @@ namespace controller
     {
 
         public:
-						cliprescan_pe_controller();
+						//cliprescan_pe_controller();
 
             bool initial_task_size(size_t thread_count,
                     int64_t timeout,
@@ -37,8 +37,8 @@ namespace controller
             //monitoring controller
             monitor_controller monitor;
 						//logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            //boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            //h_util::clutil_logging<std::string, int>    *logger;
 
     };
 

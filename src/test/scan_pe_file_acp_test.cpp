@@ -5,7 +5,7 @@
 #include "filetypes/pe_file_controller.hpp"
 #include "test/environment_test.hpp"
 
-#define FILE_ON 1
+#define FILE_ON 2
 
 namespace dstr    = data_structure;
 namespace fpolicy = policy;
@@ -28,6 +28,7 @@ class ScanACTireParallel : public ::testing::Test
         virtual void SetUp() {
             //load binary file pe.
             file_name_offset[0] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_int.exe";
+						file_name_offset[1] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_01.exe";
 						opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
 						file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.hdb";
             for(int count_file = 0; count_file < 	FILE_ON; count_file++) {

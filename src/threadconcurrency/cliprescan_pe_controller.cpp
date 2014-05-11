@@ -1,21 +1,21 @@
 
-#include "utils/logger/clutil_logger.hpp"
-#include "utils/base/system_code.hpp"
+//#include "utils/logger/clutil_logger.hpp"
+//#include "utils/base/system_code.hpp"
 
 #include "threadconcurrency/cliprescan_pe_controller.hpp"
 #include "filetypes/pe.hpp"
 
 namespace controller
 {
-	
+		/*	
 		template<typename MAPPED_FILE>
 		cliprescan_pe_controller<MAPPED_FILE>::cliprescan_pe_controller(){
 
-				logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
-        logger = logger_ptr->get();
+				//logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        //logger = logger_ptr->get();
 
 		}
-
+		*/
 
     template<typename MAPPED_FILE>
     bool cliprescan_pe_controller<MAPPED_FILE>::
@@ -23,7 +23,7 @@ namespace controller
             int64_t timeout,
             std::vector<MAPPED_FILE *> * mapped_file_pe_vec)
     {
-			  logger->write_info("cliprescan_pe_controller::initial_task_size, Initial worker (default 4)");
+			  //logger->write_info("cliprescan_pe_controller::initial_task_size, Initial worker (default 4)");
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
         worker_count = mapped_file_pe_vec->size();
@@ -39,8 +39,8 @@ namespace controller
             clipe_task->set_file_sigdb(mf_pe->file_sig); //set file signature path name
             tasks_scan_pe.insert(boost::shared_ptr<cliprescan_pe_task>(clipe_task));
 
-						logger->write_info("cliprescan_pe_controller::initial_task_size, Insert file_name completed", 
-									boost::lexical_cast<std::string>(mf_pe->file_sig));
+						//logger->write_info("cliprescan_pe_controller::initial_task_size, Insert file_name completed", 
+						//			boost::lexical_cast<std::string>(mf_pe->file_sig));
         }
 
     }
@@ -48,8 +48,8 @@ namespace controller
     template<typename MAPPED_FILE>
     bool cliprescan_pe_controller<MAPPED_FILE>::task_start()
     {
-				logger->write_info("cliprescan_pe_controller::initial_task_size, Task start");
-
+				//logger->write_info("cliprescan_pe_controller::initial_task_size, Task start");
+				//worker_count = 4;
         //prescan with clamav.
         boost::shared_ptr<thread_manager> thread_m =
                 thread_manager::new_simple_thread_manager(worker_count);
@@ -82,7 +82,7 @@ namespace controller
 
         }
 
-			 logger->write_info("cliprescan_pe_controller::initial_task_size, Worker run completed.");
+			 //logger->write_info("cliprescan_pe_controller::initial_task_size, Worker run completed.");
     }
 		template class cliprescan_pe_controller<MAPPED_FILE_PE>;
 }
