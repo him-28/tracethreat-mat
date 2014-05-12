@@ -140,7 +140,7 @@ namespace utils
  						
 								strcpy(mapped_file_ptr->file_sig, s_file_sig.c_str());
 
-
+								std::cout<<"file_offset_handler::mapped_file " << mapped_file_ptr->file_name <<std::endl;
 
 
                     mapped_file_ptr->data = (uint8_t *)mmap(0,

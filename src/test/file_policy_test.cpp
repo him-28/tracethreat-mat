@@ -1,6 +1,7 @@
 #include "scan/file_scan_policy.hpp"
 #include "utils/file_offset_handler.hpp"
-#include "threadconcurrency/cliprescan_pe_controller.hpp"
+//#include "threadconcurrency/cliprescan_pe_controller.hpp"
+#include "test/environment_test.hpp"
 
 #define FILE_SIZE_POLICY 1
 class FilePolicyTest : public ::testing::Test
@@ -128,6 +129,6 @@ TEST_F(FilePolicyTest, pe_file_policy)
 GTEST_API_ int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);
-    //testing::AddGlobalTestEnvironment( new SystemTestingEnvironment(argc, argv));
+    testing::AddGlobalTestEnvironment( new SystemTestingEnvironment(argc, argv));
     return RUN_ALL_TESTS();
 }

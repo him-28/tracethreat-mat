@@ -44,7 +44,7 @@ namespace utils
 
             return '*';
         }
-
+				/*
         char *byte2hexstr(uint8_t *bytes, size_t buflen)
         {
             char *retval;
@@ -60,6 +60,23 @@ namespace utils
             return retval;
 
         }
+				*/
+			static char *byte2hexstr(uint8_t *bytes, size_t buflen)
+        {
+            int count_buflen;
+						char * retval = (char*)malloc(sizeof(char) * buflen * 2 + 1);
+            for(count_buflen = 0; count_buflen < buflen; count_buflen++) {
+                retval[count_buflen * 2] = nibble2char(bytes[count_buflen] >> 4);
+                retval[count_buflen * 2 +1] = nibble2char(bytes[count_buflen] & 0x0f);
+            }
+
+            retval[count_buflen] = '\0';
+            return retval;
+
+        }
+
+
+
 
         //TDebugProtocol is byte to hex.
         //single convert byte to char

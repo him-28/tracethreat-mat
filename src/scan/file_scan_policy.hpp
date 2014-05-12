@@ -263,6 +263,7 @@ namespace policy
                     //get data, size mapped_file for API system.
                     std::vector<MAPPED_FILE *> *mapped_file_vec = obj_fconl_policy->get_mapped_file();
                     //Send ot Multiple file OCL mode.
+                    std::cout<<"file_scan_policy::scan_pe : " << mapped_file_vec->size() <<std::endl;
                     return obj_fconl_policy->scan_file_engine(obj_fconl_policy, mapped_file_vec);
                 }
 

@@ -32,9 +32,6 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
 
 
 
-
-
-
 # library
 libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp thread_controller.cpp buffer_sync.cpp semaphore_controller.cpp thread_barrier_controller.cpp \
 	$(top_builddir)/src/utils/file_calculate.cpp  \
@@ -53,9 +50,6 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/threadconcurrency/mutex_controller.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp
-
-
-
 
 
 libthreadsyncocl_a_LIBADD = $(top_builddir)/src/utils/libutils.a \

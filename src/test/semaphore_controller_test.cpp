@@ -15,6 +15,8 @@
 
 //#include "test/cliprescan_pe_task_test.hpp"
 
+#include "test/scan_pe_file_acp_test.hpp"
+
 //#2 -stable
 //#include "test/file_policy_test.hpp"         // PE fist file policy class
 
@@ -39,7 +41,6 @@
 // Offset, Uncomment with test without
 //  test/thread_sync_test.hpp  and test/file_shm_handler_test.hpp
 
-// #include "test/scan_pe_file_actire_parallel_test.hpp"
 
 //#include "test/pe_file_controller_test.hpp"  // PE
 

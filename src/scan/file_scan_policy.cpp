@@ -267,7 +267,7 @@ namespace policy
         uint8_t result_file_count = 0;
         f_col_policy = fcol_policy;
         f_col_policy->get_result();
-
+				std::cout<<"file_scan_policy::scan_file_engine, mapped_file_vec size : " << mapped_file_vec->size() <<std::endl;
         //return scanning completed all files.
         if(f_col_policy->scan_file_type(mapped_file_vec)) {
 

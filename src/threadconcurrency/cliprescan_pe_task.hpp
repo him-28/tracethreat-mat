@@ -7,6 +7,9 @@
 #include "threadconcurrency/util_thread.hpp"
 
 #include "clibasewrapper/cliwrapper/cli_scanner_wrapper.h"
+
+#include "filetypes/pe.hpp"
+
 //
 namespace controller
 {
@@ -15,13 +18,18 @@ namespace controller
     class cliprescan_pe_task : public Runnable
     {
         public:
-            cliprescan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout);
 
+
+            cliprescan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout);
+						
             bool set_file_scanpath(const char *file_scanpath);
 
             bool set_file_sigdb(const char *file_sigdb);
-						//support multiple file scanning. File name send from struct of File-SHM.			
-						//bool set_file_scanpath(std::vector<const char*>  file_scanpath_vec);
+            //support multiple file scanning. File name send from struct of File-SHM.
+            //bool set_file_scanpath(std::vector<const char*>  file_scanpath_vec);
+            //bool task_start(size_t thread_count,
+            //        int64_t timeout,
+            //        std::vector<MAPPED_FILE *> *mapped_file_pe_vec);
 
             void run();
         private:
