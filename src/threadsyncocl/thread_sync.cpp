@@ -46,6 +46,7 @@ namespace controller
             std::map<const uint64_t , size_t> *map_file_size)
     {
         logger->write_info("thread_sync::init_syncocl_workload(), Start initial workload");
+        uint64_t file_size_summary = 0;
 
         //buffer data for multithread.
         buff_sync_internal  = new BufferSync();
@@ -59,7 +60,25 @@ namespace controller
 
         typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm::iterator iter_mapstr_shm;
         typename shm_memory::file_shm_handler<MAPPED_FILE>::binary_string_shm    *binarystr_shm;
-
+				
+        for(std::map<const uint64_t , size_t>::iterator iter_map = map_file_size->begin();
+                iter_map != map_file_size->end();
+                ++iter_map) {
+            std::pair<const uint64_t, size_t> pair_file_size = *iter_map;
+            size_t size_hex = pair_file_size.second;
+            file_size_summary += size_hex;
+        }
+				
+        std::cout<<" File_size_summary : " << file_size_summary <<std::endl;
+				/*
+        boost::shared_ptr<std::vector<char> > binary_hex_vec_sptr;
+        std::vector<char> *binary_hex_vec_ptr = binary_hex_vec_sptr.get();
+        binary_hex_vec_ptr =  new std::vector<char>(file_size_summary);
+				*/
+				if(!buff_sync_internal->set_size_summary(file_size_summary))
+				{
+						std::cout<<" Cannot initial file size for binary or result wb completed." <<std::endl;
+				}
 
         for(iter_mapstr_shm  = mapstr_shm.begin();
                 iter_mapstr_shm != mapstr_shm.end();
@@ -67,6 +86,7 @@ namespace controller
 
             typename shm_memory::file_shm_handler<MAPPED_FILE>::
             value_types_str pair_int_str = *iter_mapstr_shm;
+
             // file_name_md5 : It's uid instance processes id
             // Global struct data(file-shm, vector hex char and vector result) initials
             // for processing buff_sync_internal.
@@ -81,10 +101,17 @@ namespace controller
 
             binarystr_shm = &pair_int_str.second;
 
+            //declare size on heap
+            //binary_hex_sptr_type  * binary_hex_ptr = binary_hex_sptr[count_vec];
+            //std::vector<char>     *  binary_hex_vec = binary_hex_ptr->get();
+            //binary_hex_vec = new std::vector<char>(size_hex);
+
             //const char *  data_char_hex = binarystr_shm->c_str(); : get const string from file-shm
             //insert binary hex data to vector
-            //	binarystr_shm->size() <<std::endl;
-            if(buff_sync_internal->write_binary_hex(binarystr_shm->c_str(), size_hex, file_name_md5)) {
+            std::cout<<"binary shm size : "<< 	binarystr_shm->size() <<std::endl;
+            if(buff_sync_internal->write_binary_hex(binarystr_shm->c_str(),
+                    size_hex,
+                    file_name_md5)) {
                 //TODO: problem before return
             }
 
@@ -97,8 +124,8 @@ namespace controller
                             (file_name_md5, buff_sync_internal, mutex_sync_internal)) //[thread_id]
             );
 
-             logger->write_info("thread_sync::init_syncocl_workload(), Push thread task completed.",
-																boost::lexical_cast<std::string>(file_name_md5));
+            logger->write_info("thread_sync::init_syncocl_workload(), Push thread task completed.",
+                    boost::lexical_cast<std::string>(file_name_md5));
 
 
         }//end for loop
@@ -154,7 +181,7 @@ namespace controller
             //p_tid_task_vec.push_back(ct_buff->get_thread_id());
         }
 
-				logger->write_info("thread_sync::::start_processes(), Start threader success.");
+        logger->write_info("thread_sync::::start_processes(), Start threader success.");
 
         //join threads/ Join
         for(iter_threads = thread_pv_ptr->begin();
@@ -214,21 +241,22 @@ namespace controller
             state_vec_convert.push_back(boost::lexical_cast<int>(state_str));
         }
 
-        std::vector<char>   binary_hex =
-                buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex;
-        std::vector<uint8_t> *  binary_result =
-                &buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result;
+        std::vector<char>  binary_hex =
+                buff_sync_internal->buff->binary_hex; //
+				std::cout<<"thread_sync::add_load_ocl_system binary hex " << binary_hex.size() <<", buff binary size : " << buff_sync_internal->buff->binary_hex.size()<<std::endl;
+        std::vector<uint8_t>  * binary_result =
+                &buff_sync_internal->buff->index_binary_result; //& get end result for check
 
         this->load_ocl_system->cl_process_buffer(*symbol_vec,
                 state_vec_convert,
                 binary_hex,
-								*binary_result);
-				
-				
+                *binary_result);
+
+
         this->load_ocl_system->cl_build_memory();
         this->load_ocl_system->cl_load_commandqueue();
         this->load_ocl_system->cl_process_commandqueue(binary_result);
-			
+
         return true;
     }
 

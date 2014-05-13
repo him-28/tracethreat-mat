@@ -244,14 +244,14 @@ namespace controller
                 logger->write_info("Scan  end  point ",
                         boost::lexical_cast<std::string>(s_ocl->end_point));
 
-                std::vector<uint8_t> index_result = docl_processes->index_binary_result;
+                std::vector<uint8_t> * index_result = &docl_processes->index_binary_result;
                 //check on ranking of star_point to end_point
-                std::vector<uint8_t>::iterator iter_nresult = index_result.begin();
+                std::vector<uint8_t>::iterator iter_nresult = index_result->begin();
 
                 std::advance(iter_nresult, s_ocl->start_point);
 
                 for(;; ++iter_nresult) {
-                    size_t index = iter_nresult - index_result.begin();
+                    size_t index = iter_nresult - index_result->begin();
                     uint8_t value = *iter_nresult;
 
                     //logger->write_info("comm_thread_buffer::run(), status is zero");

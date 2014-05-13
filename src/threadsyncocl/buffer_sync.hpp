@@ -5,6 +5,7 @@
 
 // 3rd
 #include "CL/cl.h"
+#include "boost/shared_ptr.hpp"
 
 // internal
 #include "utils/logger/clutil_logger.hpp"
@@ -24,7 +25,7 @@ namespace controller
 
     struct slot_ocl;
     struct data_sig_process;
-    template<typename MAPPED_FILE> struct data_ocl_process;
+    //template<typename MAPPED_FILE> struct data_ocl_process::binary_hex;
     template<typename Buffer, typename MAPPED_FILE> class  BufferSync;
 
 
@@ -52,9 +53,12 @@ namespace controller
         typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *mapstr_shm;
         typedef std::map<uint64_t,struct slot_ocl *>   map_thread_id_type;
 
-        //mapstr_shm_type *mapstr_shm;   // shared_memory system.
-        std::vector<char> binary_hex;  // input hex of char type.
-        std::vector<uint8_t>  index_binary_result; // index of vector binaries are hex of char type.
+        //std::vector<char> *binary_hex;   // input hex of char type.
+        //std::vector<uint8_t> *index_binary_result;  // index of vector binaries are hex of char type.
+        std::vector<char> binary_hex;   // input hex of char type.
+        std::vector<uint8_t> index_binary_result;  // index of vector binaries are hex of char type.
+
+
         map_thread_id_type map_tidslot_ocl;
 
         //migrate from : struct name buffer_kernel.
@@ -70,6 +74,8 @@ namespace controller
     class BufferSync
     {
         public:
+            typedef boost::shared_ptr<std::vector<char> > binary_hex_sptr_type;
+
             BufferSync(uint8_t  buffersync_size);
             BufferSync();
 
@@ -80,6 +86,8 @@ namespace controller
             Buffer *buff;
             //TODO: Plan-00004: Multiple name search virus.
             data_sig_process *sig_processes;
+
+            //struct data_ocl_process<MAPPED_FILE>  docl_process;
 
             BufferSync<Buffer, MAPPED_FILE>& operator[](uint8_t value)const;
             BufferSync<Buffer, MAPPED_FILE>& operator=(BufferSync<Buffer, MAPPED_FILE> *buffr);
@@ -92,7 +100,10 @@ namespace controller
 
             std::vector<int> threadbuff_result()const;
 
-            bool write_binary_hex(const char *char_hex, uint64_t size_hex, uint64_t thread_id);
+            bool write_binary_hex(const char *char_hex,
+                    uint64_t size_hex,
+                    uint64_t thread_id);
+                    //boost::shared_ptr<std::vector<char> >  binary_hex_ptr);
 
             /**
             * @brief Insert hex char to vector. Default char_hex is byte per file.
@@ -103,11 +114,17 @@ namespace controller
             *
             * @return True, If not problem after inserts data to vector<char>.
             */
-            bool setbuff_ocl(const char *char_hex, uint64_t size_hex);
+            bool setbuff_ocl(const char *char_hex,
+                    uint64_t size_hex);
+                    //boost::shared_ptr<std::vector<char> >  binary_hex_vec_sptr);
+
+            bool set_size_summary(uint64_t size_summary);
 
         private:
             typename Buffer::size_int size_buff;
             BufferSync<Buffer, MAPPED_FILE> *buffersync_ptr;
+
+            std::vector<char> *binary_hex_ptr;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;

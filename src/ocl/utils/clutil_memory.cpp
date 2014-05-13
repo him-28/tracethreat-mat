@@ -100,7 +100,7 @@ namespace hnmav_kernel
 
         logger->write_info("-- Binary Size    ",
                 lexical_cast<std::string>(plat_info->node_binary_vec.size()));
-
+				std::cout<<" cl_build_node_buffer_object , plat_info->node_binary_vec size  : " << plat_info->node_binary_vec.size() <<std::endl;
         logger->write_info("-- Result Size    ",
                 lexical_cast<std::string>(plat_info->node_result_vec.size()));
 

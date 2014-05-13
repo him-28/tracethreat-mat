@@ -131,9 +131,9 @@ namespace utils
                     }
 
 
-							  mapped_file_ptr->file_name = (char*)malloc(s_file_name.size() + 1);
+							  mapped_file_ptr->file_name = (char*)malloc(sizeof(char*) * s_file_name.size() + 1);
 
-								mapped_file_ptr->file_sig = (char*)malloc(s_file_sig.size() + 1);
+								mapped_file_ptr->file_sig = (char*)malloc(sizeof(char*)*s_file_sig.size() + 1);
 
 								
 								strcpy(mapped_file_ptr->file_name, s_file_name.c_str());

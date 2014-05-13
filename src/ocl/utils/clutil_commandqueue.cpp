@@ -255,8 +255,8 @@ namespace hnmav_kernel
 
             std::size_t offset = 0;
             //Calculate work size.
-            platdevices->global_size = 1024;//platdevices->node_binary_vec.size();  //symbol_vec
-            platdevices->local_size  = 32;//platdevices->node_symbol_vec.size();  //symbol_vec
+            platdevices->global_size = 1024;//platdevices->node_binary_vec.size();  //symbol_vec : 1024
+            platdevices->local_size  = 32;//platdevices->node_symbol_vec.size();  //symbol_vec : 32
 
             logger->write_info("--- Global Size NDRange ",
                     lexical_cast<std::string>(platdevices->global_size));

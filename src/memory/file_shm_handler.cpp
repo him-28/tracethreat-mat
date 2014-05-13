@@ -128,9 +128,10 @@ namespace memory
             //details_file_hex = (char*)malloc(sizeof(char) * mf->size);
             //printf("File name : %c ", mf->file_name);
             // insert addresses of hex char.
-            //char *hex_ptr = utils::convert::byte2hexstr(mf->data, mf->size);
-            //addr_df_hex_vec.push_back(hex_ptr);
-						addr_df_hex_vec.push_back((char*)mf->data);
+            char *hex_ptr = utils::convert::byte2hexstr(mf->data, mf->size);
+            addr_df_hex_vec.push_back(hex_ptr);
+            //std::cout<<"Mf->size : " << mf->size <<std::endl;
+						//addr_df_hex_vec.push_back((char*)mf->data);
             /*//Conver to hex type.
             			add_df_hex_vec->push_back(detail_file_hex);
 

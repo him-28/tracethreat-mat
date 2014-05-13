@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 #include "environment_test.hpp"
 
-#include "threadsyncocl/semaphore_controller.hpp"
-#include "test/thread_controller_test.hpp"
-#include "test/thread_exception_test.hpp"
-#include "test/thread_barrier_controller_test.hpp"
+//#include "threadsyncocl/semaphore_controller.hpp"
+//#include "test/thread_controller_test.hpp"
+//#include "test/thread_exception_test.hpp"
+//#include "test/thread_barrier_controller_test.hpp"
 
 //shm-read multiple fie
 //#include "test/file_shm_handler_test.hpp"

@@ -1,8 +1,13 @@
 #include "buffer_sync.hpp"
 //#define MAX_BUFFER_SIZE 500000
+#include <stdexcept>
+#include <algorithm>
+#include <iterator>
+
 
 namespace controller
 {
+
     template<typename Buffer, typename MAPPED_FILE>
     BufferSync<Buffer, MAPPED_FILE>::BufferSync(uint8_t  buffersync_size)
     {
@@ -21,12 +26,12 @@ namespace controller
     {
 
         //this->size_buff = 0;
-        this->buff = new Buffer;
-				this->sig_processes     = new data_sig_process; 
+        this->buff = new Buffer;//();//(1888324);
+        this->sig_processes     = new data_sig_process;
         //this->buff->buffer_length = 0;
 
         // logger
-        //logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        //logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
         //logger = logger_ptr->get();
         //logger->write_info("BufferSync, init size of size_buff");
     }
@@ -99,6 +104,7 @@ namespace controller
     bool BufferSync<Buffer, MAPPED_FILE>::write_binary_hex(const char *char_hex,
             uint64_t size_hex,
             uint64_t thread_id)
+            //boost::shared_ptr<std::vector<char> >  binary_hex_vec_sptr)
     {
         //check binary length
 
@@ -118,8 +124,8 @@ namespace controller
             if(temp_start < s_ocl->end_point) {
                 temp_start = s_ocl->end_point;
                 //std::cout<<" Temp_start is : "<< temp_start <<std::endl;
-								logger->write_info("BufferSync::write_binary_hex(), Temp start point ", 
-										boost::lexical_cast<std::string>(temp_start));
+                logger->write_info("BufferSync::write_binary_hex(), Temp start point ",
+                        boost::lexical_cast<std::string>(temp_start));
             }
 
         }
@@ -127,11 +133,11 @@ namespace controller
         //Temp_start for next element (start_point + 1)
         //end_point = binary size;
         //support dynamic allocator.
-				if(setbuff_ocl(char_hex, size_hex)){
-					//TODO: If no data insert to binary_hex
-				}
+        if(setbuff_ocl(char_hex, size_hex)) {
+            //TODO: If no data insert to binary_hex
+        }
 
-     
+
         // find thread_id and insert lenght, start_point and end_point
         iter_maptid = map_thread_id->find(thread_id);
 
@@ -140,7 +146,7 @@ namespace controller
             std::pair<uint64_t, struct slot_ocl *> pair_s_ocl = *iter_maptid;
             s_ocl  = pair_s_ocl.second;
 
-                s_ocl->start_point = temp_start;
+            s_ocl->start_point = temp_start;
 
             s_ocl->end_point   = s_ocl->start_point + size_hex;
 
@@ -177,30 +183,61 @@ namespace controller
         return true;
     }
 
+    std::string bin2hex(const std::string& input)
+    {
+        std::string res;
+        const char hex[] = "0123456789ABCDEF";
+        std::cout<<"Input size : " << input.size() <<std::endl;
+
+        for(int i = 0; i < input.size(); i++) {
+            unsigned char c = static_cast<unsigned char>(input[i]);
+            res += hex[c >> 4];
+            res += hex[c & 0xf];
+        }
+
+        return res;
+    }
+
     template<typename Buffer, typename MAPPED_FILE>
     bool BufferSync<Buffer, MAPPED_FILE>::setbuff_ocl(const char *char_hex,
             uint64_t size_hex)
+            //boost::shared_ptr<std::vector<char> >  binary_hex_vec_sptr)
     {
 
-				if(size_hex == 0)
-					return false;
+        if(size_hex == 0)
+            return false;
 
-        buff->data_ocl_process<MAPPED_FILE>::
-        binary_hex.insert(buff->data_ocl_process<MAPPED_FILE>::binary_hex.end(),
+        buff->binary_hex.insert(buff->binary_hex.end(),
                 char_hex,
-                char_hex + size_hex); // insert  char hex to vector elements.
-        uint64_t size_max = buff->data_ocl_process<MAPPED_FILE>::binary_hex.size();
-				
-				//Resize supported result from OCL write back.		
-				buff->data_ocl_process<MAPPED_FILE>::index_binary_result.resize(size_max);
-				
-      	//logger->write_info("Max binary sizes are",
-				//	boost::lexical_cast<std::string>(size_max));
+                char_hex + size_hex); // insert char hex to vector elements.
+
+
+        //std::string hex_value;
+        //uint8_t count_null;
+
+        //const char * chex = const_cast<const char*>(&char_hex[count_hex]);
+        //					hex_value.push_back((char)char_hex[count_hex]);
+        //std::string result = bin2hex(hex_value);
+        //std::cout<<"Result : " << result <<std::endl;
+
+        //logger->write_info("Max binary sizes are",
+        //	boost::lexical_cast<std::string>(size_max));
 
         return true;
-   }
+    }
 
+    template<typename Buffer, typename MAPPED_FILE>
+    bool BufferSync<Buffer, MAPPED_FILE>::set_size_summary(uint64_t size_summary)
+    {
+        size_summary = size_summary * 2 + 1;
 
+        buff->binary_hex = std::vector<char>(size_summary);
+        buff->index_binary_result = std::vector<uint8_t>(size_summary);
+
+        if(buff->binary_hex.size() != size_summary) return false;
+
+        if(buff->index_binary_result.size() != size_summary) return false;
+    }
 
     template class BufferSync<struct data_ocl_process<MAPPED_FILE_PE>, MAPPED_FILE_PE>;
 
