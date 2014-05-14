@@ -210,15 +210,8 @@ namespace controller
         buff->binary_hex.insert(buff->binary_hex.end(),
                 char_hex,
                 char_hex + size_hex); // insert char hex to vector elements.
-
-
-        //std::string hex_value;
-        //uint8_t count_null;
-
-        //const char * chex = const_cast<const char*>(&char_hex[count_hex]);
-        //					hex_value.push_back((char)char_hex[count_hex]);
-        //std::string result = bin2hex(hex_value);
-        //std::cout<<"Result : " << result <<std::endl;
+				
+				buff->index_binary_result.resize(buff->binary_hex.size());
 
         //logger->write_info("Max binary sizes are",
         //	boost::lexical_cast<std::string>(size_max));

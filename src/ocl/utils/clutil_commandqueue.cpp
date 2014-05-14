@@ -242,6 +242,56 @@ namespace hnmav_kernel
         return true;
     }
 
+    /*Magic code for test : commandqueue::cl_enqueue_nd_task  */
+    //int size_symbol_bw = platdevices->node_symbol_vec.size();
+
+    //const char *binary_test = "e1fba0e00b409cd21b8014ccd215468";
+    //const char *binary_end  = binary_test + strlen(binary_test);
+    //std::vector<char>  data_check;
+    //data_check.insert(data_check.end(), binary_test, binary_end);
+
+    /*
+    for(int count_bin = 129; count_bin < 140; count_bin++)
+    {
+    	printf("Data lenght : %c \n", platdevices->node_binary_vec[count_bin]);
+    }
+    */
+    /*
+    for(int count_bin = 129; count_bin < 180; count_bin++) {
+    if(platdevices->node_binary_vec[count_bin] == data_check[0]) {
+    printf("Data equal: %c, index : %d \n",
+            platdevices->node_binary_vec[count_bin],
+            count_bin);
+
+    for(int count_data = 1; count_data < data_check.size(); count_data++) {
+        count_bin++;
+
+        if(platdevices->node_binary_vec[count_bin] == data_check[count_data]) {
+            printf("Data equal: %c, index : %d \n",
+                    platdevices->node_binary_vec[count_bin],
+                    count_bin);
+
+        } else {
+            //printf("-----break-----\n");
+            break;
+        }
+    }
+    }
+    }
+    */
+    /*
+    for(int count_symbol = 129;
+    count_symbol < 180;//platdevices->node_binary_vec.size();
+    count_symbol++) {
+
+    //if( platdevices->state_wb[count_symbol] > 0){
+    printf("print value int : %d, index : %d \n",
+    platdevices->state_wb[count_symbol],
+    count_symbol);
+    //}
+
+    }//for
+    */
 
     bool commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> *result_vec)
     {
@@ -337,55 +387,6 @@ namespace hnmav_kernel
                 throw cl::clutil_exception(err, "clEnqueueReadBuffer");
             }
 
-            //int size_symbol_bw = platdevices->node_symbol_vec.size();
-
-            //const char *binary_test = "e1fba0e00b409cd21b8014ccd215468";
-            //const char *binary_end  = binary_test + strlen(binary_test);
-            //std::vector<char>  data_check;
-            //data_check.insert(data_check.end(), binary_test, binary_end);
-
-            /*
-            for(int count_bin = 129; count_bin < 140; count_bin++)
-            {
-            	printf("Data lenght : %c \n", platdevices->node_binary_vec[count_bin]);
-            }
-            */
-            /*
-            for(int count_bin = 129; count_bin < 180; count_bin++) {
-            if(platdevices->node_binary_vec[count_bin] == data_check[0]) {
-            printf("Data equal: %c, index : %d \n",
-                    platdevices->node_binary_vec[count_bin],
-                    count_bin);
-
-            for(int count_data = 1; count_data < data_check.size(); count_data++) {
-                count_bin++;
-
-                if(platdevices->node_binary_vec[count_bin] == data_check[count_data]) {
-                    printf("Data equal: %c, index : %d \n",
-                            platdevices->node_binary_vec[count_bin],
-                            count_bin);
-
-                } else {
-                    //printf("-----break-----\n");
-                    break;
-                }
-            }
-            }
-            }
-            */
-            /*
-            for(int count_symbol = 129;
-            count_symbol < 180;//platdevices->node_binary_vec.size();
-            count_symbol++) {
-
-            //if( platdevices->state_wb[count_symbol] > 0){
-            printf("print value int : %d, index : %d \n",
-            platdevices->state_wb[count_symbol],
-            count_symbol);
-            //}
-
-            }//for
-            */
 
             std::vector<char>::iterator iter_symbol;
 
@@ -404,6 +405,9 @@ namespace hnmav_kernel
 
                     if(count_symbol_size == threshold_levels) {
                         std::fill_n(result_vec->begin() + index_symbol, symbol_size, 1);
+
+                        logger->write_info("commandqueue::cl_enqueue_nd_task, threshold_levels have index_symbol",
+                                boost::lexical_cast<std::string>(index_symbol));
 
                     }
 
@@ -739,12 +743,12 @@ namespace hnmav_kernel
     {
         return commandqueue_util->cl_write_event();
     }
-   
-    bool clutil_commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> * result_vec)
+
+    bool clutil_commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> *result_vec)
     {
-    return commandqueue_util->cl_enqueue_nd_task(result_vec);
+        return commandqueue_util->cl_enqueue_nd_task(result_vec);
     }
-   
+
     /*
     bool clutil_commandqueue::cl_read_buffer()
     {

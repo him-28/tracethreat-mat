@@ -70,15 +70,11 @@ namespace controller
         }
 				
         std::cout<<" File_size_summary : " << file_size_summary <<std::endl;
-				/*
-        boost::shared_ptr<std::vector<char> > binary_hex_vec_sptr;
-        std::vector<char> *binary_hex_vec_ptr = binary_hex_vec_sptr.get();
-        binary_hex_vec_ptr =  new std::vector<char>(file_size_summary);
-				*/
-				if(!buff_sync_internal->set_size_summary(file_size_summary))
-				{
-						std::cout<<" Cannot initial file size for binary or result wb completed." <<std::endl;
-				}
+
+				//if(!buff_sync_internal->set_size_summary(file_size_summary))
+				//{
+				//		std::cout<<" Cannot initial file size for binary or result wb completed." <<std::endl;
+				//}
 
         for(iter_mapstr_shm  = mapstr_shm.begin();
                 iter_mapstr_shm != mapstr_shm.end();
@@ -100,11 +96,6 @@ namespace controller
             size_t size_hex = pair_file_size.second;
 
             binarystr_shm = &pair_int_str.second;
-
-            //declare size on heap
-            //binary_hex_sptr_type  * binary_hex_ptr = binary_hex_sptr[count_vec];
-            //std::vector<char>     *  binary_hex_vec = binary_hex_ptr->get();
-            //binary_hex_vec = new std::vector<char>(size_hex);
 
             //const char *  data_char_hex = binarystr_shm->c_str(); : get const string from file-shm
             //insert binary hex data to vector
@@ -243,7 +234,10 @@ namespace controller
 
         std::vector<char>  binary_hex =
                 buff_sync_internal->buff->binary_hex; //
-				std::cout<<"thread_sync::add_load_ocl_system binary hex " << binary_hex.size() <<", buff binary size : " << buff_sync_internal->buff->binary_hex.size()<<std::endl;
+
+				std::cout<<"thread_sync::add_load_ocl_system binary hex " << binary_hex.size() 
+				<<", buff binary size : " << buff_sync_internal->buff->binary_hex.size()<<std::endl;
+
         std::vector<uint8_t>  * binary_result =
                 &buff_sync_internal->buff->index_binary_result; //& get end result for check
 
