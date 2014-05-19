@@ -241,8 +241,8 @@ struct MAPPED_FILE_PE {
     uint32_t          ops_begin;
     uint32_t					ops_end;
 		//unsigned char     *file_name;
-	  char *  file_name;
-	  char *  file_sig;
+	  std::string file_name;
+	  std::string file_sig;
 };
 
 struct MAMORY_BLOCK_PE {

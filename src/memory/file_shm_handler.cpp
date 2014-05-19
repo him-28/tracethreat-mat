@@ -162,7 +162,7 @@ namespace memory
             //encode with MD5 with mf->file_name ( filename inculded path of file)
             //Plan-00004 : const uint64_t  file_name_md5 =  utils::convert::MD5Hash(mf->data, mf->size);
             boost::hash<char*> hash_file_name;
-            const uint64_t file_name_md5 =  hash_file_name(mf->file_name);
+            const uint64_t file_name_md5 =  hash_file_name(const_cast<char*>(mf->file_name.c_str()));
             file_name_md5_vec.push_back(file_name_md5);
             //file_name_md5_vec.push_back(file_name_md5);
             //std::cout<<"File name md5 : " << file_name_md5 << std::endl;

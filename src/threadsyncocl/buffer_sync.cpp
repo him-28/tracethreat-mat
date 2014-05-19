@@ -104,7 +104,7 @@ namespace controller
     bool BufferSync<Buffer, MAPPED_FILE>::write_binary_hex(const char *char_hex,
             uint64_t size_hex,
             uint64_t thread_id)
-            //boost::shared_ptr<std::vector<char> >  binary_hex_vec_sptr)
+    //boost::shared_ptr<std::vector<char> >  binary_hex_vec_sptr)
     {
         //check binary length
 
@@ -201,7 +201,7 @@ namespace controller
     template<typename Buffer, typename MAPPED_FILE>
     bool BufferSync<Buffer, MAPPED_FILE>::setbuff_ocl(const char *char_hex,
             uint64_t size_hex)
-            //boost::shared_ptr<std::vector<char> >  binary_hex_vec_sptr)
+    //boost::shared_ptr<std::vector<char> >  binary_hex_vec_sptr)
     {
 
         if(size_hex == 0)
@@ -210,8 +210,8 @@ namespace controller
         buff->binary_hex.insert(buff->binary_hex.end(),
                 char_hex,
                 char_hex + size_hex); // insert char hex to vector elements.
-				
-				buff->index_binary_result.resize(buff->binary_hex.size());
+
+        buff->index_binary_result.resize(buff->binary_hex.size());
 
         //logger->write_info("Max binary sizes are",
         //	boost::lexical_cast<std::string>(size_max));
@@ -231,6 +231,20 @@ namespace controller
 
         if(buff->index_binary_result.size() != size_summary) return false;
     }
+
+    template<typename Buffer, typename MAPPED_FILE>
+    BufferSync<Buffer, MAPPED_FILE>::~BufferSync()
+    {
+					
+				delete sig_processes->sig_name;
+				sig_processes->symbol_vec.clear();
+				sig_processes->state_vec.clear();
+				delete sig_processes;
+        delete buff;
+				
+    }
+
+
 
     template class BufferSync<struct data_ocl_process<MAPPED_FILE_PE>, MAPPED_FILE_PE>;
 

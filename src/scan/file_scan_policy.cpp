@@ -236,14 +236,14 @@ namespace policy
 						std::cout<<"File name send to scan_file_type : " << mapp_file->file_name <<std::endl;
             if(f_col_policy->scan_file_type(mapp_file)) {
                 //Mapp_file instant mapped_file
-                if(mapp_file->file_name == NULL) {
+                if(mapp_file->file_name.empty()) {
                     //logger->write_info("file_scan_policy::scan_file_engine, Scan found infected file ",
                     //        boost::lexical_cast<std::string>(mapp_file->file_name->c_str()));
 
                     //create struct file scan result contain on vector.
                     fs_result = new file_scan_result<MAPPED_FILE>();
                     file_scan_result_vec.push_back(fs_result);
-                    file_scan_result_vec[result_file_count]->file_name = mapp_file->file_name;
+                    file_scan_result_vec[result_file_count]->file_name = mapp_file->file_name.c_str();
                 }
 
                 //logger->write_info("file_scan_policy::scan_file_engine, Scan found, but unname of file");

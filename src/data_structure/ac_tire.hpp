@@ -118,12 +118,14 @@ namespace data_structure
             //get vector contain string, go_to and failture state to actire_parallel
 
             //output function
-            std::map<state_t, std::set<size_t> >& get_output_function() {
+            boost::unordered_map<state_t, std::set<size_t> >& get_output_function() {
                 return output_;
             }
 
             //get graph
             std::vector<boost::unordered_map<SymbolT, state_t> > const& get_graph() {
+						//std::vector<std::map<SymbolT, state_t> > const& get_graph() {
+
                 return goto_.get_nodes();
             }
 
@@ -139,12 +141,13 @@ namespace data_structure
             }
             // main private
         private:
-            typedef std::map<state_t, std::set<size_t> > output_function;
+            typedef boost::unordered_map<state_t, std::set<size_t> > output_function;
             //---------------------------Class go to function---------------------------------------
             class goto_function
             {
                 public:
                     typedef boost::unordered_map<SymbolT, state_t> edges_t;
+                    //typedef std::map<SymbolT, state_t> edges_t;
 
                     typedef std::vector<edges_t> nodes_t;
 
@@ -192,6 +195,18 @@ namespace data_structure
                         return graph_;
                     }
 
+										~goto_function(){ 
+											typename std::vector<edges_t>::iterator iter_node;
+											for(iter_node = graph_.begin();
+													iter_node != graph_.end();
+													++iter_node)
+											{
+												   edges_t  edges = *iter_node;
+													 if(!edges.empty())  
+															edges.clear();
+											} 
+												//graph_.clear(); 
+										 }
                 private:
                     template <typename KeywordT>
                     void enter(

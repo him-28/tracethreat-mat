@@ -84,7 +84,8 @@ namespace hnmav_kernel
                 platdevices_info *platdevices =  plat_shared_ptr.get();
                 return platdevices;
             }
-
+				
+						~memory();
 
         private:
 

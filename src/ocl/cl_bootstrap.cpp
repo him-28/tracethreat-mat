@@ -159,10 +159,9 @@ namespace hnmav_kernel
             std::vector<uint8_t>&       result_vec)
     {
         //WorkTypes workloads;
-        //workloads.work_groups = 50;
-        //workloads.work_items  = 100;
         dstr::dstr_def::work_groupitems workloads;
-				std::cout<<"Binary insert size : " <<  binary_vec.size() <<", result wb size : " << result_vec.size() <<std::endl;
+					//std::cout<<"Binary insert size : " <<  binary_vec.size() 
+					//<<", result wb size : " << result_vec.size() <<std::endl;
         logger->write_info_test("cl_load_system::cl_process_buffer, Symbol size",
                 boost::lexical_cast<std::string>(symbol_vec_ptr.size()));
         logger->write_info_test("cl_load_system::cl_process_buffer, State size",
@@ -239,6 +238,22 @@ namespace hnmav_kernel
         utilplat->cl_release_context();
     }
 
+template<typename UtilPlatform,
+             typename TireDefine,
+             typename WorkTypes,
+             typename ContainerT
+             >
+    cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::~cl_load_system()
+		{
+				delete opencl_file_path;
+				delete utilplat;
+				delete base_memory_clutil;
+				delete base_comqueue_clutil;
+				delete comqueue_clutil;
+				//delete node_tire_vec;
+			  //delete node_tire_input;
+				//delete node_tire_output;
+		}
 
 
     template class				 cl_load_system<clutil_platform,

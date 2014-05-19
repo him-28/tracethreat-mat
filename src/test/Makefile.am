@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src -I/src/threadsyncocl @AM_CXXFLAGS@
+AM_CXXFLAGS = -ggdb -I$(top_srcdir)/src -I/src/threadsyncocl @AM_CXXFLAGS@
 # -I/src/clibasewrapper 
 # -I/src/utils -I/src/rules -I/src/filetypes \
 # -I/src/scan -I/src/ocl -I/src/exception -I/src/data_structure  @AM_CXXFLAGS@

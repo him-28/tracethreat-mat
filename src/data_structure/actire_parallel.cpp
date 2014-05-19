@@ -22,6 +22,8 @@ namespace data_structure
         typename ContainerT::const_iterator iter_con_acs;
         //uint64_t count_state = 0;
         typedef boost::unordered_map<SymbolT, StateT> unordered_map;
+        //typedef std::map<SymbolT, StateT> unordered_map;
+
         unordered_map map_con_acs;
 
         for(iter_con_acs = container_acs->begin();
@@ -40,12 +42,13 @@ namespace data_structure
 								//key  : Symbol
 								//graph_symbol_vec.push_back(iter_map_acs->first);
 								symbol_shared_ptr_vec->push_back(iter_map_acs->first);
-
+								//symbol_shared_vec.push_back(iter_map_acs->first);
                 logger->write_info_test("--actire_parallel::operator= value ",
                         boost::lexical_cast<std::string>(iter_map_acs->second));
 								//value : State
 								//graph_state_vec.push_back(iter_map_acs->second);
 							  state_shared_ptr_vec->push_back(iter_map_acs->second);
+							  //state_shared_vec.push_back(iter_map_acs->second);
             }
 						logger->write_info_test("------- End state_push_back --------");
 
@@ -78,6 +81,12 @@ namespace data_structure
 
 
     }
+
+    template<typename SymbolT, typename StateT, typename EdgesT, typename ContainerT>
+    actire_parallel<SymbolT, StateT, EdgesT, ContainerT>::~actire_parallel(){ 
+		   //	   if(!edget_map->empty()) edget_map->clear(); 
+		}
+
 
 		template class actire_parallel<char, 
 																	size_t,

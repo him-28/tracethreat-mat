@@ -83,6 +83,8 @@ namespace hnmav_kernel
                 return platdevices;
             }
 
+					  ~commandqueue();					  					
+
         private:
 
             std::size_t *buffer_elements;
@@ -133,6 +135,8 @@ namespace hnmav_kernel
             platdevices_info *get_platdevices_data() {
                 return commandqueue_util->get_platdevices_data();
             }
+
+						~clutil_commandqueue();
 
         private:
             commandqueue *commandqueue_util;

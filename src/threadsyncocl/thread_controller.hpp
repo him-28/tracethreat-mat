@@ -149,6 +149,7 @@ namespace controller
                 //mutex_buff->init();
             }
             virtual void *run();
+						~comm_thread_buffer();
         private:
             //typename buffer_kernel::size_int  my_id;
             uint64_t  my_id;
@@ -195,6 +196,8 @@ namespace controller
             bool set_tid_task(std::vector<pthread_t> p_tid_task_vec) {
                 this->p_tid_task_vec = p_tid_task_vec;
             }
+		
+						~slot_ocl_thread();
 
         private:
             //typename buffer_kernel::size_int  my_id;

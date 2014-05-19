@@ -50,7 +50,7 @@ namespace controller
 
     template<typename MAPPED_FILE>
     struct data_ocl_process {
-        typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *mapstr_shm;
+        //typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *mapstr_shm;
         typedef std::map<uint64_t,struct slot_ocl *>   map_thread_id_type;
 
         //std::vector<char> *binary_hex;   // input hex of char type.
@@ -78,7 +78,7 @@ namespace controller
 
             BufferSync(uint8_t  buffersync_size);
             BufferSync();
-
+					  ~BufferSync();
             //legacy concept.
             bool set_buffer(uint8_t buffer_size);
 

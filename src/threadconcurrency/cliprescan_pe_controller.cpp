@@ -35,8 +35,8 @@ namespace controller
                 ++iter_mapped_files) {
             MAPPED_FILE   *mf_pe = *iter_mapped_files;
             clipe_task = new cliprescan_pe_task(monitor, task_count, timeout_);
-            clipe_task->set_file_scanpath(mf_pe->file_name); // set file infected.
-            clipe_task->set_file_sigdb(mf_pe->file_sig); //set file signature path name
+            clipe_task->set_file_scanpath(mf_pe->file_name.c_str()); // set file infected.
+            clipe_task->set_file_sigdb(mf_pe->file_sig.c_str()); //set file signature path name
             tasks_scan_pe.insert(boost::shared_ptr<cliprescan_pe_task>(clipe_task));
 
 						//logger->write_info("cliprescan_pe_controller::initial_task_size, Insert file_name completed", 

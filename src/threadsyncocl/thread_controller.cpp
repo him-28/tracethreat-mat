@@ -207,8 +207,8 @@ namespace controller
 
         //Mutex buffer locks mutex,
 
-        logger->write_info("Comm_thread_buffer::run(), Before to critical section.", 
-					h_util::format_type::type_center);
+        logger->write_info("Comm_thread_buffer::run(), Before to critical section.",
+                h_util::format_type::type_center);
 
         uint64_t found_size = 0;
         uint8_t  summary_status = 0;
@@ -244,7 +244,7 @@ namespace controller
                 logger->write_info("Scan  end  point ",
                         boost::lexical_cast<std::string>(s_ocl->end_point));
 
-                std::vector<uint8_t> * index_result = &docl_processes->index_binary_result;
+                std::vector<uint8_t> *index_result = &docl_processes->index_binary_result;
                 //check on ranking of star_point to end_point
                 std::vector<uint8_t>::iterator iter_nresult = index_result->begin();
 
@@ -259,7 +259,7 @@ namespace controller
                         found_size++;
 
                         logger->write_info_test("comm_thread_buffer::run(), index_matching",
-													boost::lexical_cast<std::string>(found_size));
+                                boost::lexical_cast<std::string>(found_size));
 
                         //break;
                     }
@@ -297,6 +297,16 @@ namespace controller
         }//while(true) loop
 
     }
+
+    template<typename BufferSync, typename MAPPED_FILE>
+    comm_thread_buffer<BufferSync, MAPPED_FILE>::~comm_thread_buffer()
+    {
+        delete buffer_sync_;
+        delete mutex_buff_;
+        delete s_ocl;
+        delete d_ocl_processes;
+    }
+
 
     template<typename BufferSync, typename MAPPED_FILE>
     void *slot_ocl_thread<BufferSync, MAPPED_FILE>::run()
@@ -344,6 +354,17 @@ namespace controller
 
         }
     }
+
+    template<typename BufferSync, typename MAPPED_FILE>
+    slot_ocl_thread<BufferSync, MAPPED_FILE>::~slot_ocl_thread()
+    {
+        delete buffer_sync_;
+        delete mutex_buff_;
+        delete s_ocl;
+        delete d_ocl_processes;
+        delete load_ocl_system_;
+    }
+
 
     // Explicitly instance
 

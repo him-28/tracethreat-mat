@@ -132,7 +132,7 @@ namespace controller
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
 
-
+						
 
 
         public:
@@ -186,6 +186,10 @@ namespace controller
                     std::string *kernel_file_path_ptr,
                     std::vector<char> *symbol_vec,
                     std::vector<size_t>   *state_vec);
+
+						//dtor
+						~thread_sync();
+
 
     };
 

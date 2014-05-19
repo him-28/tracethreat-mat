@@ -294,8 +294,6 @@ namespace filetypes
 
 				//pre-scan
 				int64_t timeout_scan = 1000LL;
-				//controller::cliprescan_pe_task<MAPPED_FILE>  prescan_pe;
-				//prescan_pe.task_start(mapped_file_pe_vec->size(), timeout_scan, mapped_file_pe_vec);
 				controller::cliprescan_pe_controller<MAPPED_FILE>  prescan_pe;
 				prescan_pe.initial_task_size(mapped_file_pe_vec->size(), timeout_scan, mapped_file_pe_vec);
 				prescan_pe.task_start();

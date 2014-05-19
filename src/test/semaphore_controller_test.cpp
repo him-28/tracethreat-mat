@@ -25,7 +25,7 @@
 
 /*
 #include "test/ac_tire_test.hpp"
-//
+
 #include "test/actire_parallel_test.hpp"
 
 #include "test/clutil_platform_test.hpp"
@@ -50,26 +50,8 @@
 
 //#include "test/wrapper_rules_tests.hpp"
 
-#include "utils/config/options_system.hpp"
-#include "utils/logger/clutil_logger.hpp"
-
-// semaphore test suite
-using namespace controller;
-
-TEST(semaphore_mutex_controller, mutex_controller)
-{
-
-    mutex_buffer<Mutex>  mutex_buff;
-    // init
-    EXPECT_EQ(mutex_buff.init(), true);
-    //
-    EXPECT_EQ(mutex_buff.lock_request(), true);
-
-    EXPECT_EQ(mutex_buff.unlock_request(), true);
-
-    EXPECT_EQ(mutex_buff.destruction(), true);
-
-}
+//#include "utils/config/options_system.hpp"
+//#include "utils/logger/clutil_logger.hpp"
 
 
 GTEST_API_ int main(int argc, char **argv)

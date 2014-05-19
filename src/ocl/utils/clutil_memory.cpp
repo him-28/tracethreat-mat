@@ -273,6 +273,15 @@ namespace hnmav_kernel
         return true;
     }
 
+    template<typename WorkTypes, typename ContainerT>
+    memory<WorkTypes, ContainerT>::~memory(){
+			delete symbol_vec;
+			delete state_vec;
+			delete binary_vec;
+			delete sig_input;
+			delete platdevices;
+		}
+
     /**
     * @brief Handling memory in GPU or CPU selected. Interface class for API.
     */
@@ -325,7 +334,7 @@ namespace hnmav_kernel
     template<typename WorkTypes, typename ContainerT>
     clutil_memory<WorkTypes, ContainerT>::~clutil_memory()
     {
-
+			  memory_util->~memory();
     }
 
     template class memory<dstr::dstr_def::work_groupitems, std::vector<size_t> >;

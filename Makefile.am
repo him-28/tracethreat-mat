@@ -3,5 +3,5 @@
 
 SUBDIRS = src/threadsyncocl src/bin
 
-AM_CXXFLAGS = -g3 -O0
+AM_CXXFLAGS = -ggdb -O0
 CFLAGS_CXX  = -std=c++0x

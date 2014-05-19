@@ -3,12 +3,7 @@
 namespace hnmav_kernel
 {
 
-    /* platform declare */
-    platform::~platform()
-    {
-        logger->write_info("clutil_platform delete object ");
-    }
-
+    
     cl_platform_id	platform::get_platform_ids()
     {
         return NULL;
@@ -371,6 +366,15 @@ namespace hnmav_kernel
         return src_prog->length();
     }
 
+			
+		platform::~platform(){
+					delete input_file_stream;
+					delete src_prog;
+					delete info;
+					delete fp;
+					delete source_str;
+		}
+
 
     /* clutil_platform declear */
     void clutil_platform::set_num_platforms_ids(cl_uint number_entries,
@@ -455,6 +459,7 @@ namespace hnmav_kernel
 
     clutil_platform::~clutil_platform()
     {
+				platform_util->~platform();
     }
 
 

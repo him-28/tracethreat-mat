@@ -278,6 +278,14 @@ namespace controller
         return true;
     }
 
+   template<typename BufferSync, typename MAPPED_FILE>
+    thread_sync<BufferSync, MAPPED_FILE>::~thread_sync(){
+			  delete thread_array_ptr;
+				delete mutex_sync_internal;
+				delete thread_pv_ptr;	
+		}
+
+
     template class controller::thread_sync<
     BufferSync<struct data_ocl_process<MAPPED_FILE_PE>, MAPPED_FILE_PE >,
                MAPPED_FILE_PE

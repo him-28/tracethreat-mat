@@ -349,7 +349,7 @@ namespace hnmav_kernel
             for(iter_state = platdevices->node_state_vec.begin();
                     iter_state != platdevices->node_state_vec.end();
                     ++iter_state) {
-                std::cout<<"Data state : " << *iter_state <<std::endl;
+                //std::cout<<"Data state : " << *iter_state <<std::endl;
 
             }
 
@@ -716,7 +716,12 @@ namespace hnmav_kernel
         return true;
     }
 
-
+	  commandqueue::~commandqueue()
+		{
+					delete buffer_elements;
+					delete platdevices;
+					delete mapped_memory;
+		}
 
 
     bool clutil_commandqueue::cl_release_kernel()
@@ -785,5 +790,10 @@ namespace hnmav_kernel
     {
         commandqueue_util->set_buffer_elements(buffer_elements_);
     }
+
+		clutil_commandqueue::~clutil_commandqueue()
+		{
+				commandqueue_util->~commandqueue();
+		}
 
 }
