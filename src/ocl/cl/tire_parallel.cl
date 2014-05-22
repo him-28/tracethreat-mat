@@ -16,29 +16,25 @@ __kernel void actire_search(
 
   	uint state = 0;
 
- 		//symbol_wb[id_sym0] = 'g'; // if not data.
 
     if(node_symbol[0] == infected_str[id_sym0]) {
+
         uint count_state = 1;
 
 				uint count_state_wb = 1;
 
         symbol_wb[id_sym0] = node_symbol[state];
-        for(uint count_inf = id_sym0 + 1; count_inf < id_sym0+32; count_inf++) {
 
-           //if(node_symbol[count_state] != infected_str[count_inf]) { // count_state
+        for(uint count_inf = id_sym0 + 1; count_inf < id_sym0+24; count_inf++) {
+
 			     if(node_symbol[node_state[count_state]] != infected_str[count_inf]) { // count_state
 
                count_state = 1;
 							break;		
-            } else {
-                symbol_wb[count_inf] =  node_symbol[count_state];
-	
-								state_wb[count_inf]  =  count_state;
-//                state_wb[count_inf]  =  node_state[state_wb[count_inf]];
-								state_wb[count_inf]  = node_state[count_state];						
             }
 
+						state_wb[count_inf]  =  node_state[count_state];					
+	
             count_state++;
 						count_state_wb++;
         }//for

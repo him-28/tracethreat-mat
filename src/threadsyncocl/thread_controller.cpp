@@ -268,7 +268,7 @@ namespace controller
                         //TODO: Take loggic for check with another method.
                         logger->write_info_test("comm_thread_buffer::run(), found size",
                                 boost::lexical_cast<std::string>(found_size));
-
+												std::cout<<"Found size " << found_size <<std::endl;
                         //Make condition when found data.
                         s_ocl->status = utils::infected_fist_step;
 
@@ -339,7 +339,7 @@ namespace controller
                 if(s_ocl->status == utils::infected_fist_step) {
                     //delete thread from thread_id ( file_name_md5)
                     --thread_size;
-                    logger->write_info_test("substract...");
+                    //logger->write_info_test("substract...");
                 }
 
             }

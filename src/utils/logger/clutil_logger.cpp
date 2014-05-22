@@ -118,7 +118,7 @@ namespace  hnmav_util
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(char const& write_info)
     {
-        BOOST_LOG(write_log::get()) << write_info;
+        //BOOST_LOG(write_log::get()) << write_info;
     }
 
 

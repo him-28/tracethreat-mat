@@ -23,10 +23,10 @@ class ScanACTireParallel : public ::testing::Test
 
         virtual void SetUp() {
             //load binary file pe.
-            file_name_offset[0] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_int.exe";
-            file_name_offset[1] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_int_01.exe";
-            file_name_offset[2] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_int_02.exe";
-            file_name_offset[3] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_int_03.exe";
+            file_name_offset[0] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext.exe";
+            file_name_offset[1] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_01.exe";
+            file_name_offset[2] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_02.exe";
+            file_name_offset[3] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_03.exe";
 
             opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
             file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.hdb";
@@ -84,7 +84,8 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     const char *input;
     //} test_data;
 
-    keywords =  boost::assign::list_of("4bc647")("4b537db2e3a337")("4b53abf");
+    keywords =  boost::assign::list_of("4c01b821685421cd70207369");
+    //boost::assign::list_of("4bc647")("4b537db2e3a337")("4b53abf");
     input    = (char *)malloc(sizeof(char *) * std::string("a824bc647c46d04b537db2e3a33711").size());
     input    = "a824bc647c46d04b537db2e3a33711";
 

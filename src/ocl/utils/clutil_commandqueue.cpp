@@ -251,34 +251,28 @@ namespace hnmav_kernel
     //data_check.insert(data_check.end(), binary_test, binary_end);
 
     /*
-    for(int count_bin = 129; count_bin < 140; count_bin++)
-    {
-    	printf("Data lenght : %c \n", platdevices->node_binary_vec[count_bin]);
-    }
-    */
-    /*
-    for(int count_bin = 129; count_bin < 180; count_bin++) {
-    if(platdevices->node_binary_vec[count_bin] == data_check[0]) {
-    printf("Data equal: %c, index : %d \n",
-            platdevices->node_binary_vec[count_bin],
-            count_bin);
+     for(int count_bin = 129; count_bin < 180; count_bin++) {
+     if(platdevices->node_binary_vec[count_bin] == data_check[0]) {
+     printf("Data equal: %c, index : %d \n",
+             platdevices->node_binary_vec[count_bin],
+             count_bin);
 
-    for(int count_data = 1; count_data < data_check.size(); count_data++) {
-        count_bin++;
+     for(int count_data = 1; count_data < data_check.size(); count_data++) {
+         count_bin++;
 
-        if(platdevices->node_binary_vec[count_bin] == data_check[count_data]) {
-            printf("Data equal: %c, index : %d \n",
-                    platdevices->node_binary_vec[count_bin],
-                    count_bin);
+         if(platdevices->node_binary_vec[count_bin] == data_check[count_data]) {
+             printf("Data equal: %c, index : %d \n",
+                     platdevices->node_binary_vec[count_bin],
+                     count_bin);
 
-        } else {
-            //printf("-----break-----\n");
-            break;
-        }
-    }
-    }
-    }
-    */
+         } else {
+             //printf("-----break-----\n");
+             break;
+         }
+     }
+     }
+     }
+     */
     /*
     for(int count_symbol = 129;
     count_symbol < 180;//platdevices->node_binary_vec.size();
@@ -302,11 +296,25 @@ namespace hnmav_kernel
 
         try {
 
+						printf("\n----- Hex test -------\n");
+            for(int countb = 210; countb < 240; countb++) {
+                printf("%c", platdevices->node_binary_vec[countb]);
+            }
+						printf("\n----- End Hex --------\n");
+
+						printf("\n------ State----------\n");
+						for(int counts = 0; counts < platdevices->node_symbol_vec.size(); counts++)
+						{
+				
+								printf("%c", platdevices->node_symbol_vec[counts]);
+						
+						}
+						printf("\n------ End Symbol---------\n");
 
             std::size_t offset = 0;
             //Calculate work size.
             platdevices->global_size = 1024;//platdevices->node_binary_vec.size();  //symbol_vec : 1024
-            platdevices->local_size  = 32;//platdevices->node_symbol_vec.size();  //symbol_vec : 32
+            platdevices->local_size  = 24;//platdevices->node_symbol_vec.size();  //symbol_vec : 32
 
             logger->write_info("--- Global Size NDRange ",
                     lexical_cast<std::string>(platdevices->global_size));
@@ -392,7 +400,7 @@ namespace hnmav_kernel
 
             int count_symbol_size = 0;
             //Threshold leves for mathcing string lenght. Less than real string size, Must not detailed.
-            uint64_t threshold_levels = 2;
+            uint64_t threshold_levels = 4;
             uint64_t symbol_size = platdevices->node_symbol_vec.size();
             threshold_levels = symbol_size - threshold_levels;
 
@@ -400,12 +408,15 @@ namespace hnmav_kernel
                     iter_symbol != platdevices->node_binary_vec.end();
                     ++iter_symbol) {
                 int index_symbol = std::distance(platdevices->node_binary_vec.begin(), iter_symbol);
+		
+								 const char * hex_bin = &platdevices->symbol_wb[index_symbol];
+                if(*hex_bin == *iter_symbol) {
 
-                if(platdevices->symbol_wb[index_symbol] == *iter_symbol) {
+										std::cout<<" i , index : " << index_symbol <<",data : " << *hex_bin << std::endl;
 
                     if(count_symbol_size == threshold_levels) {
                         std::fill_n(result_vec->begin() + index_symbol, symbol_size, 1);
-
+                        std::cout<<"commandqueue::cl_enqueue_nd_task, threshold_levels have index_symbol : " << index_symbol <<std::endl;
                         logger->write_info("commandqueue::cl_enqueue_nd_task, threshold_levels have index_symbol",
                                 boost::lexical_cast<std::string>(index_symbol));
 
@@ -716,12 +727,12 @@ namespace hnmav_kernel
         return true;
     }
 
-	  commandqueue::~commandqueue()
-		{
-					delete buffer_elements;
-					delete platdevices;
-					delete mapped_memory;
-		}
+    commandqueue::~commandqueue()
+    {
+        delete buffer_elements;
+        delete platdevices;
+        delete mapped_memory;
+    }
 
 
     bool clutil_commandqueue::cl_release_kernel()
@@ -791,9 +802,9 @@ namespace hnmav_kernel
         commandqueue_util->set_buffer_elements(buffer_elements_);
     }
 
-		clutil_commandqueue::~clutil_commandqueue()
-		{
-				commandqueue_util->~commandqueue();
-		}
+    clutil_commandqueue::~clutil_commandqueue()
+    {
+        commandqueue_util->~commandqueue();
+    }
 
 }
