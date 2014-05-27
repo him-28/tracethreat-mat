@@ -5,7 +5,7 @@
 #include "filetypes/pe_file_controller.hpp"
 //#include "test/environment_test.hpp"
 
-#define FILE_ON 4
+#define FILE_ON 3
 
 namespace data_str    = data_structure;
 namespace fpolicy = policy;
@@ -25,8 +25,17 @@ class ScanACTireParallel : public ::testing::Test
             //load binary file pe.
             file_name_offset[0] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext.exe";
             file_name_offset[1] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_01.exe";
+
             file_name_offset[2] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_02.exe";
-            file_name_offset[3] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_03.exe";
+/*            file_name_offset[3] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_03.exe";
+        file_name_offset[4] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_04.exe";
+        file_name_offset[5] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_05.exe";
+        file_name_offset[6] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_06.exe";
+        file_name_offset[7] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_07.exe";
+        file_name_offset[8] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_08.exe";
+        file_name_offset[9] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_09.exe";
+        file_name_offset[10] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_10.exe";
+*/
 
             opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
             file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.hdb";
@@ -84,7 +93,11 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     const char *input;
     //} test_data;
 
-    keywords =  boost::assign::list_of("4c01b821685421cd70207369");
+    //keywords =  boost::assign::list_of("4c01b821685421cd70207369");
+
+	   keywords =  boost::assign::list_of("09cd21b8014ccd215468")("09cd21cc8d2e1a");
+     //("8d2e1a0abb1a")("cc8de2b1");
+
     //boost::assign::list_of("4bc647")("4b537db2e3a337")("4b53abf");
     input    = (char *)malloc(sizeof(char *) * std::string("a824bc647c46d04b537db2e3a33711").size());
     input    = "a824bc647c46d04b537db2e3a33711";

@@ -113,7 +113,7 @@ namespace hnmav_kernel
 
         try {
             // inital vector size
-            plat_info->vec_buffer.initial_size(6);
+            plat_info->vec_buffer.initial_size(KERNEL_BUFFER_SIZE);
             //Node input
             cl_mem  symbol_mem = clCreateBuffer(
                     plat_info->context,
@@ -125,7 +125,7 @@ namespace hnmav_kernel
             if(err != CL_SUCCESS)
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-node_symbol_vec");
 
-            // Node->data initial root and child
+            // Node->data initial root and child- 0
             plat_info->vec_buffer.push_back(symbol_mem);
 
             cl_mem  state_mem = clCreateBuffer(
@@ -138,7 +138,7 @@ namespace hnmav_kernel
             if(err != CL_SUCCESS)
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-node_state_vec");
 
-            // set size of buffer input
+            // set size of buffer input - 1
             plat_info->vec_buffer.push_back(state_mem);
 
             // signature size
@@ -152,7 +152,7 @@ namespace hnmav_kernel
             if(err != CL_SUCCESS)
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-node_binary_vec");
 
-            // set size of buffer input
+            // set size of buffer input - 2
             plat_info->vec_buffer.push_back(binaryf_mem);
 
             //Write back symbol
@@ -166,7 +166,7 @@ namespace hnmav_kernel
             if(err != CL_SUCCESS)
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-symbol_wb");
 
-            // set size of buffer input
+            // set size of buffer input - 3
             plat_info->vec_buffer.push_back(symbol_wb_mem);
 
             //Write back index found.
@@ -180,22 +180,22 @@ namespace hnmav_kernel
             if(err != CL_SUCCESS)
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-node_result_vec");
 
-            // set size of write back index found matching.
+            // set size of write back index found matching. - 4
             plat_info->vec_buffer.push_back(result_mem);
 
             //Write back symbol
-            cl_mem  state_wb_mem = clCreateBuffer(
+            cl_mem  result_wb_mem = clCreateBuffer(
                     plat_info->context,
                     CL_MEM_READ_ONLY,
                     sizeof(int) * plat_info->node_binary_vec.size(),
-                    plat_info->state_wb,
+                    plat_info->result_wb,
                     &err);
 
             if(err != CL_SUCCESS)
                 throw except::cl::clutil_exception(err, "clCreateBuffer-Build-symbol_wb");
 
-            // set size of buffer input
-            plat_info->vec_buffer.push_back(state_wb_mem);
+            // set size of buffer input - 5
+            plat_info->vec_buffer.push_back(result_wb_mem);
 
         } catch(std::runtime_error&  ex) {
             logger->write_error( ex.what() );

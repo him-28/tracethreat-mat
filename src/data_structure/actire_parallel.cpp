@@ -45,6 +45,7 @@ namespace data_structure
 								//symbol_shared_vec.push_back(iter_map_acs->first);
                 logger->write_info_test("--actire_parallel::operator= value ",
                         boost::lexical_cast<std::string>(iter_map_acs->second));
+								printf("--AC, key : %c , value : %d \n ",iter_map_acs->first, iter_map_acs->second);
 								//value : State
 								//graph_state_vec.push_back(iter_map_acs->second);
 							  state_shared_ptr_vec->push_back(iter_map_acs->second);

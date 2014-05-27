@@ -16,6 +16,8 @@
  *                                                                       Chatsiri.rat         11/09/2012
  */
 
+#define SEARCH_BYTES_PER_ITEM 1024
+#define LOCAL_SIZE            256
 
 #include <boost/shared_ptr.hpp>
 
@@ -57,11 +59,18 @@ namespace hnmav_kernel
             bool cl_release_commandqueue();
 
             bool cl_enqueue_task();
-            bool cl_enqueue_nd_task(std::vector<uint8_t> * result_vec);
+            bool cl_enqueue_nd_task(std::vector<uint8_t> *result_vec);
             //bool cl_enqueue_nd_task();
 
             bool cl_enqueue_copy_buffer();
             bool cl_enqueue_map_buffer();
+
+            bool cl_enqueue_map_buffer(cl_mem device_buffer,
+                    void  *&host_ptr,
+                    size_t size_bytes,
+                    cl_map_flags flags);
+
+
             bool cl_enqueue_unmap_buffer();
 
             bool add_input_str(std::string input_str);
@@ -83,7 +92,7 @@ namespace hnmav_kernel
                 return platdevices;
             }
 
-					  ~commandqueue();					  					
+            ~commandqueue();
 
         private:
 
@@ -111,10 +120,15 @@ namespace hnmav_kernel
             bool cl_create_kernel();
 
             bool cl_enqueue_task();
-            bool cl_enqueue_nd_task(std::vector<uint8_t> * result_vec);
+            bool cl_enqueue_nd_task(std::vector<uint8_t> *result_vec);
 
             bool cl_enqueue_copy_buffer();
             bool cl_enqueue_map_buffer();
+
+					  bool cl_enqueue_map_buffer(cl_mem device_buffer,
+            void  *&host_ptr,
+            size_t size_bytes,
+            cl_map_flags flags);
 
             bool cl_enqueue_unmap_buffer();
 
@@ -136,7 +150,7 @@ namespace hnmav_kernel
                 return commandqueue_util->get_platdevices_data();
             }
 
-						~clutil_commandqueue();
+            ~clutil_commandqueue();
 
         private:
             commandqueue *commandqueue_util;

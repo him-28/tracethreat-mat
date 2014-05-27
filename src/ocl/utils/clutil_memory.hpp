@@ -39,6 +39,8 @@
 #include "exception/system_exception.hpp"
 #include "exception/datastructure_exception.hpp"
 
+#define KERNEL_BUFFER_SIZE 6
+
 namespace hnmav_kernel
 {
 

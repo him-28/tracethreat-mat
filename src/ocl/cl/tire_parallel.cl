@@ -1,104 +1,66 @@
 /*  Titles			                                                                  Authors	        Date
  * --Multi file array with multi signature file                                   R.Chatsiri
  */
+int compare(__global const uchar * infected_str, __local const uchar * symbol, uint length)
+{
 
+		for(uint count_length = 0; count_length < length; ++count_length)
+		{
+				if(infected_str[count_length] != symbol[count_length]) return 0;
+
+		}
+		return 1;
+}
 /* Create Buffer */
 __kernel void actire_search(
         __global uchar *node_symbol,
         __global int   *node_state,
         __global uchar *infected_str,
         __global uchar *symbol_wb,
-        __global uint *result,
-				__global int  *state_wb)
+        __global int * result_group_wb,
+				__global int  * result_wb, 
+        const int   binary_length,
+        const int   symbol_length,
+        const int   search_length_wg,
+        __local  uchar* local_symbol)
 {
 
-    uint id_sym0 = get_global_id(0);
+			 __local volatile uint group_success_counter;
 
-  	uint state = 0;
+		   int local_idx  = get_local_id(0);
+			 int local_size = get_local_size(0);
+			 int group_idx  = get_group_id(0);
 
 
-    if(node_symbol[0] == infected_str[id_sym0]) {
+			 uint last_search_idx =  binary_length - search_length_wg + 1;
 
-        uint count_state = 1;
+			 uint begin_search_idx = group_idx * search_length_wg;
+			 uint end_search_idx   = begin_search_idx + search_length_wg;
 
-				uint count_state_wb = 1;
-
-        symbol_wb[id_sym0] = node_symbol[state];
-
-        for(uint count_inf = id_sym0 + 1; count_inf < id_sym0+24; count_inf++) {
-
-			     if(node_symbol[node_state[count_state]] != infected_str[count_inf]) { // count_state
-
-               count_state = 1;
-							break;		
-            }
-
-						state_wb[count_inf]  =  node_state[count_state];					
+	     if(begin_search_idx > last_search_idx) return;
+			 if(end_search_idx > last_search_idx)  end_search_idx = last_search_idx;
 	
-            count_state++;
-						count_state_wb++;
-        }//for
-    }//if
+			 for(int idx = local_idx; idx < symbol_length; idx+= local_size)
+			 {
+						local_symbol[idx] =  node_symbol[idx];
+			 }
 
+			 if(local_idx == 0) group_success_counter = 0;
+
+			 barrier(CLK_LOCAL_MEM_FENCE);
+
+			 for(uint string_pos = begin_search_idx + local_idx;
+                string_pos < end_search_idx;
+								string_pos += local_size)
+			 {
+					if(compare(infected_str + string_pos, local_symbol, symbol_length) == 1)
+					{
+					   int count = atomic_inc(&group_success_counter);
+						  result_wb[begin_search_idx + count] = string_pos;
+					}	
+
+			 }
+
+			 barrier(CLK_LOCAL_MEM_FENCE);
+			  if(local_idx == 0)  result_group_wb[group_idx] = group_success_counter;
 }
-
-
-/*
-__kernel void actire_search(
-        __global uchar *node_symbol,
-        __global int *node_state,
-        __global uchar *infected_str,
-        __global uchar *symbol_wb,
-        __global uint *result)
-{
-
-uint id_sym0 = get_global_id(0);
-
-uint state = 0;
-
-if(node_symbol[state] == infected_str[id_sym0])
-{
-	uint count_state = 1;
-	uint count_index = 0;
-
-	for(uint count_inf = id_sym0 + 1; count_inf < id_sym0 + 31; count_inf++){
-			symbol_wb[count_index] = 'x';//infected_str[count_inf];
-			count_index++;
-	}//for
-}//if
-
-
-
-}//end
-
-*/
-
-
-/*
-__kernel void actire_search(
-__global uchar *node_symbol,
-__global int *node_state,
-__global uchar *infected_str,
-__global uchar *symbol_wb,
-__global uint *result)
-{
-
-uint id_sym0 = get_global_id(0);
-
-uint state = 0;
-
-if(node_symbol[state] == infected_str[id_sym0+128])
-{
-	uint count_state = 1;
-	uint count_index = 0;
-	//symbol_wb[id_sym0] = node_symbol[state];
-
-	for(uint count_inf = id_sym0 + 129; count_inf < 160; count_inf++){
-			symbol_wb[count_index] = infected_str[count_inf];
-			count_index++;
-	}//for
-}//if
-
-}//end
-
-*/

@@ -15,6 +15,7 @@
 
 //#include "test/cliprescan_pe_task_test.hpp"
 
+//Stable test ac_tire and ocl class
 #include "test/scan_pe_file_acp_test.hpp"
 
 //#2 -stable
@@ -23,11 +24,11 @@
 //#1
 //#include "test/thread_sync_test.hpp"
 
+
+//#include "test/ac_tire_test.hpp"
+
+//#include "test/actire_parallel_test.hpp"
 /*
-#include "test/ac_tire_test.hpp"
-
-#include "test/actire_parallel_test.hpp"
-
 #include "test/clutil_platform_test.hpp"
 
 #include "test/system_exception_test.hpp"
