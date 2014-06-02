@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -g -I$(top_srcdir)/src -I/src/threadsyncocl @AM_CXXFLAGS@
+AM_CXXFLAGS = -g -I$(top_srcdir)/src -I/src/threadsyncocl -std=c++0x @AM_CXXFLAGS@
 # -I/src/clibasewrapper 
 # -I/src/utils -I/src/rules -I/src/filetypes \
 # -I/src/scan -I/src/ocl -I/src/exception -I/src/data_structure  @AM_CXXFLAGS@
@@ -27,7 +27,7 @@ environment_test.hpp
 #file_policy_test.hpp 
 
 test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsyncocl \
- -lthreadsyncocl -lgtest -lgtest_main -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \
+ -lthreadsyncocl -lgtest -lgtest_main -ltbb_debug -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \
  -lutils -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/exception \
  -lexception -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/data_structure \
  -ldstr -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/wrapper \
@@ -38,4 +38,5 @@ test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsync
  -lmemory -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl \
  -locl -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadconcurrency \
  -lthreadconcurrency -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/clibasewrapper \
- -lclibasewrapper $(AM_LDFLAGS)
+ -lclibasewrapper -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/tbbscan \
+ -ltbbscan $(AM_LDFLAGS)

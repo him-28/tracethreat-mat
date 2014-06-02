@@ -41,7 +41,7 @@ std::string uuid_generator::generate()
 		   boost::uuids::uuid uid;
     	 std::stringstream ss;
 			 ss << uid; 
-			 this->uuid_thread_map.insert(std::make_pair<uint64_t, std::string>(this->tid_,ss.str()));
+			 //this->uuid_thread_map.insert(std::make_pair<uint64_t, std::string>(this->tid_,ss.str()));
 			 return ss.str();
 }
 

@@ -1,5 +1,5 @@
 # debug, optimized
-AM_CXXFLAGS   = -I$(top_srcdir)/src -I/home/chatsiri/sda1/workspacecpp/clamav-devel-hnmav  @AM_CXXFLAGS@
+AM_CXXFLAGS   = -I$(top_srcdir)/src -I/home/chatsiri/sda1/workspacecpp/clamav-devel-hnmav -std=c++0x  @AM_CXXFLAGS@
 
 # Make src file 
 # libarries for control threads
@@ -11,6 +11,7 @@ libthreadsyncocl_adir = $(includedir)/threadsyncocl
 #Header
 libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/utils/file_calculate.hpp \
+ $(top_builddir)/src/utils/base/timer_queue.hpp \
  $(top_builddir)/src/exception/datastructure_exception.cpp \
  $(top_builddir)/src/exception/failure_handler_code.hpp \
  $(top_builddir)/src/data_structure/ac_tire.hpp \
@@ -28,13 +29,15 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/threadconcurrency/mutex_controller.hpp \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.h \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.h \
- $(top_builddir)/src/clibasewrapper/cliwrapper/global_wrapper.h
+ $(top_builddir)/src/clibasewrapper/cliwrapper/global_wrapper.h \
+ $(top_builddir)/src/tbbscan/data_structure/actire_concurrency.hpp
 
 
 
 # library
 libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp thread_controller.cpp buffer_sync.cpp semaphore_controller.cpp thread_barrier_controller.cpp \
 	$(top_builddir)/src/utils/file_calculate.cpp  \
+  $(top_builddir)/src/utils/base/timer_queue.cpp \
 	$(top_builddir)/src/exception/failure_handler_code.cpp \
   $(top_builddir)/src/exception/datastructure_exception.cpp \
 	$(top_builddir)/src/data_structure/ac_tire.cpp \
@@ -49,7 +52,8 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/threadconcurrency/cliprescan_pe_controller.cpp \
   $(top_builddir)/src/threadconcurrency/mutex_controller.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.cpp \
-  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp
+  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp \
+  $(top_builddir)/src/tbbscan/data_structure/actire_concurrency.cpp
 
 
 libthreadsyncocl_a_LIBADD = $(top_builddir)/src/utils/libutils.a \
@@ -61,4 +65,5 @@ $(top_builddir)/src/scan/libscan.a \
 $(top_builddir)/src/memory/libmemory.a \
 $(top_builddir)/src/threadconcurrency/libthreadconcurrency.a \
 $(top_builddir)/src/clibasewrapper/libclibasewrapper.a \
-$(top_builddir)/src/ocl/libocl.a $(AM_LDFLAGS)
+$(top_builddir)/src/ocl/libocl.a \
+$(top_builddir)/src/tbbscan/libtbbscan.a $(AM_LDFLAGS)

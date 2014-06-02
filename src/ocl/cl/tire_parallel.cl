@@ -1,15 +1,16 @@
 /*  Titles			                                                                  Authors	        Date
  * --Multi file array with multi signature file                                   R.Chatsiri
  */
-int compare(__global const uchar * infected_str, __local const uchar * symbol, uint length)
+int compare(__global const uchar * infected_str,
+__local const uchar * symbol, 
+uint length)
 {
-
 		for(uint count_length = 0; count_length < length; ++count_length)
 		{
-				if(infected_str[count_length] != symbol[count_length]) return 0;
-
+					if(infected_str[count_length] != symbol[count_length]) return 0;
+				  
 		}
-		return 1;
+		return  1;
 }
 /* Create Buffer */
 __kernel void actire_search(

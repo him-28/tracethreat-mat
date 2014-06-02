@@ -170,15 +170,16 @@ namespace data_structure
                             enter(*kw_iter, newstate);
                             output_f[newstate].insert(kw_index++);
                         }
+											printf("-- goto_function::goto_function, size : %d \n", output_f.size());
                     }
 
                     state_t operator()(state_t state, SymbolT const& symbol) const {
                         //assert(state < graph_.size());
-                        //printf("--- Check Goto_Function ---\n");
-                        //printf("goto_function, Graph_ in goto_function size : %lu \n", graph_.size());
-                        //printf("goto_function, operator(), State : %lu, Symbol : %c \n", state, symbol);
+                         //printf("--- Check Goto_Function, operater() ---\n");
+                        printf("goto_function, Graph_ in goto_function size : %lu \n", graph_.size());
+                        printf("goto_function, operator(), State : %lu, Symbol : %c \n", state, symbol);
                         edges_t const& node(graph_[state]); // State for next state map
-                        //printf("goto_function, Node from graph_ size : %lu \n", node.size());
+                        printf("goto_function, Node from graph_ size : %lu \n", node.size());
 
                         typename edges_t::const_iterator const& edge_it(node.find(symbol));
 
@@ -216,8 +217,8 @@ namespace data_structure
                         size_t index = 0;
                         edges_t *node;
 
-                        if(typeid(keyword) != typeid(std::string)) {
-                            std::cout<<" Is keyword " <<std::endl;
+                        if(typeid(keyword) == typeid(std::string)) {
+                            std::cout<<" Is keywords are string" <<std::endl;
                         }
 												//printf("--- Check Enter ---\n");
                         // follow existing symbol edges
@@ -288,11 +289,11 @@ namespace data_structure
                                 SymbolT const& a(edge.first);
                                 state_t const& s(edge.second);
 
-                                //printf("failure_function, Symbol a: %c, State_t s : %lu, Table r: %lu \n", a, s, r);
+                                printf("failure_function, Symbol a: %c, State_t s : %lu, Table r: %lu \n", a, s, r);
                                 queue.push_back(s);
                                 state_t state = table_[r];
 
-                                //printf("failure_function, State from table : %lu \n", state);
+                                printf("failure_function, State from table : %lu , symbol : %c\n", state, a);
 
                                 while (_goto(state, a) == AC_FAIL_STATE) {
                                     state = table_[state];
@@ -334,7 +335,7 @@ namespace data_structure
 
                         for (edge_it = node.begin(); edge_it != node.end(); ++edge_it) {
                             std::pair<SymbolT, state_t> const& edge(*edge_it);
-                            //printf("queue_edges, edge_id value : %lu \n", edge.second);
+                            printf("queue_edges, edge_id value : %lu \n", edge.second);
                             queue.push_back(edge.second); // push_back opsition of keywords [1 and 7]
                             table_[edge.second] = 0; // insert position of keywords [edge.second]
                         }

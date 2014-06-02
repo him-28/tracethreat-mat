@@ -368,13 +368,14 @@ namespace hnmav_kernel
 
             printf("\n----- Hex test -------\n");
             int count_in = 0;
-						//defaul 140-160, 1215370 - 1215390
+
+            //defaul 140-160, 1215370 - 1215390
             for(int countb = 65530; countb < 65550; countb++) {
-							printf("| data : %c , index : %d | ", platdevices->node_binary_vec[countb], countb);
+                printf("| data : %c , index : %d | ", platdevices->node_binary_vec[countb], countb);
             }
 
             for(int countb = 65530; countb < 65550; countb++) {
-							printf("%c", platdevices->node_binary_vec[countb]);
+                printf("%c", platdevices->node_binary_vec[countb]);
             }
 
 
@@ -487,15 +488,17 @@ namespace hnmav_kernel
                 if(platdevices->result_wb[index_result] > 0) {
                     int *hex_bin = &platdevices->result_wb[index_result]; //&, symbol_wb
                     int *hex_bin_group = &platdevices->result_group_wb[index_result];
-									//	if(*hex_bin > platdevices->node_binary_vec.size())
-									//		  break;
-				
-										printf("Index of binary : %d \n", *hex_bin);
 
-									 // if(platdevices->node_binary_vec[*hex_bin] == '0')
-                     std::cout<< "binary index : " << *hex_bin
-											<< ", group index : "<< *hex_bin_group 
-											<<", data : " << platdevices->node_binary_vec[*hex_bin] << std::endl;
+                    if(*hex_bin > platdevices->node_binary_vec.size())
+                        break;
+
+
+                    if(platdevices->node_binary_vec[*hex_bin] == '0') {
+                        std::cout<< "binary index : " << *hex_bin
+                                << ", group index : "<< *hex_bin_group
+                                <<", data : " << platdevices->node_binary_vec[*hex_bin] << std::endl;
+
+                    }
                 }
 
                 index_result++;

@@ -15,8 +15,11 @@
 
 //#include "test/cliprescan_pe_task_test.hpp"
 
+#include "test/utils_base_timer_queue.hpp"
+
 //Stable test ac_tire and ocl class
-#include "test/scan_pe_file_acp_test.hpp"
+//#include "test/scan_pe_file_acp_test.hpp"
+
 
 //#2 -stable
 //#include "test/file_policy_test.hpp"         // PE fist file policy class
@@ -24,8 +27,9 @@
 //#1
 //#include "test/thread_sync_test.hpp"
 
-
+// Ac_tire_test & actire_concurrency_test for thread building block concurrency.
 //#include "test/ac_tire_test.hpp"
+//#include "test/actire_concurrency_test.hpp"
 
 //#include "test/actire_parallel_test.hpp"
 /*

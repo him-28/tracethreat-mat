@@ -29,7 +29,7 @@ AC_CHECK_HEADERS([iostream])
 #m4_pattern_allow([AC_PROG_LIBTOOL])
 #AC_PROG_LIBTOOL
 
-LIBS="-lgtest -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem -lOpenCL -lrt -lclamav $LIBS"
+LIBS="-lgtest -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem -lboost_timer -lOpenCL -lrt -lclamav $LIBS"
 
 AC_TYPE_SIZE_T
 ##################################
@@ -60,6 +60,7 @@ AC_CONFIG_FILES([src/bin/Makefile])
 AC_CONFIG_FILES([src/decompiler/Makefile])
 AC_CONFIG_FILES([src/clibasewrapper/Makefile])
 AC_CONFIG_FILES([src/threadconcurrency/Makefile])
+AC_CONFIG_FILES([src/tbbscan/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
 AC_OUTPUT
