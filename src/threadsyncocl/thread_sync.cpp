@@ -241,6 +241,7 @@ namespace controller
         std::vector<uint8_t>  * binary_result =
                 &buff_sync_internal->buff->index_binary_result; //& get end result for check
 
+				//Send all data to OCL for calculating and matching function.
         this->load_ocl_system->cl_process_buffer(*symbol_vec,
                 state_vec_convert,
                 binary_hex,

@@ -254,12 +254,18 @@ namespace controller
                     size_t index = iter_nresult - index_result->begin();
                     uint8_t value = *iter_nresult;
 
+
                     //logger->write_info("comm_thread_buffer::run(), status is zero");
+                    //Check value not null and Index founds virus.
                     if(value == utils::infected_found) {
+
                         found_size++;
 
-                        logger->write_info_test("comm_thread_buffer::run(), index_matching",
+                        logger->write_info_test("comm_thread_buffer::run(), found size",
                                 boost::lexical_cast<std::string>(found_size));
+
+						            logger->write_info_test("comm_thread_buffer::run(), index_matching",
+                                boost::lexical_cast<std::string>(index));
 
                         //break;
                     }
@@ -268,7 +274,7 @@ namespace controller
                         //TODO: Take loggic for check with another method.
                         logger->write_info_test("comm_thread_buffer::run(), found size",
                                 boost::lexical_cast<std::string>(found_size));
-												std::cout<<"Found size " << found_size <<std::endl;
+
                         //Make condition when found data.
                         s_ocl->status = utils::infected_fist_step;
 
@@ -289,7 +295,8 @@ namespace controller
 
             if(summary_status == map_tid.size()) {
 
-                logger->write_info("Comm_thread_buffer::run(), Task end, completed jobs",h_util::format_type::type_center);
+                logger->write_info("Comm_thread_buffer::run(), Task end, completed jobs",
+                        h_util::format_type::type_center);
                 //this->thread_cancel();
                 break;
             }

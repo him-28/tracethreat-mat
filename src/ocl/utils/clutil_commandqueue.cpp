@@ -4,6 +4,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include "utils/base/system_code.hpp"
+
 #include "ocl/utils/clutil_commandqueue.hpp"
 //GPU OCL new namespace
 
@@ -280,16 +282,16 @@ namespace hnmav_kernel
 
                 logger->write_info_test("commandqueue::cl_create_command_queue,\
 									clEnqueueWriteBuffer, node_result_vec size ",
-                        boost::lexical_cast<std::string>(platdevices->node_result_vec.size()));
+                        boost::lexical_cast<std::string>(platdevices->node_result_vec->size()));
                 logger->write_info_test("commandqueue::cl_create_command_queue, result [0] ",
-                        boost::lexical_cast<std::string>(platdevices->node_result_vec[0]));
+                        boost::lexical_cast<std::string>(platdevices->node_result_vec->at(0)));
 
                 err |= clEnqueueWriteBuffer(platdevices->queues[0],
                         cl_mem_result,
                         CL_FALSE,
                         0,
-                        sizeof(uint8_t) * platdevices->node_result_vec.size(),
-                        (void *)&platdevices->node_result_vec[0],
+                        sizeof(uint8_t) * platdevices->node_result_vec->size(),
+                        (void *)&platdevices->node_result_vec->at(0),
                         0,
                         NULL,
                         NULL);
@@ -365,10 +367,10 @@ namespace hnmav_kernel
 
         try {
 
-
+					/*
             printf("\n----- Hex test -------\n");
             int count_in = 0;
-
+						
             //defaul 140-160, 1215370 - 1215390
             for(int countb = 65530; countb < 65550; countb++) {
                 printf("| data : %c , index : %d | ", platdevices->node_binary_vec[countb], countb);
@@ -385,12 +387,13 @@ namespace hnmav_kernel
 
             for(int counts = 0; counts < platdevices->node_symbol_vec.size(); counts++) {
 
-                printf("AC Parallel, Data :%c , State : %d \n", platdevices->node_symbol_vec[counts], platdevices->node_state_vec[counts]);
+                printf("AC Parallel, Data :%c , State : %d \n",
+                        platdevices->node_symbol_vec[counts], platdevices->node_state_vec[counts]);
 
             }
 
             printf("\n------ End Symbol---------\n");
-
+					*/
             //Calculate work size.
             std::size_t offset = 0;
 
@@ -422,15 +425,21 @@ namespace hnmav_kernel
             }
 
             logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
+						/*
             platdevices->symbol_wb = (char *)malloc(sizeof(char) * platdevices->node_binary_vec.size());
             //memset default value -g.
             std::fill(platdevices->symbol_wb,
                     platdevices->symbol_wb + platdevices->node_binary_vec.size(),
-                    'g');
+                    '0');
+						*/
 
             platdevices->result_wb  = (int *)malloc(sizeof(int)  * platdevices->node_binary_vec.size());
             platdevices->result_group_wb = (int *)malloc(sizeof(int) * platdevices->node_binary_vec.size());
             std::vector<int>::iterator iter_state;
+
+            std::fill(platdevices->result_wb,
+                    platdevices->result_wb + platdevices->node_binary_vec.size(),
+                    1);
 
             for(iter_state = platdevices->node_state_vec.begin();
                     iter_state != platdevices->node_state_vec.end();
@@ -484,7 +493,7 @@ namespace hnmav_kernel
 
             uint64_t index_result = 0;
 
-            while(index_result != platdevices->node_binary_vec.size()) {
+            while(index_result <= platdevices->node_binary_vec.size()) {
                 if(platdevices->result_wb[index_result] > 0) {
                     int *hex_bin = &platdevices->result_wb[index_result]; //&, symbol_wb
                     int *hex_bin_group = &platdevices->result_group_wb[index_result];
@@ -493,11 +502,16 @@ namespace hnmav_kernel
                         break;
 
 
-                    if(platdevices->node_binary_vec[*hex_bin] == '0') {
-                        std::cout<< "binary index : " << *hex_bin
-                                << ", group index : "<< *hex_bin_group
-                                <<", data : " << platdevices->node_binary_vec[*hex_bin] << std::endl;
+                    if(platdevices->node_binary_vec[*hex_bin]) {
 
+                        std::cout<< " - binary index : " << *hex_bin
+                                <<  ", group index : "<< *hex_bin_group
+                                <<  ", data : " << platdevices->node_binary_vec[*hex_bin] << std::endl;
+
+												//Infected found bits set to node_binary_vec 
+												//platdevices->node_binary_vec[*hex_bin] = utils::infected_found;
+												uint8_t * write_index = &platdevices->node_result_vec->at(*hex_bin);
+                        *write_index = utils::infected_found;
                     }
                 }
 
@@ -505,42 +519,6 @@ namespace hnmav_kernel
 
             }
 
-            /*for(iter_symbol = platdevices->node_binary_vec.begin();
-                    iter_symbol != platdevices->node_binary_vec.end();
-                    ++iter_symbol) {
-                int index_symbol = std::distance(platdevices->node_binary_vec.begin(), iter_symbol);
-
-                int *hex_bin = &platdevices->result_wb[index_symbol]; //&, symbol_wb
-
-            					int *hex_bin_group = &platdevices->result_group_wb[index_symbol];
-
-            					if(*hex_bin == (int)(*iter_symbol))
-            					{
-            						 std::cout<<" Index group : " << *hex_bin_group <<std::endl;
-                     std::cout<<" index : " << index_symbol <<",data : " << *hex_bin << std::endl;
-
-            					}
-            				*/
-            //if(*hex_bin > 0 && hex_bin != 0) {
-
-            //    std::cout<<" index : " << index_symbol <<",data : " << *hex_bin << std::endl;
-
-            /*
-            if(count_symbol_size == threshold_levels) {
-            std::fill_n(result_vec->begin() + index_symbol, symbol_size, 1);
-            std::cout<<"commandqueue::cl_enqueue_nd_task, threshold_levels have index_symbol : "
-            		<< index_symbol <<std::endl;
-            logger->write_info("commandqueue::cl_enqueue_nd_task, threshold_levelsindex_symbol",
-            boost::lexical_cast<std::string>(index_symbol));
-
-            }
-            */
-            //      count_symbol_size++;
-            //  } else {
-            //      count_symbol_size = 0;
-            //  }
-
-            //}//for
 
             //Release memory
             for(int count_mem = 0; count_mem < platdevices->vec_buffer.size(); count_mem++) {
@@ -872,7 +850,7 @@ namespace hnmav_kernel
     {
         delete buffer_elements;
         delete platdevices;
-        delete mapped_memory;
+        //delete mapped_memory;
     }
 
 

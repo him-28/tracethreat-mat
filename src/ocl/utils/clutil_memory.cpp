@@ -59,7 +59,7 @@ namespace hnmav_kernel
 				//set result node. Value sets are zero.
 				std::fill(result_vec_ptr.begin(), result_vec_ptr.end(), 0);
 				//memset(&result_vec_ptr[0], 0, result_vec_ptr.size() * sizeof(result_vec_ptr[0]));
-        platdevices->node_result_vec = result_vec_ptr;
+        platdevices->node_result_vec = &result_vec_ptr;
 				
 				
 					
@@ -76,7 +76,7 @@ namespace hnmav_kernel
                 boost::lexical_cast<std::string>(platdevices->node_binary_vec.size()));
 
 		   logger->write_info("### memory::cl_create_buffer,   result.size()",
-                boost::lexical_cast<std::string>(platdevices->node_result_vec.size()));
+                boost::lexical_cast<std::string>(platdevices->node_result_vec->size()));
 
         return true;
     }
@@ -106,7 +106,7 @@ namespace hnmav_kernel
                 lexical_cast<std::string>(plat_info->node_binary_vec.size()));
 
         logger->write_info("-- Result Size    ",
-                lexical_cast<std::string>(plat_info->node_result_vec.size()));
+                lexical_cast<std::string>(plat_info->node_result_vec->size()));
 
         cl_int err = CL_SUCCESS;
         int node_size = 0;
@@ -173,7 +173,7 @@ namespace hnmav_kernel
             cl_mem  result_mem = clCreateBuffer(
                     plat_info->context,
                     CL_MEM_WRITE_ONLY,
-                    sizeof(uint8_t) * plat_info->node_result_vec.size(), //Equal node_result_vec.size()
+                    sizeof(uint8_t) * plat_info->node_result_vec->size(), //Equal node_result_vec.size()
                     &plat_info->node_result_vec[0],
                     &err);
 
