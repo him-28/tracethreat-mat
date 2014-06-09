@@ -189,13 +189,14 @@ namespace memory
             //        boost::lexical_cast<std::string>(strlen(binary_buffer)));
 
             //fix binary equal symbol_buffer: problems from std::copy renew size.
+            //Safety compare.
             binary_buffer[symbol_vec->size()] = '\0';
+						symbol_buffer[symbol_vec->size()] = '\0';
+            logger->write_info_test("signature_shm_pe_controller::filter_sigtype, symbol sig",
+                    boost::lexical_cast<std::string>(symbol_buffer));
 
-            //logger->write_info_test("signature_shm_pe_controller::filter_sigtype, symbol sig",
-            //        boost::lexical_cast<std::string>(symbol_buffer));
-
-            //logger->write_info_test("signature_shm_pe_controller::filter_sigtype, Infected binary",
-            //        boost::lexical_cast<std::string>(binary_buffer));
+            logger->write_info_test("signature_shm_pe_controller::filter_sigtype, Infected binary",
+                    boost::lexical_cast<std::string>(binary_buffer));
 
             if(strncmp(symbol_buffer, binary_buffer, symbol_vec->size()) < 0) {
                 logger->write_info("Signature incorrect size. Internal incorrect.");

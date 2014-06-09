@@ -40,7 +40,7 @@ class SignatureShmTest : public ::testing::Test
             msig = &meta_sig_def[0];
             msig->sig_type = utils::pe_file;
             msig->offset   = 140;
-            msig->sig      = "09e1bb0812ab2344b1b1e9db09\0";
+            msig->sig      = "e9e1bb0812ab2344b1b1e9db09\0";
             msig->vir_name = "Trojan-Case-01\0";
             msig->sig_detail = "Trojan for testing-01.\0";
             meta_sig_vec.push_back(&meta_sig_def[0]);
@@ -48,19 +48,19 @@ class SignatureShmTest : public ::testing::Test
             msig = &meta_sig_def[1];
             msig->sig_type = utils::pe_file;
             msig->offset   = 2556;
-            msig->sig      = "08e2bb0812ab2344b1b1e9db09\0";
+            msig->sig      = "a8e2bb0812ab2344b1b1e9db09\0";
             msig->vir_name = "Trojan-Case-02\0";
             msig->sig_detail = "Trojan for testing-02.\0";
             meta_sig_vec.push_back(&meta_sig_def[1]);
 
-            char *data_sig1 = "233208e2bb0812ab2344b1b1e9db09a123b01232343\0";
+            char *data_sig1 = "2332a8e2bb0812ab2344b1b1e9db09a123b01232343\0";
             char *end_data_sig1 = data_sig1 + strlen(data_sig1);
             binary_vec.insert(binary_vec.end(), data_sig1, end_data_sig1);
 
             //char *data_sig2 = "a132308e2bb0812ab2344b1b1e9db0923a1ab";
             //char *end_data_sig2 = data_sig2 + strlen(data_sig2);
 
-            char *symbol_db = "08e2bb0812ab2344b1b1e9db09\0";
+            char *symbol_db = "a8e2bb0812ab2344b1b1e9db09\0";
             char *end_symbol_db = symbol_db + strlen(symbol_db);
             symbol_vec.insert(symbol_vec.end(), symbol_db, end_symbol_db);
 
@@ -88,7 +88,10 @@ TEST_F(SignatureShmTest, signature_shm_pe_controller)
     std::string shm_name  = "shm-pe";
 
     sig_shm_pe.initial_shm_sigtype(&meta_sig_vec, shm_name);
-    sig_shm_pe.verify_signature(sig_type, start_symbol, start_pos_symbol, &binary_vec, &symbol_vec);
+    struct memory::meta_sig msig_ret = 
+				sig_shm_pe.verify_signature(sig_type, start_symbol, start_pos_symbol, &binary_vec, &symbol_vec);
+	  EXPECT_EQ("a8e2bb0812ab2344b1b1e9db09", std::string(msig_ret.sig));
+		
     //typename std::vector<<struct memory::meta_sig *>::const_iterator iter_sig_vec;
     /*
     for(iter_sig_vec = meta_sig_vec.begin();
