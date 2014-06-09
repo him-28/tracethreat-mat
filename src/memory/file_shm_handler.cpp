@@ -88,30 +88,19 @@ namespace memory
         //string allocator
         string_allocator str_alloc(file_shm->get_segment_manager());
         //vector allocator
-        //binary_string_shm_vec_allocator  bs_vec_alloc(file_shm.get_segment_manager());
 
         //map allocator
-        //map_shm_allocator  map_shm_alloc(file_shm->get_segment_manager());
         map_str_shm_allocator  mapstr_shm_alloc(file_shm->get_segment_manager());
 
 
 
 
         binary_string_shm        *binarystr_shm[files_map->size()];
-        //binary_string_shm_vec    *binarystr_shm_vec[files_map.size()];
 
         //initial file-shm
-        //map_shm_ptr = file_shm->construct<map_shm>("file-shm")(std::less<uint64_t>(), map_shm_alloc);
-
         map_str_shm_ptr = file_shm->construct<map_str_shm>("file-shm")(std::less<uint64_t>(),
                 mapstr_shm_alloc);
 
-        /*
-        map_shm_shared_ptr =  boostinp::managed_shared_ptr(
-        file_shm.construct<map_shm_ptr>("file-shm-shared"), file_shm);
-        */
-        //file from map support
-        //files_buff_map::const_iterator iter_files;
 
         typename std::vector<MAPPED_FILE *>::iterator iter_files;
 
@@ -130,43 +119,18 @@ namespace memory
             // insert addresses of hex char.
             char *hex_ptr = utils::convert::byte2hexstr(mf->data, mf->size);
             addr_df_hex_vec.push_back(hex_ptr);
-            //std::cout<<"Mf->size : " << mf->size <<std::endl;
-						//addr_df_hex_vec.push_back((char*)mf->data);
-            /*//Conver to hex type.
-            			add_df_hex_vec->push_back(detail_file_hex);
-
-            for(int count_data = 0; count_data < mf->size(); count_data++) {
-                detail_file_hex[count_data] = utils::convert::byte2hex(mf->data[count_data]);
-            }
-            */
 
             //get detail_file_hex address from vector to binary_string_shm
             //test: 7115022752065567031
             binarystr_shm[index_file] = new binary_string_shm(char_alloc);
             *binarystr_shm[index_file] = addr_df_hex_vec[index_file];
 
-            // Test : get hex data.
-            //						binary_string_shm  * bistr = binarystr_shm[index_file];
-            //						for(int count_str = 0; count_str < mf->size; count_str)
-            //	std::cout<<"Data : " << *bistr <<std::endl;
-
-
-            //insert string to vector
-            /*
-             binarystr_shm_vec[index_file] = new binary_string_shm_vec(str_alloc);
-             binarystr_shm_vec[index_file]->insert(binarystr_shm_vec[index_file]->begin(),
-                     mf->size,
-                     *binarystr_shm[index_file]);
-            */
 
             //encode with MD5 with mf->file_name ( filename inculded path of file)
             //Plan-00004 : const uint64_t  file_name_md5 =  utils::convert::MD5Hash(mf->data, mf->size);
             boost::hash<char*> hash_file_name;
             const uint64_t file_name_md5 =  hash_file_name(const_cast<char*>(mf->file_name.c_str()));
             file_name_md5_vec.push_back(file_name_md5);
-            //file_name_md5_vec.push_back(file_name_md5);
-            //std::cout<<"File name md5 : " << file_name_md5 << std::endl;
-            //std::cout<<"File name path : " << mf->file_name <<std::endl;
 
             //Key : MD5 from detail insides file.
             //Value : insert vector contains detail of hex of file to value.
@@ -197,8 +161,6 @@ namespace memory
         const uint64_t fn_md5 = pair_map_shm.first;
         binary_string_shm  bistr_shm = pair_map_shm.second;
 
-        //std::cout<<"fn_md5:"<< fn_md5 <<std::endl;
-        //std::cout<<"str : "<< bistr_shm <<std::endl;
 				logger->write_info("file_shm_handler::list_detail_shm, list fn_md",
 						boost::lexical_cast<std::string>(fn_md5));
 				logger->write_info("file_shm_handler::list_detail_shm, binary_string_shm",

@@ -54,7 +54,7 @@ namespace memory
     namespace h_util = hnmav_util;
 
     template<typename MAPPED_FILE>
-    class file_shm_handler /* : public file_shm_base<MAPPED_FILE> */
+    class file_shm_handler
     {
 
         public:

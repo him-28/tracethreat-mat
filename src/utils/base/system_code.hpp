@@ -26,6 +26,7 @@
 #define INFECTED_FOUND 								1   /* Scan infected file found */
 #define INFECTED_FIRST_STEP           2   /* Except is infected file. */
 
+
 // system scanning
 #define NEXT_SCANNING                20 /* Scanning next method */
 #define FILE_ERROR                   21 /* File input error check */
@@ -43,6 +44,14 @@
 //Sandbox code
 
 //File type
+// File Type
+#define FILETYPE_PE                 100 /* File type PE */
+#define FILETYPE_ELF                101 /* File type ELF */
+
+//File size
+#define FILESIZE_MD5     32
+#define FILESIZE_SHA1    32 
+#define FILESIZE_SHA256  64
 
 //MapReduce
 
@@ -53,7 +62,7 @@ namespace utils
     typedef	enum SCAN_FILE_CODE {
         infected_found = INFECTED_FOUND ,
         infected_not_found = INFECTED_NOT_FOUND,
-				infected_fist_step = INFECTED_FIRST_STEP
+        infected_fist_step = INFECTED_FIRST_STEP
     } scan_file_code;
 
     typedef enum SCAN_FILE_SYSTEM_CODE {
@@ -65,6 +74,18 @@ namespace utils
         kernel_not_load = KERNEL_NOT_LOAD,
         buffer_not_LOAD = BUFFER_NOT_LOAD
     } ocl_system_code;
+
+    typedef enum FILETYPE {
+        pe_file  = FILETYPE_PE,
+        elf_file = FILETYPE_ELF
+    } filetype_code;
+
+		typedef enum SIGTYPE_SIZE{
+				filesize_md5    = FILESIZE_MD5,
+				filesize_sha1   = FILESIZE_SHA1,
+				fileIsze_sha256 =  FILESIZE_SHA256
+		} sigtype_size;
+
 }
 
 #endif

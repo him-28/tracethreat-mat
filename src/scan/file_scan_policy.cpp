@@ -6,8 +6,10 @@
 namespace policy
 {
 
+		/*
     template<typename MAPPED_FILE>
     struct file_scan_result;
+		*/
 
     template<typename MAPPED_FILE>
     pe_file_policy<MAPPED_FILE>::pe_file_policy()
@@ -201,7 +203,7 @@ namespace policy
     }
 
     template<typename MAPPED_FILE>
-    struct file_scan_result<MAPPED_FILE>& pe_file_policy<MAPPED_FILE>::get_result()const {
+    struct utils::file_scan_result<MAPPED_FILE>& pe_file_policy<MAPPED_FILE>::get_result()const {
 
     }
 
@@ -218,7 +220,7 @@ namespace policy
     }
 
     template<typename MAPPED_FILE>
-    std::vector<struct file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
+    std::vector<struct utils::file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy)
     {
         //logger->write_info("In file_scan_policy<MAPPED_FILE>::scan_file_engine");
@@ -241,7 +243,7 @@ namespace policy
                     //        boost::lexical_cast<std::string>(mapp_file->file_name->c_str()));
 
                     //create struct file scan result contain on vector.
-                    fs_result = new file_scan_result<MAPPED_FILE>();
+                    fs_result = new utils::file_scan_result<MAPPED_FILE>();
                     file_scan_result_vec.push_back(fs_result);
                     file_scan_result_vec[result_file_count]->file_name = mapp_file->file_name.c_str();
                 }
@@ -258,7 +260,7 @@ namespace policy
     }
 
     template<typename MAPPED_FILE>
-    std::vector<struct file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
+    std::vector<struct utils::file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
             std::vector<MAPPED_FILE *> *mapped_file_vec)
     {

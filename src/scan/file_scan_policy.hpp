@@ -18,42 +18,20 @@ namespace policy
     namespace h_util = hnmav_util;
     namespace ftypes = filetypes;
     //using namespace filetypes;
+		using utils::file_scan_result;
+
 
     template<typename MAPPED_FILE>
     class file_scan_policy;
-
+		/*
     template<typename MAPPED_FILE>
     struct file_scan_result;
-
+		*/
     template<typename MAPPED_FILE>
     class pe_file_policy;
 
 
-    struct plugins_result {
-        uint8_t  status;
-        bool     infected_status;
-    };
-
-
-
     //----------------------------  File Scan Policy -------------------------------//
-    template<typename MAPPED_FILE>
-    struct file_scan_result {
-        /**
-        * @brief
-        */
-        const char *file_name;
-        /**
-        * @brief
-        */
-        size_t       file_size;
-        /**
-        * @brief
-        */
-        //   MAPPED_FILE  file_detail;
-
-    };
-
 
     template<typename Base, int D>
     class disting : public Base
@@ -101,15 +79,15 @@ namespace policy
             *
             * @return
             */
-            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+            std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
             scan_file_engine(file_scan_policy<MAPPED_FILE> *f_col_policy);
 
-            std::vector<struct file_scan_result<MAPPED_FILE>* >&
+            std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
             scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
                     std::vector<MAPPED_FILE *> *mapped_file_vec);
 
             template<typename SymbolT, typename StateT>
-            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+            std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
             scan_ocl_controller(std::vector<SymbolT> *node_symbol,
                     std::vector<StateT> *node_state) {
                 node_symbol_vec = node_symbol;
@@ -117,7 +95,7 @@ namespace policy
             }
 
             template<typename SymbolT, typename StateT>
-            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+            std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
             receive_signature(boost::shared_ptr<std::vector<SymbolT> >& symbol_shared_ptr,
                     boost::shared_ptr<std::vector<StateT> >& state_shared_ptr) {
                 //TODO:
@@ -173,7 +151,7 @@ namespace policy
             *
             * @return
             */
-            virtual struct file_scan_result<MAPPED_FILE>& get_result()const = 0;
+            virtual struct utils::file_scan_result<MAPPED_FILE>& get_result()const = 0;
             /**
             * @brief
             *
@@ -201,8 +179,8 @@ namespace policy
 
         private:
             //file_policy<MAPPED_FILE> *f_policy;
-            file_scan_result<MAPPED_FILE> *fs_result;
-            std::vector<struct file_scan_result<MAPPED_FILE> * >  file_scan_result_vec;
+            utils::file_scan_result<MAPPED_FILE> *fs_result;
+            std::vector<struct utils::file_scan_result<MAPPED_FILE> * >  file_scan_result_vec;
 
             file_scan_policy<MAPPED_FILE> *f_col_policy;
 
@@ -249,7 +227,7 @@ namespace policy
         public:
             enum scanning_mode { MULTIPLE_OCL_MODE = 1, MULTIPLE_TBB_MODE = 2, MULTIPLE_OCL_TBB_MODE = 3 };
             // pe type support
-            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+            std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
             scan_pe(file_scan_policy<MAPPED_FILE> *obj_fconl_policy) {
 
                 //TODO: test only
@@ -259,7 +237,7 @@ namespace policy
                 switch(smode) {
 
                 case scan_file_policy::MULTIPLE_OCL_MODE : { //multiple scanning on OCL
-										 //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_mode");
+                    //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_mode");
                     //get data, size mapped_file for API system.
                     std::vector<MAPPED_FILE *> *mapped_file_vec = obj_fconl_policy->get_mapped_file();
                     //Send ot Multiple file OCL mode.
@@ -268,13 +246,13 @@ namespace policy
                 }
 
                 case scan_file_policy::MULTIPLE_TBB_MODE : { //multiple scanning on TBB
- 										 //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_tbb_mode");
+                    //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_tbb_mode");
 
-                   return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
                 }
 
                 case scan_file_policy::MULTIPLE_OCL_TBB_MODE : { //Priority OCL before TBB mode.
-										 //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_tbb_mode");
+                    //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_tbb_mode");
 
                     return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
                 }
@@ -326,7 +304,7 @@ namespace policy
             *
             * @return
             */
-    virtual struct file_scan_result<MAPPED_FILE>& get_result()const;
+    virtual struct utils::file_scan_result<MAPPED_FILE>& get_result()const;
             /**
             * @brief
             *
@@ -363,7 +341,7 @@ namespace policy
 
             //data_structure::iparallel<SymbolT, StateT> *ipara
             template<typename SymbolT, typename StateT>
-            std::vector<struct file_scan_result<MAPPED_FILE> * >&
+            std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
             scan_ocl_controller(std::vector<SymbolT> node_symbol, std::vector<StateT> node_state) {
                 //  logger->write_info_test("Call pe_file_policy::scan_ocl_controller...");
                 //	node_symbol_vec = node_symbol;
