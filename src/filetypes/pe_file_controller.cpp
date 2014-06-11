@@ -274,7 +274,8 @@ namespace filetypes
     utils::scan_file_code  pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
             std::vector<size_t> *state_vec,
             std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
-            std::string *kernel_file_path_ptr)
+            std::string *kernel_file_path_ptr,
+						memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> * sig_shm)
     {
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
@@ -311,7 +312,8 @@ namespace filetypes
         //Send vector contains symbol and state.
         //send data to OCL
         tsync.init_syncocl_workload(f_shm_handler.get_map_str_shm(),
-                f_shm_handler.get_map_file_size());
+                f_shm_handler.get_map_file_size(),
+								sig_shm);
 
         //logger->write_info("pe_file_policy::scan_file_type(), Initial OCL workload completed.");
 

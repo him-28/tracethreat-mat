@@ -16,7 +16,7 @@
  *                                                                       Chatsiri.rat         11/09/2012
  */
 
-#define SEARCH_BYTES_PER_ITEM 1024
+#define SEARCH_BYTES_PER_ITEM 512
 #define LOCAL_SIZE            256
 
 #include <boost/shared_ptr.hpp>

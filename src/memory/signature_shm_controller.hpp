@@ -37,6 +37,7 @@
 
 namespace memory
 {
+    namespace h_util = hnmav_util;
 
     template<typename SignatureTypeMemory, typename SignatureInternal>
     class signature_shm_controller : public signature_shm<SignatureTypeMemory, SignatureInternal>

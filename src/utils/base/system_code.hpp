@@ -24,37 +24,30 @@
 // File scanning
 #define INFECTED_NOT_FOUND 						0   /* Scan infected file not found */
 #define INFECTED_FOUND 								1   /* Scan infected file found */
-#define INFECTED_FIRST_STEP           2   /* Except is infected file. */
-
+#define INFECTED_FIRST_STEP         	2   /* Except is infected file. */
 
 // system scanning
-#define NEXT_SCANNING                20 /* Scanning next method */
-#define FILE_ERROR                   21 /* File input error check */
+#define NEXT_SCANNING                	20 /* Scanning next method */
+#define FILE_ERROR                   	21 /* File input error check */
 
 //OpenCL code
-#define KERNEL_NOT_LOAD           50  /* OpenCL cannot load  .cl extension file */
-#define BUFFER_NOT_LOAD						51  /* KernelArg cannot load buffer */
-//Certificate code
+#define KERNEL_NOT_LOAD           		50  /* OpenCL cannot load  .cl extension file */
+#define BUFFER_NOT_LOAD								51  /* KernelArg cannot load buffer */
 
-
-//Database connection code
-
-//Network Connection code.
-
-//Sandbox code
-
-//File type
 // File Type
-#define FILETYPE_PE                 100 /* File type PE */
-#define FILETYPE_ELF                101 /* File type ELF */
+#define FILETYPE_PE               		100 /* File type PE */
+#define FILETYPE_ELF              		101 /* File type ELF */
 
+//Scanning mode
+#define MULTIPLE_OCL_MODE         		150 /* Run OCL Mode */
+#define MULTIPLE_TBB_MODE         		151 /* Thread Building Block(TBB) Mode */
+#define MULTIPLE_OCL_TBB_MODE     		152 /* OCL and TBB mix mode. Load balance concept. */
+
+//______________________ Number not depend on consequenctial number _________________________
 //File size
-#define FILESIZE_MD5     32
-#define FILESIZE_SHA1    32 
-#define FILESIZE_SHA256  64
-
-//MapReduce
-
+#define FILESIZE_MD5     							32  /* MD5 size */ 
+#define FILESIZE_SHA1    							32  /* SHA-1 size */
+#define FILESIZE_SHA256  							64  /* SHA-256 size */
 
 
 namespace utils
@@ -80,11 +73,18 @@ namespace utils
         elf_file = FILETYPE_ELF
     } filetype_code;
 
-		typedef enum SIGTYPE_SIZE{
-				filesize_md5    = FILESIZE_MD5,
-				filesize_sha1   = FILESIZE_SHA1,
-				fileIsze_sha256 =  FILESIZE_SHA256
-		} sigtype_size;
+    typedef enum SIGTYPE_SIZE {
+        filesize_md5    = FILESIZE_MD5,
+        filesize_sha1   = FILESIZE_SHA1,
+        fileIsze_sha256 =  FILESIZE_SHA256
+    } sigtype_size;
+
+    typedef enum SCANNING_MODE{
+        multiple_ocl_mode = MULTIPLE_OCL_MODE,
+        multiple_tbb_mode = MULTIPLE_TBB_MODE,
+        multiple_ocl_tbb_mode = MULTIPLE_OCL_TBB_MODE
+    } scanning_mode;
+
 
 }
 

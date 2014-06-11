@@ -28,6 +28,9 @@
 
 #include "threadsyncocl/thread_sync.hpp"
 
+#include "memory/signature_shm_base.hpp"
+#include "memory/signature_shm_controller.hpp"
+
 // Big endian supported type.
 union unaligned_64 {
     uint64_t una_u64;
@@ -72,6 +75,9 @@ namespace filetypes
     namespace h_util = hnmav_util;
     namespace dstr   = data_structure;
     namespace kernel_ocl = hnmav_kernel;
+
+		using memory::signature_shm;
+
     //using namespace  controller;
     //namespace utils  = util;
     template<typename MAPPED_FILE = struct MAPPED_FILE_PE>
@@ -191,7 +197,8 @@ namespace filetypes
             utils::scan_file_code scan(std::vector<char> *symbol_vec,
                     std::vector<size_t> *state_vec,
                     std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
-                    std::string *kernel_file_path_ptr);
+                    std::string *kernel_file_path_ptr,
+										memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> * sig_shm);
 
             /**
             * @brief Buffer return to external class

@@ -41,7 +41,9 @@
 
 #include "ocl/cl_bootstrap.hpp"
 
-//#include "filetypes/pe_file_controller.hpp"
+#include "memory/signature_shm_base.hpp"
+#include "memory/signature_shm_controller.hpp"
+
 namespace filetypes
 {
 
@@ -59,6 +61,7 @@ namespace controller
 
     namespace dstr   = data_structure;
     namespace kernel_ocl = hnmav_kernel;
+		using  memory::signature_shm;
 
     class thread_controller
     {
@@ -138,24 +141,31 @@ namespace controller
     class comm_thread_buffer : public thread<BufferSync>
     {
         public:
+						typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
+							signature_shm_type;
+
             comm_thread_buffer(uint64_t ID,
                     BufferSync *const  buffer_sync,
-                    mutex_buffer<Mutex> *mutex_buff) :
+                    mutex_buffer<Mutex> *mutex_buff,
+                    signature_shm_type *sig_shm) :
                 my_id(ID),
                 buffer_sync_(buffer_sync),
-                mutex_buff_(mutex_buff) {
+                mutex_buff_(mutex_buff),
+								sig_shm_(sig_shm){
                 //Initial mutex after set buffer to buffer_sync_
                 //mutex_buff = new mutex_buffer<Mutex>();
                 //mutex_buff->init();
             }
             virtual void *run();
-						~comm_thread_buffer();
+            ~comm_thread_buffer();
         private:
             //typename buffer_kernel::size_int  my_id;
             uint64_t  my_id;
             BufferSync *buffer_sync_;
             mutex_buffer<Mutex> *mutex_buff_;
-
+						
+						//memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> *sig_shm_;
+						signature_shm_type * sig_shm_;
             //id processes_id_register for thread
             struct slot_ocl *s_ocl;
             struct data_ocl_process<MAPPED_FILE> *d_ocl_processes;
@@ -171,8 +181,8 @@ namespace controller
     class slot_ocl_thread : public thread<BufferSync>
     {
         public:
-					
-				 typedef kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
+
+            typedef kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
                     dstr::dstr_def::work_groupitems,
                     std::vector<boost::unordered_map<char, size_t> >,
                     dstr::actire_parallel<char,
@@ -181,7 +191,7 @@ namespace controller
                     std::vector<boost::unordered_map<char, size_t> > >
                     >	 load_ocl_system_type;
 
-					public:
+        public:
             slot_ocl_thread(typename slot_ocl_thread<BufferSync, MAPPED_FILE>::
                     load_ocl_system_type *load_ocl_system,
                     BufferSync *const  buffer_sync,
@@ -196,8 +206,8 @@ namespace controller
             bool set_tid_task(std::vector<pthread_t> p_tid_task_vec) {
                 this->p_tid_task_vec = p_tid_task_vec;
             }
-		
-						~slot_ocl_thread();
+
+            ~slot_ocl_thread();
 
         private:
             //typename buffer_kernel::size_int  my_id;

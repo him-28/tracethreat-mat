@@ -264,16 +264,23 @@ namespace controller
                         logger->write_info_test("comm_thread_buffer::run(), found size",
                                 boost::lexical_cast<std::string>(found_size));
 
-						            logger->write_info_test("comm_thread_buffer::run(), index_matching",
+                        logger->write_info_test("comm_thread_buffer::run(), index_matching",
                                 boost::lexical_cast<std::string>(index));
 
-                        //break;
+                        uint8_t sigtype = utils::pe_file; //delete in future
+                        sig_shm_->verify_signature(sigtype,
+                                value,
+                                index,
+                                &docl_processes->binary_hex,
+                                &docl_processes->symbol_hex);
+
                     }
 
                     if(index == s_ocl->end_point) {
                         //TODO: Take loggic for check with another method.
                         logger->write_info_test("comm_thread_buffer::run(), found size",
                                 boost::lexical_cast<std::string>(found_size));
+
 
                         //Make condition when found data.
                         s_ocl->status = utils::infected_fist_step;
@@ -322,8 +329,6 @@ namespace controller
         //[] start OCL and call function sends data to buffer of OCL.
         //[] check thread completed. check from size of thread. and map contain slot_ocl structure.
         uint64_t thread_size = 0;
-
-        //this->load_ocl_system_->cl_process_commandqueue();
 
         while(true) {
             mutex_buff_->lock_request();

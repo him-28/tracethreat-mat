@@ -15,24 +15,20 @@
 */
 
 /*  Titles			                                                     Authors	          Date
- *  -Init Signature SHM test with malare sigature.                   R.Chatsiri   20/03/2014
- *  -First signature insert to PE-SHM signature kind.                R.Chatsiri   06/06/2014
+ *  -Result Infected Container. Propose for send to RocksDB.         R.Chatsiri   09/06/2014
  */
-
 #include "memory/signature_shm_base.hpp"
-#include "memory/signature_shm_controller.hpp"
+#include "utils/connector/result_infected.hpp"
 #include "utils/base/system_code.hpp"
 #include <vector>
 #include <string>
 #include <string.h>
 
 #define VIRUS_SIG 2
-class SignatureShmTest : public ::testing::Test
+class ResultInfectedTest : public ::testing::Test
 {
 
     protected:
-
-
 
         virtual void SetUp() {
             //load binary file pe.
@@ -53,16 +49,6 @@ class SignatureShmTest : public ::testing::Test
             msig->sig_detail = "Trojan for testing-02.\0";
             meta_sig_vec.push_back(&meta_sig_def[1]);
 
-            char *data_sig1 = "2332a8e2bb0812ab2344b1b1e9db09a123b01232343\0";
-            char *end_data_sig1 = data_sig1 + strlen(data_sig1);
-            binary_vec.insert(binary_vec.end(), data_sig1, end_data_sig1);
-
-            //char *data_sig2 = "a132308e2bb0812ab2344b1b1e9db0923a1ab";
-            //char *end_data_sig2 = data_sig2 + strlen(data_sig2);
-
-            char *symbol_db = "a8e2bb0812ab2344b1b1e9db09\0";
-            char *end_symbol_db = symbol_db + strlen(symbol_db);
-            symbol_vec.insert(symbol_vec.end(), symbol_db, end_symbol_db);
 
             sig_type = utils::pe_file;
             start_symbol = 0;
@@ -77,36 +63,12 @@ class SignatureShmTest : public ::testing::Test
         //support intial filter
         struct memory::meta_sig meta_sig_def[VIRUS_SIG];
         std::vector<struct memory::meta_sig *>  meta_sig_vec;
-        memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>
-                    sig_shm_pe;
 
 };
 
 
-TEST_F(SignatureShmTest, signature_shm_pe_controller)
-{
-    std::string shm_name  = "shm-pe";
-
-    sig_shm_pe.initial_shm_sigtype(&meta_sig_vec, shm_name);
-    struct memory::meta_sig msig_ret = 
-				sig_shm_pe.verify_signature(sig_type, start_symbol, start_pos_symbol, &binary_vec, &symbol_vec);
-	  EXPECT_EQ("a8e2bb0812ab2344b1b1e9db09", std::string(msig_ret.sig));
-		
-    //typename std::vector<<struct memory::meta_sig *>::const_iterator iter_sig_vec;
-    /*
-    for(iter_sig_vec = meta_sig_vec.begin();
-    		iter_sig_vec != meta_sig_vec.end();
-    		++iter_sig_vec)
-    {
-    struct memory::meta_sig msg  = meta_sig_vec
-    sig_shm_pe.verify_signature(msg->sig_type,"0",1,&binary_vec, &symbol_vec);
-    }
-    */
-}
-
-TEST_F(SignatureShmTest, verify_signature)
+TEST_F(ResultInfectedTest, result_infected)
 {
 
-    //    sig_shm_pe.verify_signature(sig_type, start_symbol, &binary_vec, &symbol_vec);
 
 }

@@ -16,6 +16,7 @@ logger/format_logger.hpp \
 logger/clutil_logger.hpp \
 base/system_code.hpp \
 base/timer_queue.hpp \
+connector/result_infected.hpp \
 file_offset_handler.hpp \
 convert.hpp \
 md5_hash.hpp \
@@ -28,6 +29,7 @@ config/options_system.cpp \
 logger/format_logger.cpp \
 logger/clutil_logger.cpp \
 base/timer_queue.cpp \
+connector/result_infected.cpp \
 file_offset_handler.cpp \
 md5_hash.cpp \
 uuid_generator.cpp

@@ -19,7 +19,7 @@ namespace hnmav_kernel
 
     bool commandqueue::cl_create_kernel()
     {
-        logger->write_info("### Start cl_create_kernel ###", format_type::type_header);
+        logger->write_info("Start cl_create_kernel", format_type::type_header);
 
         try {
             cl_int err = CL_SUCCESS;
@@ -57,7 +57,7 @@ namespace hnmav_kernel
     */
     bool commandqueue::cl_create_command_queue()
     {
-        logger->write_info("### Start cl_create_command_queue ###", format_type::type_header);
+        logger->write_info("Start cl_create_command_queue", format_type::type_header);
 
         cl_int err = CL_SUCCESS;
         platdevices_info *platdevices = get_platdevices_data();
@@ -110,8 +110,6 @@ namespace hnmav_kernel
                         lexical_cast<std::string>(command_queue));
                 logger->write_info("--- Count_queue               ",
                         lexical_cast<std::string>(count_queue));
-                // logger->write_info("--- Address of mem_input_buffer  ",
-                //        lexical_cast<std::string>(platdevices->mem_input_buffers->size()));
                 logger->write_info("--- Kernel size               ",
                         lexical_cast<std::string>(platdevices->kernels.size()));
 
@@ -257,8 +255,7 @@ namespace hnmav_kernel
                 //Binary of file to queue
                 cl_mem cl_mem_binary = platdevices->vec_buffer[2];
 
-                logger->write_info_test("commandqueue::cl_create_command_queue,\
-									clEnqueueWriteBuffer, node_binary_vec size ",
+                logger->write_info_test("commandqueue::cl_create_command_queue, node_binary_vec size ",
                         boost::lexical_cast<std::string>(platdevices->node_binary_vec.size()));
 
                 err |= clEnqueueWriteBuffer(platdevices->queues[0],
@@ -280,8 +277,7 @@ namespace hnmav_kernel
 
                 cl_mem cl_mem_result = platdevices->vec_buffer[4];
 
-                logger->write_info_test("commandqueue::cl_create_command_queue,\
-									clEnqueueWriteBuffer, node_result_vec size ",
+                logger->write_info_test("commandqueue::cl_create_command_queue, node_result_vec size ",
                         boost::lexical_cast<std::string>(platdevices->node_result_vec->size()));
                 logger->write_info_test("commandqueue::cl_create_command_queue, result [0] ",
                         boost::lexical_cast<std::string>(platdevices->node_result_vec->at(0)));
@@ -360,7 +356,7 @@ namespace hnmav_kernel
 
     bool commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> *result_vec)
     {
-        logger->write_info("#### Start cl_enqueue_nd_task ####", format_type::type_header);
+        logger->write_info("Start cl_enqueue_nd_task", format_type::type_header);
 
         cl_int err = CL_SUCCESS;
         platdevices_info *platdevices = get_platdevices_data();
@@ -425,13 +421,6 @@ namespace hnmav_kernel
             }
 
             logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
-						/*
-            platdevices->symbol_wb = (char *)malloc(sizeof(char) * platdevices->node_binary_vec.size());
-            //memset default value -g.
-            std::fill(platdevices->symbol_wb,
-                    platdevices->symbol_wb + platdevices->node_binary_vec.size(),
-                    '0');
-						*/
 
             platdevices->result_wb  = (int *)malloc(sizeof(int)  * platdevices->node_binary_vec.size());
             platdevices->result_group_wb = (int *)malloc(sizeof(int) * platdevices->node_binary_vec.size());
@@ -543,7 +532,7 @@ namespace hnmav_kernel
 
     bool commandqueue::cl_enqueue_task()
     {
-        logger->write_info("#### Start cl_enqueue_task ... ####", format_type::type_header);
+        logger->write_info("Start cl_enqueue_task ...", format_type::type_header);
 
         cl_int err = CL_SUCCESS;
         platdevices_info *platdevices = get_platdevices_data();
@@ -599,7 +588,7 @@ namespace hnmav_kernel
 
     bool commandqueue::cl_enqueue_unmap_buffer()
     {
-        logger->write_info("#### Start Unmap buffer ####", format_type::type_header);
+        logger->write_info("Start Unmap buffer", format_type::type_header);
 
         platdevices_info *platdevices = get_platdevices_data();
         cl_int err = CL_SUCCESS;
@@ -653,7 +642,7 @@ namespace hnmav_kernel
 
     bool commandqueue::cl_enqueue_map_buffer()
     {
-        logger->write_info("#### Start enqueue map buffer ####", format_type::type_header);
+        logger->write_info("Start enqueue map buffer", format_type::type_header);
 
         platdevices_info *platdevices =  get_platdevices_data();
 

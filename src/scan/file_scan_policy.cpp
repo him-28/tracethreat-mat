@@ -150,7 +150,9 @@ namespace policy
     */
     template<typename MAPPED_FILE>
     bool pe_file_policy<MAPPED_FILE>::
-    scan_file_type(std::vector<MAPPED_FILE *> *mapped_file_pe_vec)
+    scan_file_type(std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
+								memory::signature_shm<struct memory::meta_sig, 
+									struct memory::meta_sig_mem> * sig_shm)
     {
 				//logger->write_info("pe_file_policy::scan_file_type(), multiple scanning with ocl");
 
@@ -159,7 +161,8 @@ namespace policy
         pe_fconl.scan(this->node_symbol_vec,
                 this->node_state_vec,
                 mapped_file_pe_vec,
-                this->kernel_file_path);
+                this->kernel_file_path,
+								sig_shm);
         //Plan-00004 : read result and match with internal arena.
     }
 
@@ -262,16 +265,18 @@ namespace policy
     template<typename MAPPED_FILE>
     std::vector<struct utils::file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
-            std::vector<MAPPED_FILE *> *mapped_file_vec)
+            std::vector<MAPPED_FILE *> *mapped_file_vec,
+						memory::signature_shm<struct memory::meta_sig, 
+							struct memory::meta_sig_mem> * sig_shm)
     {
         //logger->write_info("In file_scan_policy<MAPPED_FILE>::scan_file_engine");
 
         uint8_t result_file_count = 0;
         f_col_policy = fcol_policy;
         f_col_policy->get_result();
-				std::cout<<"file_scan_policy::scan_file_engine, mapped_file_vec size : " << mapped_file_vec->size() <<std::endl;
+
         //return scanning completed all files.
-        if(f_col_policy->scan_file_type(mapped_file_vec)) {
+        if(f_col_policy->scan_file_type(mapped_file_vec, sig_shm)) {
 
             //logger->write_info("file_scan_policy::scan_file_engine, Scan found, but unname of file");
         }// end if

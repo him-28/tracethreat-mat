@@ -47,8 +47,8 @@
 
 #include "ocl/cl_bootstrap.hpp"
 
-//PE SCANNING
-//#include "filetypes/pe_file_controller.hpp"
+#include "memory/signature_shm_base.hpp"
+#include "memory/signature_shm_controller.hpp"
 
 namespace controller
 {
@@ -62,16 +62,6 @@ namespace controller
     class thread_sync;
 }
 
-/*
-namespace filetypes
-{
-
-    template<typename MAPPED_FILE>
-    class pe_file_controller;
-
-
-}
-*/
 
 namespace controller
 {
@@ -109,6 +99,11 @@ namespace controller
             typedef boost::shared_ptr<comm_thread_buffer<buffer_sync_type, MAPPED_FILE> > thread_ptr;
             typedef boost::shared_ptr<slot_ocl_thread<buffer_sync_type, MAPPED_FILE> > thread_ocl_ptr;
 
+
+					  //Buffer call buff from BufferSync class name.
+				    typename BufferSync::buffer_internal * buff;
+
+
             //     std::string  *file_path;
             thread_ptr   *thread_array_ptr;
 
@@ -136,6 +131,9 @@ namespace controller
 
 
         public:
+
+						typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
+							signature_shm_type;
 
             //ocl support
             typedef kernel_ocl::cl_load_system<kernel_ocl::clutil_platform,
@@ -167,17 +165,17 @@ namespace controller
                 //TODO: Interface supported other class.
             };
 
-            //boost::tuple<struct shm_memory::data_ocl_process<MAPPED_FILE>::size_int> get_thread_info();
 
             boost::tuple<uint8_t> get_thread_info();
 
             ibuffer_sync<BufferSync>& start_processes();
 
             //insert file-shm mapped to create vector thread.
-            std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync,MAPPED_FILE> > >&
-            init_syncocl_workload(typename shm_memory::
+            //std::vector<boost::shared_ptr<comm_thread_buffer<BufferSync,MAPPED_FILE> > >&
+            bool init_syncocl_workload(typename shm_memory::
                     file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
-                    std::map<const uint64_t , size_t> *map_file_size);
+                    std::map<const uint64_t , size_t> *map_file_size,
+										signature_shm_type * sig_shm);
             //signature
             bool add_sig_process(std::vector<char> *symbol_vec, std::vector<size_t> *state_vec);
             //OCL send to slot_ocl_thread

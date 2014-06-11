@@ -31,22 +31,22 @@ namespace utils
         * @brief
         */
         const char *file_name;
+
         /**
         * @brief
         */
         size_t       file_size;
+
         /**
         * @brief
         */
-        //   MAPPED_FILE  file_detail;
-        uint64_t    start_index;
-        uint64_t    end_index; //support TBB
+        size_t index_start;
+        size_t index_end;                                                               
+
         char *vir_name;  // support TBB
         char *keywords;  // keyword  TBB
     };
 
 }
-
-
 
 #endif /* UTILS_BASE_COMMON_HPP */

@@ -12,7 +12,8 @@ libthreadsyncocl_adir = $(includedir)/threadsyncocl
 libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/utils/file_calculate.hpp \
  $(top_builddir)/src/utils/base/timer_queue.hpp \
- $(top_builddir)/src/exception/datastructure_exception.cpp \
+ $(top_builddir)/src/utils/connector/result_infected.hpp \
+ $(top_builddir)/src/exception/datastructure_exception.hpp \
  $(top_builddir)/src/exception/failure_handler_code.hpp \
  $(top_builddir)/src/data_structure/ac_tire.hpp \
  $(top_builddir)/src/data_structure/actire_parallel.hpp \
@@ -40,6 +41,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
 libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp thread_controller.cpp buffer_sync.cpp semaphore_controller.cpp thread_barrier_controller.cpp \
 	$(top_builddir)/src/utils/file_calculate.cpp  \
   $(top_builddir)/src/utils/base/timer_queue.cpp \
+  $(top_builddir)/src/utils/connector/result_infected.cpp \
 	$(top_builddir)/src/exception/failure_handler_code.cpp \
   $(top_builddir)/src/exception/datastructure_exception.cpp \
 	$(top_builddir)/src/data_structure/ac_tire.cpp \

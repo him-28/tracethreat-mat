@@ -44,8 +44,8 @@ namespace controller
         const char *sig_name;  //signature name
         uint8_t      sig_type; //signature type
         uint64_t     start_index_scan; // index start scanning.
-        std::vector<uint8_t> symbol_vec; //TODO: Plan-00004 : Support arena size.
-        std::vector<size_t>  state_vec;  //TODO: Plan-00004 : Support arena size.
+        //std::vector<uint8_t> symbol_vec; //TODO: Plan-00004 : Support arena size.
+        //std::vector<size_t>  state_vec;  //TODO: Plan-00004 : Support arena size.
     };
 
     template<typename MAPPED_FILE>
@@ -57,7 +57,7 @@ namespace controller
         //std::vector<uint8_t> *index_binary_result;  // index of vector binaries are hex of char type.
         std::vector<char> binary_hex;   // input hex of char type.
         std::vector<uint8_t> index_binary_result;  // index of vector binaries are hex of char type.
-
+				std::vector<char> symbol_hex;
 
         map_thread_id_type map_tidslot_ocl;
 
@@ -75,6 +75,7 @@ namespace controller
     {
         public:
             typedef boost::shared_ptr<std::vector<char> > binary_hex_sptr_type;
+						typedef Buffer  buffer_internal;
 
             BufferSync(uint8_t  buffersync_size);
             BufferSync();
@@ -125,7 +126,7 @@ namespace controller
             BufferSync<Buffer, MAPPED_FILE> *buffersync_ptr;
 
             std::vector<char> *binary_hex_ptr;
-
+						std::vector<char> *symbol_hex_ptr;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

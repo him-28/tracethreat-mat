@@ -158,11 +158,15 @@ namespace memory
             if(sig_ret != sig_map.end()) {
 
                 signature_ret_ptr = sig_ret->second;
+
+								logger->write_info("------------------Result Scanning---------------------------");				
+
                 logger->write_info("signature_shm_pe_controller::filter_sigtype, found virus sig",
                         boost::lexical_cast<std::string>(signature_ret_ptr->vir_name));
                 logger->write_info("signature_shm_pe_controller::filter_sigtype, virus signature",
                         boost::lexical_cast<std::string>(signature_ret_ptr->sig));
-                logger->write_info("signature_shm_pe_controller::filter_sigtype, Completed processes");
+
+                logger->write_info("------------------Scanning Completed.-----------------------");
 
                 return *signature_ret_ptr;
             }
@@ -198,7 +202,8 @@ namespace memory
             logger->write_info_test("signature_shm_pe_controller::filter_sigtype, Infected binary",
                     boost::lexical_cast<std::string>(binary_buffer));
 
-            if(strncmp(symbol_buffer, binary_buffer, symbol_vec->size()) < 0) {
+            //if(strncmp(symbol_buffer, binary_buffer, symbol_vec->size()) < 0) {
+            if(std::strcmp(symbol_buffer, binary_buffer) != 0){
                 logger->write_info("Signature incorrect size. Internal incorrect.");
                 signature_ret_ptr = new SignatureTypeMemory();
                 return *signature_ret_ptr;
@@ -265,8 +270,6 @@ namespace memory
 
 
     }
-
-    //template class signature_shm<struct meta_sig, struct meta_sig_mem>;
 
     template class signature_shm_controller<struct meta_sig, struct meta_sig_mem>;
 

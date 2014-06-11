@@ -53,7 +53,7 @@ namespace hnmav_util
     void format_logger<TypeData, CONST>::adjust_header()
     {
         std::string _str = lexical_cast<std::string, const std::string>(str_);
-        std::string format_str = "[%-d]";
+        std::string format_str = "[##### %-d #####]";
 
         format formatter(format_str.c_str());
         formatter % _str;
@@ -66,7 +66,7 @@ namespace hnmav_util
     void format_logger<TypeData, CONST>::adjust_right()
     {
         std::string _str = lexical_cast<std::string, const std::string>(str_);
-        std::string format_str = "|%-90d| %n";
+        std::string format_str = "[--- %-90d] %n";
 
         common_adjust(_str, format_str);
 
@@ -76,7 +76,7 @@ namespace hnmav_util
     void format_logger<TypeData, CONST>::adjust_center()
     {
         std::string  _str = lexical_cast<std::string, const std::string>(str_);
-        std::string  format_str = "|%=90d|";
+        std::string  format_str = "[========== %*.*d ==========]";
 
         common_adjust(_str, format_str);
     }
@@ -88,7 +88,7 @@ namespace hnmav_util
     void format_logger<TypeData, CONST>::align_right_detail()
     {
         std::string  _str = lexical_cast<std::string, const std::string>(str_);
-        std::string  format_str = "--- %=90d %n";
+        std::string  format_str = "*** %=90d %n";
 
         common_adjust(_str, format_str);
     }

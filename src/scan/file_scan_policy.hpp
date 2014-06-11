@@ -6,7 +6,8 @@
 #include "filetypes/pe_file_controller.hpp"
 #include "filetypes/pe.hpp"
 
-//#include "data_structure/actire_parallel.hpp"
+#include "memory/signature_shm_base.hpp"
+#include "memory/signature_shm_controller.hpp"
 
 //logger
 #include "utils/logger/clutil_logger.hpp"
@@ -18,15 +19,15 @@ namespace policy
     namespace h_util = hnmav_util;
     namespace ftypes = filetypes;
     //using namespace filetypes;
-		using utils::file_scan_result;
+    using utils::file_scan_result;
 
 
     template<typename MAPPED_FILE>
     class file_scan_policy;
-		/*
+    /*
     template<typename MAPPED_FILE>
     struct file_scan_result;
-		*/
+    */
     template<typename MAPPED_FILE>
     class pe_file_policy;
 
@@ -84,7 +85,8 @@ namespace policy
 
             std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
             scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
-                    std::vector<MAPPED_FILE *> *mapped_file_vec);
+                    std::vector<MAPPED_FILE *> *mapped_file_vec,
+                    memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> *sig_shm);
 
             template<typename SymbolT, typename StateT>
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
@@ -136,7 +138,9 @@ namespace policy
             *
             * @return
             */
-            virtual bool scan_file_type(std::vector<MAPPED_FILE *> *mapped_file) = 0;
+            virtual bool scan_file_type(std::vector<MAPPED_FILE *> *mapped_file,
+                    memory::signature_shm<struct memory::meta_sig,
+                    struct memory::meta_sig_mem> * sig_shm) = 0;
             /**
             * @brief
             *
@@ -225,33 +229,35 @@ namespace policy
 
             typedef file_policy_selector<FilePolicySetter>  policy;
         public:
-            enum scanning_mode { MULTIPLE_OCL_MODE = 1, MULTIPLE_TBB_MODE = 2, MULTIPLE_OCL_TBB_MODE = 3 };
             // pe type support
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
-            scan_pe(file_scan_policy<MAPPED_FILE> *obj_fconl_policy) {
+            scan_pe(file_scan_policy<MAPPED_FILE> *obj_fconl_policy,
+                    memory::signature_shm<struct memory::meta_sig,
+                    struct memory::meta_sig_mem> * sig_shm) {
 
                 //TODO: test only
-                scan_file_policy::scanning_mode smode = scan_file_policy::MULTIPLE_OCL_MODE;
+                utils::scanning_mode smode = utils::multiple_ocl_mode;
 
                 //Policy multiple scanning file with-OCL
                 switch(smode) {
 
-                case scan_file_policy::MULTIPLE_OCL_MODE : { //multiple scanning on OCL
+                case utils::multiple_ocl_mode : { //multiple scanning on OCL
                     //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_mode");
                     //get data, size mapped_file for API system.
                     std::vector<MAPPED_FILE *> *mapped_file_vec = obj_fconl_policy->get_mapped_file();
                     //Send ot Multiple file OCL mode.
-                    std::cout<<"file_scan_policy::scan_pe : " << mapped_file_vec->size() <<std::endl;
-                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy, mapped_file_vec);
+                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy, 
+														mapped_file_vec, 
+														sig_shm);
                 }
 
-                case scan_file_policy::MULTIPLE_TBB_MODE : { //multiple scanning on TBB
+                case utils::multiple_tbb_mode : { //multiple scanning on TBB
                     //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_tbb_mode");
 
                     return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
                 }
 
-                case scan_file_policy::MULTIPLE_OCL_TBB_MODE : { //Priority OCL before TBB mode.
+                case utils::multiple_ocl_tbb_mode : { //Priority OCL before TBB mode.
                     //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_tbb_mode");
 
                     return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
@@ -289,7 +295,9 @@ namespace policy
             // : Cannot use virtual from file_scan_policy abstract base
             virtual bool scan_file_type(MAPPED_FILE *mapped_file);
 
-            virtual bool scan_file_type(std::vector<MAPPED_FILE *> *mapped_file);
+            virtual bool scan_file_type(std::vector<MAPPED_FILE *> *mapped_file,
+                    memory::signature_shm<struct memory::meta_sig,
+                    struct memory::meta_sig_mem> * sig_shm);
 
             /**
             * @brief

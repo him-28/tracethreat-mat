@@ -40,7 +40,6 @@ namespace memory
 
     namespace boostinp = boost::interprocess;
     namespace bmi  = boost::multi_index;
-    namespace h_util = hnmav_util;
 
 
     typedef  boost::interprocess::managed_shared_memory::allocator<char>::type   char_allocator;
