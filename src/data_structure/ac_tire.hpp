@@ -103,7 +103,9 @@ namespace data_structure
 
                     {
                         //printf("-- Callback --\n");
-                        //printf("-- callback, state_ : %lu \n", state_);
+                        printf("-- callback, state_ : %lu \n", state_);
+												printf("--- Output size     : %d \n", output_.size());
+
                         std::set<std::size_t> const& out_node = output_[state_];
                         typename std::set<size_t>::const_iterator output_it;
 

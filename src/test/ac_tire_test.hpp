@@ -49,7 +49,8 @@ class InitDataAc : public ::testing::Test
 
         virtual void SetUp() {
             //td[0].keywords = boost::assign::list_of("4bc647")("537db2e3a337");
-						td[0].keywords = boost::assign::list_of("09cd21b80")("09cd21b44ce1aea");
+						td[0].keywords = {"09cd21b80", "09cd21b44ce1aea" };
+//boost::assign::list_of("09cd21b80")("09cd21b44ce1aea");
             td[0].input    = "a82a3f7daca1e4bc647c46d0dd553e637b06cc23547783ff91813";
 /*
             td[1].keywords = boost::assign::list_of("4bc647")("537db2e3a337");
