@@ -21,6 +21,38 @@ namespace utils
         bool     infected_status;
     };
 
+    /**
+    * @brief Meta signature support internal shared_memory(Plan-00004).
+    * In Plan-00003 programs use for create signature node for TBBand verfify signature on OCL scanning.
+    *
+    */
+    struct meta_sig {
+        //support OCL and TBB
+        const char *sig;   // signature full.
+        const char *virname;  // virus name
+        const char *file_name;  // result file name
+
+        //support OCL
+        uint8_t  sig_type; // MD5, SHA-1, SHA-256
+        uint64_t offset; // offset start search virus
+        const char *sig_detail;  // Declare detail of virus
+
+        //support tbb
+        char         keyword_str; //Keyword per node.
+        uint32_t     sig_size;
+        uint64_t       index_start;
+        std::size_t    state;
+
+        meta_sig():
+            sig_type(0),
+            offset(0),
+            sig(""),
+            virname(""),
+            sig_detail("") { }
+
+    };
+
+
     // Set result in struct before send to connector class.
     /**
     * @brief Result after matched on OCL and TBB module.
@@ -35,16 +67,27 @@ namespace utils
         /**
         * @brief
         */
-        size_t       file_size;
+        size_t     file_size;
 
         /**
-        * @brief
+        * @brief Start Index found infected file.
         */
         size_t index_start;
-        size_t index_end;                                                               
 
-        char *vir_name;  // support TBB
-        char *keywords;  // keyword  TBB
+        /**
+        * @brief End index found infected file.
+        */
+        size_t index_end;
+
+        /**
+        * @brief Virus name after found on node_str.
+        */
+        const char *vir_name;  // support TBB
+
+        /**
+        * @brief Signature found.(Key of db_name : )
+        */
+        const char *sig_node;  // keyword  TBB
     };
 
 }

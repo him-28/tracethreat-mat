@@ -35,31 +35,20 @@
 #include <functional>
 #include <boost/functional/hash.hpp>
 
+
+#include "utils/base/common.hpp"
+
 namespace memory
 {
 
     namespace boostinp = boost::interprocess;
     namespace bmi  = boost::multi_index;
-
+		
+		using utils::meta_sig;
 
     typedef  boost::interprocess::managed_shared_memory::allocator<char>::type   char_allocator;
     typedef  boost::interprocess::basic_string<char, std::char_traits<char>, char_allocator>  shm_string;
-
-    struct meta_sig {
-        uint8_t  sig_type; // MD5, SHA-1, SHA-256
-        uint64_t offset; // offset start search virus
-        const char *sig;   // signature
-        const char *vir_name;  // virus name
-        const char *sig_detail;  // Declare detail of virus
-			  meta_sig(): 
-					sig_type(0), 
-					offset(0), 
-					sig(""), 
-					vir_name(""), 
-					sig_detail(""){ }
-
-    };
-
+ 
 
     struct meta_sig_mem {
 
@@ -126,7 +115,7 @@ namespace memory
             //support OCL multiple length find in binary_vec.
             virtual SignatureTypeMemory  verify_signature(const uint8_t sig_type,
                     const char start_symbol,
-									  uint64_t   start_pos_symbol,
+                    uint64_t   start_pos_symbol,
                     std::vector<char> *binary_vec,
                     std::vector<char> *symbol_vec) = 0;
 

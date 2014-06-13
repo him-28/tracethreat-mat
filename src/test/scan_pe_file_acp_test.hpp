@@ -1,10 +1,16 @@
 #include "utils/file_offset_handler.hpp"
 #include "scan/file_scan_policy.hpp"
+
 #include "data_structure/actire_parallel.hpp"
 #include "data_structure/ac_tire.hpp"
+
 #include "filetypes/pe_file_controller.hpp"
+
 #include "memory/signature_shm_base.hpp"
 #include "memory/signature_shm_controller.hpp"
+
+
+#include "utils/base/common.hpp"
 
 #define FILE_ON 4
 #define VIRUS_SIG  1
@@ -52,12 +58,12 @@ class ScanACTireParallel : public ::testing::Test
 
             //support signature base scanning.
             //load binary file pe.
-            struct memory::meta_sig *msig;
+            struct utils::meta_sig *msig;
             msig = &meta_sig_def[0];
             msig->sig_type = utils::pe_file;
             msig->offset   = 140;
             msig->sig      = "09cd21b8014ccd215468\0";
-            msig->vir_name = "Trojan-Case-01\0";
+            msig->virname = "Trojan-Case-01\0";
             msig->sig_detail = "Trojan for testing-01.\0";
             meta_sig_vec.push_back(&meta_sig_def[0]);
 
@@ -73,9 +79,9 @@ class ScanACTireParallel : public ::testing::Test
         std::string  opencl_file_path;
 
         //support shm pe
-        struct memory::meta_sig meta_sig_def[VIRUS_SIG];
-        std::vector<struct memory::meta_sig *>  meta_sig_vec;
-        memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>
+        struct utils::meta_sig meta_sig_def[VIRUS_SIG];
+        std::vector<struct utils::meta_sig *>  meta_sig_vec;
+        memory::signature_shm_pe_controller<struct utils::meta_sig, struct memory::meta_sig_mem>
                     sig_shm_pe;
 
 };

@@ -95,6 +95,8 @@ namespace filetypes
                     std::vector<boost::unordered_map<char, size_t> > >
                     >	 load_ocl_system_type;
 
+					  typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> 
+								signature_shm_type;
 
             pe_file_controller();
             /**
@@ -198,7 +200,13 @@ namespace filetypes
                     std::vector<size_t> *state_vec,
                     std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
                     std::string *kernel_file_path_ptr,
-										memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> * sig_shm);
+										signature_shm_type * sig_shm);
+
+
+						/*
+						utils::scan_file_code scan(std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
+										signature_shm_type * sig_shm);
+						*/
 
             /**
             * @brief Buffer return to external class

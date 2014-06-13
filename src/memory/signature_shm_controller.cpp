@@ -162,7 +162,7 @@ namespace memory
 								logger->write_info("------------------Result Scanning---------------------------");				
 
                 logger->write_info("signature_shm_pe_controller::filter_sigtype, found virus sig",
-                        boost::lexical_cast<std::string>(signature_ret_ptr->vir_name));
+                        boost::lexical_cast<std::string>(signature_ret_ptr->virname));
                 logger->write_info("signature_shm_pe_controller::filter_sigtype, virus signature",
                         boost::lexical_cast<std::string>(signature_ret_ptr->sig));
 
@@ -226,7 +226,7 @@ namespace memory
             if(sig_ret != sig_map.end()) {
                 signature_ret_ptr = sig_ret->second;
                 logger->write_info_test("signature_shm_pe_controller::filter_sigtype, found virus sig",
-                        boost::lexical_cast<std::string>(signature_ret_ptr->vir_name));
+                        boost::lexical_cast<std::string>(signature_ret_ptr->virname));
                 logger->write_info_test("signature_shm_pe_controller::filter_sigtype, virus signature",
                         boost::lexical_cast<std::string>(signature_ret_ptr->sig));
                 logger->write_info("signature_shm_pe_controller::filter_sigtype, Completed processes");
@@ -271,9 +271,9 @@ namespace memory
 
     }
 
-    template class signature_shm_controller<struct meta_sig, struct meta_sig_mem>;
+    template class signature_shm_controller<struct utils::meta_sig, struct meta_sig_mem>;
 
-    template class signature_shm_pe_controller<struct meta_sig, struct meta_sig_mem>;
+    template class signature_shm_pe_controller<struct utils::meta_sig, struct meta_sig_mem>;
 
 
 }
