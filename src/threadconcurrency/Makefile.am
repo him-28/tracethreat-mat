@@ -17,12 +17,10 @@ mutex_controller.hpp \
 util_thread.hpp \
 timer_controller.hpp \
 cliprescan_pe_task.hpp \
-cliprescan_pe_controller.hpp
-
-#cliprescan_pe_controller.hpp
-#$(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.h \
-#$(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.h \
-#$(top_builddir)/src/clibasewrapper/cliwrapper/global_wrapper.h
+cliprescan_pe_controller.hpp \
+buffer_sync_tbb.hpp \
+tbbpostscan_pe_task.hpp \
+tbbpostscan_pe_controller.hpp
 
 
 
@@ -34,12 +32,7 @@ mutex_controller.cpp \
 util_thread.cpp \
 timer_controller.cpp \
 cliprescan_pe_task.cpp \
-cliprescan_pe_controller.cpp
-
-#cliprescan_pe_controller.cpp
-
-#$(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.cpp \
-#$(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp
-
-
-#libthreadconcurrency_a_LIBADD = $(top_builddir)/src/clibasewrapper/libclibasewrapper.a $(AM_LDFLAGS)
+cliprescan_pe_controller.cpp \
+buffer_sync_tbb.cpp \
+tbbpostscan_pe_task.cpp \
+tbbpostscan_pe_controller.cpp

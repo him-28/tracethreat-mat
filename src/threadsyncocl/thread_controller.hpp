@@ -164,9 +164,8 @@ namespace controller
             BufferSync *buffer_sync_;
             mutex_buffer<Mutex> *mutex_buff_;
 						
-						//memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> *sig_shm_;
 						signature_shm_type * sig_shm_;
-            //id processes_id_register for thread
+            //file md5 per thread.
             struct slot_ocl *s_ocl;
             struct data_ocl_process<MAPPED_FILE> *d_ocl_processes;
 

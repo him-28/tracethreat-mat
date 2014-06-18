@@ -131,7 +131,7 @@ namespace utils
                     }
 				
 								mapped_file_ptr->file_name += s_file_name;
-								mapped_file_ptr->file_sig  += s_file_sig;
+								mapped_file_ptr->file_sig  += std::string(file_sig);// s_file_sig;
 
 								std::cout<<"file_offset_handler::mapped_file " << mapped_file_ptr->file_name <<std::endl;
 

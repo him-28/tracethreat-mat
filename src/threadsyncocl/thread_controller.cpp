@@ -20,42 +20,9 @@
 
 
 #include "threadsyncocl/thread_controller.hpp"
-//#include "utils/file_calculate.hpp"
 
 namespace controller
 {
-    /*
-    template<typename BufferSync>
-    void thread_controller<BufferSync>::get_data()
-    {
-    //	logger->write_info("thread_controller, get_data()");
-    }
-    */
-
-    /*
-    template<typename BufferSync>
-    thread_controller<BufferSync>::thread_controller()
-    {
-    }
-    */
-
-
-    // Explicitly instance
-    //template class thread_controller<int>;
-    //template class thread_controller<BufferSync<char, MAPPED_FILE_PE> >;
-
-
-    /* todo: For testing with runnable, Subclass extend to runnable.
-        template<typename BufferSync>
-        thread<BufferSync>::thread(boost::shared_ptr<runnable> r, bool detached)
-            : runnable_(r), detached_(detached)
-        {
-            if(!runnable_.get()) {
-                logger->write_info(" Thread is detached ");
-                exit(-1);
-            }
-        }
-    */
 
 
     template<typename BufferSync>
@@ -63,23 +30,11 @@ namespace controller
         : runnable_(boost::shared_ptr<runnable>()), detached_(detached)
     {
         //logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
-        logger = logger_ptr->get();
+        //logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        //logger = logger_ptr->get();
         //logger->write_info("Thread, Thread init/ not start ", h_util::format_type::type_header);
     }
 
-
-    /*
-    template<typename BufferSync>
-    thread<BufferSync>::thread()
-    : runnable_(boost::shared_ptr<runnable>())
-    {
-    //logger
-    logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
-    logger = logger_ptr->get();
-    logger->write_info("Thread, Thread init/ not start ", h_util::format_type::type_header);
-    }
-    */
 
     template<typename BufferSync>
     void *thread<BufferSync>::start_thread_runnable(void *p_void)
@@ -220,8 +175,8 @@ namespace controller
 
             BufferSync *buff_sync = buffer_sync_;
             struct data_ocl_process<MAPPED_FILE> *docl_processes = buff_sync->buff;
-            struct data_ocl_process<MAPPED_FILE>::map_thread_id_type  map_tid =
-                            docl_processes->map_tidslot_ocl;
+            struct data_ocl_process<MAPPED_FILE>::map_md5_type  map_tid =
+                            docl_processes->map_fmd5_slot_ocl;
 
             std::map<uint64_t, struct slot_ocl *>::iterator iter_tid;
             iter_tid =  map_tid.find(my_id);
@@ -232,8 +187,6 @@ namespace controller
             logger->write_info("comm_thread_buffer::run(), MD5_Specific Thread",
                     boost::lexical_cast<std::string>(my_id));
 
-            //uint64_t found_size;
-            //uint8_t  summary_status;
 
             if(iter_tid != map_tid.end()) {
                 std::pair<uint64_t, struct slot_ocl *>  pair_tid = *iter_tid;
@@ -335,8 +288,8 @@ namespace controller
 
             BufferSync *buff_sync = buffer_sync_;
             struct data_ocl_process<MAPPED_FILE> *docl_processes = buff_sync->buff;
-            struct data_ocl_process<MAPPED_FILE>::map_thread_id_type  map_tid =
-                            docl_processes->map_tidslot_ocl;
+            struct data_ocl_process<MAPPED_FILE>::map_md5_type  map_tid =
+                            docl_processes->map_fmd5_slot_ocl;
 
             std::map<uint64_t, struct slot_ocl *>::iterator iter_tid;
 

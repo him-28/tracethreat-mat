@@ -98,7 +98,7 @@ namespace memory
                     boost::lexical_cast<std::string>(sig_mem->sig));
 
             sig_map.insert(std::make_pair(*sig_mem->sig, sig_mem));
-
+						sig_vec.push_back(sig_mem);
         }
 
         logger->write_info("signature_shm_pe_controller::filter_sigtype, Start filtering process");
@@ -267,8 +267,7 @@ namespace memory
     std::vector<SignatureTypeMemory *>& signature_shm_pe_controller<SignatureTypeMemory, SignatureInternal>::
     get_signature()
     {
-
-
+				return sig_vec;
     }
 
     template class signature_shm_controller<struct utils::meta_sig, struct meta_sig_mem>;

@@ -25,8 +25,8 @@ class CliPreScanPeTask : public ::testing::Test
 
 TEST_F(CliPreScanPeTask, task_pe)
 {
-            char *file_scanpath = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_int.exe";
-            char *file_sigdb = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
+    char *file_scanpath = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_int.exe";
+    char *file_sigdb = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
 
 
     monitor_controller monitor;

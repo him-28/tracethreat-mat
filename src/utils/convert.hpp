@@ -20,16 +20,19 @@
  */
 
 //BOOST
-#include<boost/lexical_cast.hpp>
+#include <boost/lexical_cast.hpp>
 //STL
 #include <iostream>
 #include <stdexcept>
+
+#include "utils/base/system_code.hpp"
+
 namespace utils
 {
 
     namespace convert
     {
-
+				
         //hexString.c : opensource.apple.com
         //File convert uint8_t byte to hex char pointer.
         static char byte_map[] = { '0', '1', '2', '3', '4', '5', '6',
@@ -78,15 +81,16 @@ namespace utils
 
         //TDebugProtocol is byte to hex.
         //single convert byte to char
-         static std::string byte2hex(const uint8_t byte)
-         {
-             char buff[3];
-             int ret = std::sprintf(buff, "%02x", (int)byte);
-             assert(ret == 2);
-             assert(buff[2] == '\0');
-             return buff;
-         }
-        		 
+        static std::string byte2hex(const uint8_t byte)
+        {
+            char buff[3];
+            int ret = std::sprintf(buff, "%02x", (int)byte);
+            assert(ret == 2);
+            assert(buff[2] == '\0');
+            return buff;
+        }
+
+
     }
 
 }

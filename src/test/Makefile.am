@@ -1,7 +1,4 @@
 AM_CXXFLAGS = -g -I$(top_srcdir)/src -I/src/threadsyncocl -std=c++0x @AM_CXXFLAGS@
-# -I/src/clibasewrapper 
-# -I/src/utils -I/src/rules -I/src/filetypes \
-# -I/src/scan -I/src/ocl -I/src/exception -I/src/data_structure  @AM_CXXFLAGS@
 
 TEST = test_suite
 
@@ -9,22 +6,6 @@ check_PROGRAMS = test_suite
 
 test_suite_SOURCES = semaphore_controller_test.cpp \
 environment_test.hpp
-#thread_controller.hpp \
-#file_calculate.hpp \
-#thread_exception.hpp \
-#thread_barrier_controller.hpp \
-#ac_tire.hpp \
-#actire_parallel.hpp \
-#file_handler.hpp \
-#file_offset_handler.hpp \
-#datastructure_exception.hpp \
-#libclamav/clamav.h \
-#shared/optparser.h
-
-#cl_bootstrap.hpp
-
-#pe_file_controller_test.hpp \
-#file_policy_test.hpp 
 
 test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsyncocl \
  -lthreadsyncocl -lgtest -lgtest_main -ltbb_debug -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \

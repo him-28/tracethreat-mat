@@ -36,7 +36,7 @@ class SignatureShmTest : public ::testing::Test
 
         virtual void SetUp() {
             //load binary file pe.
-            struct memory::meta_sig *msig;
+            struct utils::meta_sig *msig;
             msig = &meta_sig_def[0];
             msig->sig_type = utils::pe_file;
             msig->offset   = 140;
@@ -75,9 +75,9 @@ class SignatureShmTest : public ::testing::Test
         std::vector<char> binary_vec;
         std::vector<char> symbol_vec;
         //support intial filter
-        struct memory::meta_sig meta_sig_def[VIRUS_SIG];
-        std::vector<struct memory::meta_sig *>  meta_sig_vec;
-        memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>
+        struct utils::meta_sig meta_sig_def[VIRUS_SIG];
+        std::vector<struct utils::meta_sig *>  meta_sig_vec;
+        memory::signature_shm_pe_controller<struct utils::meta_sig, struct memory::meta_sig_mem>
                     sig_shm_pe;
 
 };
@@ -88,17 +88,17 @@ TEST_F(SignatureShmTest, signature_shm_pe_controller)
     std::string shm_name  = "shm-pe";
 
     sig_shm_pe.initial_shm_sigtype(&meta_sig_vec, shm_name);
-    struct memory::meta_sig msig_ret = 
+    struct utils::meta_sig msig_ret = 
 				sig_shm_pe.verify_signature(sig_type, start_symbol, start_pos_symbol, &binary_vec, &symbol_vec);
 	  EXPECT_EQ("a8e2bb0812ab2344b1b1e9db09", std::string(msig_ret.sig));
 		
-    //typename std::vector<<struct memory::meta_sig *>::const_iterator iter_sig_vec;
+    //typename std::vector<<struct utils::meta_sig *>::const_iterator iter_sig_vec;
     /*
     for(iter_sig_vec = meta_sig_vec.begin();
     		iter_sig_vec != meta_sig_vec.end();
     		++iter_sig_vec)
     {
-    struct memory::meta_sig msg  = meta_sig_vec
+    struct utils::meta_sig msg  = meta_sig_vec
     sig_shm_pe.verify_signature(msg->sig_type,"0",1,&binary_vec, &symbol_vec);
     }
     */

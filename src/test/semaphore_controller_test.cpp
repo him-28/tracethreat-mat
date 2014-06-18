@@ -33,7 +33,11 @@
 
 // Ac_tire_test & actire_concurrency_test for thread building block concurrency.
 //#include "test/ac_tire_test.hpp"
-#include "test/actire_concurrency_test.hpp"
+//#include "test/actire_concurrency_test.hpp"
+
+// AC Engine TBB
+#include "test/tbbpostscan_pe_controller_test.hpp"
+
 
 //#include "test/actire_parallel_test.hpp"
 /*

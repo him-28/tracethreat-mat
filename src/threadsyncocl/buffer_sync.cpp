@@ -26,7 +26,6 @@ namespace controller
     {
 
         this->buff = new Buffer;
-        this->sig_processes     = new data_sig_process;
 
     }
 
@@ -64,7 +63,7 @@ namespace controller
             }
         }
 
-        for(typename Buffer::size_int size_count =  0; size_count < size_buff; size_count++) {
+        for(uint8_t size_count =  0; size_count < size_buff; size_count++) {
             buffersync_ptr[size_count] = buffr[size_count];
         }
 
@@ -80,29 +79,29 @@ namespace controller
     }
 
     template<typename Buffer, typename MAPPED_FILE>
-    bool BufferSync<Buffer, MAPPED_FILE>::write_binary_hex(const char *char_hex,
+    bool BufferSync<Buffer, MAPPED_FILE>::write_binary_hex_ocl(const char *char_hex,
             uint64_t size_hex,
-            uint64_t thread_id)
+            uint64_t fmd5_id)
     {
         //check binary length
 
-        std::map<uint64_t,struct slot_ocl *>   *map_thread_id =
-                        &buff->data_ocl_process<MAPPED_FILE>::map_tidslot_ocl;
+        std::map<uint64_t,struct slot_ocl *>   *map_fmd5_id =
+                        &buff->data_ocl_process<MAPPED_FILE>::map_fmd5_slot_ocl;
 
-        typename data_ocl_process<MAPPED_FILE>::map_thread_id_type::iterator iter_maptid;
+        typename data_ocl_process<MAPPED_FILE>::map_md5_type::iterator iter_maptid;
 
         uint64_t temp_start = 0;
 
         struct slot_ocl *s_ocl;
 
-        for(iter_maptid = map_thread_id->begin(); iter_maptid != map_thread_id->end(); ++iter_maptid) {
+        for(iter_maptid = map_fmd5_id->begin(); iter_maptid != map_fmd5_id->end(); ++iter_maptid) {
             std::pair<uint64_t, struct slot_ocl *> pair_s_ocl = *iter_maptid;
             s_ocl = pair_s_ocl.second;
 
             if(temp_start < s_ocl->end_point) {
                 temp_start = s_ocl->end_point;
 
-                logger->write_info("BufferSync::write_binary_hex(), Temp start point ",
+                logger->write_info("BufferSync::write_binary_hex_ocl(), Temp start point ",
                         boost::lexical_cast<std::string>(temp_start));
             }
 
@@ -117,10 +116,10 @@ namespace controller
 
 
         // find thread_id and insert lenght, start_point and end_point
-        iter_maptid = map_thread_id->find(thread_id);
+        iter_maptid = map_fmd5_id->find(fmd5_id);
 
         // insert lenght of binary hex char to s_ocl that it's contains in value of map.
-        if(iter_maptid != map_thread_id->end()) {
+        if(iter_maptid != map_fmd5_id->end()) {
             std::pair<uint64_t, struct slot_ocl *> pair_s_ocl = *iter_maptid;
             s_ocl  = pair_s_ocl.second;
 
@@ -134,26 +133,24 @@ namespace controller
         return false;
     }
 
-    //}
+
 
 
     template<typename Buffer, typename MAPPED_FILE>
-    bool BufferSync<Buffer, MAPPED_FILE>::threadbuff_regis(uint64_t thread_id)
+    bool BufferSync<Buffer, MAPPED_FILE>::filemd5_regis_ocl(uint64_t fmd5_id)
     {
         // file_name_md5 is thread_id
-        //map_thread_id_type
-        std::map<uint64_t,struct slot_ocl *> *map_thread_id =
-                        &buff->data_ocl_process<MAPPED_FILE>::map_tidslot_ocl;
-        //map_thread_id_type
+        std::map<uint64_t,struct slot_ocl *> *map_fmd5_id =
+                        &buff->data_ocl_process<MAPPED_FILE>::map_fmd5_slot_ocl;
 
         std::pair<int, struct slot_ocl *> pair_slot;
 
-        pair_slot.first  = thread_id;
+        pair_slot.first  = fmd5_id;
         struct slot_ocl   *s_ocl =  pair_slot.second;
         s_ocl = new struct slot_ocl;
-        s_ocl->processes_id_register = thread_id;
+        s_ocl->file_map_md5          = fmd5_id;
 
-        if(!map_thread_id->insert(std::make_pair(thread_id, s_ocl)).second) {
+        if(!map_fmd5_id->insert(std::make_pair(fmd5_id, s_ocl)).second) {
             //TODO: thread_id(file_name_md5) has on map
             return false;
         }
@@ -176,6 +173,7 @@ namespace controller
         return res;
     }
 
+
     template<typename Buffer, typename MAPPED_FILE>
     bool BufferSync<Buffer, MAPPED_FILE>::setbuff_ocl(const char *char_hex,
             uint64_t size_hex)
@@ -192,6 +190,9 @@ namespace controller
 
         return true;
     }
+
+
+
 
     template<typename Buffer, typename MAPPED_FILE>
     bool BufferSync<Buffer, MAPPED_FILE>::set_size_summary(uint64_t size_summary)
@@ -210,8 +211,6 @@ namespace controller
     BufferSync<Buffer, MAPPED_FILE>::~BufferSync()
     {
 
-        delete sig_processes->sig_name;
-        delete sig_processes;
         delete buff;
 
     }

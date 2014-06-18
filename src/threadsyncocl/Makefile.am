@@ -29,6 +29,9 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/threadconcurrency/posixthread_factory.hpp \
  $(top_builddir)/src/threadconcurrency/cliprescan_pe_task.hpp \
  $(top_builddir)/src/threadconcurrency/cliprescan_pe_controller.hpp \
+ $(top_builddir)/src/threadconcurrency/tbbpostscan_pe_task.hpp \
+ $(top_builddir)/src/threadconcurrency/tbbpostscan_pe_controller.hpp \
+ $(top_builddir)/src/threadconcurrency/buffer_sync_tbb.hpp \
  $(top_builddir)/src/threadconcurrency/mutex_controller.hpp \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.h \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.h \
@@ -55,6 +58,9 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/threadconcurrency/posixthread_factory.cpp \
   $(top_builddir)/src/threadconcurrency/cliprescan_pe_task.cpp \
   $(top_builddir)/src/threadconcurrency/cliprescan_pe_controller.cpp \
+  $(top_builddir)/src/threadconcurrency/tbbpostscan_pe_task.cpp \
+  $(top_builddir)/src/threadconcurrency/tbbpostscan_pe_controller.cpp \
+  $(top_builddir)/src/threadconcurrency/buffer_sync_tbb.cpp \
   $(top_builddir)/src/threadconcurrency/mutex_controller.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp \

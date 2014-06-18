@@ -11,8 +11,17 @@
 #include "utils/base/stdint_msvc.hpp" //VCpp supported header.
 #endif
 
+#include <boost/unordered_map.hpp>
+#include <boost/assign/list_of.hpp>
+
+#include "utils/base/system_code.hpp"
+
+
 namespace utils
 {
+
+		using boost::assign::map_list_of;
+
     /**
     * @brief Plugins for cirtical file scanning.
     */
@@ -89,6 +98,18 @@ namespace utils
         */
         const char *sig_node;  // keyword  TBB
     };
+
+
+
+
+    typedef boost::unordered_map<utils::filetype_code, std::string>  filetype_code_type;
+    static	const std::string  filetype_code_map(utils::filetype_code ftype_code)
+    {
+        const filetype_code_type  filetype_engine_def  =
+                boost::assign::map_list_of(utils::pe_file,"pe_actire_engine")
+                (utils::elf_file, "elf_actire_engine");
+        return filetype_engine_def.at(ftype_code);
+    }
 
 }
 

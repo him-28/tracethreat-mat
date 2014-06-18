@@ -50,7 +50,7 @@ class ScanACTireParallel : public ::testing::Test
             file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.hdb";
 
             for(int count_file = 0; count_file < 	FILE_ON; count_file++) {
-                list_file_type.push_back(file_name_offset[count_file].c_str());
+                file_type_vec.push_back(file_name_offset[count_file].c_str());
 
                 mapped_file_vec.push_back(&s_mapped_fpe[count_file]);
 
@@ -71,7 +71,7 @@ class ScanACTireParallel : public ::testing::Test
 
 
         //read file.
-        std::vector<const char *> list_file_type;
+        std::vector<const char *> file_type_vec;
         struct MAPPED_FILE_PE s_mapped_fpe[FILE_ON];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
         const char *file_sig;
@@ -134,12 +134,9 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     // Second, Send Symbol and State vector to  file_scan_policy
     // list_file_tye insert file name, s_mapped_fpe inserted  file_type details.
     utils::file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
-    EXPECT_TRUE(fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h, file_sig));
 
-    for(int count = 0; count < 2; count++) {
-        struct MAPPED_FILE_PE *smf = mapped_file_vec[count];
-        std::cout<<" SMF : " << smf->file_name <<std::endl;
-    }
+    EXPECT_TRUE(fileoffset_h.mapped_file(file_type_vec, mapped_file_vec, fileoffset_h, file_sig));
+
 
     boost::shared_ptr<std::vector<MAPPED_FILE_PE * > > mappedf_vec_ptr =
             fileoffset_h.get_mappedf_vec_ptr();

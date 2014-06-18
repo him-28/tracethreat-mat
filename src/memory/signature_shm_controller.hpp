@@ -120,12 +120,15 @@ namespace memory
 
 
 
-            std::vector<SignatureTypeMemory *>& get_signature();
+            std::vector<SignatureTypeMemory *>& get_signature();//{ return sig_vec; };
         private:
 
             //signature unordered map
             sigtype_map  sig_map;
             SignatureTypeMemory *signature_ret_ptr;
+						//signature in vector.
+						std::vector<SignatureTypeMemory *>  sig_vec;
+
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

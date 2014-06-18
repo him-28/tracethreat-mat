@@ -3,6 +3,8 @@
 
 #include <set>
 
+#include "threadconcurrency/buffer_sync_tbb.hpp"
+
 #include "threadconcurrency/monitor_controller.hpp"
 #include "threadconcurrency/cliprescan_pe_task.hpp"
 
@@ -36,6 +38,8 @@ namespace controller
             std::set<boost::shared_ptr<cliprescan_pe_task> > tasks_scan_pe;
             //monitoring controller
             monitor_controller monitor;
+
+
 						//logger
             //boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             //h_util::clutil_logging<std::string, int>    *logger;

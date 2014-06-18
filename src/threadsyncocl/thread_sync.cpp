@@ -91,8 +91,8 @@ namespace controller
             // for processing buff_sync_internal.
             const uint64_t file_name_md5 = pair_int_str.first;
 
-            //initial data for thread per struct name slot_ocl
-            buff_sync_internal->threadbuff_regis(file_name_md5);
+            //initial data for file md5 name per struct name slot_ocl
+            buff_sync_internal->filemd5_regis_ocl(file_name_md5);
 
             std::pair<const uint64_t, size_t>  pair_file_size = *map_file_size->find(file_name_md5);
 
@@ -104,7 +104,7 @@ namespace controller
             //insert binary hex data to vector
             //shm size : binarystr_shm->size() 
 
-            if(buff_sync_internal->write_binary_hex(binarystr_shm->c_str(),
+            if(buff_sync_internal->write_binary_hex_ocl(binarystr_shm->c_str(),
                     size_hex,
                     file_name_md5)) {
                 //TODO: problem before return
