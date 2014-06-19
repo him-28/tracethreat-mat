@@ -4,7 +4,7 @@
 namespace controller
 {
 
-	
+		/*
     template<typename MAPPED_FILE, typename SignatureTypeMemory>
     tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
     tbbpostscan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout):
@@ -25,7 +25,7 @@ namespace controller
         binary_hex_input_ = _binary_hex_input;
         return true;
     }
-		/*
+		
 
     template<typename MAPPED_FILE, typename SignatureTypeMemory>
     bool tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::

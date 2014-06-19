@@ -36,9 +36,9 @@ namespace controller
             typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
                         signature_shm_type;
 
-            typedef tbbscan::actire_engine_concurrency<char, true>  actire_engine_type;
+            //typedef tbbscan::actire_engine_concurrency<char, true>  actire_engine_type;
 
-            typedef tbbscan::iactire_concurrency<char, true> iactire_concur_type;
+            //typedef tbbscan::iactire_concurrency<char, true> iactire_concur_type;
 
 						typedef tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory> tbbpostscan_pe_task_type;
 
@@ -53,17 +53,18 @@ namespace controller
                     std::vector<MAPPED_FILE *>         *mapped_file_vec);
 
             //add signature engine.
-            bool add_sig_engine(actire_engine_type *_actire_engine);
+            //bool add_sig_engine(actire_engine_type *_actire_engine);
+            
             //add search engine. Searching from signature engine.
-            bool add_search_engine(iactire_concur_type    *_iactire_concur);
+            //bool add_search_engine(iactire_concur_type    *_iactire_concur);
 
             //run multiple file scanning this member function.
-            bool task_start();
+            //bool task_start();
 
         private:
             //pe engine scanning
-            actire_engine_type *  actire_engine_;
-            iactire_concur_type * iactire_concur_;
+            //actire_engine_type *  actire_engine_;
+            //iactire_concur_type * iactire_concur_;
 					  //buff_sync_tbb_type  * buff_sync_internal;
 			
 						buffer_sync_type *buff_sync_internal;
@@ -73,11 +74,11 @@ namespace controller
 
             int64_t  timeout_;
 
-            std::set<boost::shared_ptr<tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory > > >
-            tasks_tbbscan_pe;
+            //std::set<boost::shared_ptr<tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory > > >
+            //tasks_tbbscan_pe;
 
-						tbbpostscan_pe_task<MAPPED_FILE_PE, utils::meta_sig> * tbbscan_pe_task;
-            monitor_controller  monitor;
+						//tbbpostscan_pe_task<MAPPED_FILE_PE, utils::meta_sig> * tbbscan_pe_task;
+            //monitor_controller  monitor;
 
 						//logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;

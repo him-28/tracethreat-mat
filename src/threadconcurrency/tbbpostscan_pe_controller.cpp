@@ -14,7 +14,7 @@ namespace controller
 
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, Start Load data to task");
         std::vector<std::string>  sig_key_vec;
-        struct tbbscan::results_callback<std::vector<std::string> >  res_callback(sig_key_vec);
+        //struct tbbscan::results_callback<std::vector<std::string> >  res_callback(sig_key_vec);
         //typename tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::res_callback_type res_callback;
         //[x] Get all data from mapped_file_vec for invoke file_name in order hash data.
         //[x]  Insert binary from File-SHM to write_binary_hex is contains all binary hex file.
@@ -90,10 +90,10 @@ namespace controller
 
 						//tbbpostscan_pe_task<MAPPED_FILE_PE, utils::meta_sig>  
 						//		 tbbscan_pe_task(monitor, task_count, timeout_);
-						
-            tbbscan_pe_task =
+					/*					
+	            tbbscan_pe_task =
                     new tbbpostscan_pe_task<MAPPED_FILE_PE, utils::meta_sig>(monitor, task_count, timeout_);
-           /*
+           
             tbbscan_pe_task->set_file(&buff_sync_internal->buff->binary_hex);//Binary stream
 					  tbbscan_pe_task->set_file_name(s_tbb->file_name.c_str()); // file name.
 						tbbscan_pe_task->set_point(start_point, end_point); //position on binary stream for scanning.
@@ -110,7 +110,7 @@ namespace controller
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, End Load data to task");
 
     }
-
+		/*
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
     bool tbbpostscan_pe_controller<BufferSync, MAPPED_FILE, SignatureTypeMemory>::
     add_sig_engine(actire_engine_type *_actire_engine)
@@ -132,7 +132,7 @@ namespace controller
 
 
     }
-
+		*/
     template class tbbpostscan_pe_controller<BufferSyncTBB<struct data_tbb_process<struct MAPPED_FILE_PE>,
              struct MAPPED_FILE_PE>,
              struct MAPPED_FILE_PE,

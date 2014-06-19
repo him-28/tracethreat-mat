@@ -6,9 +6,10 @@
  */
 
 //extern "C" {
-#include "rules/yara.h"
+//#include "rules/yara.h"
 //}
 
+/*
 
 #include "utils/logger/clutil_logger.hpp"
 #include "utils/file_handler.hpp"
@@ -16,10 +17,12 @@
 
 namespace wrapper
 {
+
     namespace h_util = hnmav_util;
 		namespace utility = util;
+*/
     /*   Wrapper class call rules for file signature */
-
+/*
     typedef struct _EXTERNAL {
         char type;
         char  *name;
@@ -72,7 +75,7 @@ namespace wrapper
 						bool wrapper_yr_compiler_get_rules(typename Compiler::compiler_wrapper * compiler, 
 								typename Compiler::rules_wrapper * rules);
 						*/
-
+/*
 						void set_compiler(typename Compiler::compiler_wrapper * compiler){ 
 										this->compiler = compiler;
 						}
@@ -99,6 +102,6 @@ namespace wrapper
     };
 
 }
-
+*/
 
 #endif

@@ -109,9 +109,9 @@ namespace controller
         cli_scanner_wrapper  cli_swrapper;
 
         cli_swrapper.set_filename_path(file_scanpath);
-        ret = cli_swrapper.prepare_scandesc_wrapper(file_sigdb);
-        const char *rec = cli_swrapper.result_code(ret);
-        std::cout<<"Result code : " << rec << "In prescanning." <<std::endl;
+        //ret = cli_swrapper.prepare_scandesc_wrapper(file_sigdb);
+        //const char *rec = cli_swrapper.result_code(ret);
+        //std::cout<<"Result code : " << rec << "In prescanning." <<std::endl;
 
         _startTime = util_thread::current_time();
 

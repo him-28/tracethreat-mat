@@ -27,8 +27,9 @@
 using namespace utils;//   = util;
 using tbbscan::goto_function;
 using tbbscan::failure_function;
-using tbbscan::actire_pe_concurrency;
-using tbbscan::results_callback;
+
+//using tbbscan::actire_pe_engine;
+//using tbbscan::result_callback;
 
 
 class ACTireConcurrency : public ::testing::Test
@@ -44,7 +45,7 @@ class ACTireConcurrency : public ::testing::Test
             std::string sig2 = "09cd21b44ce1aea";
 
             file_name_binary_hex = "trojan_test.exe";
-            char *binary_hex="a500e6b7a4b523235323234ae12b1e8bb";
+            char *binary_hex="a82a3f709cd21b44ce1aeadaca1e4bc647c46d0dd553e637b06cc23547783ff91813";
 
             //"a50009cd21b44ce1aea";
             //binary_hex_input.insert(binary_hex_input.end(), binary_hex, binary_hex + strlen(binary_hex));
@@ -75,7 +76,7 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig_type  = utils::pe_file;
             n_str->sig_size  = sig2.size();
             sig_key_vec.push_back(std::string(n_str->sig));
-
+						
             nstr_vec.push_back(new struct utils::meta_sig);
             n_str = nstr_vec[2];
             n_str->sig  = "235323234ae12b1e8";
@@ -83,7 +84,7 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig_type  = utils::pe_file;
             n_str->sig_size  = sig2.size();
             sig_key_vec.push_back(std::string(n_str->sig));
-
+							
             nstr_vec.push_back(new struct utils::meta_sig);
             n_str = nstr_vec[3];
             n_str->sig  = "2353ab1e119d32c67a23ab3d";
@@ -91,7 +92,7 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig_type  = utils::pe_file;
             n_str->sig_size  = sig2.size();
             sig_key_vec.push_back(std::string(n_str->sig));
-
+						
         }
 
         std::string file_name_binary_hex;
@@ -120,38 +121,40 @@ TEST_F(ACTireConcurrency, goto_function)
 
 
     goto_function<char, tbbscan::tbb_allocator> goto_fn;
-    goto_fn.create_goto(nstr_vec, output_fn);
+    goto_fn.create_goto(&nstr_vec, output_fn);
+
 
     failure_function<char, tbbscan::tbb_allocator> failure_fn(goto_fn);
     failure_fn.create_failure(goto_fn, output_fn);
 
-
-    actire_pe_concurrency<char, tbbscan::tbb_allocator> pe_parallel_search;
-    results_callback<std::vector<std::string> > result(sig_key_vec);
-    pe_parallel_search.search_basic(&goto_fn,
-            &failure_fn,
-            &output_fn,
+		
+    tbbscan::actire_pe_engine<char, tbbscan::tbb_allocator> pe_parallel_search;
+    tbbscan::result_callback<std::vector<std::string> > result(sig_key_vec);
+    pe_parallel_search.search_parallel(goto_fn,
+            failure_fn,
+            output_fn,
             result,
             0,
             binary_hex_input.size(),
             file_name_binary_hex.c_str(),
             &binary_hex_input);
+		
     //pe_parallel_search.search(&goto_fn, &failure_fn, &output_fn, result, &binary_hex_input);
-
+/*
     std::string sigtype_code = utils::filetype_code_map(utils::pe_file);
     tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::register_actire_type(sigtype_code,
             actire_pe_concurrency<char, tbbscan::tbb_allocator>::create);
-
+*/
 }
 
 
 TEST_F(ACTireConcurrency, actire_engine_concurrency)
 {
-
+		
     //create engine support type per signature.
-    tbbscan::actire_engine_concurrency<char, tbbscan::tbb_allocator>  actire_engine;
-    EXPECT_TRUE(actire_engine.create_engine(nstr_vec, utils::pe_file));
-
+    //tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine;
+    //EXPECT_TRUE(sig_engine.create_engine(nstr_vec, utils::pe_file));
+		/*
     actire_pe_concurrency<char, tbbscan::tbb_allocator> pe_parallel_search;
     results_callback<std::vector<std::string> > result(sig_key_vec);
     pe_parallel_search.search_basic(&actire_engine.get_goto_fn(),
@@ -162,5 +165,5 @@ TEST_F(ACTireConcurrency, actire_engine_concurrency)
 						binary_hex_input.size(),
 						file_name_binary_hex.c_str(),
             &binary_hex_input);
-
+		*/
 }

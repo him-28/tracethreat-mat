@@ -92,7 +92,7 @@ namespace data_structure
 
                         while ((next = goto_(state_, input)) == AC_FAIL_STATE) {
 														//printf("search, --- Check Fail ---\n");
-														//printf("search, state send to file_ : %lu \n", state_);
+														printf("Search, state send to fail_ : %lu \n", state_);
                             state_ = fail_(state_);
                             //printf("search, fail_ state_ : %lu  \n", state_);
                         }
@@ -103,14 +103,14 @@ namespace data_structure
 
                     {
                         //printf("-- Callback --\n");
-                        printf("-- callback, state_ : %lu \n", state_);
-												printf("--- Output size     : %d \n", output_.size());
+                        //printf("-- callback, state_ : %lu \n", state_);
+												//printf("--- Output size     : %d \n", output_.size());
 
                         std::set<std::size_t> const& out_node = output_[state_];
                         typename std::set<size_t>::const_iterator output_it;
-
+												printf("Search, Set size : %d \n", out_node.size());
                         for (output_it = out_node.begin(); output_it != out_node.end(); ++output_it) {
-                            //printf("-- callback, position where_ : %lu \n", where_);
+                            printf("-- callback, position where_ : %lu \n", where_);
                             callback(*output_it, where_);
                         }
                     }
@@ -170,18 +170,19 @@ namespace data_structure
 
                         for ( ; kw_iter != kw_end; ++kw_iter) {
                             enter(*kw_iter, newstate);
+														//std::cout<<" Newstate in actire basic : " << newstate <<std::endl;
                             output_f[newstate].insert(kw_index++);
                         }
-											printf("-- goto_function::goto_function, size : %d \n", output_f.size());
+											//printf("-- goto_function::goto_function, size : %d \n", output_f.size());
                     }
 
                     state_t operator()(state_t state, SymbolT const& symbol) const {
                         //assert(state < graph_.size());
                          //printf("--- Check Goto_Function, operater() ---\n");
-                        printf("goto_function, Graph_ in goto_function size : %lu \n", graph_.size());
-                        printf("goto_function, operator(), State : %lu, Symbol : %c \n", state, symbol);
+                        //printf("goto_function, Graph_ in goto_function size : %lu \n", graph_.size());
+                        //printf("goto_function, operator(), State : %lu, Symbol : %c \n", state, symbol);
                         edges_t const& node(graph_[state]); // State for next state map
-                        printf("goto_function, Node from graph_ size : %lu \n", node.size());
+                        //printf("goto_function, Node from graph_ size : %lu \n", node.size());
 
                         typename edges_t::const_iterator const& edge_it(node.find(symbol));
 
@@ -243,7 +244,7 @@ namespace data_structure
                             }
 
                             state = edge->second;
-
+												    //printf("State from edge : %d \n", state);
 
                         }
 
@@ -308,17 +309,18 @@ namespace data_structure
 
                                 table_[s] = _goto(state, a);
 
-                                //printf("failure_function, table_[s] : %lu, s: %lu \n", table_[s], s);
+                                printf("failure_function, table_[s] : %lu, s: %lu \n", table_[s], s);
 
                                 output[s].insert(
                                         output[table_[s]].begin(),
                                         output[table_[s]].end());
                             }
                         }
+												printf("ailure_function, summary output size : %d \n", output.size());
                     }
 
                     state_t operator()(state_t state) const {
-                        //printf("failure_function, return operator() : %lu \n", table_[state]);
+                        printf("failure_function, return operator() : %lu \n", table_[state]);
                         return table_[state];
                     }
 
@@ -337,7 +339,7 @@ namespace data_structure
 
                         for (edge_it = node.begin(); edge_it != node.end(); ++edge_it) {
                             std::pair<SymbolT, state_t> const& edge(*edge_it);
-                            printf("queue_edges, edge_id value : %lu \n", edge.second);
+                            //printf("queue_edges, edge_id value : %lu \n", edge.second);
                             queue.push_back(edge.second); // push_back opsition of keywords [1 and 7]
                             table_[edge.second] = 0; // insert position of keywords [edge.second]
                         }

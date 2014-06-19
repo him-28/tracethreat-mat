@@ -48,6 +48,7 @@ namespace utils
 
         //support tbb
         char         keyword_str; //Keyword per node.
+				uint64_t     keyword_index; // Index of keyword.
         uint32_t     sig_size;
         uint64_t       index_start;
         std::size_t    state;
@@ -57,7 +58,8 @@ namespace utils
             offset(0),
             sig(""),
             virname(""),
-            sig_detail("") { }
+            sig_detail(""),
+						state(0) { }
 
     };
 
