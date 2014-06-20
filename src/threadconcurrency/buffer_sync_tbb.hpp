@@ -64,7 +64,7 @@ namespace controller
             BufferSyncTBB<Buffer, MAPPED_FILE>& operator*(BufferSyncTBB<Buffer, MAPPED_FILE>& buffr);
 
             //File MD5 register for TBB
-            bool filemd5_regis_tbb(uint64_t fmd5_id);
+            bool filemd5_regis_tbb(uint64_t fmd5_id, const char * file_name);
 
 
             bool write_binary_hex_tbb(const char *char_hex,
@@ -88,6 +88,8 @@ namespace controller
         private:
             uint8_t size_buff;
             BufferSyncTBB<Buffer, MAPPED_FILE> *buffersync_ptr;
+
+						MAPPED_FILE   *s_tbb_ptr;
 
             std::vector<char> *binary_hex_ptr;
             //logger

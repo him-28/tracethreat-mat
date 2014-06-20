@@ -11,7 +11,7 @@
 #define FILE_ON 2
 
 
-using tbbscan::actire_pe_concurrency;
+using tbbscan::actire_pe_engine;
 
 using namespace memory;
 using namespace utils;
@@ -160,16 +160,16 @@ TEST_F(TBBPostScanPEController, InitialScanEngine)
     f_shm_handler.initial_file_shm(mapped_file_pe_vec);
 
     // Call Engine Signature.
-    tbbscan::actire_engine_concurrency<char, tbbscan::tbb_allocator>  actire_engine;
-    EXPECT_TRUE(actire_engine.create_engine(meta_sig_vec, utils::pe_file));
+    tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator> sig_engine;
+    EXPECT_TRUE(sig_engine.create_engine(meta_sig_vec, utils::pe_file));
 
     // Register Engine Scanner.
     std::string sigtype_code = utils::filetype_code_map(utils::pe_file);
     tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::register_actire_type(sigtype_code,
-            actire_pe_concurrency<char, tbbscan::tbb_allocator>::create);
+            tbbscan::actire_pe_engine<char, tbbscan::tbb_allocator>::create);
 
     // Create Engine Scanner
-    tbbscan::iactire_concurrency<char, tbbscan::tbb_allocator> *iactire_concur =
+    tbbscan::iactire_engine<char, tbbscan::tbb_allocator> *iactire_concur =
             tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::create_actire_engine(sigtype_code);
 
 

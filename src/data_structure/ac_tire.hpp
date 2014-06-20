@@ -92,7 +92,7 @@ namespace data_structure
 
                         while ((next = goto_(state_, input)) == AC_FAIL_STATE) {
 														//printf("search, --- Check Fail ---\n");
-														printf("Search, state send to fail_ : %lu \n", state_);
+														//printf("Search, state send to fail_ : %lu \n", state_);
                             state_ = fail_(state_);
                             //printf("search, fail_ state_ : %lu  \n", state_);
                         }
@@ -108,9 +108,9 @@ namespace data_structure
 
                         std::set<std::size_t> const& out_node = output_[state_];
                         typename std::set<size_t>::const_iterator output_it;
-												printf("Search, Set size : %d \n", out_node.size());
+												//printf("Search, Set size : %d \n", out_node.size());
                         for (output_it = out_node.begin(); output_it != out_node.end(); ++output_it) {
-                            printf("-- callback, position where_ : %lu \n", where_);
+                            //printf("-- callback, position where_ : %lu \n", where_);
                             callback(*output_it, where_);
                         }
                     }
@@ -220,9 +220,12 @@ namespace data_structure
                         size_t index = 0;
                         edges_t *node;
 
+												/*
                         if(typeid(keyword) == typeid(std::string)) {
                             std::cout<<" Is keywords are string" <<std::endl;
                         }
+												*/
+
 												//printf("--- Check Enter ---\n");
                         // follow existing symbol edges
                         for ( ; index < keyword.size(); index++) {
@@ -292,11 +295,11 @@ namespace data_structure
                                 SymbolT const& a(edge.first);
                                 state_t const& s(edge.second);
 
-                                printf("failure_function, Symbol a: %c, State_t s : %lu, Table r: %lu \n", a, s, r);
+                                //printf("failure_function, Symbol a: %c, State_t s : %lu, Table r: %lu \n", a, s, r);
                                 queue.push_back(s);
                                 state_t state = table_[r];
 
-                                printf("failure_function, State from table : %lu , symbol : %c\n", state, a);
+                                //printf("failure_function, State from table : %lu , symbol : %c\n", state, a);
 
                                 while (_goto(state, a) == AC_FAIL_STATE) {
                                     state = table_[state];
@@ -309,18 +312,18 @@ namespace data_structure
 
                                 table_[s] = _goto(state, a);
 
-                                printf("failure_function, table_[s] : %lu, s: %lu \n", table_[s], s);
+                                //printf("failure_function, table_[s] : %lu, s: %lu \n", table_[s], s);
 
                                 output[s].insert(
                                         output[table_[s]].begin(),
                                         output[table_[s]].end());
                             }
                         }
-												printf("ailure_function, summary output size : %d \n", output.size());
+												//printf("ailure_function, summary output size : %d \n", output.size());
                     }
 
                     state_t operator()(state_t state) const {
-                        printf("failure_function, return operator() : %lu \n", table_[state]);
+                        //printf("failure_function, return operator() : %lu \n", table_[state]);
                         return table_[state];
                     }
 

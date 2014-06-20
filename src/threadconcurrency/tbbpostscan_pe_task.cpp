@@ -4,9 +4,7 @@
 namespace controller
 {
 
-		/*
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
+    tbbpostscan_pe_task::
     tbbpostscan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout):
 				_monitor(monitor),
 				_count(count),
@@ -17,8 +15,7 @@ namespace controller
 
     }
 		
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    bool tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
+    bool tbbpostscan_pe_task::
     set_file(tbb::concurrent_vector<char> *_binary_hex_input)
     {
 
@@ -27,25 +24,22 @@ namespace controller
     }
 		
 
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    bool tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
+    bool tbbpostscan_pe_task::
     set_file_name(const char *_file_name)
     {
         file_name = _file_name;
         return true;
     }
     //Signature support pe type.
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    bool tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
-    set_signature(std::vector<SignatureTypeMemory *> *_msig)
+    bool tbbpostscan_pe_task::
+    set_signature(std::vector<struct utils::meta_sig *> *_msig)
     {
         msig_ = _msig;
         return true;
 
     };
 
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    bool tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
+    bool tbbpostscan_pe_task::
     set_callback(res_callback_type *res_callback)
     {
         call_back_ = res_callback;
@@ -53,17 +47,15 @@ namespace controller
 
     }
 
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    bool tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
-    set_sig_engine(actire_engine_type *_actire_engine)
+    bool tbbpostscan_pe_task::
+    set_sig_engine(actire_sig_engine_type *_actire_engine)
     {
         actire_engine_ = _actire_engine;
         return true;
 
     }
 
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    bool tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
+    bool tbbpostscan_pe_task::
     set_search_engine(iactire_concur_type *_iactire_concur)
     {
         iactire_concur_ =  _iactire_concur;
@@ -71,8 +63,7 @@ namespace controller
 
     }
 
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    bool tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
+    bool tbbpostscan_pe_task::
     set_point(uint64_t _start_point, uint64_t _end_point)
     {
         start_point = _start_point;
@@ -81,17 +72,16 @@ namespace controller
 
     }
 
-    template<typename MAPPED_FILE, typename SignatureTypeMemory>
-    void tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::
+    void tbbpostscan_pe_task::
     run()
     {
         goto_ = &actire_engine_->get_goto_fn();
         failure_ = &actire_engine_->get_failure_fn();
         output_ = &actire_engine_->get_output_fn();
 
-        iactire_concur_->search_basic(goto_,
-                failure_,
-                output_,
+        iactire_concur_->search_parallel(*goto_,
+                *failure_,
+                *output_,
                 *call_back_,
                 start_point,
                 end_point,
@@ -131,7 +121,8 @@ namespace controller
 
 
     }
-		*/
-    template class tbbpostscan_pe_task<MAPPED_FILE_PE, utils::meta_sig>;
+
+
+    //template class tbbpostscan_pe_task<struct MAPPED_FILE_PE, struct utils::meta_sig>;
 
 }

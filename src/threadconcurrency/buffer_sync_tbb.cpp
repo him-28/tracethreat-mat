@@ -81,7 +81,7 @@ namespace controller
 
 
     template<typename Buffer, typename MAPPED_FILE>
-    bool BufferSyncTBB<Buffer, MAPPED_FILE>::filemd5_regis_tbb(uint64_t fmd5_id)
+    bool BufferSyncTBB<Buffer, MAPPED_FILE>::filemd5_regis_tbb(uint64_t fmd5_id, const char * file_name)
     {
 
         // file_name_md5 is thread_id
@@ -92,11 +92,11 @@ namespace controller
 
         pair_slot.first  = fmd5_id;
 
-        MAPPED_FILE   *s_tbb =  pair_slot.second;
-        s_tbb = new MAPPED_FILE;
-        s_tbb->file_map_md5 = fmd5_id;
-
-        if(!map_fmd5_id->insert(std::make_pair(fmd5_id, s_tbb)).second) {
+        s_tbb_ptr =  pair_slot.second;
+        s_tbb_ptr = new MAPPED_FILE;
+        s_tbb_ptr->file_map_md5 = fmd5_id;
+				s_tbb_ptr->file_name    = file_name;
+        if(!map_fmd5_id->insert(std::make_pair(fmd5_id, s_tbb_ptr)).second) {
             //TODO: thread_id(file_name_md5) has on map
             return false;
         }
@@ -117,14 +117,14 @@ namespace controller
         std::map<uint64_t, MAPPED_FILE *>   *map_fmd5_id =
                 &buff->data_tbb_process<MAPPED_FILE>::fmd5_tbb_map;
 
-        typename data_tbb_process<MAPPED_FILE>::fmd5_map_type::iterator iter_maptid;
+        typename data_tbb_process<MAPPED_FILE>::fmd5_map_type::iterator iter_mapfmd5;
 
         uint64_t temp_start = 0;
 
         MAPPED_FILE *s_tbb;
 
-        for(iter_maptid = map_fmd5_id->begin(); iter_maptid != map_fmd5_id->end(); ++iter_maptid) {
-            std::pair<uint64_t, MAPPED_FILE *> pair_s_tbb = *iter_maptid;
+        for(iter_mapfmd5 = map_fmd5_id->begin(); iter_mapfmd5 != map_fmd5_id->end(); ++iter_mapfmd5) {
+            std::pair<uint64_t, MAPPED_FILE *> pair_s_tbb = *iter_mapfmd5;
             s_tbb = pair_s_tbb.second;
 
             if(temp_start < s_tbb->end_point) {
@@ -147,17 +147,18 @@ namespace controller
 
 
         // find thread_id and insert lenght, start_point and end_point
-        iter_maptid = map_fmd5_id->find(fmd5_id);
+        iter_mapfmd5 = map_fmd5_id->find(fmd5_id);
 
         // insert lenght of binary hex char to s_ocl that it's contains in value of map.
-        if(iter_maptid != map_fmd5_id->end()) {
-            std::pair<uint64_t, MAPPED_FILE *> pair_s_tbb = *iter_maptid;
+        if(iter_mapfmd5 != map_fmd5_id->end()) {
+            std::pair<uint64_t, MAPPED_FILE *> pair_s_tbb = *iter_mapfmd5;
             s_tbb  = pair_s_tbb.second;
 
             s_tbb->start_point = temp_start;
 
             s_tbb->end_point   = s_tbb->start_point + size_hex;
-
+						std::cout<<"Start point " << temp_start <<", End point : " << s_tbb->end_point <<std::endl;
+						std::cout<<"Map map_fmd5_id size(fmd5_tbb_map) : " << map_fmd5_id->size() <<std::endl;
             return true;
         }
 

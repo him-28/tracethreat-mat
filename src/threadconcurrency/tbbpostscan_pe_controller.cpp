@@ -1,4 +1,4 @@
-
+#include <utility>
 #include "boost/functional/hash.hpp"
 #include "threadconcurrency/tbbpostscan_pe_controller.hpp"
 
@@ -50,12 +50,13 @@ namespace controller
 						//binary stream from file.
             binarystr_shm = &pair_int_str.second;
 						//register file: md5 
-            buff_sync_internal->filemd5_regis_tbb(file_name_md5);
+            if(buff_sync_internal->filemd5_regis_tbb(file_name_md5, mapped_file->file_name.c_str()))
+									logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, Map not completed.");
 
 						//Get map : Key : md5, Value : Size of file.
-            std::pair<const uint64_t, size_t> pair_file_size =  *map_file_size->find(file_name_md5);
+            std::pair<const uint64_t, size_t> pair_fsize =  *map_file_size->find(file_name_md5);
 
-            size_t size_hex = pair_file_size.second;
+            size_t size_hex = pair_fsize.second;
 						//Add binary stream to vector_concurrent
             if(buff_sync_internal->write_binary_hex_tbb(binarystr_shm->c_str(),
                     size_hex,
@@ -70,14 +71,17 @@ namespace controller
         //[x] Task set contains on set.
         //[x] Insert start-end point scan on binary_hex vector_concurrent.
         std::map<uint64_t, MAPPED_FILE *>   *map_fmd5_id =
-                &buff->data_tbb_process<MAPPED_FILE>::fmd5_tbb_map;
+                &buff_sync_internal->buff->data_tbb_process<MAPPED_FILE>::fmd5_tbb_map;
 
-        typename data_tbb_process<MAPPED_FILE>::fmd5_map_type::iterator iter_maptid;
+        logger->write_info_test("tbbpostscan_pe_controller::init_syntbb_workload, mapped_file size",
+										boost::lexical_cast<std::string>(map_fmd5_id->size()));
 
-        for(iter_maptid = map_fmd5_id->begin();
-                iter_maptid != map_fmd5_id->end();
-                ++iter_maptid) {
-            std::pair<uint64_t, MAPPED_FILE *> pair_s_tbb = *iter_maptid;
+        typename data_tbb_process<MAPPED_FILE>::fmd5_map_type::iterator iter_mapfmd5;
+
+        for(iter_mapfmd5 = map_fmd5_id->begin();
+                iter_mapfmd5 != map_fmd5_id->end();
+                ++iter_mapfmd5) {
+            std::pair<uint64_t, MAPPED_FILE *> pair_s_tbb = *iter_mapfmd5;
             MAPPED_FILE *s_tbb = pair_s_tbb.second;
 
             logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, Insert file to task",
@@ -88,32 +92,37 @@ namespace controller
             uint64_t start_point = s_tbb->start_point;
             uint64_t end_point   = s_tbb->end_point;
 
-						//tbbpostscan_pe_task<MAPPED_FILE_PE, utils::meta_sig>  
-						//		 tbbscan_pe_task(monitor, task_count, timeout_);
-					/*					
-	            tbbscan_pe_task =
-                    new tbbpostscan_pe_task<MAPPED_FILE_PE, utils::meta_sig>(monitor, task_count, timeout_);
-           
+						logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, Scan start point",
+									boost::lexical_cast<std::string>(start_point));
+
+					 logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, End start point",
+									boost::lexical_cast<std::string>(end_point));
+
+						std::vector<std::string> data_sig;
+						tbbscan::result_callback<std::vector<std::string> >  res_callback(data_sig);
+	          tbbscan_pe_task =
+                    new tbbpostscan_pe_task(monitor, task_count, timeout_);
+          	 
             tbbscan_pe_task->set_file(&buff_sync_internal->buff->binary_hex);//Binary stream
+					
 					  tbbscan_pe_task->set_file_name(s_tbb->file_name.c_str()); // file name.
 						tbbscan_pe_task->set_point(start_point, end_point); //position on binary stream for scanning.
-            //tbbscan_pe_task->set_signature(sig_shm->get_signature());
             tbbscan_pe_task->set_callback(&res_callback);
             tbbscan_pe_task->set_sig_engine(actire_engine_);
             tbbscan_pe_task->set_search_engine(iactire_concur_);
             //insert to tasks per thread.
             tasks_tbbscan_pe.insert(boost::shared_ptr<tbbpostscan_pe_task_type>(tbbscan_pe_task));
-						*/
+						
 
         }//for
 
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, End Load data to task");
 
     }
-		/*
+		
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
     bool tbbpostscan_pe_controller<BufferSync, MAPPED_FILE, SignatureTypeMemory>::
-    add_sig_engine(actire_engine_type *_actire_engine)
+    add_sig_engine(actire_sig_engine_type *_actire_engine)
     {
         actire_engine_ = _actire_engine;
     }
@@ -132,7 +141,7 @@ namespace controller
 
 
     }
-		*/
+		
     template class tbbpostscan_pe_controller<BufferSyncTBB<struct data_tbb_process<struct MAPPED_FILE_PE>,
              struct MAPPED_FILE_PE>,
              struct MAPPED_FILE_PE,
