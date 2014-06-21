@@ -20,9 +20,10 @@
  * - File details convert to MD5 and send to meta data.           R.Chatsiri         25/04/2014
  */
 
+//external
+#include "boost/functional/hash.hpp"
+
 //internal
-
-
 #include "memory/file_shm_handler.hpp"
 #include "utils/get_process_id_name.hpp"
 
@@ -31,19 +32,55 @@
 
 #include "filetypes/pe.hpp"
 
+#define EXTENED_SIZE_SHM  64 /*Issues: Plan-00004 : Investigate SHM-Sizes should equal filel sizes.*/
+
 namespace memory
 {
+
+		template<typename MAPPED_FILE>
+		file_shm_handler<MAPPED_FILE>::file_shm_handler(){
+
+				logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        logger = logger_ptr->get();
+
+
+		}
+
     template<typename MAPPED_FILE>
     bool file_shm_handler<MAPPED_FILE>::initial_shm(uint64_t full_file_size)
     {
-        // Managed_shared_memory created SHM.
-        file_shm = new boostinp::managed_shared_memory(
-                boostinp::create_only, utils::get_process_id_name(), full_file_size * 8);
-        //map_shm_ptr = new map_shm;
+        try {
+
+            //TODO: Plant-00004 :Change to memory menagement size system.
+            uint64_t shm_initial_size = full_file_size * EXTENED_SIZE_SHM;
+            std::string fshm_name = "file-shm";
+            boostinp::shared_memory_object::remove(fshm_name.c_str());
+            // Managed_shared_memory created SHM.
+            file_shm = new boostinp::managed_shared_memory(
+                    boostinp::create_only, fshm_name.c_str(), shm_initial_size);
+
+            if(file_shm->get_size() == shm_initial_size) {
+
+                logger->write_info("file_shm_handler::initial_shm(), shm-size ",
+                        boost::lexical_cast<std::string>(shm_initial_size));
+
+                //logger->write_info("file_shm_handler::initial_shm(), processes_id ",
+                 //       boost::lexical_cast<std::string>(utils::get_process_id_name()));
+
+                return true;
+            }
+
+        } catch(boostinp::bad_alloc& ex) {
+            std::cerr<< ex.what() << std::endl;
+						return false;
+        }
+
+      return false;
+
     }
     /*Phase-1 :  File read to string on files-shm */
     template<typename MAPPED_FILE>
-    bool file_shm_handler<MAPPED_FILE>::initial_file_shm(std::vector<MAPPED_FILE *> * files_map)
+    bool file_shm_handler<MAPPED_FILE>::initial_file_shm(std::vector<MAPPED_FILE *> *files_map)
     {
 
         //char allocator
@@ -51,30 +88,19 @@ namespace memory
         //string allocator
         string_allocator str_alloc(file_shm->get_segment_manager());
         //vector allocator
-        //binary_string_shm_vec_allocator  bs_vec_alloc(file_shm.get_segment_manager());
 
         //map allocator
-        //map_shm_allocator  map_shm_alloc(file_shm->get_segment_manager());
         map_str_shm_allocator  mapstr_shm_alloc(file_shm->get_segment_manager());
 
 
 
 
         binary_string_shm        *binarystr_shm[files_map->size()];
-        //binary_string_shm_vec    *binarystr_shm_vec[files_map.size()];
 
         //initial file-shm
-        //map_shm_ptr = file_shm->construct<map_shm>("file-shm")(std::less<uint64_t>(), map_shm_alloc);
-
         map_str_shm_ptr = file_shm->construct<map_str_shm>("file-shm")(std::less<uint64_t>(),
                 mapstr_shm_alloc);
 
-        /*
-        map_shm_shared_ptr =  boostinp::managed_shared_ptr(
-        file_shm.construct<map_shm_ptr>("file-shm-shared"), file_shm);
-        */
-        //file from map support
-        //files_buff_map::const_iterator iter_files;
 
         typename std::vector<MAPPED_FILE *>::iterator iter_files;
 
@@ -89,45 +115,23 @@ namespace memory
 
             //MD5 variable mallocs supported mf->data converts from MD5Hash.
             //details_file_hex = (char*)malloc(sizeof(char) * mf->size);
-
+            //printf("File name : %c ", mf->file_name);
             // insert addresses of hex char.
             char *hex_ptr = utils::convert::byte2hexstr(mf->data, mf->size);
             addr_df_hex_vec.push_back(hex_ptr);
-
-            /*//Conver to hex type.
-            			add_df_hex_vec->push_back(detail_file_hex);
-
-            for(int count_data = 0; count_data < mf->size(); count_data++) {
-                detail_file_hex[count_data] = utils::convert::byte2hex(mf->data[count_data]);
-            }
-            */
 
             //get detail_file_hex address from vector to binary_string_shm
             //test: 7115022752065567031
             binarystr_shm[index_file] = new binary_string_shm(char_alloc);
             *binarystr_shm[index_file] = addr_df_hex_vec[index_file];
 
-            // Test : get hex data.
-            //						binary_string_shm  * bistr = binarystr_shm[index_file];
-            //						for(int count_str = 0; count_str < mf->size; count_str)
-            //	std::cout<<"Data : " << *bistr <<std::endl;
-
-
-            //insert string to vector
-            /*
-             binarystr_shm_vec[index_file] = new binary_string_shm_vec(str_alloc);
-             binarystr_shm_vec[index_file]->insert(binarystr_shm_vec[index_file]->begin(),
-                     mf->size,
-                     *binarystr_shm[index_file]);
-            */
 
             //encode with MD5 with mf->file_name ( filename inculded path of file)
-            const uint64_t  file_name_md5 =  utils::convert::MD5Hash(mf->data, mf->size);
+            //Plan-00004 : const uint64_t  file_name_md5 =  utils::convert::MD5Hash(mf->data, mf->size);
+            boost::hash<char*> hash_file_name;
+            const uint64_t file_name_md5 =  hash_file_name(const_cast<char*>(mf->file_name.c_str()));
             file_name_md5_vec.push_back(file_name_md5);
-            //file_name_md5_vec.push_back(file_name_md5);
-            //std::cout<<"File name md5 : " << file_name_md5 << std::endl;
-            //std::cout<<"File name path : " << mf->file_name <<std::endl;
-            
+
             //Key : MD5 from detail insides file.
             //Value : insert vector contains detail of hex of file to value.
             /*map_shm_ptr->insert(std::pair<const uint64_t, binary_string_shm_vec>(
@@ -139,8 +143,8 @@ namespace memory
             map_str_shm_ptr->insert(std::pair<const uint64_t, binary_string_shm>(
                     file_name_md5, *binarystr_shm[index_file]));
 
-						//insert filename and file size for calculate
-					   map_file_size.insert(std::make_pair(file_name_md5, mf->size));
+            //insert filename and file size for calculate
+            map_file_size.insert(std::make_pair(file_name_md5, mf->size));
 
         }
 
@@ -157,14 +161,18 @@ namespace memory
         const uint64_t fn_md5 = pair_map_shm.first;
         binary_string_shm  bistr_shm = pair_map_shm.second;
 
-        //std::cout<<"fn_md5:"<< fn_md5 <<std::endl;
-        //std::cout<<"str : "<< bistr_shm <<std::endl;
-
+				logger->write_info("file_shm_handler::list_detail_shm, list fn_md",
+						boost::lexical_cast<std::string>(fn_md5));
+				logger->write_info("file_shm_handler::list_detail_shm, binary_string_shm",
+						boost::lexical_cast<std::string>(bistr_shm));
     }
 
     template<typename MAPPED_FILE>
     bool file_shm_handler<MAPPED_FILE>::delete_file_shm()
     {
+        if(map_str_shm_ptr->size() ==  0)
+            return true;
+
         //TODO : list file-shm detail deleted.
         std::vector<uint64_t>::const_iterator iter_fn_md5;
 
@@ -175,6 +183,7 @@ namespace memory
         }
 
         file_shm->destroy_ptr(map_str_shm_ptr);
+        return true;
     }
 
 
@@ -185,17 +194,17 @@ namespace memory
     }
 
     template<typename MAPPED_FILE>
-    typename file_shm_handler<MAPPED_FILE>::map_str_shm & file_shm_handler<MAPPED_FILE>::get_map_str_shm()
+    typename file_shm_handler<MAPPED_FILE>::map_str_shm& file_shm_handler<MAPPED_FILE>::get_map_str_shm()
     {
         return *map_str_shm_ptr;
     }
 
-		template<typename MAPPED_FILE>
-		typename std::map<const uint64_t, size_t> * file_shm_handler<MAPPED_FILE>::get_map_file_size()
-		{
-				return &map_file_size;
-		}
-				
+    template<typename MAPPED_FILE>
+    typename std::map<const uint64_t, size_t> *file_shm_handler<MAPPED_FILE>::get_map_file_size()
+    {
+        return &map_file_size;
+    }
+
 
 
     /*Phase-2 : File mapped set file load to shared memory

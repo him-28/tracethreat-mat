@@ -64,9 +64,9 @@ struct IMAGE_DOS_HEADER {      // DOS .EXE header
     WORD   e_oeminfo;                   // OEM information; e_oemid specific
     WORD   e_res2[10];                  // Reserved words
     LONG   e_lfanew;                    // File address of new exe header
-  };
+};
 
-typedef struct IMAGE_DOS_HEADER * PIMAGE_DOS_HEADER;
+typedef struct IMAGE_DOS_HEADER *PIMAGE_DOS_HEADER;
 
 #ifndef _MAC
 #pragma pack(pop)             	        // Back to 4 byte packing
@@ -86,7 +86,7 @@ struct IMAGE_FILE_HEADER {
     WORD    Characteristics;
 };
 
-typedef struct IMAGE_FILE_HEADER * PIMAGE_FILE_HEADER;
+typedef struct IMAGE_FILE_HEADER *PIMAGE_FILE_HEADER;
 
 #define IMAGE_SIZEOF_FILE_HEADER             20
 
@@ -119,7 +119,7 @@ struct IMAGE_DATA_DIRECTORY {
     DWORD   Size;
 };
 
-typedef struct IMAGE_DATA_DIRECTORY * PIMAGE_DATA_DIRECTORY;
+typedef struct IMAGE_DATA_DIRECTORY *PIMAGE_DATA_DIRECTORY;
 
 #define IMAGE_NUMBEROF_DIRECTORY_ENTRIES    16
 
@@ -170,7 +170,7 @@ struct IMAGE_OPTIONAL_HEADER {
     IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
 };
 
-typedef struct IMAGE_OPTIONAL_HEADER * PIMAGE_OPTIONAL_HEADER;
+typedef struct IMAGE_OPTIONAL_HEADER *PIMAGE_OPTIONAL_HEADER;
 
 #define IMAGE_NT_OPTIONAL_HDR32_MAGIC      0x10b
 #define IMAGE_NT_OPTIONAL_HDR64_MAGIC      0x20b
@@ -183,7 +183,7 @@ struct IMAGE_NT_HEADERS {
     IMAGE_OPTIONAL_HEADER OptionalHeader;
 };
 
-typedef struct IMAGE_NT_HEADERS * PIMAGE_NT_HEADERS;
+typedef struct IMAGE_NT_HEADERS *PIMAGE_NT_HEADERS;
 
 
 // IMAGE_FIRST_SECTION doesn't need 32/64 versions since the file header is the same either way.
@@ -213,8 +213,8 @@ typedef struct IMAGE_NT_HEADERS * PIMAGE_NT_HEADERS;
 struct IMAGE_SECTION_HEADER {
     BYTE    Name[IMAGE_SIZEOF_SHORT_NAME];
     union {
-            DWORD   PhysicalAddress;
-            DWORD   VirtualSize;
+        DWORD   PhysicalAddress;
+        DWORD   VirtualSize;
     } Misc;
     DWORD   VirtualAddress;
     DWORD   SizeOfRawData;
@@ -226,19 +226,37 @@ struct IMAGE_SECTION_HEADER {
     DWORD   Characteristics;
 };
 
-typedef struct IMAGE_SECTION_HEADER * PIMAGE_SECTION_HEADER;
+typedef struct IMAGE_SECTION_HEADER *PIMAGE_SECTION_HEADER;
 #define IMAGE_SIZEOF_SECTION_HEADER          40
 
 #pragma pack(pop)
+
+
+#include "boost/scoped_array.hpp"
 
 struct MAPPED_FILE_PE {
     FILE_DESCRIPTOR   file;
     size_t            size;
     uint8_t 					*data;
-    uint32_t          ops_begin;
-    uint32_t					ops_end;
-		//unsigned char     *file_name;
-	  const char        *file_name;
+    //unsigned char     *file_name;
+    std::string file_name;
+    //If scan found infected file.
+    std::string file_sig;
+
+    //Support TBB Scanning (Layout of PE file)
+    //Position of data. start position of  file.
+    uint64_t          start_point;
+    //Position of data. end position of file.
+    uint64_t					end_point;
+
+    //Pre scanning check layout incorrect or not.
+    bool             pass_pre_scanning;
+    //Post scanning check binary hex has infected or not.
+    bool             pass_post_scanning;
+    //Summary status
+    uint8_t          status;
+    //MD5 of file.
+    uint64_t         file_map_md5;
 };
 
 struct MAMORY_BLOCK_PE {
@@ -252,13 +270,157 @@ struct MAMORY_BLOCK_PE {
 struct IMAGE_NT_HEADERS_EXT {
     uint64_t      data;
     uint64_t      offset;
-		size_t        size;
-	  uint8_t       *data_offset;	
+    size_t        size;
+    uint8_t       *data_offset;
     //contain type
     uint64_t          rva_block;
     size_t            size_block;
 
 };
+
+//cli pe.h
+/*
+#include "clamav.h"
+#include "execs.h"
+#include "others.h"
+#include "cltypes.h"
+#include "fmap.h"
+#include "bcfeatures.h"
+*/
+
+/** @file */
+/** Header for this PE file
+  \group_pe */
+struct pe_image_file_hdr {
+    uint32_t Magic;  /**< PE magic header: PE\\0\\0 */
+    uint16_t Machine;/**< CPU this executable runs on, see libclamav/pe.c for possible values */
+    uint16_t NumberOfSections;/**< Number of sections in this executable */
+    uint32_t TimeDateStamp;   /**< Unreliable */
+    uint32_t PointerToSymbolTable;	    /**< debug */
+    uint32_t NumberOfSymbols;		    /**< debug */
+    uint16_t SizeOfOptionalHeader;	    /**< == 224 */
+    uint16_t Characteristics;
+};
+
+/** PE data directory header
+  \group_pe */
+struct pe_image_data_dir {
+    uint32_t VirtualAddress;
+    uint32_t Size;
+};
+
+/** 32-bit PE optional header
+  \group_pe */
+struct pe_image_optional_hdr32 {
+    uint16_t Magic;
+    uint8_t  MajorLinkerVersion;		    /**< unreliable */
+    uint8_t  MinorLinkerVersion;		    /**< unreliable */
+    uint32_t SizeOfCode;			    /**< unreliable */
+    uint32_t SizeOfInitializedData;		    /**< unreliable */
+    uint32_t SizeOfUninitializedData;		    /**< unreliable */
+    uint32_t AddressOfEntryPoint;
+    uint32_t BaseOfCode;
+    uint32_t BaseOfData;
+    uint32_t ImageBase;				    /**< multiple of 64 KB */
+    uint32_t SectionAlignment;			    /**< usually 32 or 4096 */
+    uint32_t FileAlignment;			    /**< usually 32 or 512 */
+    uint16_t MajorOperatingSystemVersion;	    /**< not used */
+    uint16_t MinorOperatingSystemVersion;	    /**< not used */
+    uint16_t MajorImageVersion;			    /**< unreliable */
+    uint16_t MinorImageVersion;			    /**< unreliable */
+    uint16_t MajorSubsystemVersion;
+    uint16_t MinorSubsystemVersion;
+    uint32_t Win32VersionValue;			    /*< ? */
+    uint32_t SizeOfImage;
+    uint32_t SizeOfHeaders;
+    uint32_t CheckSum;				    /**< NT drivers only */
+    uint16_t Subsystem;
+    uint16_t DllCharacteristics;
+    uint32_t SizeOfStackReserve;
+    uint32_t SizeOfStackCommit;
+    uint32_t SizeOfHeapReserve;
+    uint32_t SizeOfHeapCommit;
+    uint32_t LoaderFlags;			    /*< ? */
+    uint32_t NumberOfRvaAndSizes;		    /**< unreliable */
+    struct pe_image_data_dir DataDirectory[16];
+};
+
+/** PE 64-bit optional header
+  \group_pe */
+struct pe_image_optional_hdr64 {
+    uint16_t Magic;
+    uint8_t  MajorLinkerVersion;		    /**< unreliable */
+    uint8_t  MinorLinkerVersion;		    /**< unreliable */
+    uint32_t SizeOfCode;			    /**< unreliable */
+    uint32_t SizeOfInitializedData;		    /**< unreliable */
+    uint32_t SizeOfUninitializedData;		    /**< unreliable */
+    uint32_t AddressOfEntryPoint;
+    uint32_t BaseOfCode;
+    uint64_t ImageBase;				    /**< multiple of 64 KB */
+    uint32_t SectionAlignment;			    /**< usually 32 or 4096 */
+    uint32_t FileAlignment;			    /**< usually 32 or 512 */
+    uint16_t MajorOperatingSystemVersion;	    /**< not used */
+    uint16_t MinorOperatingSystemVersion;	    /**< not used */
+    uint16_t MajorImageVersion;			    /**< unreliable */
+    uint16_t MinorImageVersion;			    /**< unreliable */
+    uint16_t MajorSubsystemVersion;
+    uint16_t MinorSubsystemVersion;
+    uint32_t Win32VersionValue;			    /* ? */
+    uint32_t SizeOfImage;
+    uint32_t SizeOfHeaders;
+    uint32_t CheckSum;				    /**< NT drivers only */
+    uint16_t Subsystem;
+    uint16_t DllCharacteristics;
+    uint64_t SizeOfStackReserve;
+    uint64_t SizeOfStackCommit;
+    uint64_t SizeOfHeapReserve;
+    uint64_t SizeOfHeapCommit;
+    uint32_t LoaderFlags;			    /* ? */
+    uint32_t NumberOfRvaAndSizes;		    /**< unreliable */
+    struct pe_image_data_dir DataDirectory[16];
+};
+
+/** PE section header
+  \group_pe */
+struct pe_image_section_hdr {
+    uint8_t Name[8];			    /**< may not end with NULL */
+    /*
+    union {
+    uint32_t PhysicalAddress;
+    uint32_t VirtualSize;
+    } AddrSize;
+    */
+    uint32_t VirtualSize;
+    uint32_t VirtualAddress;
+    uint32_t SizeOfRawData;		    /**< multiple of FileAlignment */
+    uint32_t PointerToRawData;		    /**< offset to the section's data */
+    uint32_t PointerToRelocations;	    /**< object files only */
+    uint32_t PointerToLinenumbers;	    /**< object files only */
+    uint16_t NumberOfRelocations;	    /**< object files only */
+    uint16_t NumberOfLinenumbers;	    /**< object files only */
+    uint32_t Characteristics;
+};
+
+/** Data for the bytecode PE hook
+  \group_pe */
+struct cli_pe_hook_data {
+    uint32_t offset;
+    uint32_t ep; /**< EntryPoint as file offset */
+    uint16_t nsections;/**< Number of sections */
+    uint16_t dummy; /* align */
+    struct pe_image_file_hdr file_hdr;/**< Header for this PE file */
+    struct pe_image_optional_hdr32 opt32; /**< 32-bit PE optional header */
+    uint32_t dummy2; /* align */
+    struct pe_image_optional_hdr64 opt64;/**< 64-bit PE optional header */
+    struct pe_image_data_dir dirs[16]; /**< PE data directory header */
+    uint32_t e_lfanew;/**< address of new exe header */
+    uint32_t overlays;/**< number of overlays */
+    int32_t overlays_sz;/**< size of overlays */
+    uint32_t hdr_size;/**< internally needed by rawaddr */
+};
+
+
+
 
 
 #endif

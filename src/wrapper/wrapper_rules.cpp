@@ -5,7 +5,7 @@
 
 #include "wrapper/wrapper_rules.hpp"
 #include "boost/lexical_cast.hpp"
-
+/*
 namespace wrapper
 {
     //	namespace utility = util;
@@ -53,7 +53,7 @@ namespace wrapper
         int errors;
 
 				/*&this->compiler */
-        if(yr_compiler_create(&compiler) != ERROR_SUCCESS) {
+/*        if(yr_compiler_create(&compiler) != ERROR_SUCCESS) {
 
             return false;
         }
@@ -95,7 +95,7 @@ namespace wrapper
 
         return true;
     }
-
+*/
 /*    
     template<typename Compiler>
     bool wrapper_rule_compiles<Compiler>::wrapper_yr_compiler_get_rules(
@@ -109,6 +109,9 @@ namespace wrapper
     }
     
 */
-    template class wrapper_rule_compiles<YARA_wrapper>;
+/*    template class wrapper_rule_compiles<YARA_wrapper>;
+
 
 }
+*/
+

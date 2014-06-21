@@ -9,9 +9,11 @@ lib_LIBRARIES = libmemory.a
 libmemory_adir = $(includedir)/memory
 
 #Header
-libmemory_a_HEADERS = file_shm_handler.hpp 
+libmemory_a_HEADERS = file_shm_handler.hpp \
+signature_shm_base.hpp \
+signature_shm_controller.hpp
 
 # library
-libmemory_a_SOURCES = $(libmemory_a_HEADERS)  file_shm_handler.cpp
-
+libmemory_a_SOURCES = $(libmemory_a_HEADERS)  file_shm_handler.cpp \
+signature_shm_controller.cpp
 

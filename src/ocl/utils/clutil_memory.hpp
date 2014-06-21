@@ -39,6 +39,8 @@
 #include "exception/system_exception.hpp"
 #include "exception/datastructure_exception.hpp"
 
+#define KERNEL_BUFFER_SIZE 6
+
 namespace hnmav_kernel
 {
 
@@ -49,7 +51,7 @@ namespace hnmav_kernel
 
     //  memory internal initial, write Real Object here.
     template<typename WorkTypes,
-             typename ContainerT = std::vector<size_t> >
+             typename ContainerT = std::vector<int> >
      class memory : public base_clutil
     {
         public:
@@ -57,9 +59,10 @@ namespace hnmav_kernel
             memory();
 
             bool  cl_create_buffer(WorkTypes& worktype_loads,
-										std::vector<char>   & symbol_vec_ptr,
-										std::vector<size_t> & state_vec_ptr,
-                    std::vector<uint8_t>& binary_vec_ptr);
+										std::vector<char>   & 		symbol_vec_ptr,
+										std::vector<int>    & 		state_vec_ptr,
+                    std::vector<char>		& 		binary_vec_ptr,
+										std::vector<uint8_t> &    result_vec_ptr);
 
             bool  cl_build_node_buffer_object() throw(std::runtime_error);
 
@@ -83,7 +86,8 @@ namespace hnmav_kernel
                 platdevices_info *platdevices =  plat_shared_ptr.get();
                 return platdevices;
             }
-
+				
+						~memory();
 
         private:
 
@@ -97,7 +101,8 @@ namespace hnmav_kernel
 
             // input open cl
             std::vector<char> *symbol_vec;
-            ContainerT        *state_vec;
+//            ContainerT        *state_vec;
+            std::vector<int>  *state_vec;
             std::vector<uint8_t> *binary_vec;
             std::vector<cl_mem> mem_object_vec;
 
@@ -115,8 +120,9 @@ namespace hnmav_kernel
 
             void cl_create_buffer(WorkTypes& worktype_loads,
                    	std::vector<char>   & symbol_vec_ptr,
-										std::vector<size_t> & state_vec_ptr,
-                    std::vector<uint8_t>& binary_vec);
+										std::vector<int> & state_vec_ptr,
+                    std::vector<char>& binary_vec,
+										std::vector<uint8_t> & result_vec);
 
             bool cl_create_subbuffer();
 

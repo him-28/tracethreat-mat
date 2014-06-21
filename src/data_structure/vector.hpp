@@ -128,7 +128,7 @@ namespace data_structure
         if(index_buffer > size_)
             throw exp_container::container_exception("Cannot get more size of index");
 
-        logger->write_info("-- Operator[ ] insert index ", boost::lexical_cast<std::string>(index_buffer));
+        //logger->write_info("-- Operator[ ] insert index ", boost::lexical_cast<std::string>(index_buffer));
         return buffer_data_[index_buffer];
     }
 

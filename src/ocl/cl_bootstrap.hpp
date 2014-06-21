@@ -25,8 +25,6 @@ namespace hnmav_kernel
     namespace dstr = data_structure;
     namespace util = hnmav_util;
 
-    //namespace cl_bootstrap
-    //{
     template<typename UtilPlatform,
              typename TireDefine,
              typename WorkTypes,
@@ -53,11 +51,14 @@ namespace hnmav_kernel
 
 
             bool cl_process_buffer(std::vector<char>& symbol_vec_tr,
-                    std::vector<size_t>&  state_vec_ptr,
-                    std::vector<uint8_t>& binary_vec);
+                    std::vector<int>&  state_vec_ptr,
+                    std::vector<char>& binary_vec,
+										std::vector<uint8_t> & result_vec);
 
             // Manage command queue
-            bool cl_process_commandqueue();
+            bool cl_process_commandqueue(std::vector<uint8_t> * result_vec);
+
+						~cl_load_system();
 
         private:
             std::string *opencl_file_path;
@@ -68,19 +69,17 @@ namespace hnmav_kernel
             base_clutil   *base_comqueue_clutil;
             clutil_commandqueue *comqueue_clutil;
 
-            typedef TireDefine  tire_vec;
-            tire_vec *node_tire_vec;
+            //typedef TireDefine  tire_vec;
+            //tire_vec *node_tire_vec;
 
             std::string signature_name;
             // Handeling logger
             shared_ptr<util::clutil_logging<std::string, int> > *logger_ptr;
             util::clutil_logging<std::string, int>              *logger;
 
-            TireDefine *node_tire_input;
-            TireDefine *node_tire_output;
+            //TireDefine *node_tire_input;
+            //TireDefine *node_tire_output;
     };
-
-    // }
 
 }
 

@@ -14,10 +14,10 @@ class PEFileControllerTest : public ::testing::Test
         virtual void SetUp() {
 
             char const *file_name_offset[FILE_SIZE];
-
+		
            // file_name_offset[0] = "/home/chatsiri/sda1/workspacecpp/clamav-devel/test/Crack.exe";
             file_name_offset[0] = "/home/chatsiri/sda1/workspacemalware/lab_malwareanalysis/3/clam_ISmsi_ext.exe";
-
+						file_sig = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.ndb";
             for(int count_file = 0; count_file < 	FILE_SIZE; count_file++) {
                 list_file_type.push_back(file_name_offset[count_file]);
 
@@ -31,7 +31,7 @@ class PEFileControllerTest : public ::testing::Test
         std::list<std::string> list_file_type;
         struct MAPPED_FILE_PE *s_mapped_fpe[FILE_SIZE];
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
-
+				const char * file_sig;
 
 };
 
@@ -54,7 +54,7 @@ TEST_F(PEFileControllerTest, pe_read_header)
 {
 
     file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
-    fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h);
+    fileoffset_h.mapped_file(list_file_type, mapped_file_vec, fileoffset_h, file_sig);
 
     std::vector<struct MAPPED_FILE_PE *> pe_header_vec_ptr = fileoffset_h.get_mapped_file();
 

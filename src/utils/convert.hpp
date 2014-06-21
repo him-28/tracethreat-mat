@@ -20,16 +20,19 @@
  */
 
 //BOOST
-#include<boost/lexical_cast.hpp>
+#include <boost/lexical_cast.hpp>
 //STL
 #include <iostream>
 #include <stdexcept>
+
+#include "utils/base/system_code.hpp"
+
 namespace utils
 {
 
     namespace convert
     {
-
+				
         //hexString.c : opensource.apple.com
         //File convert uint8_t byte to hex char pointer.
         static char byte_map[] = { '0', '1', '2', '3', '4', '5', '6',
@@ -44,12 +47,27 @@ namespace utils
 
             return '*';
         }
-
+        /*
         char *byte2hexstr(uint8_t *bytes, size_t buflen)
         {
-            char *retval;
+        char *retval;
+        int count_buflen;
+        retval = (char*)malloc(buflen * 2 + 1);
+
+        for(count_buflen = 0; count_buflen < buflen; count_buflen++) {
+        retval[count_buflen * 2] = nibble2char(bytes[count_buflen] >> 4);
+        retval[count_buflen * 2 +1] = nibble2char(bytes[count_buflen] & 0x0f);
+        }
+
+        retval[count_buflen] = '\0';
+        return retval;
+
+        }
+        */
+        char *byte2hexstr(uint8_t *bytes, size_t buflen)
+        {
             int count_buflen;
-            retval = (char*)malloc(buflen * 2 + 1);
+            char *retval = (char *)malloc(sizeof(char) * buflen * 2 + 1);
 
             for(count_buflen = 0; count_buflen < buflen; count_buflen++) {
                 retval[count_buflen * 2] = nibble2char(bytes[count_buflen] >> 4);
@@ -71,6 +89,7 @@ namespace utils
             assert(buff[2] == '\0');
             return buff;
         }
+
 
     }
 

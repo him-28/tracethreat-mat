@@ -54,7 +54,7 @@ namespace controller
     template<typename Mutex>
     bool mutex_buffer<Mutex>::lock_request()
     {
-        logger->write_info(" Lock request ");
+        //logger->write_info(" Lock request ");
         boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
         Mutex *m = mx.get();
 
@@ -68,7 +68,7 @@ namespace controller
     template<typename Mutex>
     bool mutex_buffer<Mutex>::unlock_request()
     {
-        logger->write_info(" Unlock request ");
+        //logger->write_info(" Unlock request ");
         boost::shared_ptr<Mutex> mx = mx_ptr_vec.back();
         Mutex *m = mx.get();
 

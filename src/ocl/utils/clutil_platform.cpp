@@ -3,12 +3,7 @@
 namespace hnmav_kernel
 {
 
-    /* platform declare */
-    platform::~platform()
-    {
-        logger->write_info("clutil_platform delete object ");
-    }
-
+    
     cl_platform_id	platform::get_platform_ids()
     {
         return NULL;
@@ -19,7 +14,7 @@ namespace hnmav_kernel
     {
         platdevices_info   *platdevices = get_platdevices_data();
         clReleaseContext(platdevices->context);
-        logger->write_info("--- Release Context Completed");
+        logger->write_info("Release Context Completed");
         return true;
     }
 
@@ -27,7 +22,7 @@ namespace hnmav_kernel
     {
         platdevices_info   *platdevices = get_platdevices_data();
         clReleaseProgram(platdevices->program);
-        logger->write_info("--- Release Program Completed");
+        logger->write_info("Release Program Completed");
         return true;
     }
 
@@ -35,12 +30,12 @@ namespace hnmav_kernel
             cl_platform_id *platforms)
     {
         try {
-            logger->write_info("### Start in num_platforms_ids ###", format_type::type_header);
+            logger->write_info("Start in num_platforms_ids", format_type::type_header);
 
             platdevices_info   *platdevices = get_platdevices_data();
 
-            logger->write_info("--- Number entires   ", lexical_cast<std::string>(number_entries));
-            logger->write_info("--- Platforms number ", lexical_cast<std::string>(platdevices->num_platforms));
+            logger->write_info("Number entires   ", lexical_cast<std::string>(number_entries));
+            logger->write_info("Platforms number ", lexical_cast<std::string>(platdevices->num_platforms));
 
             cl_int err = clGetPlatformIDs(number_entries, platforms , &platdevices->num_platforms);
 
@@ -62,7 +57,7 @@ namespace hnmav_kernel
     */
     bool platform::init_platforms_ids()
     {
-        logger->write_info("### Start init_platforms_ids ### ", format_type::type_header);
+        logger->write_info("Start init_platforms_ids", format_type::type_header);
 
         try {
             platdevices_info   *platforms = get_platdevices_data();
@@ -77,14 +72,16 @@ namespace hnmav_kernel
 
             err |= clGetPlatformIDs(platforms->num_platforms, platforms->platform_ids, NULL);
 
-            logger->write_info("--- Number platform ",lexical_cast<std::string>(platforms->num_platforms));
-            logger->write_info("--- Platform IDs    ",lexical_cast<std::string>(&platforms->platform_ids));
+            logger->write_info("Number platform ",lexical_cast<std::string>(platforms->num_platforms));
+            logger->write_info("Platform IDs    ",lexical_cast<std::string>(&platforms->platform_ids));
 
             if(err != CL_SUCCESS) {
                 throw cl::clutil_exception(err, "clGetPlatformIDs");
             }
 
-            DisplayPlatformInfo(platforms->platform_ids[platform_id], CL_PLATFORM_VENDOR, "CL_PLATFORM_VENDOR");
+            DisplayPlatformInfo(platforms->platform_ids[platform_id], 
+								CL_PLATFORM_VENDOR, 
+								"CL_PLATFORM_VENDOR");
 
             return true;
         } catch(std::runtime_error e) {
@@ -95,7 +92,7 @@ namespace hnmav_kernel
 
     cl_device_id& platform::get_device_ids(cl_device_type device_type)
     {
-        logger->write_info("### Start get_devices_ids ###", format_type::type_header);
+        logger->write_info("Start get_devices_ids", format_type::type_header);
         platdevices_info   *devices = get_platdevices_data();
 
         for(int count_platform  = 0; count_platform < devices->num_platforms; count_platform++) {
@@ -112,7 +109,8 @@ namespace hnmav_kernel
                     logger->write_info("!!! Cannot initial devices ids-stage 1 ", format_type::type_header);
                     throw   cl::clutil_exception(err, "clGetDeviceIDs");
                 } else if(devices->num_devices > 0) {
-                    devices->device_ids =  (cl_device_id *)malloc(sizeof(cl_device_id) * devices->num_devices );
+                    devices->device_ids =  (cl_device_id *)
+													malloc(sizeof(cl_device_id) * devices->num_devices );
                     err = clGetDeviceIDs(
                             devices->platform_ids[count_platform],
                             device_type,
@@ -131,8 +129,8 @@ namespace hnmav_kernel
                 exit(EXIT_FAILURE);
             }
 
-            logger->write_info("--- Count Platform number", lexical_cast<std::string>(count_platform));
-            logger->write_info("--- Devices number       ", lexical_cast<std::string>(devices->num_devices));
+            logger->write_info("Count Platform number", lexical_cast<std::string>(count_platform));
+            logger->write_info("Devices number       ", lexical_cast<std::string>(devices->num_devices));
         }
 
         return *devices->device_ids;
@@ -141,7 +139,7 @@ namespace hnmav_kernel
 
     void platform::context_properties()
     {
-        logger->write_info("### Start context_properties ###", format_type::type_header);
+        logger->write_info("Start context_properties", format_type::type_header);
         platdevices_info   *platforms = get_platdevices_data();
 
         platforms->context_vec.push_back(CL_CONTEXT_PLATFORM);
@@ -153,7 +151,7 @@ namespace hnmav_kernel
 
     void  platform::cl_create_programs_with_source()
     {
-        logger->write_info("### Create create program with source ###", format_type::type_header);
+        logger->write_info("Create create program with source", format_type::type_header);
         platdevices_info   *devices = get_platdevices_data();
 
         try {
@@ -176,15 +174,15 @@ namespace hnmav_kernel
 
     void platform::cl_build_programs()
     {
-        logger->write_info("### Create build programs ###", format_type::type_header);
+        logger->write_info("Create build programs", format_type::type_header);
 
         platdevices_info   *devices = get_platdevices_data();
 
         const char options[] = "-Werror -cl-std=CL1.1 -I /home/chatsiri/workspacecpp/Hanumanav/src/kernels/cl/";
 
-        logger->write_info("--- Device programs ", lexical_cast<std::string>(devices->program));
-        logger->write_info("--- Device Number   ", lexical_cast<std::string>(devices->num_devices));
-        logger->write_info("--- Device Id       ", lexical_cast<std::string>(devices->device_ids[0]));
+        logger->write_info("Device programs ", lexical_cast<std::string>(devices->program));
+        logger->write_info("Device Number   ", lexical_cast<std::string>(devices->num_devices));
+        logger->write_info("Device Id       ", lexical_cast<std::string>(devices->device_ids[0]));
 
 
         try {
@@ -213,15 +211,15 @@ namespace hnmav_kernel
             logger->write_info( "Build log = ",build_log);
         }
 
-        logger->write_info("--- Create Programs ", lexical_cast<std::string>(devices->program));
+        logger->write_info("Create Programs ", lexical_cast<std::string>(devices->program));
 
     }
 
 
     bool platform::input_kernel_source(std::string str)
     {
-        logger->write_info("####   Input Kernel Source ####", format_type::type_header);
-        logger->write_info("--- Platform input kernel ", str);
+        logger->write_info("Input Kernel Source", format_type::type_header);
+        logger->write_info("Platform input kernel ", str);
 
         try {
             input_file_stream  = new std::ifstream(str.c_str());
@@ -247,14 +245,14 @@ namespace hnmav_kernel
 
     void  platform::cl_create_context()
     {
-        logger->write_info("### Create... cl_create_contxt ###", format_type::type_header);
+        logger->write_info("Create... cl_create_contxt", format_type::type_header);
 
         platdevices_info   *devices = get_platdevices_data();
         const cl_device_id *devices_id  = devices->device_ids;
         cl_uint             devices_num = devices->num_devices;
-        logger->write_info("--- Check properties ", lexical_cast<std::string>(devices->properties));
-        logger->write_info("--- Devices Number   ", lexical_cast<std::string>( *&devices_num));
-        logger->write_info("--- Devices IDs      ", lexical_cast<std::string>(devices_id));
+        logger->write_info("Check properties ", lexical_cast<std::string>(devices->properties));
+        logger->write_info("Devices Number   ", lexical_cast<std::string>( *&devices_num));
+        logger->write_info("Devices IDs      ", lexical_cast<std::string>(devices_id));
 
         cl_context_properties context_pro[] = {
             CL_CONTEXT_PLATFORM,
@@ -287,15 +285,15 @@ namespace hnmav_kernel
 
     std::string platform::get_platforms_info(cl_platform_info  name, std::string str)
     {
-        logger->write_info( "### Start get_platforms_info ###", format_type::type_header );
+        logger->write_info( "Start get_platforms_info", format_type::type_header );
         std::size_t param_value_size;
         std::string info_str;
 
         try {
             platdevices_info   *platforms = get_platdevices_data();
 
-            logger->write_info("--- Platform IDs   ", lexical_cast<std::string>(platform_id));
-            logger->write_info("--- Platform value ", lexical_cast<std::string>(platforms->platform_ids[platform_id]));
+            logger->write_info("Platform IDs   ", lexical_cast<std::string>(platform_id));
+            logger->write_info("Platform value ", lexical_cast<std::string>(platforms->platform_ids[platform_id]));
 
             cl_int err = clGetPlatformInfo(
                     platforms->platform_ids[platform_id],
@@ -318,7 +316,7 @@ namespace hnmav_kernel
             if(err != CL_SUCCESS)
                 throw cl::clutil_exception(err,"Fail to fine OpenCL Platform stage 2");
 
-            logger->write_info("--- Platform information ",  std::string(info));
+            logger->write_info("Platform information ",  std::string(info));
 
         } catch(std::runtime_error e) {
             logger->write_error(e.what());
@@ -331,7 +329,7 @@ namespace hnmav_kernel
 
     void platform::cl_get_devices_info()
     {
-        logger->write_info("#### Start cl_get_devices_inf ####", format_type::type_header);
+        logger->write_info("Start cl_get_devices_inf", format_type::type_header);
 
         platdevices_info   *platforms = get_platdevices_data();
         clGetDeviceInfo(
@@ -344,7 +342,7 @@ namespace hnmav_kernel
 				// Config size before run nd-rank
         //platforms->global_size = 100;
 
-        logger->write_info("--- Platform global size ", lexical_cast<std::string>(platforms->global_size));
+        logger->write_info("Platform global size ", lexical_cast<std::string>(platforms->global_size));
 
         clGetDeviceInfo(
                 *(platforms->device_ids),
@@ -356,7 +354,7 @@ namespace hnmav_kernel
 				// Config size before run nd-rank
         //platforms->local_size = 50;
 
-        logger->write_info("---  Platform local size ", lexical_cast<std::string>(platforms->local_size));
+        logger->write_info("Platform local size ", lexical_cast<std::string>(platforms->local_size));
 
 
     }
@@ -370,6 +368,15 @@ namespace hnmav_kernel
     {
         return src_prog->length();
     }
+
+			
+		platform::~platform(){
+					delete input_file_stream;
+					delete src_prog;
+					delete info;
+					delete fp;
+					delete source_str;
+		}
 
 
     /* clutil_platform declear */
@@ -455,6 +462,7 @@ namespace hnmav_kernel
 
     clutil_platform::~clutil_platform()
     {
+				platform_util->~platform();
     }
 
 

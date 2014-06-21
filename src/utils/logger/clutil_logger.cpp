@@ -87,7 +87,9 @@ namespace  hnmav_util
 
         std::vector<std::string> *list_info = format_info.get_str_format();
 
-        for(std::vector<std::string>::iterator iter_log = list_info->begin(); iter_log !=  list_info->end() ; ++iter_log)
+        for(std::vector<std::string>::iterator iter_log = list_info->begin();
+                iter_log !=  list_info->end() ;
+                ++iter_log)
             BOOST_LOG(write_log::get())<< *iter_log;
     }
 
@@ -102,7 +104,9 @@ namespace  hnmav_util
 
         std::vector<std::string> *list_header = format_log_header.get_str_format();
 
-        for(std::vector<std::string>::iterator iter_log = list_header->begin(); iter_log !=  list_header->end() ; ++iter_log)
+        for(std::vector<std::string>::iterator iter_log = list_header->begin();
+                iter_log !=  list_header->end() ;
+                ++iter_log)
             BOOST_LOG(write_log::get())<< *iter_log;
 
         // Info
@@ -110,7 +114,9 @@ namespace  hnmav_util
 
         std::vector<std::string> *list_detail = format_log_detail.get_str_format();
 
-        for(std::vector<std::string>::iterator iter_log = list_detail->begin(); iter_log !=  list_detail->end() ; ++iter_log)
+        for(std::vector<std::string>::iterator iter_log = list_detail->begin();
+                iter_log !=  list_detail->end() ;
+                ++iter_log)
             BOOST_LOG(write_log::get())<< *iter_log;
     }
 
@@ -223,7 +229,7 @@ namespace  hnmav_util
         frontend_core_vec.push_back(core);
     }
 
-		template class clutil_logging<std::string, int>;
+    template class clutil_logging<std::string, int>;
 
 }
 

@@ -3,9 +3,6 @@
 namespace hnmav_kernel
 {
 
-    //    namespace cl_bootstrap
-    //    {
-
     template<typename UtilPlatform,
              typename TireDefine,
              typename WorkTypes,
@@ -34,7 +31,7 @@ namespace hnmav_kernel
     cl_load_system()
     //:opencl_file_path_(&opencl_file_path)
     {
-        util::options_system& op_system = util::options_system::get_instance();
+        //util::options_system& op_system = util::options_system::get_instance();
         //init logger
         logger_ptr = &util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
@@ -137,15 +134,16 @@ namespace hnmav_kernel
     bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
     cl_build_memory()
     {
-				//TODO: Check memory buffer before build 
+        //TODO: Check memory buffer before build
 
         bool ret = memory_clutil->cl_build_node_buffer_object();
-				//memory_clutil->cl_check_buffer_size();
+        //memory_clutil->cl_check_buffer_size();
 
         if(!ret) {
             logger->write_info("cl_load_system::cl_init_memory, cannot build node buffer object");
             return false;
         }
+
         return true;
     }
 
@@ -156,25 +154,29 @@ namespace hnmav_kernel
              >
     bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
     cl_process_buffer(std::vector<char>& symbol_vec_ptr,
-            std::vector<size_t>&         state_vec_ptr,
-            std::vector<uint8_t>&        binary_vec)
+            std::vector<int>&            state_vec_ptr,
+            std::vector<char>&           binary_vec,
+            std::vector<uint8_t>&       result_vec)
     {
         //WorkTypes workloads;
-        //workloads.work_groups = 50;
-        //workloads.work_items  = 100;
         dstr::dstr_def::work_groupitems workloads;
-
+					//std::cout<<"Binary insert size : " <<  binary_vec.size() 
+					//<<", result wb size : " << result_vec.size() <<std::endl;
         logger->write_info_test("cl_load_system::cl_process_buffer, Symbol size",
                 boost::lexical_cast<std::string>(symbol_vec_ptr.size()));
         logger->write_info_test("cl_load_system::cl_process_buffer, State size",
                 boost::lexical_cast<std::string>(state_vec_ptr.size()));
         logger->write_info_test("cl_load_system::cl_process_buffer, File binary size",
                 boost::lexical_cast<std::string>(binary_vec.size()));
+				logger->write_info_test("cl_load_system::cl_process_buffer,  reuslt inex size",
+								boost::lexical_cast<std::string>(result_vec.size()));
 
-
-
-        memory_clutil->cl_create_buffer(workloads, symbol_vec_ptr, state_vec_ptr, binary_vec);
-     }
+        memory_clutil->cl_create_buffer(workloads,
+                symbol_vec_ptr, // symbol of signature.
+                state_vec_ptr, // state of symbol.
+                binary_vec,  // File binary char hex type.
+                result_vec); // result array index.
+    }
 
 
     template<typename UtilPlatform,
@@ -205,21 +207,13 @@ namespace hnmav_kernel
              typename ContainerT
              >
     bool cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::
-    cl_process_commandqueue()
+    cl_process_commandqueue(std::vector<uint8_t> * result_vec)
     {
         comqueue_clutil->cl_create_command_queue();
-
-        comqueue_clutil->cl_enqueue_nd_task();
-
-        // comqueue_clutil->cl_enqueue_task();
-
-        //comqueue_clutil->cl_read_buffer();
-        //            comqueue_clutil->cl_write_event();
-
-        //            comqueue_clutil->cl_call_kernel();
-
+        comqueue_clutil->cl_enqueue_nd_task(result_vec);
         return true;
     }
+
 
     /**
     * @brief Releases all cl processes.
@@ -244,8 +238,23 @@ namespace hnmav_kernel
         utilplat->cl_release_context();
     }
 
+template<typename UtilPlatform,
+             typename TireDefine,
+             typename WorkTypes,
+             typename ContainerT
+             >
+    cl_load_system<UtilPlatform, TireDefine, WorkTypes, ContainerT>::~cl_load_system()
+		{
+				delete opencl_file_path;
+				delete utilplat;
+				delete base_memory_clutil;
+				delete base_comqueue_clutil;
+				delete comqueue_clutil;
+				//delete node_tire_vec;
+			  //delete node_tire_input;
+				//delete node_tire_output;
+		}
 
-    //    }
 
     template class				 cl_load_system<clutil_platform,
                        dstr::dstr_def::work_groupitems,

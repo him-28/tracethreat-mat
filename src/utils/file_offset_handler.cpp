@@ -34,7 +34,7 @@ namespace utils
         //logger
         logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
-        logger->write_info_test("Init logger fileoffset");
+        //logger->write_info_test("Init logger fileoffset");
     }
 
 
@@ -60,17 +60,19 @@ namespace utils
     bool file_offset_handler<FileType, MAPPED_FILE>
     ::mapped_file(std::vector<const char*> file_name_vec,
             std::vector<MAPPED_FILE *> mapped_vec,
-            file_offset_handler<FileType, MAPPED_FILE>& file_offset_object)
+            file_offset_handler<FileType, MAPPED_FILE>& file_offset_object,
+						const char * file_sig)
     {
         std::vector<const char*>::iterator iter_files;
 
         mapped_vec_shared = boost::make_shared<std::vector<MAPPED_FILE * > >();
-
+				
         const char *file_name;
         std::string s_file_name;
+				std::string s_file_sig = file_sig;
         MAPPED_FILE *mapped_file_ptr;
 
-        if(!file_name_vec.size() || !mapped_vec.size() /*!mapped_vec_shared->size()*/ ) {
+        if(!file_name_vec.size() || !mapped_vec.size()) {
             logger->write_info("Not data on file_name or mapped file");
             return false;
         }
@@ -117,48 +119,46 @@ namespace utils
                     mapped_file_ptr->size =	file_status->st_size;
 
                     mapped_file_ptr->file = file_offset_object.get_popen_file();
-
+										/*
                     logger->write_info("Mapped file ptr size  ",
                             boost::lexical_cast<std::string>(mapped_file_ptr->size));
 
                     logger->write_info("Mapped file ptr name  ",
                             boost::lexical_cast<std::string>(mapped_file_ptr->file));
-
+										*/
                     if(mapped_file_ptr->size == 0 || mapped_file_ptr->file == -1) {
                         throw file_system_excep::offset_exception("[** File size don't get status **]");
                     }
-										//allocated size of file name. 
-									  mapped_file_ptr->file_name = (char*)malloc(sizeof(char*) * s_file_name.size());
-										//insert file name path.
-										mapped_file_ptr->file_name = s_file_name.c_str();
+				
+								mapped_file_ptr->file_name += s_file_name;
+								mapped_file_ptr->file_sig  += std::string(file_sig);// s_file_sig;
 
+								std::cout<<"file_offset_handler::mapped_file " << mapped_file_ptr->file_name <<std::endl;
+
+										
                     mapped_file_ptr->data = (uint8_t *)mmap(0,
                             mapped_file_ptr->size,
                             PROT_READ,
                             MAP_SHARED,// MAP_PRIVED, it's not changed/shared.
                             mapped_file_ptr->file,
                             0);
-
+										
                     //logger->write_info("Mapped file with mmap success");
 
-                    //TO-DO : Cannot set s_file_name.c_str() to mapped_file_ptr->file_name;
-                    //mapped_file_ptr->file_name = s_file_name;
-                    //logger->write_info("Mapped file name ", mapped_file_ptr->file_name);
-                    //mapped_file_ptr->file_name = (char*)malloc(s_file_name.size() + 1);
-                    //strcpy(mapped_file_ptr->file_name, s_file_name.c_str());
+                    
                     //logger->write_info("Mapped file name completed ", s_file_name);
 
                     //logger->write_info("Mapped file data ",
                     //        boost::lexical_cast<std::string>(mapped_file_ptr->data));
 
 										mapped_vec_shared->push_back(mapped_file_ptr);
-
+										
                     if(mapped_file_ptr->data == MAP_FAILED) {
                         throw file_system_excep
                         ::offset_exception("[** File cannot map **]");
                         file_offset_object.close_file();
                     }
-
+										
                 } catch(file_system_excep::offset_exception& offset_excep) {
                     logger->write_info("Error, Mapped file",
                             offset_excep.message_error_file_is_null());
@@ -168,6 +168,7 @@ namespace utils
             }
         }
 			  file_name_vec.clear(); // clear file name on list
+
         return true;
     }
 
@@ -202,6 +203,10 @@ namespace utils
 			return true;
     }
 
+	  template<typename FileType, typename MAPPED_FILE>
+    file_offset_handler<FileType, MAPPED_FILE>::~file_offset_handler(){
+
+		}
 
     template class file_offset_handler<struct common_filetype,
              struct MAPPED_FILE_PE>;

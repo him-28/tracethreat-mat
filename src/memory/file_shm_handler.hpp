@@ -41,6 +41,7 @@
 #include <boost/interprocess/allocators/allocator.hpp>
 #include "utils/get_process_id_name.hpp"
 
+#include "utils/logger/clutil_logger.hpp"
 
 
 //internal
@@ -50,9 +51,10 @@ namespace memory
 {
 
     namespace boostinp = boost::interprocess;
+    namespace h_util = hnmav_util;
 
     template<typename MAPPED_FILE>
-    class file_shm_handler /* : public file_shm_base<MAPPED_FILE> */
+    class file_shm_handler
     {
 
         public:
@@ -74,6 +76,9 @@ namespace memory
 
             };
             */
+
+						file_shm_handler();
+
 
             //char allocator
             typedef boostinp::allocator<char,
@@ -219,6 +224,10 @@ namespace memory
             //managed_shared_memory::size_type * sizes; : Not supported.
 						
 						std::map<const uint64_t, size_t>  map_file_size;
+
+						//logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
 
             /*Phase-2 : File mapped set file load to shared memory
             *

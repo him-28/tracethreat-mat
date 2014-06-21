@@ -1,0 +1,6 @@
+[submodule "src/clibasewrapper"]
+	path = src/clibasewrapper
+	url = git@github.com:Chatsiri/clibasewrapper.git
+[submodule "src/tbbscan"]
+	path = src/tbbscan
+	url = git@github.com:treadstoneproject/tbbscan.git

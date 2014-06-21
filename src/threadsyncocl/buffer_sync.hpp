@@ -1,10 +1,15 @@
-#ifndef CONTROLLER__BUFFER_SYNC_HPP_
-#define CONTROLLER__BUFFER_SYNC_HPP_
+#ifndef CONTROLLER__BUFFER_SYNC_HPP
+#define CONTROLLER__BUFFER_SYNC_HPP
+
+//Concurrency for vector.
+#include "tbb/concurrent_vector.h"
+
 // STL
 #include  <iostream>
 
 // 3rd
 #include "CL/cl.h"
+#include "boost/shared_ptr.hpp"
 
 // internal
 #include "utils/logger/clutil_logger.hpp"
@@ -23,78 +28,96 @@ namespace controller
     //struct buffer_kernel;
 
     struct slot_ocl;
-    template<typename MAPPED_FILE> struct data_ocl_process;
+    struct data_sig_process;
+
     template<typename Buffer, typename MAPPED_FILE> class  BufferSync;
 
-
+    //_________________________ Slot support OCL ___________________________
     struct slot_ocl {
         uint8_t  status;
         uint64_t start_point; //start point of binary file.
         uint64_t end_point;   //end point of binary file.
-        uint64_t processes_id_register; //insert processes thread_id;
         uint64_t file_map_md5; // check md5 match with file-shm mapping index.
+    };
+
+    /**
+    * @brief Plan-0003 : Support single signature scanning.
+    */
+    struct data_sig_process {
+        const char *sig_name;  //signature name
+        uint8_t      sig_type; //signature type
+        uint64_t     start_index_scan; // index start scanning.
     };
 
     template<typename MAPPED_FILE>
     struct data_ocl_process {
-        typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm *mapstr_shm;
-        typedef std::map<uint64_t,struct slot_ocl *>   map_thread_id_type;
+        typedef std::map<uint64_t,struct slot_ocl *>   map_md5_type;
 
-        //mapstr_shm_type *mapstr_shm;   // shared_memory system.
-        std::vector<char> binary_hex;  // input hex of char type.
-        std::vector<int>  index_binary_result; // index of vector binaries are hex of char type.
-        map_thread_id_type map_tidslot_ocl;
+        std::vector<char> binary_hex;   // input hex of char type.
+        std::vector<uint8_t> index_binary_result;  // index of vector binaries are hex of char type.
+        std::vector<char> symbol_hex;
+
+        map_md5_type map_fmd5_slot_ocl;
 
         //migrate from : struct name buffer_kernel.
         uint8_t buffer_length;
-
-        typedef uint64_t thread_int;
-        typedef uint8_t  size_int;
-
     };
 
 
+    //_________________________ BufferSync __________________________________
     template<typename Buffer, typename MAPPED_FILE>
     class BufferSync
     {
         public:
+            typedef boost::shared_ptr<std::vector<char> > binary_hex_sptr_type;
+            typedef Buffer  buffer_internal;
+
             BufferSync(uint8_t  buffersync_size);
             BufferSync();
-
+            ~BufferSync();
             //legacy concept.
             bool set_buffer(uint8_t buffer_size);
 
-            //volatile Buffer *buff;
+            //TODO: Plan-00003: volatile Buffer *buff;
             Buffer *buff;
+
+            //TODO: Plan-00003: Multiple name search virus.
+            data_sig_process *sig_processes;
+
 
             BufferSync<Buffer, MAPPED_FILE>& operator[](uint8_t value)const;
             BufferSync<Buffer, MAPPED_FILE>& operator=(BufferSync<Buffer, MAPPED_FILE> *buffr);
             BufferSync<Buffer, MAPPED_FILE>& operator*(BufferSync<Buffer, MAPPED_FILE>& buffr);
 
-            //thread register
-            bool threadbuff_regis(uint64_t thread_id);
+      
+            //File MD5 register for OCL
+            bool filemd5_regis_ocl(uint64_t fmd5_id);
 
-            bool threadbuff_sync_slotocl(uint64_t thread_id);
 
-            std::vector<int> threadbuff_result()const;
+            bool write_binary_hex_ocl(const char *char_hex,
+                    uint64_t size_hex,
+                    uint64_t fmd5_id);
 
-            bool write_binary_hex(const char *char_hex, uint64_t size_hex, uint64_t thread_id);
-
+       
             /**
             * @brief Insert hex char to vector. Default char_hex is byte per file.
             *
             * @param char_hex  Hex representive of char type. It's binary of file.
-            * @param binary_hex  Vector contains char hex send to OCL.
-            * @param s_ocl Slot_ocl contains detail status and length of file.
+            * @param size_hex  size of vector hex.
             *
             * @return True, If not problem after inserts data to vector<char>.
             */
             bool setbuff_ocl(const char *char_hex, uint64_t size_hex);
+ 
+
+            bool set_size_summary(uint64_t size_summary);
 
         private:
-            typename Buffer::size_int size_buff;
+            uint8_t size_buff;
             BufferSync<Buffer, MAPPED_FILE> *buffersync_ptr;
 
+            std::vector<char> *binary_hex_ptr;
+            std::vector<char> *symbol_hex_ptr;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

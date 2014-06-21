@@ -57,23 +57,27 @@ namespace hnmav_kernel
         std::vector<cl_mem>    *mem_input_buffers;
         // Size of buffer node_data insert to devices
         int                     mem_input_buffers_sizes;
-				// Vector contains buffer
+        // Vector contains buffer
         dstructure::vector_buffer<cl_mem> vec_buffer;
 
         // Work ID of argument send-received from kernel
-				unsigned int * work_dim;
+        unsigned int *work_dim;
         // Global ID of argument send-received from kernel
-        unsigned int * global_id;
-				
+        unsigned int *global_id;
+
         std::vector<cl_mem> 	 *mem_copy_buffers;
         //std::vector<char> *node_tire_input;
         std::vector<char>  				node_symbol_vec;
-			  std::vector<size_t>       node_state_vec;
-				std::vector<uint8_t>  node_binary_vec;
-
-				//return symbol to host(write back)
-				char *      symbol_wb;
-
+        std::vector<int>          node_state_vec;
+        std::vector<char>  				node_binary_vec; //uint8_t
+        std::vector<uint8_t>   *   node_result_vec;
+        //return symbol to host(write back)
+        char       *symbol_wb;
+        int        *result_wb;
+				int        *result_group_wb;
+        cl_uint         search_length_wg; // calculate before send to nd;
+        cl_uint         binary_length;    // from node_binary_vec;
+        cl_uint         symbol_length;    // from symbol_binary_vec;
         // buffer global size
         int					 buffer_elements;
     };

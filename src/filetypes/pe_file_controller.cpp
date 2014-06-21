@@ -2,17 +2,21 @@
 #include "boost/lexical_cast.hpp"
 //#include "utils/logger/format_logger.hpp"
 //#include "utils/logger/clutil_logger.hpp"
+#include "threadconcurrency/cliprescan_pe_controller.hpp"
+//#include "threadconcurrency/cliprescan_pe_task.hpp"
+
+using namespace controller;
 
 namespace filetypes
 {
-
+	
     template<typename MAPPED_FILE>
     pe_file_controller<MAPPED_FILE>::pe_file_controller()
     {
         //logger
         logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
-        logger->write_info_test("Init logger pe_file_controller");
+       // logger->write_info_test("Init logger pe_file_controller");
     }
 
     template<typename MAPPED_FILE>
@@ -182,14 +186,16 @@ namespace filetypes
         count_offset = 0;
 
 
-        logger->write_info_test("pe_file_controller::retrive_offset,pe_header->OptionalHeader32.AddressOfEntryPoint",
-                boost::lexical_cast<std::string>(pe_header->OptionalHeader.AddressOfEntryPoint));
+        //logger->write_info_test("pe_file_controller::retrive_offset, \
+        //pe_header->OptionalHeader32.AddressOfEntryPoint",
+        //       boost::lexical_cast<std::string>(pe_header->OptionalHeader.AddressOfEntryPoint));
 
         //calculate block
         nth_ext_shared_ptr->rva_block  = pe_header->OptionalHeader.AddressOfEntryPoint;
         nth_ext_shared_ptr->size_block = pe_map_ptr->size -((uint8_t *)pe_header - pe_map_ptr->data);
 
-        printf("(RVA_BLOCK, pe_header->OptionalHeader.AddressOfEntryPoint : %d \n", pe_header->OptionalHeader.AddressOfEntryPoint);
+        //printf("(RVA_BLOCK, pe_header->OptionalHeader.AddressOfEntryPoint : %d \n", \
+        //pe_header->OptionalHeader.AddressOfEntryPoint);
 
 
         while(count_offset < MIN(pe_header->FileHeader.NumberOfSections, 60)) {
@@ -200,9 +206,12 @@ namespace filetypes
                     uint64_t  pe_offset_start = section->PointerToRawData +
                             (nth_ext_shared_ptr->rva_block - section->VirtualAddress);
 
-                    logger->write_info_test("section->PointerToRawData", boost::lexical_cast<std::string>(section->PointerToRawData));
-                    logger->write_info_test("nth_ext_shared_ptr->rva_block", boost::lexical_cast<std::string>(nth_ext_shared_ptr->rva_block));
-                    logger->write_info_test("section->VirtualAddress", boost::lexical_cast<std::string>(section->VirtualAddress));
+                    logger->write_info_test("section->PointerToRawData",
+                            boost::lexical_cast<std::string>(section->PointerToRawData));
+                    logger->write_info_test("nth_ext_shared_ptr->rva_block",
+                            boost::lexical_cast<std::string>(nth_ext_shared_ptr->rva_block));
+                    logger->write_info_test("section->VirtualAddress",
+                            boost::lexical_cast<std::string>(section->VirtualAddress));
 
                     nth_ext_shared_ptr->offset 				= pe_offset_start;
                     nth_ext_shared_ptr->data_offset   = pe_map_ptr->data;
@@ -230,7 +239,7 @@ namespace filetypes
 
 
     template<typename MAPPED_FILE>
-    util::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
+    utils::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
             std::vector<size_t>   *state_vec,
             std::vector<uint8_t> *file_buffer_vec)
     {
@@ -246,24 +255,94 @@ namespace filetypes
                 boost::lexical_cast<std::string>(state_vec->size()));
         logger->write_info("Send to pe_file_controller::scan, send symbol, state and binary to ocl",
                 hnmav_util::format_type::type_header);
-
+        /*
+        	std::vector<uint64_t>  result_vec;
         //load open file kernel file
-        this->load_system.set_opencl_file(*this->kernel_file_path_ptr);
-        this->load_system.cl_load_platform();
-        this->load_system.cl_load_memory();
-        this->load_system.cl_process_buffer(*symbol_vec, *state_vec, *file_buffer_vec);
-        this->load_system.cl_build_memory();
-        this->load_system.cl_load_commandqueue();
-        this->load_system.cl_process_commandqueue();
+        load_ocl_system.set_opencl_file(*this->kernel_file_path_ptr);
+        load_ocl_system.cl_load_platform();
+        load_ocl_system.cl_load_memory();
+        load_ocl_system.cl_process_buffer(*symbol_vec, *state_vec, *file_buffer_vec, result_vec);
+        load_ocl_system.cl_build_memory();
+        load_ocl_system.cl_load_commandqueue();
+        load_ocl_system.cl_process_commandqueue();
+        */
 
-
-        return utils::found;
+        return utils::infected_found;
     }
+
+    template<typename MAPPED_FILE>
+    utils::scan_file_code  pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
+            std::vector<size_t> *state_vec,
+            std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
+            std::string *kernel_file_path_ptr,
+						memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> * sig_shm)
+    {
+
+        typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
+        uint64_t summary_file_size = 0;
+	
+        //summary file size of all
+        for(iter_mapped_files = mapped_file_pe_vec->begin();
+                iter_mapped_files != mapped_file_pe_vec->end();
+                ++iter_mapped_files) {
+            MAPPED_FILE   *mf_pe = *iter_mapped_files;
+            summary_file_size += mf_pe->size;
+        }//end-for loop
+
+
+        //logger->write_info("pe_file_policy::scan_file_type(), Initial file-shm size completed.");
+
+
+				//pre-scan
+				/* - Comment for test with OCL flow only.
+				int64_t timeout_scan = 1000LL;
+				controller::cliprescan_pe_controller<MAPPED_FILE>  prescan_pe;
+				prescan_pe.initial_task_size(mapped_file_pe_vec->size(), timeout_scan, mapped_file_pe_vec);
+				prescan_pe.task_start();
+				*/
+
+				//post-scan
+        f_shm_handler.initial_shm(summary_file_size);
+        f_shm_handler.initial_file_shm(mapped_file_pe_vec);
+
+        //logger->write_info("pe_file_policy::scan_file_type(), Intial  file-shm data completed.");
+
+        //Send thread pointer to pe_file_controler::scan. Binary file add to tsync before call start()
+        //member function of comm_thread_buff.
+        //Send vector contains symbol and state.
+        //send data to OCL
+        tsync.init_syncocl_workload(f_shm_handler.get_map_str_shm(),
+                f_shm_handler.get_map_file_size(),
+								sig_shm);
+
+        //logger->write_info("pe_file_policy::scan_file_type(), Initial OCL workload completed.");
+
+        tsync.add_load_ocl_system(&load_ocl_system,
+                kernel_file_path_ptr,
+                symbol_vec,
+                state_vec);
+
+        //logger->write_info("pe_file_policy::scan_file_type(), OCL workload completed.");
+
+        //tsync.add_sig_process(symbol_vec, state_vec);
+
+        //logger->write_info("pe_file_policy::scan_file_type(), Add signature completed.");
+
+        tsync.start_processes();
+
+        //logger->write_info("pe_file_policy::scan_file_type(), Processes completed.");
+
+        //tsync.get_slot_ocl_result();
+
+        //TODO : Create struct contains result from OCL.: Stuct contains result with pointer.
+        //return std::vector<char>();
+    }// end scan
+
 
     template<typename MAPPED_FILE>
     bool pe_file_controller<MAPPED_FILE>::convert2buffer(uint8_t   *data, size_t size)
     {
-				
+
         file_buffer_vec.assign(data, data+size); //--error will be change
 
         if(file_buffer_vec.size() == 0) return false;
@@ -443,5 +522,4 @@ namespace filetypes
     }
 
     template class pe_file_controller<struct MAPPED_FILE_PE>;
-
 }

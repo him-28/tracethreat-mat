@@ -1,5 +1,4 @@
-AC_PREREQ([2.59])
-AC_INIT([threadsyncocl],[0.1],[technique@hnmav.org])
+AC_INIT([hnmav], [0.1], [rchatsiri@hnmav.io], [avanalysis-tools], [http://www.hnmav.io])
 
 #unique source file 
 AC_CONFIG_SRCDIR([src/bin/tsyncocl.cpp])
@@ -10,10 +9,11 @@ AC_CONFIG_AUX_DIR([build-aux])
 #build flags
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
+
 AC_PROG_CXX
 AC_PROG_RANLIB
 
-AC_PROG_CC
+#AC_PROG_CC
 
 #check for program
 AC_LANG([C++])
@@ -29,7 +29,7 @@ AC_CHECK_HEADERS([iostream])
 #m4_pattern_allow([AC_PROG_LIBTOOL])
 #AC_PROG_LIBTOOL
 
-LIBS="-lgtest -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem -lOpenCL $LIBS"
+LIBS="-lgtest -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem -lboost_timer -lOpenCL -lrt -lclamav $LIBS"
 
 AC_TYPE_SIZE_T
 ##################################
@@ -44,7 +44,7 @@ AC_SUBST([LIBS])
 AC_SUBST([AM_CFLAGS])
 
 #check library function
-#AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/threadsyncocl/Makefile])
@@ -56,8 +56,11 @@ AC_CONFIG_FILES([src/exception/Makefile])
 AC_CONFIG_FILES([src/filetypes/Makefile])
 AC_CONFIG_FILES([src/memory/Makefile])
 AC_CONFIG_FILES([src/scan/Makefile])
-AC_CONFIG_FILES([src/rules/Makefile])
 AC_CONFIG_FILES([src/bin/Makefile])
+AC_CONFIG_FILES([src/decompiler/Makefile])
+AC_CONFIG_FILES([src/clibasewrapper/Makefile])
+AC_CONFIG_FILES([src/threadconcurrency/Makefile])
+AC_CONFIG_FILES([src/tbbscan/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
 AC_OUTPUT

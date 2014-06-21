@@ -1,5 +1,13 @@
-#include "ocl/utils/clutil_commandqueue.hpp"
+
 #include "CL/cl.h"
+
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
+
+#include "utils/base/system_code.hpp"
+
+#include "ocl/utils/clutil_commandqueue.hpp"
+//GPU OCL new namespace
 
 namespace hnmav_kernel
 {
@@ -11,7 +19,7 @@ namespace hnmav_kernel
 
     bool commandqueue::cl_create_kernel()
     {
-        logger->write_info("### Start cl_create_kernel ###", format_type::type_header);
+        logger->write_info("Start cl_create_kernel", format_type::type_header);
 
         try {
             cl_int err = CL_SUCCESS;
@@ -49,10 +57,29 @@ namespace hnmav_kernel
     */
     bool commandqueue::cl_create_command_queue()
     {
-        logger->write_info("### Start cl_create_command_queue ###", format_type::type_header);
+        logger->write_info("Start cl_create_command_queue", format_type::type_header);
 
         cl_int err = CL_SUCCESS;
         platdevices_info *platdevices = get_platdevices_data();
+
+        //calculate global,local size of thread.
+        cl_uint total_search_pos = platdevices->node_binary_vec.size() -
+                platdevices->node_symbol_vec.size() +1;
+
+        int search_length_wg =  SEARCH_BYTES_PER_ITEM * LOCAL_SIZE;
+        int workgroup_count  =  (total_search_pos + search_length_wg - 1)/search_length_wg;
+
+
+        platdevices->local_size  = LOCAL_SIZE;
+        //24;//platdevices->node_symbol_vec.size();  //symbol_vec : 32
+        platdevices->global_size = platdevices->local_size * workgroup_count;
+        //1024;//platdevices->node_binary_vec.size();  //symbol_vec : 1024
+        //Binary length kernel argv size.
+        platdevices->binary_length = platdevices->node_binary_vec.size();
+        //Symbol length kernel argv size
+        platdevices->symbol_length = platdevices->node_symbol_vec.size();
+        //search_length_wg
+        platdevices->search_length_wg = search_length_wg;
 
         // get string input
         int  count_mem_object = 0;
@@ -83,8 +110,6 @@ namespace hnmav_kernel
                         lexical_cast<std::string>(command_queue));
                 logger->write_info("--- Count_queue               ",
                         lexical_cast<std::string>(count_queue));
-                // logger->write_info("--- Address of mem_input_buffer  ",
-                //        lexical_cast<std::string>(platdevices->mem_input_buffers->size()));
                 logger->write_info("--- Kernel size               ",
                         lexical_cast<std::string>(platdevices->kernels.size()));
 
@@ -118,8 +143,74 @@ namespace hnmav_kernel
                         sizeof(cl_mem),
                         platdevices->vec_buffer.pop_index(3));
 
+                //size byte result compare
+                err |= clSetKernelArg(
+                        platdevices->kernels[0],
+                        4,
+                        sizeof(cl_mem),
+                        platdevices->vec_buffer.pop_index(4));
+
+                err |= clSetKernelArg(
+                        platdevices->kernels[0],
+                        5,
+                        sizeof(cl_mem),
+                        platdevices->vec_buffer.pop_index(5));
+
                 if(err != CL_SUCCESS) {
-                    logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg");
+                    logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg 5");
+                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                }
+
+                //binary length
+                err |= clSetKernelArg(
+                        platdevices->kernels[0],
+                        6,
+                        sizeof(cl_uint),
+                        (void *)&platdevices->binary_length);
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg 6");
+                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                }
+
+                //symbol(pattern) length
+                err |= clSetKernelArg(
+                        platdevices->kernels[0],
+                        7,
+                        sizeof(cl_uint),
+                        (void *)&platdevices->symbol_length);
+
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg 7");
+                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                }
+
+
+                //max length
+                err |= clSetKernelArg(
+                        platdevices->kernels[0],
+                        8,
+                        sizeof(cl_uint),
+                        (void *)&platdevices->search_length_wg);
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg 8");
+                    throw cl::clutil_exception(err, "clCreateKernelArg");
+                }
+
+
+                //symbol(pattern) length; local
+                err |= clSetKernelArg(
+                        platdevices->kernels[0],
+                        9,
+                        platdevices->node_symbol_vec.size(),
+                        NULL);
+
+
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue, Cannot create kernel arg 9");
                     throw cl::clutil_exception(err, "clCreateKernelArg");
                 }
 
@@ -149,7 +240,7 @@ namespace hnmav_kernel
                         cl_mem_state,
                         CL_TRUE,
                         0,
-                        sizeof(size_t) * platdevices->node_state_vec.size(),
+                        sizeof(int) * platdevices->node_state_vec.size(), //size_t
                         (void *)&platdevices->node_state_vec[0],
                         0,
                         NULL,
@@ -164,15 +255,14 @@ namespace hnmav_kernel
                 //Binary of file to queue
                 cl_mem cl_mem_binary = platdevices->vec_buffer[2];
 
-                logger->write_info_test("commandqueue::cl_create_command_queue,\
-									clEnqueueWriteBuffer, node_binary_vec size ",
+                logger->write_info_test("commandqueue::cl_create_command_queue, node_binary_vec size ",
                         boost::lexical_cast<std::string>(platdevices->node_binary_vec.size()));
 
                 err |= clEnqueueWriteBuffer(platdevices->queues[0],
                         cl_mem_binary,
                         CL_TRUE,
                         0,
-                        sizeof(uint8_t) * platdevices->node_binary_vec.size(),
+                        sizeof(char) * platdevices->node_binary_vec.size(), //uint8_t
                         (void *)&platdevices->node_binary_vec[0],
                         0,
                         NULL,
@@ -182,7 +272,32 @@ namespace hnmav_kernel
                     logger->write_info("commandqueue::cl_create_command_queue,\
 											 clEnqueueWriteBuffer 03 error");
                     throw cl::clutil_exception(err, "clEnqueueWriteBuffer");
-                }                
+                }
+
+
+                cl_mem cl_mem_result = platdevices->vec_buffer[4];
+
+                logger->write_info_test("commandqueue::cl_create_command_queue, node_result_vec size ",
+                        boost::lexical_cast<std::string>(platdevices->node_result_vec->size()));
+                logger->write_info_test("commandqueue::cl_create_command_queue, result [0] ",
+                        boost::lexical_cast<std::string>(platdevices->node_result_vec->at(0)));
+
+                err |= clEnqueueWriteBuffer(platdevices->queues[0],
+                        cl_mem_result,
+                        CL_FALSE,
+                        0,
+                        sizeof(uint8_t) * platdevices->node_result_vec->size(),
+                        (void *)&platdevices->node_result_vec->at(0),
+                        0,
+                        NULL,
+                        NULL);
+
+                if(err != CL_SUCCESS) {
+                    logger->write_info("commandqueue::cl_create_command_queue,\
+											 clEnqueueWriteBuffer 04 error");
+                    throw cl::clutil_exception(err, "clEnqueueWriteBuffer");
+                }
+
 
             }
 
@@ -194,26 +309,95 @@ namespace hnmav_kernel
         return true;
     }
 
+    /*Magic code for test : commandqueue::cl_enqueue_nd_task  */
+    //int size_symbol_bw = platdevices->node_symbol_vec.size();
 
-    bool commandqueue::cl_enqueue_nd_task()
+    //const char *binary_test = "e1fba0e00b409cd21b8014ccd215468";
+    //const char *binary_end  = binary_test + strlen(binary_test);
+    //std::vector<char>  data_check;
+    //data_check.insert(data_check.end(), binary_test, binary_end);
+
+    /*
+     for(int count_bin = 129; count_bin < 180; count_bin++) {
+     if(platdevices->node_binary_vec[count_bin] == data_check[0]) {
+     printf("Data equal: %c, index : %d \n",
+             platdevices->node_binary_vec[count_bin],
+             count_bin);
+
+     for(int count_data = 1; count_data < data_check.size(); count_data++) {
+         count_bin++;
+
+         if(platdevices->node_binary_vec[count_bin] == data_check[count_data]) {
+             printf("Data equal: %c, index : %d \n",
+                     platdevices->node_binary_vec[count_bin],
+                     count_bin);
+
+         } else {
+             //printf("-----break-----\n");
+             break;
+         }
+     }
+     }
+     }
+     */
+    /*
+    for(int count_symbol = 129;
+    count_symbol < 180;//platdevices->node_binary_vec.size();
+    count_symbol++) {
+
+    //if( platdevices->result_wb[count_symbol] > 0){
+    printf("print value int : %d, index : %d \n",
+    platdevices->result_wb[count_symbol],
+    count_symbol);
+    //}
+
+    }//for
+    */
+
+    bool commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> *result_vec)
     {
-        logger->write_info("#### Start cl_enqueue_nd_task ####", format_type::type_header);
+        logger->write_info("Start cl_enqueue_nd_task", format_type::type_header);
 
         cl_int err = CL_SUCCESS;
         platdevices_info *platdevices = get_platdevices_data();
 
         try {
 
+					/*
+            printf("\n----- Hex test -------\n");
+            int count_in = 0;
+						
+            //defaul 140-160, 1215370 - 1215390
+            for(int countb = 65530; countb < 65550; countb++) {
+                printf("| data : %c , index : %d | ", platdevices->node_binary_vec[countb], countb);
+            }
+
+            for(int countb = 65530; countb < 65550; countb++) {
+                printf("%c", platdevices->node_binary_vec[countb]);
+            }
+
+
+            printf("\n----- End Hex --------\n");
+
+            printf("\n------ State----------\n");
+
+            for(int counts = 0; counts < platdevices->node_symbol_vec.size(); counts++) {
+
+                printf("AC Parallel, Data :%c , State : %d \n",
+                        platdevices->node_symbol_vec[counts], platdevices->node_state_vec[counts]);
+
+            }
+
+            printf("\n------ End Symbol---------\n");
+					*/
+            //Calculate work size.
+            std::size_t offset = 0;
+
             logger->write_info("--- Global Size NDRange ",
                     lexical_cast<std::string>(platdevices->global_size));
 
             logger->write_info("--- Local Size NDRange ",
                     lexical_cast<std::string>(platdevices->local_size));
-
-            std::size_t offset = 0;
-            //Calculate work size.
-            platdevices->global_size = platdevices->node_symbol_vec.size();
-            platdevices->local_size  = platdevices->node_symbol_vec.size();
 
             for(int count_queue = 0; count_queue < platdevices->queues.size(); count_queue++) {
                 cl_event event;
@@ -236,48 +420,105 @@ namespace hnmav_kernel
                         lexical_cast<std::string>(count_queue));
             }
 
-								logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
-                platdevices->symbol_wb = (char *)malloc(sizeof(char) * platdevices->node_symbol_vec.size());
-                //write back- test only
-                err |= clEnqueueReadBuffer(platdevices->queues[0],
-                        *platdevices->vec_buffer.pop_index(3),
-                        CL_TRUE,
-                        0,
-                        sizeof(char) * platdevices->node_symbol_vec.size(),
-                        platdevices->symbol_wb,
-                        0,
-                        NULL,
-                        NULL);
+            logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
 
-                if(err != CL_SUCCESS) {
-                    logger->write_info("commandqueue::cl_create_command_queue,\
+            platdevices->result_wb  = (int *)malloc(sizeof(int)  * platdevices->node_binary_vec.size());
+            platdevices->result_group_wb = (int *)malloc(sizeof(int) * platdevices->node_binary_vec.size());
+            std::vector<int>::iterator iter_state;
+
+            std::fill(platdevices->result_wb,
+                    platdevices->result_wb + platdevices->node_binary_vec.size(),
+                    1);
+
+            for(iter_state = platdevices->node_state_vec.begin();
+                    iter_state != platdevices->node_state_vec.end();
+                    ++iter_state) {
+                //std::cout<<"Data state : " << *iter_state <<std::endl;
+
+            }
+
+            //write back- test only
+            err |= clEnqueueReadBuffer(platdevices->queues[0],
+                    *platdevices->vec_buffer.pop_index(4), //3
+                    CL_TRUE,
+                    0,
+                    sizeof(char) * platdevices->node_binary_vec.size(),
+                    platdevices->result_group_wb, //symbol_wb
+                    0,
+                    NULL,
+                    NULL);
+
+            if(err != CL_SUCCESS) {
+                logger->write_info("commandqueue::cl_create_command_queue, 03,\
 											 clEnqueueReadBuffer  error");
-                    throw cl::clutil_exception(err, "clEnqueueReadBuffer");
+                throw cl::clutil_exception(err, "clEnqueueReadBuffer");
+            }
+
+            //write back- test only
+            err |= clEnqueueReadBuffer(platdevices->queues[0],
+                    *platdevices->vec_buffer.pop_index(5),
+                    CL_TRUE,
+                    0,
+                    sizeof(int) * platdevices->node_binary_vec.size(),
+                    platdevices->result_wb,
+                    0,
+                    NULL,
+                    NULL);
+
+            if(err != CL_SUCCESS) {
+                logger->write_info("commandqueue::cl_create_command_queue, 05,\
+											 clEnqueueReadBuffer  error");
+                throw cl::clutil_exception(err, "clEnqueueReadBuffer");
+            }
+
+
+            std::vector<char>::iterator iter_symbol;
+
+            int count_symbol_size = 0;
+            //Threshold leves for mathcing string lenght. Less than real string size, Must not detailed.
+            uint64_t threshold_levels = 4;
+            uint64_t symbol_size = platdevices->node_symbol_vec.size();
+            threshold_levels = symbol_size - threshold_levels;
+
+            uint64_t index_result = 0;
+
+            while(index_result <= platdevices->node_binary_vec.size()) {
+                if(platdevices->result_wb[index_result] > 0) {
+                    int *hex_bin = &platdevices->result_wb[index_result]; //&, symbol_wb
+                    int *hex_bin_group = &platdevices->result_group_wb[index_result];
+
+                    if(*hex_bin > platdevices->node_binary_vec.size())
+                        break;
+
+
+                    if(platdevices->node_binary_vec[*hex_bin]) {
+
+                        std::cout<< " - binary index : " << *hex_bin
+                                <<  ", group index : "<< *hex_bin_group
+                                <<  ", data : " << platdevices->node_binary_vec[*hex_bin] << std::endl;
+
+												//Infected found bits set to node_binary_vec 
+												//platdevices->node_binary_vec[*hex_bin] = utils::infected_found;
+												uint8_t * write_index = &platdevices->node_result_vec->at(*hex_bin);
+                        *write_index = utils::infected_found;
+                    }
                 }
 
-                int size_symbol_bw = platdevices->node_symbol_vec.size();
+                index_result++;
 
-                for(int count_symbol = 0; count_symbol < size_symbol_bw; count_symbol++) {
-                    printf("Return data : %c \n", platdevices->symbol_wb[count_symbol]);
-                    logger->write_info("Return value ",
-                            boost::lexical_cast<std::string>(platdevices->symbol_wb[count_symbol]));
-
-                }
-								//Release memory
-								for(int count_mem = 0; count_mem < platdevices->vec_buffer.size(); count_mem++)
-								{
-									clReleaseMemObject(platdevices->vec_buffer[count_mem]);
-								}
-								//Release kernel
-								//clReleaseKernel(platdevices->kernel[0]);
-								cl_release_kernel();
-								cl_release_commandqueue();
-								//clReleaseCommandQueue(platdevices->queue[0]);
-								clReleaseProgram(platdevices->program);
-								clReleaseContext(platdevices->context);
+            }
 
 
-            //clWaitForEvents(platdevices->events.size(), const_cast<cl_event *>(&platdevices->events[0]));
+            //Release memory
+            for(int count_mem = 0; count_mem < platdevices->vec_buffer.size(); count_mem++) {
+                clReleaseMemObject(platdevices->vec_buffer[count_mem]);
+            }
+
+            cl_release_kernel();
+            cl_release_commandqueue();
+            clReleaseProgram(platdevices->program);
+            clReleaseContext(platdevices->context);
+
         } catch(std::runtime_error  ex) {
             logger->write_error( ex.what() );
             return false;
@@ -288,9 +529,10 @@ namespace hnmav_kernel
 
 
 
+
     bool commandqueue::cl_enqueue_task()
     {
-        logger->write_info("#### Start cl_enqueue_task ... ####", format_type::type_header);
+        logger->write_info("Start cl_enqueue_task ...", format_type::type_header);
 
         cl_int err = CL_SUCCESS;
         platdevices_info *platdevices = get_platdevices_data();
@@ -346,7 +588,7 @@ namespace hnmav_kernel
 
     bool commandqueue::cl_enqueue_unmap_buffer()
     {
-        logger->write_info("#### Start Unmap buffer ####", format_type::type_header);
+        logger->write_info("Start Unmap buffer", format_type::type_header);
 
         platdevices_info *platdevices = get_platdevices_data();
         cl_int err = CL_SUCCESS;
@@ -370,17 +612,49 @@ namespace hnmav_kernel
 
     }
 
+    bool commandqueue::cl_enqueue_map_buffer(cl_mem device_buffer,
+            void  *&host_ptr,
+            size_t size_bytes,
+            cl_map_flags flags)
+    {
+        platdevices_info *platdevices =  get_platdevices_data();
+        cl_int state;
+        host_ptr = (void *)clEnqueueMapBuffer(platdevices->queues.back(),
+                device_buffer,
+                CL_TRUE,
+                flags,
+                0,
+                size_bytes,
+                0,
+                NULL,
+                NULL,
+                &state);
+
+        if(state!= CL_SUCCESS) {
+            return false;
+
+        }
+
+        logger->write_info("commandqueue::cl_enqueue_map_buffer, code return :",
+                boost::lexical_cast<std::string>(state));
+        return true;
+    }
+
     bool commandqueue::cl_enqueue_map_buffer()
     {
-        logger->write_info("#### Start enqueue map buffer ####", format_type::type_header);
+        logger->write_info("Start enqueue map buffer", format_type::type_header);
 
         platdevices_info *platdevices =  get_platdevices_data();
 
         try {
             cl_int err = CL_SUCCESS;
 
-            logger->write_info("--- Mem copy check size   ", lexical_cast<std::string>((sizeof(cl_char) * platdevices->buffer_elements  * platdevices->num_devices)));
-            logger->write_info("--- Queue size            ", lexical_cast<std::string>(platdevices->queues.back()));
+            logger->write_info("--- Mem copy check size   ",
+                    lexical_cast<std::string>((sizeof(cl_char) *
+                            platdevices->buffer_elements  *
+                            platdevices->num_devices)));
+            logger->write_info("--- Queue size            ",
+                    lexical_cast<std::string>(platdevices->queues.back()));
 
             mapped_memory  =  clEnqueueMapBuffer(
                     platdevices->queues.back(),
@@ -449,17 +723,8 @@ namespace hnmav_kernel
             platdevices_info *platdevices = get_platdevices_data();
 
             int  count_input = 0;
-            char *signature_input;// = new char[platdevices->node_tire_input->size()]();
-            //char *signature_input = (char*)malloc(platdevices->node_tire_input->size() * sizeof(char));
-            /*
-            			for(typename std::vector<node_data>::iterator iter_data = platdevices->node_tire_input->begin();
-                    iter_data != platdevices->node_tire_input->end();
-                    ++iter_data, ++count_input) {
+            char *signature_input;
 
-                node_data  input_data = *iter_data;
-                signature_input[count_input] = input_data.data[count_input];
-            }
-            			*/
 
             cl_mem buffer          = platdevices->mem_input_buffers->at(0);
             cl_command_queue queue = platdevices->queues.at(0);
@@ -570,7 +835,12 @@ namespace hnmav_kernel
         return true;
     }
 
-
+    commandqueue::~commandqueue()
+    {
+        delete buffer_elements;
+        delete platdevices;
+        //delete mapped_memory;
+    }
 
 
     bool clutil_commandqueue::cl_release_kernel()
@@ -598,10 +868,11 @@ namespace hnmav_kernel
         return commandqueue_util->cl_write_event();
     }
 
-    bool clutil_commandqueue::cl_enqueue_nd_task()
+    bool clutil_commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> *result_vec)
     {
-        return commandqueue_util->cl_enqueue_nd_task();
+        return commandqueue_util->cl_enqueue_nd_task(result_vec);
     }
+
     /*
     bool clutil_commandqueue::cl_read_buffer()
     {
@@ -629,6 +900,19 @@ namespace hnmav_kernel
         return commandqueue_util->cl_enqueue_map_buffer();
     }
 
+
+    bool clutil_commandqueue::cl_enqueue_map_buffer(cl_mem device_buffer,
+            void  *&host_ptr,
+            size_t size_bytes,
+            cl_map_flags flags)
+    {
+        return commandqueue_util->cl_enqueue_map_buffer(device_buffer,
+                host_ptr,
+                size_bytes,
+                flags);
+    }
+
+
     bool clutil_commandqueue::cl_enqueue_unmap_buffer()
     {
         return commandqueue_util->cl_enqueue_unmap_buffer();
@@ -637,6 +921,11 @@ namespace hnmav_kernel
     void clutil_commandqueue::set_buffer_elements(std::size_t& buffer_elements_)
     {
         commandqueue_util->set_buffer_elements(buffer_elements_);
+    }
+
+    clutil_commandqueue::~clutil_commandqueue()
+    {
+        commandqueue_util->~commandqueue();
     }
 
 }

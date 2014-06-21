@@ -80,8 +80,8 @@ namespace utils
     {
         public:
             typedef std::vector<MAPPED_FILE *> map_file_vec;
-            typedef boost::shared_ptr<map_file_vec> mapped_vec_ptr;
-
+            typedef boost::shared_ptr<map_file_vec> mapped_vec_sptr;
+						typedef mapped_vec_sptr  mapped_vec_ptr;
             file_offset_handler();
             /**
             * @brief File pointer points file name in order to scanning.
@@ -109,7 +109,8 @@ namespace utils
             */
             bool  mapped_file(std::vector<const char*> file_name,
                     std::vector<MAPPED_FILE *> mapped_vec,
-                    file_offset_handler<FileType, MAPPED_FILE>& file_offset_object);
+                    file_offset_handler<FileType, MAPPED_FILE>& file_offset_object,
+										const char * file_sig);
 
             /**
             * @brief Ummap single file from memory.
@@ -129,13 +130,15 @@ namespace utils
             */
             mapped_vec_ptr get_mappedf_vec_ptr();
 
+						~file_offset_handler();
+
         private:
 
-            ifile<common_filetype> *ifh;
+            //ifile<common_filetype> *ifh;
 
             mapped_vec_ptr mapped_vec_shared;
 
-            MAPPED_FILE *mapped_file_ptr;
+            //MAPPED_FILE *mapped_file_ptr;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;

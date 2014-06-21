@@ -23,6 +23,11 @@ namespace data_structure
             virtual	const std::map<std::vector<SymbolT>, std::vector<StateT> > *get_container() const = 0;
 						virtual boost::shared_ptr<std::vector<SymbolT> > get_symbol_shared_ptr() = 0;
             virtual boost::shared_ptr<std::vector<StateT> >  get_state_shared_ptr() = 0;
+
+					//	virtual std::vector<SymbolT> get_symbol_vec() = 0;
+          //  virtual std::vector<StateT>  get_state_vec() = 0;
+
+
     };
 
     /**
@@ -44,9 +49,9 @@ namespace data_structure
                 state_shared_ptr_vec(boost::make_shared<state_vec>()) {
 
                 //logger
-                logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
-                logger = logger_ptr->get();
-                logger->write_info_test("Init logger actire_parallel ...");
+                //logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
+                //logger = logger_ptr->get();
+                //logger->write_info_test("Init logger actire_parallel ...");
 
 
             }
@@ -61,6 +66,8 @@ namespace data_structure
 
             bool parallel_algorithm();
 
+
+						~actire_parallel();
             /*
             boost::tuple<std::vector<SymbolT>,
             std::vector<StateT> > * get_container()const {
@@ -89,11 +96,21 @@ namespace data_structure
                 return state_shared_ptr_vec;
             }
 
+				 virtual symbol_vec get_symbol_vec() {
+                return symbol_shared_vec;
+            }
+
+            virtual state_vec get_state_vec() {
+                return state_shared_vec;
+            }
+
+						
+
         private:
 
             //Graph_
-            ContainerT *container_ac_parallel;
-            EdgesT      *edget_map;
+            //ContainerT *container_ac_parallel;
+            //EdgesT      *edget_map;
 
             // graph :  std::vector<boost::unordered_map<SymbolT, state_t> >
             // Index of vector
@@ -106,6 +123,9 @@ namespace data_structure
 
             boost::shared_ptr<symbol_vec>    symbol_shared_ptr_vec;
             boost::shared_ptr<state_vec>     state_shared_ptr_vec;
+
+						symbol_vec    symbol_shared_vec;
+            state_vec      state_shared_vec;
 
             boost::tuple<std::vector<SymbolT>,
                   std::vector<StateT> >  symbol_state_tuple;

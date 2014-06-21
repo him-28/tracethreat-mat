@@ -92,7 +92,7 @@ namespace data_structure
 
                         while ((next = goto_(state_, input)) == AC_FAIL_STATE) {
 														//printf("search, --- Check Fail ---\n");
-														//printf("search, state send to file_ : %lu \n", state_);
+														//printf("Search, state send to fail_ : %lu \n", state_);
                             state_ = fail_(state_);
                             //printf("search, fail_ state_ : %lu  \n", state_);
                         }
@@ -104,9 +104,11 @@ namespace data_structure
                     {
                         //printf("-- Callback --\n");
                         //printf("-- callback, state_ : %lu \n", state_);
+												//printf("--- Output size     : %d \n", output_.size());
+
                         std::set<std::size_t> const& out_node = output_[state_];
                         typename std::set<size_t>::const_iterator output_it;
-
+												//printf("Search, Set size : %d \n", out_node.size());
                         for (output_it = out_node.begin(); output_it != out_node.end(); ++output_it) {
                             //printf("-- callback, position where_ : %lu \n", where_);
                             callback(*output_it, where_);
@@ -118,12 +120,14 @@ namespace data_structure
             //get vector contain string, go_to and failture state to actire_parallel
 
             //output function
-            std::map<state_t, std::set<size_t> >& get_output_function() {
+            boost::unordered_map<state_t, std::set<size_t> >& get_output_function() {
                 return output_;
             }
 
             //get graph
             std::vector<boost::unordered_map<SymbolT, state_t> > const& get_graph() {
+						//std::vector<std::map<SymbolT, state_t> > const& get_graph() {
+
                 return goto_.get_nodes();
             }
 
@@ -139,12 +143,13 @@ namespace data_structure
             }
             // main private
         private:
-            typedef std::map<state_t, std::set<size_t> > output_function;
+            typedef boost::unordered_map<state_t, std::set<size_t> > output_function;
             //---------------------------Class go to function---------------------------------------
             class goto_function
             {
                 public:
                     typedef boost::unordered_map<SymbolT, state_t> edges_t;
+                    //typedef std::map<SymbolT, state_t> edges_t;
 
                     typedef std::vector<edges_t> nodes_t;
 
@@ -165,13 +170,15 @@ namespace data_structure
 
                         for ( ; kw_iter != kw_end; ++kw_iter) {
                             enter(*kw_iter, newstate);
+														//std::cout<<" Newstate in actire basic : " << newstate <<std::endl;
                             output_f[newstate].insert(kw_index++);
                         }
+											//printf("-- goto_function::goto_function, size : %d \n", output_f.size());
                     }
 
                     state_t operator()(state_t state, SymbolT const& symbol) const {
                         //assert(state < graph_.size());
-                        //printf("--- Check Goto_Function ---\n");
+                         //printf("--- Check Goto_Function, operater() ---\n");
                         //printf("goto_function, Graph_ in goto_function size : %lu \n", graph_.size());
                         //printf("goto_function, operator(), State : %lu, Symbol : %c \n", state, symbol);
                         edges_t const& node(graph_[state]); // State for next state map
@@ -192,6 +199,18 @@ namespace data_structure
                         return graph_;
                     }
 
+										~goto_function(){ 
+											typename std::vector<edges_t>::iterator iter_node;
+											for(iter_node = graph_.begin();
+													iter_node != graph_.end();
+													++iter_node)
+											{
+												   edges_t  edges = *iter_node;
+													 if(!edges.empty())  
+															edges.clear();
+											} 
+												//graph_.clear(); 
+										 }
                 private:
                     template <typename KeywordT>
                     void enter(
@@ -201,9 +220,12 @@ namespace data_structure
                         size_t index = 0;
                         edges_t *node;
 
-                        if(typeid(keyword) != typeid(std::string)) {
-                            std::cout<<" Is keyword " <<std::endl;
+												/*
+                        if(typeid(keyword) == typeid(std::string)) {
+                            std::cout<<" Is keywords are string" <<std::endl;
                         }
+												*/
+
 												//printf("--- Check Enter ---\n");
                         // follow existing symbol edges
                         for ( ; index < keyword.size(); index++) {
@@ -225,7 +247,7 @@ namespace data_structure
                             }
 
                             state = edge->second;
-
+												    //printf("State from edge : %d \n", state);
 
                         }
 
@@ -277,7 +299,7 @@ namespace data_structure
                                 queue.push_back(s);
                                 state_t state = table_[r];
 
-                                //printf("failure_function, State from table : %lu \n", state);
+                                //printf("failure_function, State from table : %lu , symbol : %c\n", state, a);
 
                                 while (_goto(state, a) == AC_FAIL_STATE) {
                                     state = table_[state];
@@ -297,6 +319,7 @@ namespace data_structure
                                         output[table_[s]].end());
                             }
                         }
+												//printf("ailure_function, summary output size : %d \n", output.size());
                     }
 
                     state_t operator()(state_t state) const {

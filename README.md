@@ -1,42 +1,50 @@
-HNMAV-OCL
-=============
+HNMAV-OCL Malware Analysis Tools.
+=================================
 
-- Pthread struct utility synchronizes with OpenCL.
-- Scanning with TBB(Multithread and Parallelization tasks) and OpenCL.
-- Compiler signature supported clamav signature and Yara-project.
+-[x] Pthread struct utility synchronizes with OpenCL.
 
-Goal
-====
-- Thread synchronizies OpenCL kernel.
-- Structure buffer send to thread.
+-[x] Scanning with TBB(Multithread and Parallelization tasks) and OpenCL.
 
-Structure
-=========
-- scan:
--- Scanning with PE, ELF on filetype, datastructure and utils directory.
--- Exe, PE, ELF
+-[] File Structure Support file type scanning type : PE, EXE, ELF and processes.
 
-- filetypes:
---PE
+-[] Compiler server DB signatures support ClamAV  and Yara-project signature.
 
-- internet
--- Packet filtering source code on internet directory. 
--- Massive scanning with internet network packets.
+-[] Ansynchronous message communication between server and client.
 
-- memory:
 
-- utils:
+Table of content
+============
 
-- data_structure:
+* [bin] (#hnmav-bin)
 
-- exception:
+* [filetypes](#hnmav-filetypes)
 
-- ocl:
+* [internet](#hnmav-internet)
 
--  test:
+* [memory](#hnmav-memory)
 
-- threadsyncocl:
+* [utils](#hnmav-utils)
 
-- time:
+* [data_structure](#hnmav-data_structure)
 
-- utils:
+* [exception](#hnmav-exception)
+
+* [ocl](#hnmav-ocl)
+
+* [test](#hnmav-test)
+
+* [threadsyncocl](#hnmav-threadsynocl)
+
+* [utils](#hnmav-utils)
+
+-------------------------------------------------------------------------- 
+
+<a name="hnmav-bin">Binary file execuated programs.</a>
+
+* Hnmavocl programs run on system. 
+
+<a name="hmanv-filetypes">File types support scanning sytem such as PE, EXE and ELF </a>
+* PE first version support PE layout file scanning.
+* EXE next version supported in future.
+* ELF next version supported in future.
+* Process supported in future.
