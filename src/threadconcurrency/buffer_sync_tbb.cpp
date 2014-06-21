@@ -81,7 +81,8 @@ namespace controller
 
 
     template<typename Buffer, typename MAPPED_FILE>
-    bool BufferSyncTBB<Buffer, MAPPED_FILE>::filemd5_regis_tbb(uint64_t fmd5_id, const char * file_name)
+    bool BufferSyncTBB<Buffer, MAPPED_FILE>::filemd5_regis_tbb(uint64_t fmd5_id, 
+				const char * file_name)
     {
 
         // file_name_md5 is thread_id
@@ -96,12 +97,13 @@ namespace controller
         s_tbb_ptr = new MAPPED_FILE;
         s_tbb_ptr->file_map_md5 = fmd5_id;
 				s_tbb_ptr->file_name    = file_name;
+				s_tbb_ptr->end_point    = 0;
         if(!map_fmd5_id->insert(std::make_pair(fmd5_id, s_tbb_ptr)).second) {
             //TODO: thread_id(file_name_md5) has on map
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
 
 
     }
@@ -113,6 +115,8 @@ namespace controller
             uint64_t fmd5_id)
     {
         //check binary length
+			  logger->write_info("BufferSyncTBB::write_binary_hex_tbb, file size",
+                boost::lexical_cast<std::string>(size_hex));
 
         std::map<uint64_t, MAPPED_FILE *>   *map_fmd5_id =
                 &buff->data_tbb_process<MAPPED_FILE>::fmd5_tbb_map;
@@ -127,7 +131,7 @@ namespace controller
             std::pair<uint64_t, MAPPED_FILE *> pair_s_tbb = *iter_mapfmd5;
             s_tbb = pair_s_tbb.second;
 
-            if(temp_start < s_tbb->end_point) {
+            if(temp_start <= s_tbb->end_point) {
                 temp_start = s_tbb->end_point;
 
                 logger->write_info("BufferSyncTBB::write_binary_hex_tbb(), Temp start point ",
@@ -181,17 +185,20 @@ namespace controller
         return res;
     }
 
-
+		//Append parallel insert binary stream to concurren_vector
     struct AppendBuffer {
         typedef tbb::concurrent_vector<char> binary_hex_type;
         binary_hex_type& binary_hex_;
-        AppendBuffer(binary_hex_type& _binary_hex) : binary_hex_(_binary_hex) { }
+				char * str_hex_;
+        AppendBuffer(binary_hex_type& _binary_hex, char * str_hex) : 
+							binary_hex_(_binary_hex),
+							str_hex_(str_hex) { }
         void operator()(const tbb::blocked_range<uint64_t>&   range) const {
 
-            for(uint64_t count_binhex = range.begin();
-                    count_binhex != range.end();
-                    ++count_binhex) {
-
+            for(uint64_t count_strhex = range.begin();
+                    count_strhex != range.end();
+                    ++count_strhex) {
+								binary_hex_.push_back(str_hex_[count_strhex]);
             }// for
         }// operator ()
 
@@ -219,7 +226,8 @@ namespace controller
         */
 
 				//https://gist.github.com/Chatsiri/3756912b63b1f325c788
-				tbb::parallel_for(tbb::blocked_range<uint64_t>(0, size_hex), AppendBuffer(buff->binary_hex));
+				tbb::parallel_for(tbb::blocked_range<uint64_t>(0, size_hex), 
+					AppendBuffer(buff->binary_hex, const_cast<char*>(char_hex)));
 
         return true;
     }

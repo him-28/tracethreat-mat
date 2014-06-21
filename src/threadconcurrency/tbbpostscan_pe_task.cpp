@@ -6,15 +6,15 @@ namespace controller
 
     tbbpostscan_pe_task::
     tbbpostscan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout):
-				_monitor(monitor),
-				_count(count),
-				_timeout(timeout),
-				_done(false)
+        _monitor(monitor),
+        _count(count),
+        _timeout(timeout),
+        _done(false)
     {
 
 
     }
-		
+
     bool tbbpostscan_pe_task::
     set_file(tbb::concurrent_vector<char> *_binary_hex_input)
     {
@@ -22,7 +22,7 @@ namespace controller
         binary_hex_input_ = _binary_hex_input;
         return true;
     }
-		
+
 
     bool tbbpostscan_pe_task::
     set_file_name(const char *_file_name)
@@ -75,23 +75,26 @@ namespace controller
     void tbbpostscan_pe_task::
     run()
     {
-        goto_ = &actire_engine_->get_goto_fn();
-        failure_ = &actire_engine_->get_failure_fn();
-        output_ = &actire_engine_->get_output_fn();
+            goto_ = &actire_engine_->get_goto_fn();
+            failure_ = &actire_engine_->get_failure_fn();
+            output_ = &actire_engine_->get_output_fn();
 
-        iactire_concur_->search_parallel(*goto_,
-                *failure_,
-                *output_,
-                *call_back_,
-                start_point,
-                end_point,
-                file_name,
-                binary_hex_input_);
+
+            bool res = iactire_concur_->search_parallel(*goto_,
+                    *failure_,
+                    *output_,
+                    *call_back_,
+                    start_point,
+                    end_point,
+                    file_name,
+                    binary_hex_input_);
+
 
         _startTime = util_thread::current_time();
 
         {
-            synchronized s(_sleep);
+		 
+           synchronized s(_sleep);
 
             try {
                 _sleep.wait(_timeout);
@@ -100,6 +103,7 @@ namespace controller
             } catch(...) {
                 assert(0);
             }
+					
         }
 
         _endTime =  util_thread::current_time();
@@ -109,7 +113,7 @@ namespace controller
         {
             synchronized s(_monitor);
 
-            std::cout << "Thread-PE" << _count << " completed " << std::endl;
+            std::cout << "Thread-PE-" << _count << " completed " << std::endl;
 
             _count--;
 

@@ -8,7 +8,7 @@
 #include "utils/file_offset_handler.hpp"
 
 //File Number
-#define FILE_ON 2
+#define FILE_ON 3
 
 
 using tbbscan::actire_pe_engine;
@@ -26,20 +26,19 @@ class TBBPostScanPEController : public  ::testing::Test
 
             std::string sig1 = "09cd21b80";
             std::string sig2 = "09cd21b44ce1aea";
+            /*
             char *binary_hex="a500e6b7a4b523235323234ae12b1e8bb";
 
-            //"a50009cd21b44ce1aea";
-
             memcpy(&binary_hex_input[*binary_hex_input.grow_by(strlen(binary_hex))],
-                    binary_hex,
-                    strlen(binary_hex)+1);
-
+            binary_hex,
+            strlen(binary_hex)+1);
+            */
             meta_sig_vec.push_back(new struct utils::meta_sig);
             msig = meta_sig_vec[0];
-            msig->sig  = "09cd21b80"; //sig_node to sig
+            msig->sig  = "09cd21b80abe3"; //sig_node to sig
             msig->virname   = "test_trojan_a";
             msig->sig_type  = utils::pe_file;
-            msig->sig_size  = sig1.size();
+            msig->sig_size  = strlen(msig->sig);
             sig_key_vec.push_back(std::string(msig->sig));
 
             meta_sig_vec.push_back(new struct utils::meta_sig);
@@ -47,7 +46,7 @@ class TBBPostScanPEController : public  ::testing::Test
             msig->sig  = "09cd21b44ce1aea";
             msig->virname   = "test_trojan_b";
             msig->sig_type  = utils::pe_file;
-            msig->sig_size  = sig2.size();
+            msig->sig_size  = strlen(msig->sig);
             sig_key_vec.push_back(std::string(msig->sig));
 
             meta_sig_vec.push_back(new struct utils::meta_sig);
@@ -55,7 +54,7 @@ class TBBPostScanPEController : public  ::testing::Test
             msig->sig  = "235323234ae12b1e8";
             msig->virname   = "test_trojan_c";
             msig->sig_type  = utils::pe_file;
-            msig->sig_size  = sig2.size();
+            msig->sig_size  = strlen(msig->sig);
             sig_key_vec.push_back(std::string(msig->sig));
 
             meta_sig_vec.push_back(new struct utils::meta_sig);
@@ -63,13 +62,25 @@ class TBBPostScanPEController : public  ::testing::Test
             msig->sig  = "2353ab1e119d32c67a23ab3d";
             msig->virname   = "test_trojan_d";
             msig->sig_type  = utils::pe_file;
-            msig->sig_size  = sig2.size();
+            msig->sig_size  = strlen(msig->sig);
+            sig_key_vec.push_back(std::string(msig->sig));
+
+            meta_sig_vec.push_back(new struct utils::meta_sig);
+            msig = meta_sig_vec[4];
+            msig->sig  = "4d5a50000200000004000f00ffff0000b80000000000000040001a000000";
+            msig->virname   = "trojan-zbot-1563";
+            msig->sig_type  = utils::pe_file;
+            msig->sig_size  = strlen(msig->sig);
             sig_key_vec.push_back(std::string(msig->sig));
 
             sig_type = utils::pe_file;
 
-            file_name_offset[0] = "/home/chatsiri/sda1/workspacemalware/lab_malwareanalysis/3/clam_ISmsi_ext.exe";
-            file_name_offset[1] = "/home/chatsiri/sda1/workspacemalware/malware_debug/vir_Win.Trojan.Zbot-15693/84612796/new_folder.exe";
+
+            file_name_offset[0] = "/home/chatsiri/sda1/workspacemalware/malware_debug/vir_Win.Trojan.Zbot-15693/84612796/new_folder.exe";
+            file_name_offset[1] = "/home/chatsiri/Dropbox/reversing_engineer/reversing_files_test/clam_ISmsi_ext_01.exe";
+
+            file_name_offset[2] = "/home/chatsiri/sda1/workspacemalware/lab_malwareanalysis/3/clam_ISmsi_ext.exe";
+
             file_sig = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.hdb";
 
             for(int count_file = 0; count_file < 	FILE_ON; count_file++) {
@@ -85,7 +96,7 @@ class TBBPostScanPEController : public  ::testing::Test
         std::vector<std::string> sig_key_vec;
 
         //binary input from file (Test only)
-        tbb::concurrent_vector<char> binary_hex_input;
+        //tbb::concurrent_vector<char> binary_hex_input;
 
         std::vector<std::string> keywords;
 
@@ -173,18 +184,23 @@ TEST_F(TBBPostScanPEController, InitialScanEngine)
             tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::create_actire_engine(sigtype_code);
 
 
-		controller::tbbpostscan_pe_controller<controller::
-															BufferSyncTBB<struct controller::data_tbb_process<struct MAPPED_FILE_PE>, 
-																					struct MAPPED_FILE_PE>,
-																					struct MAPPED_FILE_PE,
-																					struct utils::meta_sig> tbbpostscan_pe_col;
+    controller::tbbpostscan_pe_controller<controller::
+    BufferSyncTBB<struct controller::data_tbb_process<struct MAPPED_FILE_PE>,
+                struct MAPPED_FILE_PE>,
+                    struct MAPPED_FILE_PE,
+                        struct utils::meta_sig> tbbpostscan_pe_col;
+    //Add Signature Engine to thread controller.
+    tbbpostscan_pe_col.add_sig_engine(&sig_engine);
 
-			tbbpostscan_pe_col.init_syntbb_workload(f_shm_handler.get_map_str_shm(),
-				&sig_shm_pe,
-				f_shm_handler.get_map_file_size(),
-				mapped_file_pe_vec);
-																						  
+    //Add Search PE Engine to thread controller.
+    tbbpostscan_pe_col.add_search_engine(iactire_concur);
 
+    tbbpostscan_pe_col.init_syntbb_workload(f_shm_handler.get_map_str_shm(),
+            &sig_shm_pe,
+            f_shm_handler.get_map_file_size(),
+            mapped_file_pe_vec);
+
+    tbbpostscan_pe_col.task_start();
 }
 
 TEST_F(TBBPostScanPEController, MultitaskPerThreadScanning)

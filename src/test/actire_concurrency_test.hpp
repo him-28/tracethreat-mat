@@ -38,7 +38,7 @@ class ACTireConcurrency : public ::testing::Test
             std::string sig2 = "09cd21b44ce1aea";
 
             file_name_binary_hex = "trojan_test.exe";
-            char *binary_hex="a82a3f709cd21b44ce1aeadaca1e4bc647c46d0dd553e637b06cc23547783ff91813";
+            char *binary_hex="ab4c5d23434e08d3d211d890042004230801b231e1e7c4d5a50000200000004000f00ffff0000b80000000000000040001a000000ab4353453453b123e3288b";
 
 						memcpy(&binary_hex_input[*binary_hex_input.grow_by(strlen(binary_hex))], 
 								binary_hex, 
@@ -49,7 +49,7 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig  = "09cd21b80"; //sig_node to sig
             n_str->virname   = "test_trojan_a";
             n_str->sig_type  = utils::pe_file;
-            n_str->sig_size  = sig1.size();
+            n_str->sig_size  = strlen(n_str->sig);
             sig_key_vec.push_back(std::string(n_str->sig));
 
             nstr_vec.push_back(new struct utils::meta_sig);
@@ -57,15 +57,15 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig  = "09cd21b44ce1aeadaca1e4bc647c46d0dd553e637b06cc2";
             n_str->virname   = "test_trojan_b";
             n_str->sig_type  = utils::pe_file;
-            n_str->sig_size  = sig2.size();
+            n_str->sig_size  = strlen(n_str->sig);
             sig_key_vec.push_back(std::string(n_str->sig));
 						
             nstr_vec.push_back(new struct utils::meta_sig);
             n_str = nstr_vec[2];
-            n_str->sig  = "235323234ae12b1e8";
-            n_str->virname   = "test_trojan_c";
+            n_str->sig  = "4d5a50000200000004000f00ffff0000b80000000000000040001a000000";
+            n_str->virname   = "trojan-zbot-15693";
             n_str->sig_type  = utils::pe_file;
-            n_str->sig_size  = sig2.size();
+            n_str->sig_size  = strlen(n_str->sig);
             sig_key_vec.push_back(std::string(n_str->sig));
 							
             nstr_vec.push_back(new struct utils::meta_sig);
@@ -73,7 +73,7 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig  = "2353ab1e119d32c67a23ab3d";
             n_str->virname   = "test_trojan_d";
             n_str->sig_type  = utils::pe_file;
-            n_str->sig_size  = sig2.size();
+            n_str->sig_size  = strlen(n_str->sig);
             sig_key_vec.push_back(std::string(n_str->sig));
 						
         }

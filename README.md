@@ -5,11 +5,12 @@ HNMAV-OCL Malware Analysis Tools.
 
 -[x] Scanning with TBB(Multithread and Parallelization tasks) and OpenCL.
 
+-[] File Structure Support file type scanning type : PE, EXE, ELF and processes.
+
 -[] Compiler server DB signatures support ClamAV  and Yara-project signature.
 
 -[] Ansynchronous message communication between server and client.
 
--[] File Structure Support file type scanning type : PE, EXE and ELF
 
 Table of content
 ============
@@ -46,3 +47,4 @@ Table of content
 * PE first version support PE layout file scanning.
 * EXE next version supported in future.
 * ELF next version supported in future.
+* Process supported in future.
