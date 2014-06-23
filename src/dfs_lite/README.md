@@ -1,0 +1,2 @@
+- Support DFS for Mobile Distributed File System.(QFS Concept).
+- MapReduce with SHA-256 speed up increase with GPU.

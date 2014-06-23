@@ -1,46 +1,67 @@
-/*                       Titles                                          Authors                        Date
-*-Add struct and create function vector add string from virus.db        Chatsiri.rat                   27/11/2012
-*
-*/
-
-#include <struct_tire.h>
-
-
+/*  Titles			                                                                  Authors	        Date
+ * --Multi file array with multi signature file                                   R.Chatsiri
+ */
+int compare(__global const uchar * infected_str,
+__local const uchar * symbol, 
+uint length)
+{
+		for(uint count_length = 0; count_length < length; ++count_length)
+		{
+					if(infected_str[count_length] != symbol[count_length]) return 0;
+				  
+		}
+		return  1;
+}
 /* Create Buffer */
-__kernel void  create_tire_buffer(
-__global node_data *node_input,
-__global char * sigrc_input,
- int node_input_sizes, 
-__global uint *  pw_dim, 
-__global uint  * pg_id,
-__global char * sigrc)
+__kernel void actire_search(
+        __global uchar *node_symbol,
+        __global int   *node_state,
+        __global uchar *infected_str,
+        __global uchar *symbol_wb,
+        __global int * result_group_wb,
+				__global int  * result_wb, 
+        const int   binary_length,
+        const int   symbol_length,
+        const int   search_length_wg,
+        __local  uchar* local_symbol)
 {
 
-    uint work_dim = get_work_dim();
-    uint w_dim = work_dim - 1;
-	  
-	  int lid = get_local_id(0);
-		int gb_size = get_local_size(0);
+			 __local volatile uint group_success_counter;
 
-		int idx = get_global_id(0);
+		   int local_idx  = get_local_id(0);
+			 int local_size = get_local_size(0);
+			 int group_idx  = get_group_id(0);
 
-		
-		 sigrc[idx] = sigrc_input[idx];
+
+			 uint last_search_idx =  binary_length - search_length_wg + 1;
+
+			 uint begin_search_idx = group_idx * search_length_wg;
+			 uint end_search_idx   = begin_search_idx + search_length_wg;
+
+	     if(begin_search_idx > last_search_idx) return;
+			 if(end_search_idx > last_search_idx)  end_search_idx = last_search_idx;
+	
+			 for(int idx = local_idx; idx < symbol_length; idx+= local_size)
+			 {
+						local_symbol[idx] =  node_symbol[idx];
+			 }
+
+			 if(local_idx == 0) group_success_counter = 0;
+
+			 barrier(CLK_LOCAL_MEM_FENCE);
+
+			 for(uint string_pos = begin_search_idx + local_idx;
+                string_pos < end_search_idx;
+								string_pos += local_size)
+			 {
+					if(compare(infected_str + string_pos, local_symbol, symbol_length) == 1)
+					{
+					   int count = atomic_inc(&group_success_counter);
+						  result_wb[begin_search_idx + count] = string_pos;
+					}	
+
+			 }
+
+			 barrier(CLK_LOCAL_MEM_FENCE);
+			  if(local_idx == 0)  result_group_wb[group_idx] = group_success_counter;
 }
-
-/*
-   size_t  local_size = get_local_size(w_dim);
-   printf(" Local size  : %d \n", local_size);
-
-   size_t num_groups = get_num_groups(0);
-   printf(" Number Groups : %d \n", num_groups);
-
-   size_t group_id   = get_group_id(0);
-   printf(" Group ID      : %d \n", group_id);
-
-   size_t global_offset = get_global_offset(0);
-   printf(" Global offset : %d \n", global_offset);
-
-   printf("Data in gropu id : %c \n", input[global_id]);
-*/
-

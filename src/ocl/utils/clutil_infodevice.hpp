@@ -1,5 +1,5 @@
-#ifndef CLUTIL_INFODEVICE_HPP
-#define CLUTIL_INFODEVICE_HPP
+#ifndef HNMAV_KERNEL_CLUTIL_INFODEVICE_HPP
+#define HNMAV_KERNEL_CLUTIL_INFODEVICE_HPP
 
 /* 						Titles														Authors 												Date
  * -Finding device, Coding by copy from old source code of OpenCL Programming Guide. I need to redefine some
@@ -363,4 +363,4 @@ namespace hnmav_kernel
 }
 
 
-#endif /* CLUTIL_INFODEVICE_HPP */
+#endif /* HNMAV_KERNEL_CLUTIL_INFODEVICE_HPP */
