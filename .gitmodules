@@ -4,3 +4,6 @@
 [submodule "src/tbbscan"]
 	path = src/tbbscan
 	url = git@github.com:treadstoneproject/tbbscan.git
+[submodule "src/filestructure"]
+	path = src/filestructure
+	url = git@github.com:Chatsiri/filestructure.git
