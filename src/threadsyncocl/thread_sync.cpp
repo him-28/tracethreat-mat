@@ -33,11 +33,7 @@ namespace controller
     template<typename BufferSync, typename MAPPED_FILE>
     thread_sync<BufferSync, MAPPED_FILE>::thread_sync()
     {
-        // logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
-        logger = logger_ptr->get();
-        //init value
-        //thread_id = 0;
+
     }
 
     template<typename BufferSync, typename MAPPED_FILE>
@@ -74,10 +70,6 @@ namespace controller
         logger->write_info("thread_sync::init_syncocl_workload(), File Size Summary ",
                 boost::lexical_cast<std::string>(file_size_summary));
 
-        //if(!buff_sync_internal->set_size_summary(file_size_summary))
-        //{
-        //	logger->write_info_test("Cannot initial file size for binary or result wb completed.");
-        //}
 
         for(iter_mapstr_shm  = mapstr_shm.begin();
                 iter_mapstr_shm != mapstr_shm.end();
@@ -104,10 +96,12 @@ namespace controller
             //insert binary hex data to vector
             //shm size : binarystr_shm->size()
 
-            if(buff_sync_internal->write_binary_hex_ocl(binarystr_shm->c_str(),
+            if(!buff_sync_internal->write_binary_hex_ocl(binarystr_shm->c_str(),
                     size_hex,
                     file_name_md5)) {
-                //TODO: problem before return
+                logger->write_info("thread_sync::init_syncocl_workload(), Critical Problems");
+                logger->write_info("thread_sync::init_syncocl_workload(), Write binary file problem");
+                break;
             }
 
             logger->write_info("thread_sync::init_syncocl_workload(), write binary file completed.");
@@ -294,16 +288,6 @@ namespace controller
             return false;
         }
 
-        /*
-                this->load_ocl_system->cl_process_buffer(*symbol_vec,
-                        *state_vec,
-                        buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::binary_hex,
-                        buff_sync_internal->buff->data_ocl_process<MAPPED_FILE>::index_binary_result);
-
-                this->load_ocl_system->cl_build_memory();
-                this->load_ocl_system->cl_load_commandqueue();
-        				this->load_ocl_system->cl_process_commandqueue();
-        */
         return true;
     }
 
