@@ -42,27 +42,17 @@ namespace hnmav_kernel
 
         platdevices_info *platdevices = get_platdevices_data();
 
-        //get data from tuple by boost::tie
-        /*boost::tie(platdevices->node_symbol_vec, platdevices->node_state_vec) =  ipara.get_container();
-
-        symbol_vec = platdevices->node_symbol_vec;
-        state_vec  = platdevices->node_state_vec;
-        		binary_vec = binary_vec_ptr;
-        		*/
-
+       
         //shared ptr get vector symbol and state.
-        platdevices->node_symbol_vec = symbol_vec_ptr; // *ipara.get_symbol_shared_ptr().get();
-        platdevices->node_state_vec  = state_vec_ptr; //*ipara.get_state_shared_ptr().get();
+        platdevices->node_symbol_vec = symbol_vec_ptr; 
+        platdevices->node_state_vec  = state_vec_ptr;
         platdevices->node_binary_vec = binary_vec_ptr;
 
 				
 				//set result node. Value sets are zero.
-				std::fill(result_vec_ptr.begin(), result_vec_ptr.end(), 0);
-				//memset(&result_vec_ptr[0], 0, result_vec_ptr.size() * sizeof(result_vec_ptr[0]));
         platdevices->node_result_vec = &result_vec_ptr;
 				
-				
-					
+				//Symbol and State search	
         symbol_vec = &platdevices->node_symbol_vec;
         state_vec  = &platdevices->node_state_vec;
 

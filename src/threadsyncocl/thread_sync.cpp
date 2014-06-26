@@ -258,6 +258,8 @@ namespace controller
         //set binary_hex send to OCL 
         std::vector<char>  binary_hex = buff->binary_hex;
 			  // set binary_hex end-result to OCL. OCL set success index of  vector contained.
+			  std::fill(buff->index_binary_result.begin(), buff->index_binary_result.end(), 0);
+ 
         std::vector<uint8_t>   *binary_result = &buff->index_binary_result;
 			  //set symbol to buffer_internal. For check matching with OCL.
 			  //TODO: Move to setter member function.

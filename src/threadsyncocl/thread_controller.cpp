@@ -214,6 +214,9 @@ namespace controller
 
                         found_size++;
 
+												logger->write_info_test("comm_thread_buffer::run(), value set",
+																boost::lexical_cast<std::string>(value));
+
                         logger->write_info_test("comm_thread_buffer::run(), found size",
                                 boost::lexical_cast<std::string>(found_size));
 

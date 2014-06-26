@@ -38,6 +38,7 @@ namespace controller
         uint64_t start_point; //start point of binary file.
         uint64_t end_point;   //end point of binary file.
         uint64_t file_map_md5; // check md5 match with file-shm mapping index.
+				slot_ocl(): status(0), start_point(0), end_point(0), file_map_md5(0){ }
     };
 
     /**

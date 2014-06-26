@@ -160,8 +160,7 @@ namespace hnmav_kernel
     {
         //WorkTypes workloads;
         dstr::dstr_def::work_groupitems workloads;
-					//std::cout<<"Binary insert size : " <<  binary_vec.size() 
-					//<<", result wb size : " << result_vec.size() <<std::endl;
+
         logger->write_info_test("cl_load_system::cl_process_buffer, Symbol size",
                 boost::lexical_cast<std::string>(symbol_vec_ptr.size()));
         logger->write_info_test("cl_load_system::cl_process_buffer, State size",
