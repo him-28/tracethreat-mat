@@ -70,7 +70,7 @@ namespace hnmav_kernel
         std::vector<char>  				node_symbol_vec;
         std::vector<int>          node_state_vec;
         std::vector<char>  				node_binary_vec; //uint8_t
-        std::vector<uint8_t>   *   node_result_vec;
+        std::vector<uint8_t>   *  node_result_vec;
         //return symbol to host(write back)
         char       *symbol_wb;
         int        *result_wb;

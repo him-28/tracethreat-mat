@@ -19,7 +19,7 @@
 //#include "test/utils_base_timer_queue.hpp"
 
 //Stable test ac_tire and ocl class
-//#include "test/scan_pe_file_acp_test.hpp"
+#include "test/scan_pe_file_acp_test.hpp"
 
 
 //#2 -stable
@@ -37,7 +37,7 @@
 
 // AC Engine TBB
 //#include "test/tbbpostscan_pe_task_test.hpp"
-#include "test/tbbpostscan_pe_controller_test.hpp"
+//#include "test/tbbpostscan_pe_controller_test.hpp"
 
 
 //#include "test/actire_parallel_test.hpp"

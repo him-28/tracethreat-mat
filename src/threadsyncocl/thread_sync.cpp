@@ -71,8 +71,8 @@ namespace controller
             file_size_summary += size_hex;
         }
 
-				logger->write_info("thread_sync::init_syncocl_workload(), File Size Summary ",
-							boost::lexical_cast<std::string>(file_size_summary));
+        logger->write_info("thread_sync::init_syncocl_workload(), File Size Summary ",
+                boost::lexical_cast<std::string>(file_size_summary));
 
         //if(!buff_sync_internal->set_size_summary(file_size_summary))
         //{
@@ -102,7 +102,7 @@ namespace controller
 
             //const char *  data_char_hex = binarystr_shm->c_str(); : get const string from file-shm
             //insert binary hex data to vector
-            //shm size : binarystr_shm->size() 
+            //shm size : binarystr_shm->size()
 
             if(buff_sync_internal->write_binary_hex_ocl(binarystr_shm->c_str(),
                     size_hex,
@@ -146,8 +146,8 @@ namespace controller
         logger->write_info("thread_sync::init_syncocl_workload(), Push worker controller completed.");
 
         thread_pv_ptr = &thread_ptr_vec;
-				//Internal process reference to ::start_processes() member function.
-				//thread_ocl_pv_ptr reference object on start_processes() member function.
+        //Internal process reference to ::start_processes() member function.
+        //thread_ocl_pv_ptr reference object on start_processes() member function.
         thread_ocl_pv_ptr = &thread_ocl_ptr_vec;
 
         return true;
@@ -254,14 +254,20 @@ namespace controller
             state_vec_convert.push_back(boost::lexical_cast<int>(state_str));
         }
 
-			  buff = buff_sync_internal->buff;
-        //set binary_hex send to OCL 
+        buff = buff_sync_internal->buff;
+        //set binary_hex send to OCL
         std::vector<char>  binary_hex = buff->binary_hex;
-			  // set binary_hex end-result to OCL. OCL set success index of  vector contained.
+
+        // set binary_hex end-result to OCL. OCL set success index of  vector contained.
+        std::fill(buff->index_binary_result.begin(),
+                buff->index_binary_result.end(),
+                utils::infected_not_found);
+
         std::vector<uint8_t>   *binary_result = &buff->index_binary_result;
-			  //set symbol to buffer_internal. For check matching with OCL.
-			  //TODO: Move to setter member function.
-				buff->symbol_hex = *symbol_vec;
+
+        //set symbol to buffer_internal. For check matching with OCL.
+        //TODO: Move to setter member function.
+        buff->symbol_hex = *symbol_vec;
 
         //Send all data to OCL for calculating and matching function.
         this->load_ocl_system->cl_process_buffer(*symbol_vec,
@@ -277,7 +283,7 @@ namespace controller
         return true;
     }
 
-		//Cannot Load process Why?
+    //Cannot Load process Why?
     template<typename BufferSync, typename MAPPED_FILE>
     bool thread_sync<BufferSync, MAPPED_FILE>::add_sig_process(
             std::vector<char> *symbol_vec,
