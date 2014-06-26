@@ -7,7 +7,7 @@
 #include "utils/base/system_code.hpp"
 
 #include "ocl/utils/clutil_commandqueue.hpp"
-//GPU OCL new namespace
+
 
 namespace hnmav_kernel
 {
@@ -276,12 +276,12 @@ namespace hnmav_kernel
 
 
                 cl_mem cl_mem_result = platdevices->vec_buffer[4];
-								/*
+                /*
                 logger->write_info_test("commandqueue::cl_create_command_queue, node_result_vec size ",
-                        boost::lexical_cast<std::string>(platdevices->node_result_vec->size()));
+                boost::lexical_cast<std::string>(platdevices->node_result_vec->size()));
                 logger->write_info_test("commandqueue::cl_create_command_queue, result [0] ",
-                        boost::lexical_cast<std::string>(platdevices->node_result_vec->at(0)));
-								*/
+                boost::lexical_cast<std::string>(platdevices->node_result_vec->at(0)));
+                */
                 err |= clEnqueueWriteBuffer(platdevices->queues[0],
                         cl_mem_result,
                         CL_FALSE,
@@ -308,79 +308,7 @@ namespace hnmav_kernel
 
         return true;
     }
-
-    /*Magic code for test : commandqueue::cl_enqueue_nd_task  */
-    //int size_symbol_bw = platdevices->node_symbol_vec.size();
-
-    //const char *binary_test = "e1fba0e00b409cd21b8014ccd215468";
-    //const char *binary_end  = binary_test + strlen(binary_test);
-    //std::vector<char>  data_check;
-    //data_check.insert(data_check.end(), binary_test, binary_end);
-
-    /*
-     for(int count_bin = 129; count_bin < 180; count_bin++) {
-     if(platdevices->node_binary_vec[count_bin] == data_check[0]) {
-     printf("Data equal: %c, index : %d \n",
-             platdevices->node_binary_vec[count_bin],
-             count_bin);
-
-     for(int count_data = 1; count_data < data_check.size(); count_data++) {
-         count_bin++;
-
-         if(platdevices->node_binary_vec[count_bin] == data_check[count_data]) {
-             printf("Data equal: %c, index : %d \n",
-                     platdevices->node_binary_vec[count_bin],
-                     count_bin);
-
-         } else {
-             //printf("-----break-----\n");
-             break;
-         }
-     }
-     }
-     }
-     */
-    /*
-    for(int count_symbol = 129;
-    count_symbol < 180;//platdevices->node_binary_vec.size();
-    count_symbol++) {
-
-    //if( platdevices->result_wb[count_symbol] > 0){
-    printf("print value int : %d, index : %d \n",
-    platdevices->result_wb[count_symbol],
-    count_symbol);
-    //}
-
-    }//for
-    */
-
-    /*
-    printf("\n----- Hex test -------\n");
-    int count_in = 0;
-
-    //defaul 140-160, 1215370 - 1215390
-    for(int countb = 65530; countb < 65550; countb++) {
-        printf("| data : %c , index : %d | ", platdevices->node_binary_vec[countb], countb);
-    }
-
-    for(int countb = 65530; countb < 65550; countb++) {
-        printf("%c", platdevices->node_binary_vec[countb]);
-    }
-
-
-    printf("\n----- End Hex --------\n");
-
-    printf("\n------ State----------\n");
-
-    for(int counts = 0; counts < platdevices->node_symbol_vec.size(); counts++) {
-
-        printf("AC Parallel, Data :%c , State : %d \n",
-                platdevices->node_symbol_vec[counts], platdevices->node_state_vec[counts]);
-
-    }
-
-    printf("\n------ End Symbol---------\n");
-    		*/
+		
 
     bool commandqueue::cl_enqueue_nd_task(std::vector<uint8_t> *result_vec)
     {
@@ -399,6 +327,13 @@ namespace hnmav_kernel
 
             logger->write_info("--- Local Size NDRange ",
                     lexical_cast<std::string>(platdevices->local_size));
+
+            utils::timer_queue timer_q;
+
+						struct timeval tvBegin, tvEnd, tvDiff;
+
+						// begin
+						gettimeofday(&tvBegin, NULL);
 
             for(int count_queue = 0; count_queue < platdevices->queues.size(); count_queue++) {
                 cl_event event;
@@ -424,7 +359,14 @@ namespace hnmav_kernel
                 break;
             }//for
 
+						gettimeofday(&tvEnd, NULL);
+						
+						timer_q.timeval_subtract(&tvDiff, &tvEnd, &tvBegin);
+            printf("Timer-consuming scanning virus : %ld.%06ld\n", tvDiff.tv_sec, tvDiff.tv_usec);
+
             logger->write_info_test("commandqueue::cl_create_command_queue, test read back");
+
+
 
             platdevices->result_wb  = (int *)malloc(sizeof(int)  * platdevices->node_binary_vec.size());
             platdevices->result_group_wb = (int *)malloc(sizeof(int) * platdevices->node_binary_vec.size());
@@ -434,11 +376,6 @@ namespace hnmav_kernel
                     platdevices->result_wb + platdevices->node_binary_vec.size(),
                     1);
 
-            //Node result vec initial and fill value.
-            //platdevices->node_result_vec = new std::vector<uint8_t>(platdevices->node_binary_vec.size());
-            //std::fill(platdevices->node_result_vec.begin(),
-            //        platdevices->node_result_vec.end(),
-            //        0);
 
             //write back- test only
             err |= clEnqueueReadBuffer(platdevices->queues[0],
@@ -494,7 +431,7 @@ namespace hnmav_kernel
                         logger->write_info_test(" commandqueue::cl_enqueue_nd_task, binary found index",
                                 boost::lexical_cast<std::string>(*hex_bin));
 
-                        uint8_t * write_index = &platdevices->node_result_vec->at(*hex_bin);
+                        uint8_t *write_index = &platdevices->node_result_vec->at(*hex_bin);
 
                         *write_index = utils::infected_found;
 

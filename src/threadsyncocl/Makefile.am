@@ -20,6 +20,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/filetypes/pe_file_controller.hpp \
  $(top_builddir)/src/scan/file_scan_policy.hpp \
  $(top_builddir)/src/ocl/cl_bootstrap.hpp \
+ $(top_builddir)/src/ocl/utils/clutil_commandqueue.hpp \
  $(top_builddir)/src/memory/file_shm_handler.hpp \
  $(top_builddir)/src/memory/signature_shm_base.hpp \
  $(top_builddir)/src/memory/signature_shm_controller.hpp \
@@ -51,6 +52,8 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
 	$(top_builddir)/src/data_structure/actire_parallel.cpp \
 	$(top_builddir)/src/filetypes/pe_file_controller.cpp \
   $(top_builddir)/src/scan/file_scan_policy.cpp \
+  $(top_builddir)/src/ocl/cl_bootstrap.cpp \
+  $(top_builddir)/src/ocl/utils/clutil_commandqueue.cpp \
   $(top_builddir)/src/memory/file_shm_handler.cpp \
   $(top_builddir)/src/memory/signature_shm_controller.cpp \
   $(top_builddir)/src/threadconcurrency/thread_manager.cpp \
