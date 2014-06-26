@@ -1,5 +1,5 @@
-#ifndef UTILS_INTERVAL_TIMER_QUEUE_HPP
-#define UTILS_INTERVAL_TIMER_QUEUE_HPP
+#ifndef UTILS_TIMER_QUEUE_HPP
+#define UTILS_TIMER_QUEUE_HPP
 
 //timer
 #include <boost/timer/timer.hpp>
@@ -41,23 +41,19 @@ namespace utils
 
 
             typedef int64_t Id;
-
             timer_queue::Id add(Id id, boost::timer::cpu_times start_times);
 
             timer_queue::Id add(Id id, double start_times);
-
             timer_queue::Id add(Id id, int start_time_sec, int start_time_usec);
-
             boost::timer::cpu_times get_start_timer();
 
             long int get_start_timer(Id id);
-
             double get_start_timer_linux(Id id);
-
+						
             int get_stimer_basic_sec(Id id);
 
             int get_stimer_basic_usec(Id id);
-
+						
 
             bool erase(Id id);
 
@@ -73,8 +69,14 @@ namespace utils
 
             struct time_result interval_time(int start_time_sec, int start_time_usec);
 
+
+						int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
+		
+						void timeval_print(struct timeval *tv);
+
         private:
             //timer
+            
             boost::timer::cpu_timer cpu;
             boost::timer::cpu_times start_time;
             boost::timer::cpu_times current_time;
@@ -139,6 +141,7 @@ namespace utils
 
             set_time_linux set_internal_linux_time;
 
+				
             enum {
                 BY_ID=0
             };
@@ -154,7 +157,7 @@ namespace utils
 
                 }
             };
-
+						
             typedef boost::multi_index_container<
             event_time_basic,
             boost::multi_index::indexed_by<
