@@ -496,15 +496,7 @@ namespace hnmav_kernel
 
                         uint8_t * write_index = &platdevices->node_result_vec->at(*hex_bin);
 
-												logger->write_info_test("commandqueue::cl_enqueue_nd_task, Old value set",
-															  boost::lexical_cast<std::string>(*write_index));
-
                         *write_index = utils::infected_found;
-
-												logger->write_info_test("commandqueue::cl_enqueue_nd_task, New value set",
-															  boost::lexical_cast<std::string>(*write_index));
-
-
 
                     }
                 }
