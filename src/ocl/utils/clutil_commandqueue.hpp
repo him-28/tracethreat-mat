@@ -1,11 +1,6 @@
 #ifndef  HNMAV_KERNEL_CLUTIL_COMMANDQUEUE_HPP
 #define  HNMAV_KERNEL_CLUTIL_COMMANDQUEUE_HPP
 
-// name of buildtire kernel
-//#define  BUILD_TIRE_KERNEL "buildtire"
-
-#define  BUILD_TIRE_KERNEL "actire_search"
-
 /*                       Titles                                          Authors           		Date
  *-Support command queue (Interface send/receive with vector<shared_ptr<platdevices_info> >
  *                                                                       Chatsiri.rat         07/09/2012
@@ -16,12 +11,15 @@
  *                                                                       Chatsiri.rat         11/09/2012
  */
 
+#define  BUILD_TIRE_KERNEL "actire_search"
+
 #define SEARCH_BYTES_PER_ITEM 512
 #define LOCAL_SIZE            256
 
 #include <boost/shared_ptr.hpp>
 
 #include <iostream>
+#include <vector>
 
 //#include "ocl/cl_bootstrap.hpp"
 #include "ocl/utils/base_clutil.hpp"
@@ -31,27 +29,24 @@
 #include "exception/datastructure_exception.hpp"
 
 #include "clutil_infodevice.hpp"
-#include <vector>
-
+#include "utils/base/timer_queue.hpp"
 
 namespace hnmav_kernel
 {
     using namespace boost;
     using namespace hnmav_util;
     using namespace hnmav_exception;
+    using utils::timer_queue;
 
     class commandqueue : public base_clutil
     {
         public:
 
             commandqueue() {
-                //logger_ptr = &clutil_logging<std::string, int>::get_instance();
-                //logger = logger_ptr->get();
             }
 
             bool cl_create_command_queue();
             bool cl_write_event();
-            //bool cl_read_buffer();
 
             bool cl_create_kernel();
 
@@ -60,7 +55,6 @@ namespace hnmav_kernel
 
             bool cl_enqueue_task();
             bool cl_enqueue_nd_task(std::vector<uint8_t> *result_vec);
-            //bool cl_enqueue_nd_task();
 
             bool cl_enqueue_copy_buffer();
             bool cl_enqueue_map_buffer();
@@ -101,11 +95,10 @@ namespace hnmav_kernel
             // cl define
             platdevices_info *platdevices;
             void   *mapped_memory;
+
             // logging
             shared_ptr<clutil_logging<std::string, int> > *logger_ptr;
             clutil_logging<std::string, int>   *logger;
-
-            //node_data *node;
     };
 
 
@@ -116,7 +109,6 @@ namespace hnmav_kernel
 
             bool cl_create_command_queue();
             bool cl_write_event();
-            // bool cl_read_buffer();
             bool cl_create_kernel();
 
             bool cl_enqueue_task();
@@ -125,10 +117,10 @@ namespace hnmav_kernel
             bool cl_enqueue_copy_buffer();
             bool cl_enqueue_map_buffer();
 
-					  bool cl_enqueue_map_buffer(cl_mem device_buffer,
-            void  *&host_ptr,
-            size_t size_bytes,
-            cl_map_flags flags);
+            bool cl_enqueue_map_buffer(cl_mem device_buffer,
+                    void  *&host_ptr,
+                    size_t size_bytes,
+                    cl_map_flags flags);
 
             bool cl_enqueue_unmap_buffer();
 

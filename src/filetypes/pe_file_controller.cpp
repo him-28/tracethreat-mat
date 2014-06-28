@@ -1,22 +1,19 @@
 #include "filetypes/pe_file_controller.hpp"
 #include "boost/lexical_cast.hpp"
-//#include "utils/logger/format_logger.hpp"
-//#include "utils/logger/clutil_logger.hpp"
 #include "threadconcurrency/cliprescan_pe_controller.hpp"
-//#include "threadconcurrency/cliprescan_pe_task.hpp"
 
 using namespace controller;
 
 namespace filetypes
 {
-	
+
     template<typename MAPPED_FILE>
     pe_file_controller<MAPPED_FILE>::pe_file_controller()
     {
         //logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
-        logger = logger_ptr->get();
-       // logger->write_info_test("Init logger pe_file_controller");
+        //logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
+        //logger = logger_ptr->get();
+        // logger->write_info_test("Init logger pe_file_controller");
     }
 
     template<typename MAPPED_FILE>
@@ -186,9 +183,8 @@ namespace filetypes
         count_offset = 0;
 
 
-        //logger->write_info_test("pe_file_controller::retrive_offset, \
-        //pe_header->OptionalHeader32.AddressOfEntryPoint",
-        //       boost::lexical_cast<std::string>(pe_header->OptionalHeader.AddressOfEntryPoint));
+        logger->write_info("pe_file_controller::retrive_offset,OptionalHeader32.AddressOfEntryPoint",
+              boost::lexical_cast<std::string>(pe_header->OptionalHeader.AddressOfEntryPoint));
 
         //calculate block
         nth_ext_shared_ptr->rva_block  = pe_header->OptionalHeader.AddressOfEntryPoint;
@@ -275,12 +271,12 @@ namespace filetypes
             std::vector<size_t> *state_vec,
             std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
             std::string *kernel_file_path_ptr,
-						memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> * sig_shm)
+            memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> *sig_shm)
     {
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
         uint64_t summary_file_size = 0;
-	
+
         //summary file size of all
         for(iter_mapped_files = mapped_file_pe_vec->begin();
                 iter_mapped_files != mapped_file_pe_vec->end();
@@ -293,15 +289,15 @@ namespace filetypes
         //logger->write_info("pe_file_policy::scan_file_type(), Initial file-shm size completed.");
 
 
-				//pre-scan
-				/* - Comment for test with OCL flow only.
-				int64_t timeout_scan = 1000LL;
-				controller::cliprescan_pe_controller<MAPPED_FILE>  prescan_pe;
-				prescan_pe.initial_task_size(mapped_file_pe_vec->size(), timeout_scan, mapped_file_pe_vec);
-				prescan_pe.task_start();
-				*/
+        //pre-scan
+        /* - Comment for test with OCL flow only.
+        int64_t timeout_scan = 1000LL;
+        controller::cliprescan_pe_controller<MAPPED_FILE>  prescan_pe;
+        prescan_pe.initial_task_size(mapped_file_pe_vec->size(), timeout_scan, mapped_file_pe_vec);
+        prescan_pe.task_start();
+        */
 
-				//post-scan
+        //post-scan
         f_shm_handler.initial_shm(summary_file_size);
         f_shm_handler.initial_file_shm(mapped_file_pe_vec);
 
@@ -313,7 +309,7 @@ namespace filetypes
         //send data to OCL
         tsync.init_syncocl_workload(f_shm_handler.get_map_str_shm(),
                 f_shm_handler.get_map_file_size(),
-								sig_shm);
+                sig_shm);
 
         //logger->write_info("pe_file_policy::scan_file_type(), Initial OCL workload completed.");
 

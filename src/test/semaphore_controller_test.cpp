@@ -16,7 +16,7 @@
 //#include "test/cliprescan_pe_task_test.hpp"
 
 //Timer
-//#include "test/utils_base_timer_queue.hpp"
+#include "test/utils_base_timer_queue.hpp"
 
 //Stable test ac_tire and ocl class
 #include "test/scan_pe_file_acp_test.hpp"
