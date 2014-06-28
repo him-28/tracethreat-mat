@@ -37,8 +37,10 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.h \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.h \
  $(top_builddir)/src/clibasewrapper/cliwrapper/global_wrapper.h \
- $(top_builddir)/src/tbbscan/data_structure/actire_concurrency.hpp
-
+ $(top_builddir)/src/tbbscan/data_structure/actire_concurrency.hpp \
+ $(top_builddir)/src/filestructure/pe_layout_controller.hpp \
+ $(top_builddir)/src/filestructure/logger/logging.hpp \
+ $(top_builddir)/src/filestructure/logger/stringprintf.hpp
 
 
 # library
@@ -67,7 +69,11 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/threadconcurrency/mutex_controller.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp \
-  $(top_builddir)/src/tbbscan/data_structure/actire_concurrency.cpp
+  $(top_builddir)/src/tbbscan/data_structure/actire_concurrency.cpp \
+  $(top_builddir)/src/filestructure/pe_layout_controller.cpp \
+  $(top_builddir)/src/filestructure/logger/logging.cpp \
+  $(top_builddir)/src/filestructure/logger/stringprintf.cpp
+
 
 
 libthreadsyncocl_a_LIBADD = $(top_builddir)/src/utils/libutils.a \
@@ -80,4 +86,5 @@ $(top_builddir)/src/memory/libmemory.a \
 $(top_builddir)/src/threadconcurrency/libthreadconcurrency.a \
 $(top_builddir)/src/clibasewrapper/libclibasewrapper.a \
 $(top_builddir)/src/ocl/libocl.a \
-$(top_builddir)/src/tbbscan/libtbbscan.a $(AM_LDFLAGS)
+$(top_builddir)/src/tbbscan/libtbbscan.a \
+$(top_builddir)/src/filestructure/libfilestructure.a $(AM_LDFLAGS)

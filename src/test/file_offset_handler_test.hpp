@@ -1,5 +1,4 @@
 #include "utils/file_offset_handler.hpp"
-//#include "filetypes/pe.hpp"
 
 #define FILE_SIZE 1
 
@@ -17,8 +16,7 @@ class FileOffsetHandlerTest : public ::testing::Test
                 file_type_vec.push_back(file_name_offset[count_file]);
 
 						    s_mapped_fpe[count_file]	 = (struct MAPPED_FILE_PE *)malloc(sizeof(s_mapped_fpe));
-								/*s_mapped_fpe[count_file]->file_name = 
-													(const char*)malloc(sizeof(const char*) * strlen(file_name_offset[0]));*/
+
                 mapped_file_vec.push_back(s_mapped_fpe[count_file]);
 
             }
@@ -42,8 +40,6 @@ TEST_F(FileOffsetHandlerTest, mapped_file_test)
 
 		EXPECT_TRUE(fileoffset_h.mapped_file(file_type_vec, mapped_file_vec, fileoffset_h));
 
-		//std::vector<MAPPED_FILE_PE*> * mapped_file_vec_ptr = fileoffset_h.get_mapped_file();
-
     boost::shared_ptr<std::vector<MAPPED_FILE_PE * > > mappedf_vec_ptr =
             fileoffset_h.get_mappedf_vec_ptr();
 
@@ -60,13 +56,6 @@ TEST_F(FileOffsetHandlerTest, mapped_file_test)
 							size_t size  = mf_pe->size; 
 						  EXPECT_GT(size,0);
 							ASSERT_TRUE(*data != NULL);
-/*
-							for(size_t count = 0; count < size; count++)
-							{
-							   printf("%x",data[count]); 
-							}	
-							printf("\n");
-*/
 		}
 
     EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
