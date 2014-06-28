@@ -61,6 +61,8 @@ AC_CONFIG_FILES([src/decompiler/Makefile])
 AC_CONFIG_FILES([src/clibasewrapper/Makefile])
 AC_CONFIG_FILES([src/threadconcurrency/Makefile])
 AC_CONFIG_FILES([src/tbbscan/Makefile])
+AC_CONFIG_FILES([src/filestructure/Makefile])
+AC_CONFIG_FILES([src/filestructure/test_fs/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
 AC_OUTPUT
