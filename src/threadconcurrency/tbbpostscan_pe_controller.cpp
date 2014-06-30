@@ -193,7 +193,6 @@ namespace controller
 
             while(task_count) {
                 monitor.wait();
-               //monitor.wait_for_time_relative(timeout_);
             }
         }//sync
 

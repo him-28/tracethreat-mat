@@ -9,6 +9,10 @@
 #include "memory/signature_shm_base.hpp"
 #include "memory/signature_shm_controller.hpp"
 
+#include "utils/file_offset_handler.hpp"
+#include "tbbscan/data_structure/actire_concurrency.hpp"
+#include "filestructure/pe_layout_controller.hpp"
+
 //logger
 #include "utils/logger/clutil_logger.hpp"
 #include "utils/base/common.hpp"
@@ -20,7 +24,7 @@ namespace policy
     namespace ftypes = filetypes;
     //using namespace filetypes;
     using utils::file_scan_result;
-
+		using filestructure::pe_layout_controller;
 
     template<typename MAPPED_FILE>
     class file_scan_policy;
@@ -61,7 +65,15 @@ namespace policy
     class file_scan_policy// : public file_policy<MAPPED_FILE>
     {
         public:
-            //Default Policies
+
+            typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            	sig_shm_type;
+
+            typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine_type;
+
+            typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
+            iactire_engine_scanner_type;
+
+
             /**
             * @brief
             */
@@ -73,20 +85,17 @@ namespace policy
             file_scan_policy();
 
 
-            /**
-            * @brief
-            *
-            * @param f_col_policy
-            *
-            * @return
-            */
-            std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
-            scan_file_engine(file_scan_policy<MAPPED_FILE> *f_col_policy);
+            std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
+            scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
+                    sig_shm_type   *sig_shm_pe,
+										sig_engine_type * sig_engine,
+                    iactire_engine_scanner_type *iactire_engine_scanner);
 
             std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
             scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
                     std::vector<MAPPED_FILE *> *mapped_file_vec,
-                    memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> *sig_shm);
+                    memory::signature_shm<struct memory::meta_sig,
+                    struct memory::meta_sig_mem> *sig_shm);
 
             template<typename SymbolT, typename StateT>
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
@@ -120,8 +129,6 @@ namespace policy
 
 
         public:
-            //        protected:
-
 
             /**
             * @brief
@@ -130,7 +137,14 @@ namespace policy
             *
             * @return
             */
-            virtual bool scan_file_type(MAPPED_FILE *mapped_file) = 0;
+            //virtual bool scan_file_type(MAPPED_FILE *mapped_file) = 0;
+            virtual bool scan_file_type(std::vector<const char *> * file_type_vec,
+                    std::vector<MAPPED_FILE *> * mapped_file_pe,
+                    sig_shm_type  *sig_shm,
+										sig_engine_type * sig_engine,
+                    iactire_engine_scanner_type   *iactire_engine_scanner) = 0;
+
+
             /**
             * @brief
             *
@@ -180,6 +194,22 @@ namespace policy
             * @return
             */
             virtual bool set_mapped_file(std::vector<MAPPED_FILE *>  *mapped_file) = 0;
+
+            /**
+            * @brief
+            *
+            * @param file_type_vec
+            *
+            * @return
+            */
+            virtual bool set_file_type(std::vector<const char *>    *file_type_vec) = 0;
+
+            /**
+            * @brief
+            *
+            * @return
+            */
+            virtual std::vector<const char *> *get_file_type() = 0;
 
         private:
             //file_policy<MAPPED_FILE> *f_policy;
@@ -246,9 +276,9 @@ namespace policy
                     //get data, size mapped_file for API system.
                     std::vector<MAPPED_FILE *> *mapped_file_vec = obj_fconl_policy->get_mapped_file();
                     //Send ot Multiple file OCL mode.
-                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy, 
-														mapped_file_vec, 
-														sig_shm);
+                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy,
+                            mapped_file_vec,
+                            sig_shm);
                 }
 
                 case utils::multiple_tbb_mode : { //multiple scanning on TBB
@@ -276,24 +306,34 @@ namespace policy
     class pe_file_policy :  public file_scan_policy<MAPPED_FILE>
     {
         public:
+            typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            	sig_shm_type;
+
+            typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine_type;
+
+            typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
+            iactire_engine_scanner_type;
+
+            typedef utils::file_offset_handler<struct utils::common_filetype, struct MAPPED_FILE_PE>
+                        fileoffset_type;
+
+						typedef filestructure::pe_layout_controller<struct IMAGE_NT_HEADERS_EXT, struct MAPPED_FILE_PE> 
+								pe_layout_controller_type;
 
             typedef controller::BufferSync<
             struct controller::data_ocl_process<MAPPED_FILE>,
-                    MAPPED_FILE> buffer_sync;
+                    MAPPED_FILE>
+                    buffer_sync;
 
             pe_file_policy();
+
             ~pe_file_policy();
-            //protected:
-            /**
-            * @brief Add mapped file detail for scanning
-            *
-            * @param mapped_file Mapped file included offset and size of offset
-            *
-            * @return True, If scanning completed.
-            */
-            // virtual bool scan_file_type(MAPPED_FILE *mapped_file);
-            // : Cannot use virtual from file_scan_policy abstract base
-            virtual bool scan_file_type(MAPPED_FILE *mapped_file);
+
+            virtual bool scan_file_type(std::vector<const char *> * file_type_vec,
+                    std::vector<MAPPED_FILE *> * mapped_file_pe,
+                    sig_shm_type  *sig_shm,
+										sig_engine_type * sig_engine,
+                    iactire_engine_scanner_type   *iactire_engine_scanner);
+
 
             virtual bool scan_file_type(std::vector<MAPPED_FILE *> *mapped_file,
                     memory::signature_shm<struct memory::meta_sig,
@@ -324,18 +364,13 @@ namespace policy
             /**
             * @brief
             *
-            * @return
-            */
-            virtual std::vector<MAPPED_FILE *> *get_mapped_file();
-            /**
-            * @brief
-            *
             * @param mapped_file
             *
             * @return
             */
             virtual bool set_mapped_file(MAPPED_FILE *mapped_file);
 
+            virtual std::vector<MAPPED_FILE *> *get_mapped_file();
 
             /**
             * @brief
@@ -347,25 +382,17 @@ namespace policy
             virtual bool set_mapped_file(std::vector<MAPPED_FILE *> *mapped_file);
 
 
+            virtual bool set_file_type(std::vector<const char *> *file_type);
+
+            std::vector<const char *> *get_file_type();
+
             //data_structure::iparallel<SymbolT, StateT> *ipara
             template<typename SymbolT, typename StateT>
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
             scan_ocl_controller(std::vector<SymbolT> node_symbol, std::vector<StateT> node_state) {
-                //  logger->write_info_test("Call pe_file_policy::scan_ocl_controller...");
-                //	node_symbol_vec = node_symbol;
-                //	node_state_vec  = node_state;
+
             }
 
-            /**
-            * @brief Set Kernel file of scanning on GPGPU system.
-            *
-            * @param kernel_file_path  Kernel file extension name .cl
-            *
-            * @return True, If file contains strings more size than zero.
-            */
-            //set_opencl_file_path(std::string& kernel_file_path){
-
-            //}
 
 
         private:
@@ -373,6 +400,11 @@ namespace policy
             // mapped_file detail
             std::vector<MAPPED_FILE * > mapped_files_vec;
 
+            std::vector<const char *>    file_type_vec;
+
+            fileoffset_type  fileoffset_h;
+
+            pe_layout_controller_type pe_layout;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
