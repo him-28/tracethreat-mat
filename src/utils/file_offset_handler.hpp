@@ -114,8 +114,7 @@ namespace utils
 
 						bool  mapped_file(std::vector<const char*> * file_name,
                     std::vector<MAPPED_FILE *> * mapped_vec,
-                    file_offset_handler<FileType, MAPPED_FILE>& file_offset_object,
-										const char * file_sig);
+                    file_offset_handler<FileType, MAPPED_FILE>& file_offset_object);
 
 
             /**

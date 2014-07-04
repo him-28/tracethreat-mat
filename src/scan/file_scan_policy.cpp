@@ -25,20 +25,19 @@ namespace policy
 						sig_engine_type *sig_engine,
             iactire_engine_scanner_type   *iactire_engine_scanner)
     {
-        const char *file_sig = "";
         logger->write_info("Start pe_file_policy<MAPPED_FILE>::scan_file_type");
-        //[] Mapped file in prescanning.
-        //[] Scan header and offset file found virus on infected file.
-        //-[] Header file.
-        //-[] Offset file.
-        fileoffset_h.mapped_file(file_type_vec, mapped_file_pe, fileoffset_h, file_sig);
+        //[x] Mapped file in prescanning.
+        //[x] Scan header and offset file found virus on infected file.
+        //-[x] Header file.
+        //-[x] Offset file.
+        fileoffset_h.mapped_file(file_type_vec, mapped_file_pe, fileoffset_h);
 				pe_layout.get_header(mapped_file_pe);
 				pe_layout.get_offset(mapped_file_pe);
 	
         //ACTire-Parallel with TBB
-        //[]Add Sig-SHM
-        //[]Add File-SHM * Declares on scan() member function of pe_file_controller.
-        //[]Add AC-Tire TBB Scanning.
+        //[x]Add Sig-SHM.
+        //[x]Add File-SHM * Declares on scan() member function of pe_file_controller.
+        //[x]Add AC-Tire TBB Scanning.
         pe_fconl.scan(mapped_file_pe, sig_shm_pe, sig_engine, iactire_engine_scanner);
 
         return true;// scan completed
@@ -132,7 +131,7 @@ namespace policy
     }
 
 
-    //---------------------------- File Policy  ------------------------------//
+    //________________________________ File Policy ___________________________________________//
 
     template<typename MAPPED_FILE>
     file_scan_policy<MAPPED_FILE>::file_scan_policy()

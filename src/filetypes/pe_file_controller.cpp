@@ -16,7 +16,7 @@ namespace filetypes
 
     template<typename MAPPED_FILE>
     utils::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
-            sig_shm_type  *sig_shm_pe,
+            signature_shm_type  *sig_shm_pe,
             sig_engine_type *sig_engine,
             iactire_engine_scanner_type   *iactire_engine_scanner)
     {

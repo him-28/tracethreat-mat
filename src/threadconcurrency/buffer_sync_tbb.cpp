@@ -169,22 +169,7 @@ namespace controller
         return false;
     }
 
-
-    std::string bin2hex(const std::string& input)
-    {
-        std::string res;
-        const char hex[] = "0123456789ABCDEF";
-        std::cout<<"Input size : " << input.size() <<std::endl;
-
-        for(int i = 0; i < input.size(); i++) {
-            unsigned char c = static_cast<unsigned char>(input[i]);
-            res += hex[c >> 4];
-            res += hex[c & 0xf];
-        }
-
-        return res;
-    }
-
+	
 		//Append parallel insert binary stream to concurren_vector
     struct AppendBuffer {
         typedef tbb::concurrent_vector<char> binary_hex_type;

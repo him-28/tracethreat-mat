@@ -24,7 +24,7 @@ namespace policy
     namespace ftypes = filetypes;
     //using namespace filetypes;
     using utils::file_scan_result;
-		using filestructure::pe_layout_controller;
+    using filestructure::pe_layout_controller;
 
     template<typename MAPPED_FILE>
     class file_scan_policy;
@@ -36,7 +36,7 @@ namespace policy
     class pe_file_policy;
 
 
-    //----------------------------  File Scan Policy -------------------------------//
+    //____________________________________  File Scan Policy ___________________________________//
 
     template<typename Base, int D>
     class disting : public Base
@@ -66,7 +66,9 @@ namespace policy
     {
         public:
 
-            typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            	sig_shm_type;
+            typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
+                        sig_shm_type;
+
 
             typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine_type;
 
@@ -88,7 +90,7 @@ namespace policy
             std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
             scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
                     sig_shm_type   *sig_shm_pe,
-										sig_engine_type * sig_engine,
+                    sig_engine_type *sig_engine,
                     iactire_engine_scanner_type *iactire_engine_scanner);
 
             std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
@@ -99,7 +101,7 @@ namespace policy
 
             template<typename SymbolT, typename StateT>
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
-            scan_ocl_controller(std::vector<SymbolT> *node_symbol,
+            set_sig_buffer(std::vector<SymbolT> *node_symbol,
                     std::vector<StateT> *node_state) {
                 node_symbol_vec = node_symbol;
                 node_state_vec  = node_state;
@@ -137,11 +139,10 @@ namespace policy
             *
             * @return
             */
-            //virtual bool scan_file_type(MAPPED_FILE *mapped_file) = 0;
-            virtual bool scan_file_type(std::vector<const char *> * file_type_vec,
-                    std::vector<MAPPED_FILE *> * mapped_file_pe,
+            virtual bool scan_file_type(std::vector<const char *> *file_type_vec,
+                    std::vector<MAPPED_FILE *> *mapped_file_pe,
                     sig_shm_type  *sig_shm,
-										sig_engine_type * sig_engine,
+                    sig_engine_type *sig_engine,
                     iactire_engine_scanner_type   *iactire_engine_scanner) = 0;
 
 
@@ -212,7 +213,6 @@ namespace policy
             virtual std::vector<const char *> *get_file_type() = 0;
 
         private:
-            //file_policy<MAPPED_FILE> *f_policy;
             utils::file_scan_result<MAPPED_FILE> *fs_result;
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >  file_scan_result_vec;
 
@@ -223,10 +223,8 @@ namespace policy
             h_util::clutil_logging<std::string, int>    *logger;
 
         protected :
-            //template<typename SymbolT>
             std::vector<char> *node_symbol_vec;
 
-            //template<typename StateT>
             std::vector<size_t> *node_state_vec;
 
             std::string *kernel_file_path;
@@ -248,6 +246,8 @@ namespace policy
 
     };
 
+
+    //_________________________________  Scan File Policy __________________________________//
     template<typename MAPPED_FILE,
              typename FilePolicySetter = default_file_policy_args<MAPPED_FILE> >
     class scan_file_policy
@@ -258,21 +258,36 @@ namespace policy
             h_util::clutil_logging<std::string, int>    *logger;
 
             typedef file_policy_selector<FilePolicySetter>  policy;
+
+
         public:
+
+            typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
+                        sig_shm_type;
+
+
+            typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine_type;
+
+            typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
+            iactire_engine_scanner_type;
+
+
+
             // pe type support
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
             scan_pe(file_scan_policy<MAPPED_FILE> *obj_fconl_policy,
-                    memory::signature_shm<struct memory::meta_sig,
-                    struct memory::meta_sig_mem> * sig_shm) {
+                    sig_shm_type *sig_shm,
+                    sig_engine_type *sig_engine,
+                    iactire_engine_scanner_type *iactire_engine_scanner) {
 
                 //TODO: test only
-                utils::scanning_mode smode = utils::multiple_ocl_mode;
-
+                //OCL Mode :  utils::scanning_mode smode = utils::multiple_ocl_mode;
+								 utils::scanning_mode smode = utils::multiple_tbb_mode;
                 //Policy multiple scanning file with-OCL
                 switch(smode) {
 
                 case utils::multiple_ocl_mode : { //multiple scanning on OCL
-                    //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_mode");
+                    logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_mode");
                     //get data, size mapped_file for API system.
                     std::vector<MAPPED_FILE *> *mapped_file_vec = obj_fconl_policy->get_mapped_file();
                     //Send ot Multiple file OCL mode.
@@ -282,15 +297,18 @@ namespace policy
                 }
 
                 case utils::multiple_tbb_mode : { //multiple scanning on TBB
-                    //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_tbb_mode");
+                    logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_tbb_mode");
 
-                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy,
+                            sig_shm,
+                            sig_engine,
+                            iactire_engine_scanner);
                 }
 
                 case utils::multiple_ocl_tbb_mode : { //Priority OCL before TBB mode.
-                    //logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_tbb_mode");
+                    logger->write_info("scan_file_policy::scan_pe(), Mode : multiple_ocl_tbb_mode");
 
-                    return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
+                    //return obj_fconl_policy->scan_file_engine(obj_fconl_policy);
                 }
 
                 }
@@ -301,14 +319,17 @@ namespace policy
 
 
 
-    //-----------------------PE File Policy --------------------------------//
+    //__________________________________ PE File Policy _________________________________________//
     template<typename MAPPED_FILE>
     class pe_file_policy :  public file_scan_policy<MAPPED_FILE>
     {
         public:
-            typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            	sig_shm_type;
 
-            typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine_type;
+            typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
+                        sig_shm_type;
+
+            typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>
+            sig_engine_type;
 
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             iactire_engine_scanner_type;
@@ -316,22 +337,20 @@ namespace policy
             typedef utils::file_offset_handler<struct utils::common_filetype, struct MAPPED_FILE_PE>
                         fileoffset_type;
 
-						typedef filestructure::pe_layout_controller<struct IMAGE_NT_HEADERS_EXT, struct MAPPED_FILE_PE> 
-								pe_layout_controller_type;
+            typedef filestructure::pe_layout_controller<struct IMAGE_NT_HEADERS_EXT, struct MAPPED_FILE_PE>
+                        pe_layout_controller_type;
 
-            typedef controller::BufferSync<
-            struct controller::data_ocl_process<MAPPED_FILE>,
-                    MAPPED_FILE>
+            typedef controller::BufferSync< struct controller::data_ocl_process<MAPPED_FILE>, MAPPED_FILE>
                     buffer_sync;
 
             pe_file_policy();
 
             ~pe_file_policy();
 
-            virtual bool scan_file_type(std::vector<const char *> * file_type_vec,
-                    std::vector<MAPPED_FILE *> * mapped_file_pe,
+            virtual bool scan_file_type(std::vector<const char *> *file_type_vec,
+                    std::vector<MAPPED_FILE *> *mapped_file_pe,
                     sig_shm_type  *sig_shm,
-										sig_engine_type * sig_engine,
+                    sig_engine_type *sig_engine,
                     iactire_engine_scanner_type   *iactire_engine_scanner);
 
 
@@ -389,8 +408,8 @@ namespace policy
             //data_structure::iparallel<SymbolT, StateT> *ipara
             template<typename SymbolT, typename StateT>
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
-            scan_ocl_controller(std::vector<SymbolT> node_symbol, std::vector<StateT> node_state) {
-
+            set_sig_buffer(std::vector<SymbolT> node_symbol, std::vector<StateT> node_state) {
+								logger->write_info("!!!Error set : set_sig_buffer");
             }
 
 

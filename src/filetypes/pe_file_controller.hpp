@@ -93,14 +93,15 @@ namespace filetypes
                     >	 load_ocl_system_type;
 
             typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
-                        signature_shm_type;
+            				signature_shm_type;
 
             typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine_type;
 
-            typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            	sig_shm_type;
-
+						/*
+            typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            				 signature_shm_type;
+						*/
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
-            iactire_engine_scanner_type;
+            				iactire_engine_scanner_type;
 
 
             pe_file_controller();
@@ -143,7 +144,7 @@ namespace filetypes
 
             utils::scan_file_code scan(
 										std::vector<MAPPED_FILE *> *mapped_file_pe,
-                    sig_shm_type  *sig_shm,
+                    signature_shm_type  *sig_shm,
                     sig_engine_type *sig_engine,
                     iactire_engine_scanner_type   *iactire_engine_scanner);
 

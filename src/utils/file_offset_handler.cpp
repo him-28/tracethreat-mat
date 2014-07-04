@@ -203,8 +203,7 @@ namespace utils
     bool file_offset_handler<FileType, MAPPED_FILE>
     ::mapped_file(std::vector<const char*> * file_name_vec,
             std::vector<MAPPED_FILE *> * mapped_vec,
-            file_offset_handler<FileType, MAPPED_FILE>& file_offset_object,
-						const char * file_sig)
+            file_offset_handler<FileType, MAPPED_FILE>& file_offset_object)
     {
         std::vector<const char*>::iterator iter_files;
 
@@ -212,7 +211,6 @@ namespace utils
 				
         const char *file_name;
         std::string s_file_name;
-				std::string s_file_sig = file_sig;
         MAPPED_FILE *mapped_file_ptr;
 
         if(!file_name_vec->size() || !mapped_vec->size()) {
@@ -273,7 +271,6 @@ namespace utils
                     }
 				
 								mapped_file_ptr->file_name += s_file_name;
-								mapped_file_ptr->file_sig  += std::string(file_sig);// s_file_sig;
 
 								logger->write_info("file_offset_handler::mapped_file ",
 										boost::lexical_cast<std::string>(mapped_file_ptr->file_name));

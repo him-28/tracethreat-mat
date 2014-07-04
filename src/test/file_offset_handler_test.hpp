@@ -35,7 +35,7 @@ TEST_F(FileOffsetHandlerTest, mapped_file_test)
 {
 		file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;			
 
-		EXPECT_TRUE(fileoffset_h.mapped_file(&file_type_vec, &mapped_file_vec, fileoffset_h, file_sig));
+		EXPECT_TRUE(fileoffset_h.mapped_file(&file_type_vec, &mapped_file_vec, fileoffset_h));
 
     boost::shared_ptr<std::vector<MAPPED_FILE_PE * > > mappedf_vec_ptr =
             fileoffset_h.get_mappedf_vec_ptr();
