@@ -20,7 +20,6 @@
 
 #include "utils/base/common.hpp"
 
-#define FILE_ON 2
 
 namespace data_str    = data_structure;
 namespace fpolicy = policy;
@@ -41,10 +40,14 @@ class ScanACTireParallel : public ::testing::Test
         virtual void SetUp() {
             //load binary file pe.
             f_handler.file_full_path("/home/chatsiri/sda1/workspacemalware/malware_debug/pack_test_case_01");
+						//Get all file on path .
 						std::vector<std::string> all_files = f_handler.get_full_path();
+            //OpenCL kernel file.
             opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
+            //Signature file.
             file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.hdb";
 
+						//Load mapped_file object to vector.
             for(int count_file = 0; count_file < all_files.size(); count_file++) {
 								file_type_vec.push_back(all_files[count_file].c_str());
             		mapped_file_vec.push_back(new MAPPED_FILE_PE);
