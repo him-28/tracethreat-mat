@@ -170,16 +170,16 @@ TEST_F(TBBPostScanPEController, InitialScanEngine)
     f_shm_handler.initial_shm(summary_file_size);
     f_shm_handler.initial_file_shm(mapped_file_pe_vec);
 
-    // Call Engine Signature.
+    // Call  Signature Engine.
     tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator> sig_engine;
     EXPECT_TRUE(sig_engine.create_engine(meta_sig_vec, utils::pe_file));
 
-    // Register Engine Scanner.
+    // Register  Scanner Engine.
     std::string sigtype_code = utils::filetype_code_map(utils::pe_file);
     tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::register_actire_type(sigtype_code,
             tbbscan::actire_pe_engine<char, tbbscan::tbb_allocator>::create);
 
-    // Create Engine Scanner
+    // Create  Scanner Engine.
     tbbscan::iactire_engine<char, tbbscan::tbb_allocator> *iactire_concur =
             tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::create_actire_engine(sigtype_code);
 

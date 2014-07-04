@@ -157,23 +157,7 @@ namespace controller
 
         return true;
     }
-
-    std::string bin2hex(const std::string& input)
-    {
-        std::string res;
-        const char hex[] = "0123456789ABCDEF";
-        std::cout<<"Input size : " << input.size() <<std::endl;
-
-        for(int i = 0; i < input.size(); i++) {
-            unsigned char c = static_cast<unsigned char>(input[i]);
-            res += hex[c >> 4];
-            res += hex[c & 0xf];
-        }
-
-        return res;
-    }
-
-
+	
     template<typename Buffer, typename MAPPED_FILE>
     bool BufferSync<Buffer, MAPPED_FILE>::setbuff_ocl(const char *char_hex,
             uint64_t size_hex)

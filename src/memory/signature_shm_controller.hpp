@@ -51,6 +51,15 @@ namespace memory
             typedef std::vector<SignatureTypeMemory *>  sigtype_mem_vec_type;
 
             //Initial all signature send to Signature-SHM
+            /**
+            * @brief Initiail SHM per signature type. Meta_sig add to Share Memory. Plan-00003 support only
+            * std::map, but in Plan-00004 implement Full Shared-Memory.
+            * - Work around use vector contain meta_sig for multithread.
+            * @param sigtype Vector contains signature all.
+            * @param shm_name classify signature for each type such PE, ELF and Process.
+            *
+            * @return Success return true.
+            */
             bool initial_shm_sigtype(std::vector<SignatureTypeMemory *> *sigtype,
                     std::string shm_name);
 
@@ -126,8 +135,8 @@ namespace memory
             //signature unordered map
             sigtype_map  sig_map;
             SignatureTypeMemory *signature_ret_ptr;
-						//signature in vector.
-						std::vector<SignatureTypeMemory *>  sig_vec;
+            //signature in vector.
+            std::vector<SignatureTypeMemory *>  sig_vec;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
