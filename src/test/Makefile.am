@@ -14,7 +14,7 @@ test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsync
  -ldstr -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/wrapper \
  -lwrapper  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/filetypes \
  -lfiletypes -L/home/chatsiri/workspacecpp/boost-truck/stage/lib \
- -lboost_system -lboost_program_options -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan \
+ -lboost_system -lboost_program_options -lboost_thread -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan \
  -lscan -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/memory \
  -lmemory -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl \
  -locl -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadconcurrency \

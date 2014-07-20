@@ -20,7 +20,8 @@ connector/result_infected.hpp \
 file_offset_handler.hpp \
 convert.hpp \
 md5_hash.hpp \
-uuid_generator.hpp
+uuid_generator.hpp \
+hash.hpp
 
 # library
 libutils_a_SOURCES = $(libutils_a_HEADERS) file_calculate.cpp \
@@ -32,6 +33,6 @@ base/timer_queue.cpp \
 connector/result_infected.cpp \
 file_offset_handler.cpp \
 md5_hash.cpp \
-uuid_generator.cpp
-
+uuid_generator.cpp \
+hash.cpp
 

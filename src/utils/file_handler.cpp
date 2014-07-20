@@ -1,3 +1,6 @@
+
+#include "boost/filesystem.hpp"
+
 #include "file_handler.hpp"
 
 namespace utils
@@ -41,10 +44,10 @@ namespace utils
     }
 
     template<typename FileType>
-    typename FileType::file_open_ptr &  file_handler<FileType>::get_popen_file()
-		{
-				return p_open_file;
-		}
+    typename FileType::file_open_ptr&   file_handler<FileType>::get_popen_file()
+    {
+        return p_open_file;
+    }
 
 
     template<typename FileType>
@@ -84,6 +87,41 @@ namespace utils
         close(p_open_file);
         return true;
     }
+
+    template<typename FileType>
+    bool file_handler<FileType>::file_full_path(const char *dir_path)
+    {
+        //boot file system.
+        if(boost::filesystem::exists(dir_path)) {
+            //regular file
+            if(boost::filesystem::is_regular_file(dir_path))
+                file_path_vec.push_back(dir_path);
+            else if(boost::filesystem::is_directory(dir_path)) {
+                boost::filesystem::directory_iterator dir_end;
+                typename boost::filesystem::directory_iterator iter_dir;
+
+                //get all path from dir
+                for(boost::filesystem::directory_iterator iter_dir(dir_path);
+                        iter_dir != dir_end;
+                        ++iter_dir) {
+                    file_path_vec.push_back(iter_dir->path().string());
+										logger->write_info("Get File dir", iter_dir->path().string());
+                }//for
+            }//else if
+            else {
+                logger->write_info("Not file on path or empty file");
+            }//else
+        } else {
+            logger->write_info("File not exist");
+        }//else
+
+    }
+
+		template<typename FileType>
+		std::vector<std::string> file_handler<FileType>::get_full_path()
+		{
+			return file_path_vec;
+		}
 
     template class file_handler<common_filetype>;
     //template class file_handler<common_openfile_type>;

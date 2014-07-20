@@ -31,6 +31,8 @@
 #include "memory/signature_shm_base.hpp"
 #include "memory/signature_shm_controller.hpp"
 
+#include "threadconcurrency/tbbpostscan_pe_controller.hpp"
+
 // Big endian supported type.
 union unaligned_64 {
     uint64_t una_u64;
@@ -61,11 +63,8 @@ namespace controller
 
 namespace filetypes
 {
-
     template<typename MAPPED_FILE>
     class pe_file_controller;
-
-
 }
 
 namespace filetypes
@@ -76,10 +75,8 @@ namespace filetypes
     namespace dstr   = data_structure;
     namespace kernel_ocl = hnmav_kernel;
 
-		using memory::signature_shm;
+    using memory::signature_shm;
 
-    //using namespace  controller;
-    //namespace utils  = util;
     template<typename MAPPED_FILE = struct MAPPED_FILE_PE>
     class pe_file_controller
     {
@@ -95,19 +92,19 @@ namespace filetypes
                     std::vector<boost::unordered_map<char, size_t> > >
                     >	 load_ocl_system_type;
 
-					  typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> 
-								signature_shm_type;
+            typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
+            				signature_shm_type;
+
+            typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine_type;
+
+						/*
+            typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            				 signature_shm_type;
+						*/
+            typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
+            				iactire_engine_scanner_type;
+
 
             pe_file_controller();
-            /**
-            * @brief Get PE Header file from file system.
-            *
-            * @param mapped_file_vec  Insert file detail from memory mapped.
-            *
-            * @return Vector contains header file of PE.
-            */
-            std::vector<struct IMAGE_NT_HEADERS *>&
-            get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec);
 
             /**
             * @brief List PE header detail
@@ -143,47 +140,14 @@ namespace filetypes
             * @return int32_t type
             */
             inline int32_t convert_ec32(uint16_t *buffer);
-            //support small file scanning.
-            /**
-            * @brief Retrive data from PE file by containning on vector
-            *
-            * @param pe_header_vec_ptr  PE Header details from list_pe_header member functions.
-            *
-            * @return
-            */
-            uint8_t retrive_offset_lite(std::vector<MAPPED_FILE *>  pe_header_vec_ptr,
-                    std::vector<struct IMAGE_NT_HEADERS * > pe_header)const;
 
-            /**
-            * @brief Get offset file per struct
-            *
-            * @param pe_header_ptr  contains data and size
-            *
-            * @return  retrun extens of struct IMAGE_NT_HEADER
-            */
-            struct IMAGE_NT_HEADERS_EXT& retrive_offset(MAPPED_FILE *pe_map_ptr,
-                    IMAGE_NT_HEADERS *pe_header)const;
 
-            /**
-            * @brief Convert * buffer of file to vector
-            *
-            * @param data  buffer data.(uint8_t)
-            *
-            * @return convert file completed.
-            */
-            bool convert2buffer(uint8_t   *data, size_t size);
+            utils::scan_file_code scan(
+										std::vector<MAPPED_FILE *> *mapped_file_pe,
+                    signature_shm_type  *sig_shm,
+                    sig_engine_type *sig_engine,
+                    iactire_engine_scanner_type   *iactire_engine_scanner);
 
-            /**
-            * @brief Scan file with pe type
-            *
-            * @param file_buffer_vec   Vector type uint8_t contain all buffer file.
-            *
-            * @return scan completed return true.
-            */
-
-            utils::scan_file_code scan(std::vector<char> *symbol_vec,
-                    std::vector<size_t> *state_vec,
-                    std::vector<uint8_t> *file_buffer_vec);
 
             /**
             * @brief Insert signature and thread_sync for compute with GPGPU.
@@ -200,20 +164,7 @@ namespace filetypes
                     std::vector<size_t> *state_vec,
                     std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
                     std::string *kernel_file_path_ptr,
-										signature_shm_type * sig_shm);
-
-
-						/*
-						utils::scan_file_code scan(std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
-										signature_shm_type * sig_shm);
-						*/
-
-            /**
-            * @brief Buffer return to external class
-            *
-            * @return uint64_t byte of buffer contains on std::vector<uint64_t>
-            */
-            std::vector<uint8_t>& get_file_buffer();
+                    signature_shm_type *sig_shm);
 
 
             /**
@@ -229,29 +180,25 @@ namespace filetypes
         private:
             IMAGE_NT_HEADERS *image_nt_header;
 
-            std::vector<boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> > > pe_header_vec_shared;
-            //retrive_offset_lite
-            boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS_EXT *> >  pe_offset_vec_shared_ptr;
-            // file buffer
-            std::vector<uint8_t> file_buffer_vec;
-
-            // add buffer and address of file.
-            //std::vector<uint8_t*> file_buff_addr_vec;
-            std::map<uint8_t *, size_t> file_buff_addr_map;
-
             //kernel file path
             std::string *kernel_file_path_ptr;
-
 
             //set file_shm
             memory::file_shm_handler<MAPPED_FILE>  f_shm_handler;
 
+            //Load TBB
+            controller::tbbpostscan_pe_controller<controller::
+            BufferSyncTBB<struct controller::data_tbb_process<struct MAPPED_FILE_PE>,
+                        struct MAPPED_FILE_PE>,
+                            struct MAPPED_FILE_PE,
+                                struct utils::meta_sig> tbbpostscan_pe_col;
+
+            //Load OCL
             typedef controller::thread_sync<controller::BufferSync<
             struct controller::data_ocl_process<MAPPED_FILE>,
                     MAPPED_FILE >,
                     MAPPED_FILE
                     > tsync_type;
-
 
             tsync_type tsync;
 

@@ -1,9 +1,18 @@
 [submodule "src/clibasewrapper"]
 	path = src/clibasewrapper
-	url = git@github.com:Chatsiri/clibasewrapper.git
+	url = git@github.com:treadstoneproject/clibasewrapper.git
+[submodule "src/thrust"]
+	path = src/thrustscan
+	url = git@github.com:treadstoneproject/thrustscan.git
+[submodule "src/filestructure"]
+	path = src/filestructure
+	url = git@github.com:treadstoneproject/filestructure.git
 [submodule "src/tbbscan"]
 	path = src/tbbscan
 	url = git@github.com:treadstoneproject/tbbscan.git
-[submodule "src/filestructure"]
-	path = src/filestructure
-	url = git@github.com:Chatsiri/filestructure.git
+[submodule "src/thrustscan"]
+	path = src/thrustscan
+	url = git@github.com:treadstoneproject/thrustscan.git
+[submodule "src/gensign"]
+	path = src/gensign
+	url = git@github.com:treadstoneproject/gensign.git
