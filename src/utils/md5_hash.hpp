@@ -34,8 +34,8 @@ namespace utils
     namespace convert
     {
 
-        uint64_t MD5Hash(const unsigned char *s, const unsigned int len);
-        uint64_t MD5Hash(const std::string& s);
+        uint64_t md5_hash(const unsigned char *s, const unsigned int len);
+        uint64_t md5_hash(const std::string& s);
 
     }
 

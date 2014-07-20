@@ -13,6 +13,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/utils/file_calculate.hpp \
  $(top_builddir)/src/utils/base/timer_queue.hpp \
  $(top_builddir)/src/utils/connector/result_infected.hpp \
+ $(top_builddir)/src/utils/hash.hpp \
  $(top_builddir)/src/exception/datastructure_exception.hpp \
  $(top_builddir)/src/exception/failure_handler_code.hpp \
  $(top_builddir)/src/data_structure/ac_tire.hpp \
@@ -38,9 +39,14 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.h \
  $(top_builddir)/src/clibasewrapper/cliwrapper/global_wrapper.h \
  $(top_builddir)/src/tbbscan/data_structure/actire_concurrency.hpp \
+ $(top_builddir)/src/tbbscan/data_structure/bloomfliter_concurrency.hpp \
+ $(top_builddir)/src/tbbscan/data_structure/filter_policy.hpp \
+ $(top_builddir)/src/tbbscan/data_structure/slice.hpp \
  $(top_builddir)/src/filestructure/pe_layout_controller.hpp \
  $(top_builddir)/src/filestructure/logger/logging.hpp \
- $(top_builddir)/src/filestructure/logger/stringprintf.hpp
+ $(top_builddir)/src/filestructure/logger/stringprintf.hpp \
+ $(top_builddir)/src/gensign/clamavsig.hpp
+
 
 
 # library
@@ -48,7 +54,8 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
 	$(top_builddir)/src/utils/file_calculate.cpp  \
   $(top_builddir)/src/utils/base/timer_queue.cpp \
   $(top_builddir)/src/utils/connector/result_infected.cpp \
-	$(top_builddir)/src/exception/failure_handler_code.cpp \
+  $(top_builddir)/src/utils/hash.cpp \
+ 	$(top_builddir)/src/exception/failure_handler_code.cpp \
   $(top_builddir)/src/exception/datastructure_exception.cpp \
 	$(top_builddir)/src/data_structure/ac_tire.cpp \
 	$(top_builddir)/src/data_structure/actire_parallel.cpp \
@@ -70,9 +77,13 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_scanner_wrapper.cpp \
   $(top_builddir)/src/clibasewrapper/cliwrapper/cli_others_common_wrapper.cpp \
   $(top_builddir)/src/tbbscan/data_structure/actire_concurrency.cpp \
+  $(top_builddir)/src/tbbscan/data_structure/bloomfliter_concurrency.cpp \
+  $(top_builddir)/src/tbbscan/data_structure/filter_policy.cpp \
   $(top_builddir)/src/filestructure/pe_layout_controller.cpp \
   $(top_builddir)/src/filestructure/logger/logging.cpp \
-  $(top_builddir)/src/filestructure/logger/stringprintf.cpp
+  $(top_builddir)/src/filestructure/logger/stringprintf.cpp \
+  $(top_builddir)/src/gensign/clamavsig.cpp
+
 
 
 
@@ -87,4 +98,5 @@ $(top_builddir)/src/threadconcurrency/libthreadconcurrency.a \
 $(top_builddir)/src/clibasewrapper/libclibasewrapper.a \
 $(top_builddir)/src/ocl/libocl.a \
 $(top_builddir)/src/tbbscan/libtbbscan.a \
-$(top_builddir)/src/filestructure/libfilestructure.a $(AM_LDFLAGS)
+$(top_builddir)/src/filestructure/libfilestructure.a \
+$(top_builddir)/src/gensign/libgensign.a $(AM_LDFLAGS)

@@ -63,6 +63,10 @@ AC_CONFIG_FILES([src/threadconcurrency/Makefile])
 AC_CONFIG_FILES([src/tbbscan/Makefile])
 AC_CONFIG_FILES([src/filestructure/Makefile])
 AC_CONFIG_FILES([src/filestructure/test_fs/Makefile])
+AC_CONFIG_FILES([src/gensign/Makefile])
+AC_CONFIG_FILES([src/gensign/testgensig/Makefile])
+AC_CONFIG_FILES([src/internet/client_fresh/Makefile])
+AC_CONFIG_FILES([src/internet/testinternet/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
 AC_OUTPUT
