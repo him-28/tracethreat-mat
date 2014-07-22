@@ -22,8 +22,34 @@
 #include <boost/asio.hpp>
 #include <iostream>
 
+#include <boost/config/warning_disable.hpp>
+#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix_core.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+
+
+#include <boost/fusion/include/struct.hpp>
+#include <boost/fusion/include/nview.hpp>
+#include <boost/foreach.hpp>
+#include <boost/mpl/print.hpp>
+
 namespace internet
 {
+
+    //packet header
+    struct http_header {
+        std::string type;
+        std::string value;
+    };
+
+
+    using boost::spirit::qi::char_;
+    using boost::spirit::qi::double_;
+    using boost::spirit::qi::_1;
+    using boost::spirit::qi::phrase_parse;
+    using boost::spirit::ascii::space;
+    using boost::phoenix::ref;
+
     namespace asio = boost::asio;
     typedef asio::ip::tcp protocol;
     typedef protocol::resolver resolver;
@@ -37,34 +63,51 @@ namespace internet
     class updated_sign
     {
         public:
+
+            typedef boost::fusion::result_of::as_nview<http_header, 0, 1>::type http_header_type;
+
+            typedef std::string::const_iterator iterator_type;
+
             void repos_initial(std::string ip_addr, std::string port);
 
             //Connect headler
-            void connect_handler(const error_code & error, socket * sock);
+            void connect_handler(const error_code& error, socket *sock);
             //Read data data.
             void read_headler(const error_code& error, std::size_t bytes_transffered);
             //Write signature base to file.
             void write_sig(const char *buffer_write);
-				
-						char * get_version(){ return "devel-5bf764d-exp-debug"; }
 
-						char set_srcfile(const char * srcfile){ this->srcfile = srcfile; }	
+            char *get_version() {
+                return "devel-5bf764d-exp-debug";
+            }
 
-						char set_remotename(const char * remotename){ this->remotename = remotename; }
+            char set_srcfile(const char *srcfile) {
+                this->srcfile = srcfile;
+            }
 
-						bool parse_header_cvd(const char *  header);
-						
+            char set_remotename(const char *remotename) {
+                this->remotename = remotename;
+            }
+
+            bool parse_header_cvd(std::string const& header_str,
+                    std::vector<http_header *>& header_vector,
+										uint8_t count_header);
+
         private:
 
             asio::io_service io_service;
-						// Write command to socket.
+            // Write command to socket.
             char cmd[512];
-					  const char * remotename;
-						const char * srcfile;
-						char * cvdfile[32];
-						char uastr[128];
-						char * last_modifield[36];
-						
+            const char *remotename;
+            const char *srcfile;
+            char *cvdfile[32];
+            char uastr[128];
+            char *last_modifield[36];
+            std::vector<char>   vec_buffer;
+
+            //rule parser
+            boost::spirit::qi::rule<iterator_type, http_header_type()> rule_http_header;
+
     };
 
 
