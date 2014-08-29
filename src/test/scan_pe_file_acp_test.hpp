@@ -113,15 +113,9 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     std::vector<std::string> keywords;
     const char *input;
 
-    //keywords =  boost::assign::list_of("4c01b821685421cd70207369");
-
-    //keywords =  boost::assign::list_of("09cd21b8014ccd215468"); //support c++ standard
 
     keywords =  {"09cd21b8014ccd215468"}; //support c++0x
 
-    //("8d2e1a0abb1a")("cc8de2b1");
-
-    //boost::assign::list_of("4bc647")("4b537db2e3a337")("4b53abf");
     input    = (char *)malloc(sizeof(char *) * std::string("a824bc647c46d04b537db2e3a33711").size());
     input    = "a824bc647c46d04b537db2e3a33711";
 

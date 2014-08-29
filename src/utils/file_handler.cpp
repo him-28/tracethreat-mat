@@ -123,9 +123,17 @@ namespace utils
 			return file_path_vec;
 		}
 
+		template<typename FileType>
+		bool file_handler<FileType>::write_file(std::vector<char> & buffer_vec)
+		{
+				std::ofstream outfile(file_path, std::ios::out | std::ios::binary);
+				outfile.write(&buffer_vec[0], buffer_vec.size());
+		}
+
     template class file_handler<common_filetype>;
     //template class file_handler<common_openfile_type>;
 
+		//____________________________ File stream handler ________________________________________________
     //file_strem
     template<typename FileType,typename StructFileType, typename PointerType>
     bool file_stream_handler<FileType,StructFileType, PointerType>::file_read()

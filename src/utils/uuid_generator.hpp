@@ -39,7 +39,7 @@ public:
 
 		  bool search_thread_depend(uint64_t tid);	
 private:
-	  std::map<uint64_t, std::string>  uuid_thread_map;
+	  std::map<uint64_t, std::string>  uuid_map;
 		uint64_t tid_;
 };
 

@@ -41,15 +41,15 @@ std::string uuid_generator::generate()
 		   boost::uuids::uuid uid;
     	 std::stringstream ss;
 			 ss << uid; 
-			 //this->uuid_thread_map.insert(std::make_pair<uint64_t, std::string>(this->tid_,ss.str()));
+			 //this->uuid_map.insert(std::make_pair<uint64_t, std::string>(this->tid_,ss.str()));
 			 return ss.str();
 }
 
 bool uuid_generator::search_thread_depend(uint64_t  tid)
 {
-	  std::map<pthread_t, std::string>::iterator iter_uuid_map;// = uuid_thread_map.find(tid);
-		for(iter_uuid_map = uuid_thread_map.begin(); 
-				iter_uuid_map != uuid_thread_map.end();
+	  std::map<pthread_t, std::string>::iterator iter_uuid_map;// = uuid_map.find(tid);
+		for(iter_uuid_map = uuid_map.begin(); 
+				iter_uuid_map != uuid_map.end();
 				++iter_uuid_map)
 		{
 					std::pair<pthread_t, std::string> pair_id = *iter_uuid_map;

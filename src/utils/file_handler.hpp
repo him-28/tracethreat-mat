@@ -58,14 +58,21 @@ namespace utils
         public:
 
             file_handler() { };
+
             virtual bool file_read();
+
             virtual bool set_filepath(char const *file_path);
+
             virtual typename FileType::file_ptr *get_file() const;
 
             bool file_read_mapped();
+
             bool get_fdetail_create();
+
             struct stat *get_file_status();
+
             typename FileType::file_open_ptr& get_popen_file();
+
             bool close_file();
 
             /**
@@ -78,15 +85,24 @@ namespace utils
             bool file_full_path(const char *dir_path);
 
 
-						std::vector<std::string> get_full_path();
+            /**
+            * @brief Write buffer constains in vector.
+            *
+            * @param buffer_vec  Buffer file is char type.
+            *
+            * @return Success, return true.
+            */
+            bool write_file(std::vector<char>& buffer_vec);
+
+            std::vector<std::string> get_full_path();
         private:
             typename FileType::file_ptr *p_file;
             typename FileType::file_open_ptr p_open_file;
             struct stat  file_status;
             const char *file_path;
-						std::vector<std::string> file_path_vec;
+            std::vector<std::string> file_path_vec;
 
-						boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;
 
     };

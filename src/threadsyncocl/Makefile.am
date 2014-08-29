@@ -45,7 +45,26 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/filestructure/pe_layout_controller.hpp \
  $(top_builddir)/src/filestructure/logger/logging.hpp \
  $(top_builddir)/src/filestructure/logger/stringprintf.hpp \
- $(top_builddir)/src/gensign/clamavsig.hpp
+ $(top_builddir)/src/gensign/clamavsig.hpp \
+ $(top_builddir)/src/internet/client_fresh/updated_sign.hpp \
+ $(top_builddir)/src/internet/scan_server/scan_server.hpp \
+ $(top_builddir)/src/internet/scan_server/scan_connection.hpp \
+ $(top_builddir)/src/internet/scan_client/scan_client.hpp \
+ $(top_builddir)/src/internet/scan_client/scan_dir.hpp \
+ $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.hpp \
+ $(top_builddir)/src/internet/scan_client/basic_scan_dir.hpp \
+ $(top_builddir)/src/internet/scan_client/scan_dir_impl.hpp \
+ $(top_builddir)/src/internet/scan_client/packedmessage_scan_client.hpp
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -82,7 +101,26 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/filestructure/pe_layout_controller.cpp \
   $(top_builddir)/src/filestructure/logger/logging.cpp \
   $(top_builddir)/src/filestructure/logger/stringprintf.cpp \
-  $(top_builddir)/src/gensign/clamavsig.cpp
+  $(top_builddir)/src/gensign/clamavsig.cpp \
+  $(top_builddir)/src/internet/client_fresh/updated_sign.cpp \
+  $(top_builddir)/src/internet/scan_server/scan_server.cpp \
+  $(top_builddir)/src/internet/scan_server/scan_connection.cpp \
+  $(top_builddir)/src/internet/scan_client/scan_client.cpp \
+  $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.cpp \
+  $(top_builddir)/src/internet/scan_client/basic_scan_dir.cpp \
+  $(top_builddir)/src/internet/scan_client/scan_dir_impl.cpp \
+  $(top_builddir)/src/internet/scan_client/packedmessage_scan_client.cpp
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -99,4 +137,7 @@ $(top_builddir)/src/clibasewrapper/libclibasewrapper.a \
 $(top_builddir)/src/ocl/libocl.a \
 $(top_builddir)/src/tbbscan/libtbbscan.a \
 $(top_builddir)/src/filestructure/libfilestructure.a \
-$(top_builddir)/src/gensign/libgensign.a $(AM_LDFLAGS)
+$(top_builddir)/src/gensign/libgensign.a \
+$(top_builddir)/src/internet/client_fresh/libclientfresh.a \
+$(top_builddir)/src/internet/scan_server/libscan_server.a \
+$(top_builddir)/src/internet/scan_client/libscan_client.a $(AM_LDFLAGS)$(AM_LDFLAGS)

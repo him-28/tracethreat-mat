@@ -39,7 +39,8 @@
 // AC Engine TBB
 //#include "test/tbbpostscan_pe_task_test.hpp"
 //#include "test/tbbpostscan_pe_controller_test.hpp"
-#include "test/bloomfilter_concurrency_test.hpp"
+//#include "test/bloomfilter_concurrency_test.hpp"
+
 
 /*
 #include "test/clutil_platform_test.hpp"

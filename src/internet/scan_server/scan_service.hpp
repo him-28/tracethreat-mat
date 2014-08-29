@@ -1,3 +1,6 @@
+#ifndef INTERNET_SCAN_CONTROLLER_HPP
+#define INTERNET_SCAN_CONTROLLER_HPP
+
 /*
 * Copyright 2014 Chatsiri Rattana.
 *
@@ -15,5 +18,17 @@
 */
 
 /*  Titles			                                          Authors	         Date
- *
+ * Operation support connection class                     R.Chatsiri
  */
+
+template<typename Handler>
+class scan_controller{
+
+public:
+		
+
+private:
+
+};
+
+#endif /* INTERNET_SCAN_CONTROLLER_HPP */
