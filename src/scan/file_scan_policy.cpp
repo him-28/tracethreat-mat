@@ -1,11 +1,13 @@
 
 #include <sstream>
 
+#include "utils/base/common.hpp"
+
 #include "scan/file_scan_policy.hpp"
 
 namespace policy
 {
- 
+
     template<typename MAPPED_FILE>
     pe_file_policy<MAPPED_FILE>::pe_file_policy()
     {
@@ -22,23 +24,52 @@ namespace policy
     scan_file_type(std::vector<const char *> *file_type_vec,
             std::vector<MAPPED_FILE *> *mapped_file_pe,
             sig_shm_type  *sig_shm_pe,
-						sig_engine_type *sig_engine,
+            sig_engine_type *sig_engine,
             iactire_engine_scanner_type   *iactire_engine_scanner)
     {
         logger->write_info("Start pe_file_policy<MAPPED_FILE>::scan_file_type");
+        //Check Internal or Exteranl scanning.
+        bool internal_msg = false;
+        typename std::vector<MAPPED_FILE *>::iterator iter_files;
+
+				if(file_type_vec->empty()){
+					logger->write_info("Start pe_file_policy<MAPPED_FILE>::scan_file_type, file empty");
+					return false;
+				}
+
+        for(iter_files = mapped_file_pe->begin();
+                iter_files != mapped_file_pe->end();
+                ++iter_files) {
+            MAPPED_FILE *mf = *iter_files;
+
+            //if find only one mapped_file is internal is all internal
+            //External message set all is exteranl as in msg_type = EXTERNAL
+            if(mf->msg_type == utils::internal_msg) {
+                internal_msg = true;
+                break;
+            }//if check  internal_msg
+        }
+
+        // If Internal message find offset on binary file.
         //[x] Mapped file in prescanning.
         //[x] Scan header and offset file found virus on infected file.
         //-[x] Header file.
         //-[x] Offset file.
-        fileoffset_h.mapped_file(file_type_vec, mapped_file_pe, fileoffset_h);
-				pe_layout.get_header(mapped_file_pe);
-				pe_layout.get_offset(mapped_file_pe);
-	
+        if(internal_msg) {
+            fileoffset_h.mapped_file(file_type_vec, mapped_file_pe, fileoffset_h);
+            pe_layout.get_header(mapped_file_pe);
+            pe_layout.get_offset(mapped_file_pe);
+        }// If internal_msg
+
         //ACTire-Parallel with TBB
         //[x]Add Sig-SHM.
         //[x]Add File-SHM * Declares on scan() member function of pe_file_controller.
         //[x]Add AC-Tire TBB Scanning.
         pe_fconl.scan(mapped_file_pe, sig_shm_pe, sig_engine, iactire_engine_scanner);
+
+				//Unmapped file after scan completed.
+				if(internal_msg)
+					fileoffset_h.unmapped_file(*mapped_file_pe);
 
         return true;// scan completed
     }
@@ -120,6 +151,9 @@ namespace policy
     template<typename MAPPED_FILE>
     std::vector<const char *> *pe_file_policy<MAPPED_FILE>::get_file_type()
     {
+				logger->write_info("pe_file_policy<MAPPED_FILE>::get_file_type, file no. : ",
+               boost::lexical_cast<std::string>(file_type_vec.size()));
+
         return &file_type_vec;
     }
 
@@ -143,13 +177,20 @@ namespace policy
     std::vector<struct utils::file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
             sig_shm_type   *sig_shm,
-						sig_engine_type * sig_engine,
+            sig_engine_type *sig_engine,
             iactire_engine_scanner_type *iactire_engine_scanner)
     {
         logger->write_info("In file_scan_policy<MAPPED_FILE>::scan_file_engine");
 
         std::vector<MAPPED_FILE *> *mapped_file_vec =  fcol_policy->get_mapped_file();
         std::vector<const char *>  *file_type_vec   =  fcol_policy->get_file_type();
+
+				logger->write_info("file_scan_policy<MAPPED_FILE>::scan_file_engine, mapped_file on : ",
+												boost::lexical_cast<std::string>(mapped_file_vec->size()));
+
+				logger->write_info("file_scan_policy<MAPPED_FILE>::scan_file_engine, file_type-vec on : ",
+												boost::lexical_cast<std::string>(file_type_vec->size()));
+
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_file;
         uint8_t result_file_count = 0;
@@ -159,12 +200,12 @@ namespace policy
         if(f_col_policy->scan_file_type(file_type_vec,
                 mapped_file_vec,
                 sig_shm,
-								sig_engine,
+                sig_engine,
                 iactire_engine_scanner)) {
 
         }//if
 
-				//TODO: Pluging for scanning.
+        //TODO: Pluging for scanning.
         //f_col_policy->load_plugins_type(mapp_file, pl_result);
 
 

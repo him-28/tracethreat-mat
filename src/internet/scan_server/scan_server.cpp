@@ -1,4 +1,4 @@
-#define  CPU_THREAD_SIZE 4
+#define  CPU_THREAD_SIZE 1
 #include "internet/scan_server/scan_server.hpp"
 #include "internet/scan_server/scan_connection.hpp"
 
@@ -14,9 +14,9 @@ namespace internet
     {
         public:
 
-            impl(asio::io_service& io_service, unsigned port):
+            impl(asio::io_service& io_service, std::string ip_addr, unsigned port):
                 scan_monitor_connection(new asio::io_service::work(io_service)), // Handle Async Connection
-                acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)),
+                acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::address::from_string(ip_addr), port)),
                 io_service_(io_service)
                 {
 
@@ -74,8 +74,8 @@ namespace internet
 
     };
 
-    scan_server::scan_server(asio::io_service& io_service, unsigned port)
-        : impl_(new scan_server::impl(io_service, port))
+    scan_server::scan_server(asio::io_service& io_service, std::string ip_addr, unsigned port)
+        : impl_(new scan_server::impl(io_service, ip_addr, port))
     {
 
     }

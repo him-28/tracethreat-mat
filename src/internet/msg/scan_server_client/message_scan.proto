@@ -40,27 +40,32 @@ message RequestScan{
 
 		enum RequestType{
 			REGISTER = 1;
-      SCAN = 2;
-			RESULT = 3;
+			REGISTER_SUCCESS = 2;
+			REGISTER_UNSUCCESS = 3;
+      SCAN = 4;
+			SCAN_SUCCESS = 5;
+			SCAN_UNSUCCESS = 6;
+			RESULT = 7;
 		}
+
 		required RequestType  type     = 1;
-		required string  	   uuid 		 = 2; // Machine UUID send from client.
-		required string      timestamp = 3;
-		//required string type = 3; // Request types between server and client.
+		required bytes  	   uuid 		 = 2; // Machine UUID send from client.
+		required bytes      timestamp = 3;
+		//required bytes type = 3; // Request types between server and client.
 		message RequestGetBinaryValue{
-			optional string binary     = 1;   // Binary file.
-			optional string file_name  = 2;   // File name.
+			optional bytes binary     = 1;   // Binary file.
+			optional bytes file_name  = 2;   // File name.
 			optional uint64 file_size  = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
 
 		}
 
-		optional RequestGetBinaryValue request_get_binary_value = 4;
+		repeated RequestGetBinaryValue request_get_binary_value = 4;
 
 		message RequestSetBinaryValue{
-			optional string binary      = 1;   // Binary file.
-			optional string file_name   = 2;   // File name.
+			optional bytes binary      = 1;   // Binary file.
+			optional bytes file_name   = 2;   // File name.
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
@@ -74,26 +79,57 @@ message RequestScan{
 
 message ResponseScan{
 
-		required string  	 uuid 		 = 1; // Machine UUID send from client.
-		required string    timestamp = 2;
+		//Not _suffix mean full file encoded.
+	  enum EncodeType{
+			MD5        = 1;
+			MD5_HEADER = 2;
+			MD5_BODY   = 3;
+		  SHA_1      = 4;
+			SHA_256    = 5;
+			SSDEEP     = 6;
+		}
+
+		enum FileType{
+				PE 			= 1;
+				ELF 		= 2;
+				PROCESS = 3;
+		}
+
+		enum ResponseType{
+			REGISTER = 1;
+			REGISTER_SUCCESS = 2;
+			REGISTER_UNSUCCESS = 3;
+      SCAN = 4;
+			SCAN_SUCCESS = 5;
+			SCAN_UNSUCCESS = 6;
+			RESULT = 7;
+		}
+
+		required ResponseType  type     = 1;
+		required bytes  	   uuid 		 = 2; // Machine UUID send from client.
+		required bytes      timestamp = 3;
+
 
 		message ResponseGetBinaryValue{
-			required string binary         = 1;   // Binary file.
-			required string file_name      = 2;   // File name.
-			optional bool   status         = 3;   // Found or not found infected file.
-			optional uint64 file_size      = 4;   // File size.
+			optional bytes binary     = 1;   // Binary file.
+			optional bytes file_name  = 2;   // File name.
+			optional uint64 file_size  = 3;
+			optional EncodeType  scan_type = 4; // Scan with decode type.
+			optional FileType    file_type = 5; // File type.
 		}
 
-		optional ResponseGetBinaryValue response_get_binary_value = 3;
+		repeated ResponseGetBinaryValue response_get_binary_value = 4;
 
 		message ResponseSetBinaryValue{
-			required string binary     = 1;   // Binary file.
-			required string file_name  = 2;   // File name.
-			optional bool   status     = 3;   // Found or not found infected file.
-			optional uint64 file_size  = 4;   // File size.
+
+			optional bytes binary      = 1;   // Binary file.
+			optional bytes file_name   = 2;   // File name.
+			optional uint64 file_size   = 3;
+			optional EncodeType  scan_type = 4; // Scan with decode type.
+			optional FileType    file_type = 5; // File type.
 		}
 
-		optional ResponseSetBinaryValue  reponse_set_binary_value = 4;
+		repeated ResponseSetBinaryValue  reponse_set_binary_value = 5;
 
 
 }

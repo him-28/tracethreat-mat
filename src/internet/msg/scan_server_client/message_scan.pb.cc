@@ -41,6 +41,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* ResponseScan_ResponseSetBinaryValue_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ResponseScan_ResponseSetBinaryValue_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* ResponseScan_EncodeType_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor* ResponseScan_FileType_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor* ResponseScan_ResponseType_descriptor_ = NULL;
 
 }  // namespace
 
@@ -112,7 +115,8 @@ void protobuf_AssignDesc_message_5fscan_2eproto() {
   RequestScan_FileType_descriptor_ = RequestScan_descriptor_->enum_type(1);
   RequestScan_RequestType_descriptor_ = RequestScan_descriptor_->enum_type(2);
   ResponseScan_descriptor_ = file->message_type(1);
-  static const int ResponseScan_offsets_[4] = {
+  static const int ResponseScan_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan, uuid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan, timestamp_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan, response_get_binary_value_),
@@ -130,11 +134,12 @@ void protobuf_AssignDesc_message_5fscan_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ResponseScan));
   ResponseScan_ResponseGetBinaryValue_descriptor_ = ResponseScan_descriptor_->nested_type(0);
-  static const int ResponseScan_ResponseGetBinaryValue_offsets_[4] = {
+  static const int ResponseScan_ResponseGetBinaryValue_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseGetBinaryValue, binary_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseGetBinaryValue, file_name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseGetBinaryValue, status_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseGetBinaryValue, file_size_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseGetBinaryValue, scan_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseGetBinaryValue, file_type_),
   };
   ResponseScan_ResponseGetBinaryValue_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -148,11 +153,12 @@ void protobuf_AssignDesc_message_5fscan_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ResponseScan_ResponseGetBinaryValue));
   ResponseScan_ResponseSetBinaryValue_descriptor_ = ResponseScan_descriptor_->nested_type(1);
-  static const int ResponseScan_ResponseSetBinaryValue_offsets_[4] = {
+  static const int ResponseScan_ResponseSetBinaryValue_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseSetBinaryValue, binary_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseSetBinaryValue, file_name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseSetBinaryValue, status_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseSetBinaryValue, file_size_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseSetBinaryValue, scan_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResponseScan_ResponseSetBinaryValue, file_type_),
   };
   ResponseScan_ResponseSetBinaryValue_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -165,6 +171,9 @@ void protobuf_AssignDesc_message_5fscan_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ResponseScan_ResponseSetBinaryValue));
+  ResponseScan_EncodeType_descriptor_ = ResponseScan_descriptor_->enum_type(0);
+  ResponseScan_FileType_descriptor_ = ResponseScan_descriptor_->enum_type(1);
+  ResponseScan_ResponseType_descriptor_ = ResponseScan_descriptor_->enum_type(2);
 }
 
 namespace {
@@ -215,39 +224,54 @@ void protobuf_AddDesc_message_5fscan_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\022message_scan.proto\022\014message_scan\"\277\006\n\013R"
+    "\n\022message_scan.proto\022\014message_scan\"\224\007\n\013R"
     "equestScan\0223\n\004type\030\001 \002(\0162%.message_scan."
-    "RequestScan.RequestType\022\014\n\004uuid\030\002 \002(\t\022\021\n"
-    "\ttimestamp\030\003 \002(\t\022Q\n\030request_get_binary_v"
-    "alue\030\004 \001(\0132/.message_scan.RequestScan.Re"
+    "RequestScan.RequestType\022\014\n\004uuid\030\002 \002(\014\022\021\n"
+    "\ttimestamp\030\003 \002(\014\022Q\n\030request_get_binary_v"
+    "alue\030\004 \003(\0132/.message_scan.RequestScan.Re"
     "questGetBinaryValue\022Q\n\030request_set_binar"
     "y_value\030\005 \003(\0132/.message_scan.RequestScan"
     ".RequestSetBinaryValue\032\275\001\n\025RequestGetBin"
-    "aryValue\022\016\n\006binary\030\001 \001(\t\022\021\n\tfile_name\030\002 "
-    "\001(\t\022\021\n\tfile_size\030\003 \001(\004\0227\n\tscan_type\030\004 \001("
+    "aryValue\022\016\n\006binary\030\001 \001(\014\022\021\n\tfile_name\030\002 "
+    "\001(\014\022\021\n\tfile_size\030\003 \001(\004\0227\n\tscan_type\030\004 \001("
     "\0162$.message_scan.RequestScan.EncodeType\022"
     "5\n\tfile_type\030\005 \001(\0162\".message_scan.Reques"
     "tScan.FileType\032\275\001\n\025RequestSetBinaryValue"
-    "\022\016\n\006binary\030\001 \001(\t\022\021\n\tfile_name\030\002 \001(\t\022\021\n\tf"
+    "\022\016\n\006binary\030\001 \001(\014\022\021\n\tfile_name\030\002 \001(\014\022\021\n\tf"
     "ile_size\030\003 \001(\004\0227\n\tscan_type\030\004 \001(\0162$.mess"
     "age_scan.RequestScan.EncodeType\0225\n\tfile_"
     "type\030\005 \001(\0162\".message_scan.RequestScan.Fi"
     "leType\"W\n\nEncodeType\022\007\n\003MD5\020\001\022\016\n\nMD5_HEA"
     "DER\020\002\022\014\n\010MD5_BODY\020\003\022\t\n\005SHA_1\020\004\022\013\n\007SHA_25"
     "6\020\005\022\n\n\006SSDEEP\020\006\"(\n\010FileType\022\006\n\002PE\020\001\022\007\n\003E"
-    "LF\020\002\022\013\n\007PROCESS\020\003\"1\n\013RequestType\022\014\n\010REGI"
-    "STER\020\001\022\010\n\004SCAN\020\002\022\n\n\006RESULT\020\003\"\232\003\n\014Respons"
-    "eScan\022\014\n\004uuid\030\001 \002(\t\022\021\n\ttimestamp\030\002 \002(\t\022T"
-    "\n\031response_get_binary_value\030\003 \001(\01321.mess"
-    "age_scan.ResponseScan.ResponseGetBinaryV"
-    "alue\022S\n\030reponse_set_binary_value\030\004 \001(\01321"
-    ".message_scan.ResponseScan.ResponseSetBi"
-    "naryValue\032^\n\026ResponseGetBinaryValue\022\016\n\006b"
-    "inary\030\001 \002(\t\022\021\n\tfile_name\030\002 \002(\t\022\016\n\006status"
-    "\030\003 \001(\010\022\021\n\tfile_size\030\004 \001(\004\032^\n\026ResponseSet"
-    "BinaryValue\022\016\n\006binary\030\001 \002(\t\022\021\n\tfile_name"
-    "\030\002 \002(\t\022\016\n\006status\030\003 \001(\010\022\021\n\tfile_size\030\004 \001("
-    "\004", 1281);
+    "LF\020\002\022\013\n\007PROCESS\020\003\"\205\001\n\013RequestType\022\014\n\010REG"
+    "ISTER\020\001\022\024\n\020REGISTER_SUCCESS\020\002\022\026\n\022REGISTE"
+    "R_UNSUCCESS\020\003\022\010\n\004SCAN\020\004\022\020\n\014SCAN_SUCCESS\020"
+    "\005\022\022\n\016SCAN_UNSUCCESS\020\006\022\n\n\006RESULT\020\007\"\243\007\n\014Re"
+    "sponseScan\0225\n\004type\030\001 \002(\0162\'.message_scan."
+    "ResponseScan.ResponseType\022\014\n\004uuid\030\002 \002(\014\022"
+    "\021\n\ttimestamp\030\003 \002(\014\022T\n\031response_get_binar"
+    "y_value\030\004 \003(\01321.message_scan.ResponseSca"
+    "n.ResponseGetBinaryValue\022S\n\030reponse_set_"
+    "binary_value\030\005 \003(\01321.message_scan.Respon"
+    "seScan.ResponseSetBinaryValue\032\300\001\n\026Respon"
+    "seGetBinaryValue\022\016\n\006binary\030\001 \001(\014\022\021\n\tfile"
+    "_name\030\002 \001(\014\022\021\n\tfile_size\030\003 \001(\004\0228\n\tscan_t"
+    "ype\030\004 \001(\0162%.message_scan.ResponseScan.En"
+    "codeType\0226\n\tfile_type\030\005 \001(\0162#.message_sc"
+    "an.ResponseScan.FileType\032\300\001\n\026ResponseSet"
+    "BinaryValue\022\016\n\006binary\030\001 \001(\014\022\021\n\tfile_name"
+    "\030\002 \001(\014\022\021\n\tfile_size\030\003 \001(\004\0228\n\tscan_type\030\004"
+    " \001(\0162%.message_scan.ResponseScan.EncodeT"
+    "ype\0226\n\tfile_type\030\005 \001(\0162#.message_scan.Re"
+    "sponseScan.FileType\"W\n\nEncodeType\022\007\n\003MD5"
+    "\020\001\022\016\n\nMD5_HEADER\020\002\022\014\n\010MD5_BODY\020\003\022\t\n\005SHA_"
+    "1\020\004\022\013\n\007SHA_256\020\005\022\n\n\006SSDEEP\020\006\"(\n\010FileType"
+    "\022\006\n\002PE\020\001\022\007\n\003ELF\020\002\022\013\n\007PROCESS\020\003\"\206\001\n\014Respo"
+    "nseType\022\014\n\010REGISTER\020\001\022\024\n\020REGISTER_SUCCES"
+    "S\020\002\022\026\n\022REGISTER_UNSUCCESS\020\003\022\010\n\004SCAN\020\004\022\020\n"
+    "\014SCAN_SUCCESS\020\005\022\022\n\016SCAN_UNSUCCESS\020\006\022\n\n\006R"
+    "ESULT\020\007", 1887);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "message_scan.proto", &protobuf_RegisterTypes);
   RequestScan::default_instance_ = new RequestScan();
@@ -335,6 +359,10 @@ bool RequestScan_RequestType_IsValid(int value) {
     case 1:
     case 2:
     case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
       return true;
     default:
       return false;
@@ -343,7 +371,11 @@ bool RequestScan_RequestType_IsValid(int value) {
 
 #ifndef _MSC_VER
 const RequestScan_RequestType RequestScan::REGISTER;
+const RequestScan_RequestType RequestScan::REGISTER_SUCCESS;
+const RequestScan_RequestType RequestScan::REGISTER_UNSUCCESS;
 const RequestScan_RequestType RequestScan::SCAN;
+const RequestScan_RequestType RequestScan::SCAN_SUCCESS;
+const RequestScan_RequestType RequestScan::SCAN_UNSUCCESS;
 const RequestScan_RequestType RequestScan::RESULT;
 const RequestScan_RequestType RequestScan::RequestType_MIN;
 const RequestScan_RequestType RequestScan::RequestType_MAX;
@@ -443,15 +475,12 @@ bool RequestScan_RequestGetBinaryValue::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string binary = 1;
+      // optional bytes binary = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_binary()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->binary().data(), this->binary().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -459,16 +488,13 @@ bool RequestScan_RequestGetBinaryValue::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string file_name = 2;
+      // optional bytes file_name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_file_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_file_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->file_name().data(), this->file_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -552,21 +578,15 @@ bool RequestScan_RequestGetBinaryValue::MergePartialFromCodedStream(
 
 void RequestScan_RequestGetBinaryValue::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string binary = 1;
+  // optional bytes binary = 1;
   if (has_binary()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->binary().data(), this->binary().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       1, this->binary(), output);
   }
 
-  // optional string file_name = 2;
+  // optional bytes file_name = 2;
   if (has_file_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       2, this->file_name(), output);
   }
 
@@ -595,23 +615,17 @@ void RequestScan_RequestGetBinaryValue::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* RequestScan_RequestGetBinaryValue::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string binary = 1;
+  // optional bytes binary = 1;
   if (has_binary()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->binary().data(), this->binary().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         1, this->binary(), target);
   }
 
-  // optional string file_name = 2;
+  // optional bytes file_name = 2;
   if (has_file_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->file_name(), target);
   }
 
@@ -643,17 +657,17 @@ int RequestScan_RequestGetBinaryValue::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string binary = 1;
+    // optional bytes binary = 1;
     if (has_binary()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->binary());
     }
 
-    // optional string file_name = 2;
+    // optional bytes file_name = 2;
     if (has_file_name()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->file_name());
     }
 
@@ -857,15 +871,12 @@ bool RequestScan_RequestSetBinaryValue::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string binary = 1;
+      // optional bytes binary = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_binary()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->binary().data(), this->binary().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -873,16 +884,13 @@ bool RequestScan_RequestSetBinaryValue::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string file_name = 2;
+      // optional bytes file_name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_file_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_file_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->file_name().data(), this->file_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -966,21 +974,15 @@ bool RequestScan_RequestSetBinaryValue::MergePartialFromCodedStream(
 
 void RequestScan_RequestSetBinaryValue::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string binary = 1;
+  // optional bytes binary = 1;
   if (has_binary()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->binary().data(), this->binary().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       1, this->binary(), output);
   }
 
-  // optional string file_name = 2;
+  // optional bytes file_name = 2;
   if (has_file_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       2, this->file_name(), output);
   }
 
@@ -1009,23 +1011,17 @@ void RequestScan_RequestSetBinaryValue::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* RequestScan_RequestSetBinaryValue::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string binary = 1;
+  // optional bytes binary = 1;
   if (has_binary()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->binary().data(), this->binary().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         1, this->binary(), target);
   }
 
-  // optional string file_name = 2;
+  // optional bytes file_name = 2;
   if (has_file_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->file_name(), target);
   }
 
@@ -1057,17 +1053,17 @@ int RequestScan_RequestSetBinaryValue::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string binary = 1;
+    // optional bytes binary = 1;
     if (has_binary()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->binary());
     }
 
-    // optional string file_name = 2;
+    // optional bytes file_name = 2;
     if (has_file_name()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->file_name());
     }
 
@@ -1191,7 +1187,6 @@ RequestScan::RequestScan()
 }
 
 void RequestScan::InitAsDefaultInstance() {
-  request_get_binary_value_ = const_cast< ::message_scan::RequestScan_RequestGetBinaryValue*>(&::message_scan::RequestScan_RequestGetBinaryValue::default_instance());
 }
 
 RequestScan::RequestScan(const RequestScan& from)
@@ -1205,7 +1200,6 @@ void RequestScan::SharedCtor() {
   type_ = 1;
   uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   timestamp_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  request_get_binary_value_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1221,7 +1215,6 @@ void RequestScan::SharedDtor() {
     delete timestamp_;
   }
   if (this != default_instance_) {
-    delete request_get_binary_value_;
   }
 }
 
@@ -1259,10 +1252,8 @@ void RequestScan::Clear() {
         timestamp_->clear();
       }
     }
-    if (has_request_get_binary_value()) {
-      if (request_get_binary_value_ != NULL) request_get_binary_value_->::message_scan::RequestScan_RequestGetBinaryValue::Clear();
-    }
   }
+  request_get_binary_value_.Clear();
   request_set_binary_value_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1294,16 +1285,13 @@ bool RequestScan::MergePartialFromCodedStream(
         break;
       }
 
-      // required string uuid = 2;
+      // required bytes uuid = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_uuid:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_uuid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->uuid().data(), this->uuid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -1311,16 +1299,13 @@ bool RequestScan::MergePartialFromCodedStream(
         break;
       }
 
-      // required string timestamp = 3;
+      // required bytes timestamp = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_timestamp:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_timestamp()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->timestamp().data(), this->timestamp().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -1328,16 +1313,17 @@ bool RequestScan::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
+      // repeated .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_request_get_binary_value:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_request_get_binary_value()));
+                input, add_request_get_binary_value()));
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(34)) goto parse_request_get_binary_value;
         if (input->ExpectTag(42)) goto parse_request_set_binary_value;
         break;
       }
@@ -1381,28 +1367,22 @@ void RequestScan::SerializeWithCachedSizes(
       1, this->type(), output);
   }
 
-  // required string uuid = 2;
+  // required bytes uuid = 2;
   if (has_uuid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->uuid().data(), this->uuid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       2, this->uuid(), output);
   }
 
-  // required string timestamp = 3;
+  // required bytes timestamp = 3;
   if (has_timestamp()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->timestamp().data(), this->timestamp().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       3, this->timestamp(), output);
   }
 
-  // optional .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
-  if (has_request_get_binary_value()) {
+  // repeated .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
+  for (int i = 0; i < this->request_get_binary_value_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->request_get_binary_value(), output);
+      4, this->request_get_binary_value(i), output);
   }
 
   // repeated .message_scan.RequestScan.RequestSetBinaryValue request_set_binary_value = 5;
@@ -1425,31 +1405,25 @@ void RequestScan::SerializeWithCachedSizes(
       1, this->type(), target);
   }
 
-  // required string uuid = 2;
+  // required bytes uuid = 2;
   if (has_uuid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->uuid().data(), this->uuid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->uuid(), target);
   }
 
-  // required string timestamp = 3;
+  // required bytes timestamp = 3;
   if (has_timestamp()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->timestamp().data(), this->timestamp().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         3, this->timestamp(), target);
   }
 
-  // optional .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
-  if (has_request_get_binary_value()) {
+  // repeated .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
+  for (int i = 0; i < this->request_get_binary_value_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        4, this->request_get_binary_value(), target);
+        4, this->request_get_binary_value(i), target);
   }
 
   // repeated .message_scan.RequestScan.RequestSetBinaryValue request_set_binary_value = 5;
@@ -1476,28 +1450,29 @@ int RequestScan::ByteSize() const {
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
     }
 
-    // required string uuid = 2;
+    // required bytes uuid = 2;
     if (has_uuid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->uuid());
     }
 
-    // required string timestamp = 3;
+    // required bytes timestamp = 3;
     if (has_timestamp()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->timestamp());
     }
 
-    // optional .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
-    if (has_request_get_binary_value()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->request_get_binary_value());
-    }
-
   }
+  // repeated .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
+  total_size += 1 * this->request_get_binary_value_size();
+  for (int i = 0; i < this->request_get_binary_value_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->request_get_binary_value(i));
+  }
+
   // repeated .message_scan.RequestScan.RequestSetBinaryValue request_set_binary_value = 5;
   total_size += 1 * this->request_set_binary_value_size();
   for (int i = 0; i < this->request_set_binary_value_size(); i++) {
@@ -1531,6 +1506,7 @@ void RequestScan::MergeFrom(const ::google::protobuf::Message& from) {
 
 void RequestScan::MergeFrom(const RequestScan& from) {
   GOOGLE_CHECK_NE(&from, this);
+  request_get_binary_value_.MergeFrom(from.request_get_binary_value_);
   request_set_binary_value_.MergeFrom(from.request_set_binary_value_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_type()) {
@@ -1541,9 +1517,6 @@ void RequestScan::MergeFrom(const RequestScan& from) {
     }
     if (from.has_timestamp()) {
       set_timestamp(from.timestamp());
-    }
-    if (from.has_request_get_binary_value()) {
-      mutable_request_get_binary_value()->::message_scan::RequestScan_RequestGetBinaryValue::MergeFrom(from.request_get_binary_value());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1572,7 +1545,7 @@ void RequestScan::Swap(RequestScan* other) {
     std::swap(type_, other->type_);
     std::swap(uuid_, other->uuid_);
     std::swap(timestamp_, other->timestamp_);
-    std::swap(request_get_binary_value_, other->request_get_binary_value_);
+    request_get_binary_value_.Swap(&other->request_get_binary_value_);
     request_set_binary_value_.Swap(&other->request_set_binary_value_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -1591,11 +1564,95 @@ void RequestScan::Swap(RequestScan* other) {
 
 // ===================================================================
 
+const ::google::protobuf::EnumDescriptor* ResponseScan_EncodeType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ResponseScan_EncodeType_descriptor_;
+}
+bool ResponseScan_EncodeType_IsValid(int value) {
+  switch(value) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const ResponseScan_EncodeType ResponseScan::MD5;
+const ResponseScan_EncodeType ResponseScan::MD5_HEADER;
+const ResponseScan_EncodeType ResponseScan::MD5_BODY;
+const ResponseScan_EncodeType ResponseScan::SHA_1;
+const ResponseScan_EncodeType ResponseScan::SHA_256;
+const ResponseScan_EncodeType ResponseScan::SSDEEP;
+const ResponseScan_EncodeType ResponseScan::EncodeType_MIN;
+const ResponseScan_EncodeType ResponseScan::EncodeType_MAX;
+const int ResponseScan::EncodeType_ARRAYSIZE;
+#endif  // _MSC_VER
+const ::google::protobuf::EnumDescriptor* ResponseScan_FileType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ResponseScan_FileType_descriptor_;
+}
+bool ResponseScan_FileType_IsValid(int value) {
+  switch(value) {
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const ResponseScan_FileType ResponseScan::PE;
+const ResponseScan_FileType ResponseScan::ELF;
+const ResponseScan_FileType ResponseScan::PROCESS;
+const ResponseScan_FileType ResponseScan::FileType_MIN;
+const ResponseScan_FileType ResponseScan::FileType_MAX;
+const int ResponseScan::FileType_ARRAYSIZE;
+#endif  // _MSC_VER
+const ::google::protobuf::EnumDescriptor* ResponseScan_ResponseType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ResponseScan_ResponseType_descriptor_;
+}
+bool ResponseScan_ResponseType_IsValid(int value) {
+  switch(value) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const ResponseScan_ResponseType ResponseScan::REGISTER;
+const ResponseScan_ResponseType ResponseScan::REGISTER_SUCCESS;
+const ResponseScan_ResponseType ResponseScan::REGISTER_UNSUCCESS;
+const ResponseScan_ResponseType ResponseScan::SCAN;
+const ResponseScan_ResponseType ResponseScan::SCAN_SUCCESS;
+const ResponseScan_ResponseType ResponseScan::SCAN_UNSUCCESS;
+const ResponseScan_ResponseType ResponseScan::RESULT;
+const ResponseScan_ResponseType ResponseScan::ResponseType_MIN;
+const ResponseScan_ResponseType ResponseScan::ResponseType_MAX;
+const int ResponseScan::ResponseType_ARRAYSIZE;
+#endif  // _MSC_VER
 #ifndef _MSC_VER
 const int ResponseScan_ResponseGetBinaryValue::kBinaryFieldNumber;
 const int ResponseScan_ResponseGetBinaryValue::kFileNameFieldNumber;
-const int ResponseScan_ResponseGetBinaryValue::kStatusFieldNumber;
 const int ResponseScan_ResponseGetBinaryValue::kFileSizeFieldNumber;
+const int ResponseScan_ResponseGetBinaryValue::kScanTypeFieldNumber;
+const int ResponseScan_ResponseGetBinaryValue::kFileTypeFieldNumber;
 #endif  // !_MSC_VER
 
 ResponseScan_ResponseGetBinaryValue::ResponseScan_ResponseGetBinaryValue()
@@ -1616,8 +1673,9 @@ void ResponseScan_ResponseGetBinaryValue::SharedCtor() {
   _cached_size_ = 0;
   binary_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  status_ = false;
   file_size_ = GOOGLE_ULONGLONG(0);
+  scan_type_ = 1;
+  file_type_ = 1;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1669,8 +1727,9 @@ void ResponseScan_ResponseGetBinaryValue::Clear() {
         file_name_->clear();
       }
     }
-    status_ = false;
     file_size_ = GOOGLE_ULONGLONG(0);
+    scan_type_ = 1;
+    file_type_ = 1;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1682,15 +1741,12 @@ bool ResponseScan_ResponseGetBinaryValue::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string binary = 1;
+      // optional bytes binary = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_binary()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->binary().data(), this->binary().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -1698,41 +1754,22 @@ bool ResponseScan_ResponseGetBinaryValue::MergePartialFromCodedStream(
         break;
       }
 
-      // required string file_name = 2;
+      // optional bytes file_name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_file_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_file_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->file_name().data(), this->file_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(24)) goto parse_status;
+        if (input->ExpectTag(24)) goto parse_file_size;
         break;
       }
 
-      // optional bool status = 3;
+      // optional uint64 file_size = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_status:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &status_)));
-          set_has_status();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(32)) goto parse_file_size;
-        break;
-      }
-
-      // optional uint64 file_size = 4;
-      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_file_size:
@@ -1740,6 +1777,48 @@ bool ResponseScan_ResponseGetBinaryValue::MergePartialFromCodedStream(
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &file_size_)));
           set_has_file_size();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_scan_type;
+        break;
+      }
+
+      // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_scan_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::message_scan::ResponseScan_EncodeType_IsValid(value)) {
+            set_scan_type(static_cast< ::message_scan::ResponseScan_EncodeType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(4, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_file_type;
+        break;
+      }
+
+      // optional .message_scan.ResponseScan.FileType file_type = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_file_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::message_scan::ResponseScan_FileType_IsValid(value)) {
+            set_file_type(static_cast< ::message_scan::ResponseScan_FileType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(5, value);
+          }
         } else {
           goto handle_uninterpreted;
         }
@@ -1765,32 +1844,33 @@ bool ResponseScan_ResponseGetBinaryValue::MergePartialFromCodedStream(
 
 void ResponseScan_ResponseGetBinaryValue::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string binary = 1;
+  // optional bytes binary = 1;
   if (has_binary()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->binary().data(), this->binary().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       1, this->binary(), output);
   }
 
-  // required string file_name = 2;
+  // optional bytes file_name = 2;
   if (has_file_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       2, this->file_name(), output);
   }
 
-  // optional bool status = 3;
-  if (has_status()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->status(), output);
+  // optional uint64 file_size = 3;
+  if (has_file_size()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->file_size(), output);
   }
 
-  // optional uint64 file_size = 4;
-  if (has_file_size()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->file_size(), output);
+  // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+  if (has_scan_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      4, this->scan_type(), output);
+  }
+
+  // optional .message_scan.ResponseScan.FileType file_type = 5;
+  if (has_file_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      5, this->file_type(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1801,34 +1881,35 @@ void ResponseScan_ResponseGetBinaryValue::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ResponseScan_ResponseGetBinaryValue::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string binary = 1;
+  // optional bytes binary = 1;
   if (has_binary()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->binary().data(), this->binary().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         1, this->binary(), target);
   }
 
-  // required string file_name = 2;
+  // optional bytes file_name = 2;
   if (has_file_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->file_name(), target);
   }
 
-  // optional bool status = 3;
-  if (has_status()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->status(), target);
+  // optional uint64 file_size = 3;
+  if (has_file_size()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->file_size(), target);
   }
 
-  // optional uint64 file_size = 4;
-  if (has_file_size()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->file_size(), target);
+  // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+  if (has_scan_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      4, this->scan_type(), target);
+  }
+
+  // optional .message_scan.ResponseScan.FileType file_type = 5;
+  if (has_file_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      5, this->file_type(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1842,30 +1923,37 @@ int ResponseScan_ResponseGetBinaryValue::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string binary = 1;
+    // optional bytes binary = 1;
     if (has_binary()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->binary());
     }
 
-    // required string file_name = 2;
+    // optional bytes file_name = 2;
     if (has_file_name()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->file_name());
     }
 
-    // optional bool status = 3;
-    if (has_status()) {
-      total_size += 1 + 1;
-    }
-
-    // optional uint64 file_size = 4;
+    // optional uint64 file_size = 3;
     if (has_file_size()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->file_size());
+    }
+
+    // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+    if (has_scan_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->scan_type());
+    }
+
+    // optional .message_scan.ResponseScan.FileType file_type = 5;
+    if (has_file_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->file_type());
     }
 
   }
@@ -1901,11 +1989,14 @@ void ResponseScan_ResponseGetBinaryValue::MergeFrom(const ResponseScan_ResponseG
     if (from.has_file_name()) {
       set_file_name(from.file_name());
     }
-    if (from.has_status()) {
-      set_status(from.status());
-    }
     if (from.has_file_size()) {
       set_file_size(from.file_size());
+    }
+    if (from.has_scan_type()) {
+      set_scan_type(from.scan_type());
+    }
+    if (from.has_file_type()) {
+      set_file_type(from.file_type());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1924,7 +2015,6 @@ void ResponseScan_ResponseGetBinaryValue::CopyFrom(const ResponseScan_ResponseGe
 }
 
 bool ResponseScan_ResponseGetBinaryValue::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
@@ -1933,8 +2023,9 @@ void ResponseScan_ResponseGetBinaryValue::Swap(ResponseScan_ResponseGetBinaryVal
   if (other != this) {
     std::swap(binary_, other->binary_);
     std::swap(file_name_, other->file_name_);
-    std::swap(status_, other->status_);
     std::swap(file_size_, other->file_size_);
+    std::swap(scan_type_, other->scan_type_);
+    std::swap(file_type_, other->file_type_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -1955,8 +2046,9 @@ void ResponseScan_ResponseGetBinaryValue::Swap(ResponseScan_ResponseGetBinaryVal
 #ifndef _MSC_VER
 const int ResponseScan_ResponseSetBinaryValue::kBinaryFieldNumber;
 const int ResponseScan_ResponseSetBinaryValue::kFileNameFieldNumber;
-const int ResponseScan_ResponseSetBinaryValue::kStatusFieldNumber;
 const int ResponseScan_ResponseSetBinaryValue::kFileSizeFieldNumber;
+const int ResponseScan_ResponseSetBinaryValue::kScanTypeFieldNumber;
+const int ResponseScan_ResponseSetBinaryValue::kFileTypeFieldNumber;
 #endif  // !_MSC_VER
 
 ResponseScan_ResponseSetBinaryValue::ResponseScan_ResponseSetBinaryValue()
@@ -1977,8 +2069,9 @@ void ResponseScan_ResponseSetBinaryValue::SharedCtor() {
   _cached_size_ = 0;
   binary_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  status_ = false;
   file_size_ = GOOGLE_ULONGLONG(0);
+  scan_type_ = 1;
+  file_type_ = 1;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2030,8 +2123,9 @@ void ResponseScan_ResponseSetBinaryValue::Clear() {
         file_name_->clear();
       }
     }
-    status_ = false;
     file_size_ = GOOGLE_ULONGLONG(0);
+    scan_type_ = 1;
+    file_type_ = 1;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2043,15 +2137,12 @@ bool ResponseScan_ResponseSetBinaryValue::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string binary = 1;
+      // optional bytes binary = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_binary()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->binary().data(), this->binary().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -2059,41 +2150,22 @@ bool ResponseScan_ResponseSetBinaryValue::MergePartialFromCodedStream(
         break;
       }
 
-      // required string file_name = 2;
+      // optional bytes file_name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_file_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_file_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->file_name().data(), this->file_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(24)) goto parse_status;
+        if (input->ExpectTag(24)) goto parse_file_size;
         break;
       }
 
-      // optional bool status = 3;
+      // optional uint64 file_size = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_status:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &status_)));
-          set_has_status();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(32)) goto parse_file_size;
-        break;
-      }
-
-      // optional uint64 file_size = 4;
-      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_file_size:
@@ -2101,6 +2173,48 @@ bool ResponseScan_ResponseSetBinaryValue::MergePartialFromCodedStream(
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &file_size_)));
           set_has_file_size();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_scan_type;
+        break;
+      }
+
+      // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_scan_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::message_scan::ResponseScan_EncodeType_IsValid(value)) {
+            set_scan_type(static_cast< ::message_scan::ResponseScan_EncodeType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(4, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_file_type;
+        break;
+      }
+
+      // optional .message_scan.ResponseScan.FileType file_type = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_file_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::message_scan::ResponseScan_FileType_IsValid(value)) {
+            set_file_type(static_cast< ::message_scan::ResponseScan_FileType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(5, value);
+          }
         } else {
           goto handle_uninterpreted;
         }
@@ -2126,32 +2240,33 @@ bool ResponseScan_ResponseSetBinaryValue::MergePartialFromCodedStream(
 
 void ResponseScan_ResponseSetBinaryValue::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string binary = 1;
+  // optional bytes binary = 1;
   if (has_binary()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->binary().data(), this->binary().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       1, this->binary(), output);
   }
 
-  // required string file_name = 2;
+  // optional bytes file_name = 2;
   if (has_file_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       2, this->file_name(), output);
   }
 
-  // optional bool status = 3;
-  if (has_status()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->status(), output);
+  // optional uint64 file_size = 3;
+  if (has_file_size()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->file_size(), output);
   }
 
-  // optional uint64 file_size = 4;
-  if (has_file_size()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->file_size(), output);
+  // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+  if (has_scan_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      4, this->scan_type(), output);
+  }
+
+  // optional .message_scan.ResponseScan.FileType file_type = 5;
+  if (has_file_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      5, this->file_type(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2162,34 +2277,35 @@ void ResponseScan_ResponseSetBinaryValue::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ResponseScan_ResponseSetBinaryValue::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string binary = 1;
+  // optional bytes binary = 1;
   if (has_binary()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->binary().data(), this->binary().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         1, this->binary(), target);
   }
 
-  // required string file_name = 2;
+  // optional bytes file_name = 2;
   if (has_file_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->file_name(), target);
   }
 
-  // optional bool status = 3;
-  if (has_status()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->status(), target);
+  // optional uint64 file_size = 3;
+  if (has_file_size()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->file_size(), target);
   }
 
-  // optional uint64 file_size = 4;
-  if (has_file_size()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->file_size(), target);
+  // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+  if (has_scan_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      4, this->scan_type(), target);
+  }
+
+  // optional .message_scan.ResponseScan.FileType file_type = 5;
+  if (has_file_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      5, this->file_type(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2203,30 +2319,37 @@ int ResponseScan_ResponseSetBinaryValue::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string binary = 1;
+    // optional bytes binary = 1;
     if (has_binary()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->binary());
     }
 
-    // required string file_name = 2;
+    // optional bytes file_name = 2;
     if (has_file_name()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->file_name());
     }
 
-    // optional bool status = 3;
-    if (has_status()) {
-      total_size += 1 + 1;
-    }
-
-    // optional uint64 file_size = 4;
+    // optional uint64 file_size = 3;
     if (has_file_size()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->file_size());
+    }
+
+    // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+    if (has_scan_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->scan_type());
+    }
+
+    // optional .message_scan.ResponseScan.FileType file_type = 5;
+    if (has_file_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->file_type());
     }
 
   }
@@ -2262,11 +2385,14 @@ void ResponseScan_ResponseSetBinaryValue::MergeFrom(const ResponseScan_ResponseS
     if (from.has_file_name()) {
       set_file_name(from.file_name());
     }
-    if (from.has_status()) {
-      set_status(from.status());
-    }
     if (from.has_file_size()) {
       set_file_size(from.file_size());
+    }
+    if (from.has_scan_type()) {
+      set_scan_type(from.scan_type());
+    }
+    if (from.has_file_type()) {
+      set_file_type(from.file_type());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2285,7 +2411,6 @@ void ResponseScan_ResponseSetBinaryValue::CopyFrom(const ResponseScan_ResponseSe
 }
 
 bool ResponseScan_ResponseSetBinaryValue::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
@@ -2294,8 +2419,9 @@ void ResponseScan_ResponseSetBinaryValue::Swap(ResponseScan_ResponseSetBinaryVal
   if (other != this) {
     std::swap(binary_, other->binary_);
     std::swap(file_name_, other->file_name_);
-    std::swap(status_, other->status_);
     std::swap(file_size_, other->file_size_);
+    std::swap(scan_type_, other->scan_type_);
+    std::swap(file_type_, other->file_type_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2314,6 +2440,7 @@ void ResponseScan_ResponseSetBinaryValue::Swap(ResponseScan_ResponseSetBinaryVal
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
+const int ResponseScan::kTypeFieldNumber;
 const int ResponseScan::kUuidFieldNumber;
 const int ResponseScan::kTimestampFieldNumber;
 const int ResponseScan::kResponseGetBinaryValueFieldNumber;
@@ -2326,8 +2453,6 @@ ResponseScan::ResponseScan()
 }
 
 void ResponseScan::InitAsDefaultInstance() {
-  response_get_binary_value_ = const_cast< ::message_scan::ResponseScan_ResponseGetBinaryValue*>(&::message_scan::ResponseScan_ResponseGetBinaryValue::default_instance());
-  reponse_set_binary_value_ = const_cast< ::message_scan::ResponseScan_ResponseSetBinaryValue*>(&::message_scan::ResponseScan_ResponseSetBinaryValue::default_instance());
 }
 
 ResponseScan::ResponseScan(const ResponseScan& from)
@@ -2338,10 +2463,9 @@ ResponseScan::ResponseScan(const ResponseScan& from)
 
 void ResponseScan::SharedCtor() {
   _cached_size_ = 0;
+  type_ = 1;
   uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   timestamp_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  response_get_binary_value_ = NULL;
-  reponse_set_binary_value_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2357,8 +2481,6 @@ void ResponseScan::SharedDtor() {
     delete timestamp_;
   }
   if (this != default_instance_) {
-    delete response_get_binary_value_;
-    delete reponse_set_binary_value_;
   }
 }
 
@@ -2385,6 +2507,7 @@ ResponseScan* ResponseScan::New() const {
 
 void ResponseScan::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    type_ = 1;
     if (has_uuid()) {
       if (uuid_ != &::google::protobuf::internal::kEmptyString) {
         uuid_->clear();
@@ -2395,13 +2518,9 @@ void ResponseScan::Clear() {
         timestamp_->clear();
       }
     }
-    if (has_response_get_binary_value()) {
-      if (response_get_binary_value_ != NULL) response_get_binary_value_->::message_scan::ResponseScan_ResponseGetBinaryValue::Clear();
-    }
-    if (has_reponse_set_binary_value()) {
-      if (reponse_set_binary_value_ != NULL) reponse_set_binary_value_->::message_scan::ResponseScan_ResponseSetBinaryValue::Clear();
-    }
   }
+  response_get_binary_value_.Clear();
+  reponse_set_binary_value_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2412,63 +2531,80 @@ bool ResponseScan::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string uuid = 1;
+      // required .message_scan.ResponseScan.ResponseType type = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_uuid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->uuid().data(), this->uuid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::message_scan::ResponseScan_ResponseType_IsValid(value)) {
+            set_type(static_cast< ::message_scan::ResponseScan_ResponseType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_timestamp;
+        if (input->ExpectTag(18)) goto parse_uuid;
         break;
       }
 
-      // required string timestamp = 2;
+      // required bytes uuid = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_timestamp:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_timestamp()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->timestamp().data(), this->timestamp().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+         parse_uuid:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_uuid()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_response_get_binary_value;
+        if (input->ExpectTag(26)) goto parse_timestamp;
         break;
       }
 
-      // optional .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 3;
+      // required bytes timestamp = 3;
       case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_timestamp:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_timestamp()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_response_get_binary_value;
+        break;
+      }
+
+      // repeated .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 4;
+      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_response_get_binary_value:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_response_get_binary_value()));
+                input, add_response_get_binary_value()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(34)) goto parse_reponse_set_binary_value;
+        if (input->ExpectTag(34)) goto parse_response_get_binary_value;
+        if (input->ExpectTag(42)) goto parse_reponse_set_binary_value;
         break;
       }
 
-      // optional .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 4;
-      case 4: {
+      // repeated .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 5;
+      case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_reponse_set_binary_value:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_reponse_set_binary_value()));
+                input, add_reponse_set_binary_value()));
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(42)) goto parse_reponse_set_binary_value;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2491,34 +2627,34 @@ bool ResponseScan::MergePartialFromCodedStream(
 
 void ResponseScan::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string uuid = 1;
+  // required .message_scan.ResponseScan.ResponseType type = 1;
+  if (has_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->type(), output);
+  }
+
+  // required bytes uuid = 2;
   if (has_uuid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->uuid().data(), this->uuid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->uuid(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      2, this->uuid(), output);
   }
 
-  // required string timestamp = 2;
+  // required bytes timestamp = 3;
   if (has_timestamp()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->timestamp().data(), this->timestamp().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->timestamp(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      3, this->timestamp(), output);
   }
 
-  // optional .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 3;
-  if (has_response_get_binary_value()) {
+  // repeated .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 4;
+  for (int i = 0; i < this->response_get_binary_value_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->response_get_binary_value(), output);
+      4, this->response_get_binary_value(i), output);
   }
 
-  // optional .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 4;
-  if (has_reponse_set_binary_value()) {
+  // repeated .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 5;
+  for (int i = 0; i < this->reponse_set_binary_value_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->reponse_set_binary_value(), output);
+      5, this->reponse_set_binary_value(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2529,38 +2665,38 @@ void ResponseScan::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ResponseScan::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string uuid = 1;
+  // required .message_scan.ResponseScan.ResponseType type = 1;
+  if (has_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->type(), target);
+  }
+
+  // required bytes uuid = 2;
   if (has_uuid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->uuid().data(), this->uuid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->uuid(), target);
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        2, this->uuid(), target);
   }
 
-  // required string timestamp = 2;
+  // required bytes timestamp = 3;
   if (has_timestamp()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->timestamp().data(), this->timestamp().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->timestamp(), target);
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        3, this->timestamp(), target);
   }
 
-  // optional .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 3;
-  if (has_response_get_binary_value()) {
+  // repeated .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 4;
+  for (int i = 0; i < this->response_get_binary_value_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        3, this->response_get_binary_value(), target);
+        4, this->response_get_binary_value(i), target);
   }
 
-  // optional .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 4;
-  if (has_reponse_set_binary_value()) {
+  // repeated .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 5;
+  for (int i = 0; i < this->reponse_set_binary_value_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        4, this->reponse_set_binary_value(), target);
+        5, this->reponse_set_binary_value(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2574,35 +2710,43 @@ int ResponseScan::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string uuid = 1;
+    // required .message_scan.ResponseScan.ResponseType type = 1;
+    if (has_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // required bytes uuid = 2;
     if (has_uuid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->uuid());
     }
 
-    // required string timestamp = 2;
+    // required bytes timestamp = 3;
     if (has_timestamp()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->timestamp());
     }
 
-    // optional .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 3;
-    if (has_response_get_binary_value()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->response_get_binary_value());
-    }
-
-    // optional .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 4;
-    if (has_reponse_set_binary_value()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->reponse_set_binary_value());
-    }
-
   }
+  // repeated .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 4;
+  total_size += 1 * this->response_get_binary_value_size();
+  for (int i = 0; i < this->response_get_binary_value_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->response_get_binary_value(i));
+  }
+
+  // repeated .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 5;
+  total_size += 1 * this->reponse_set_binary_value_size();
+  for (int i = 0; i < this->reponse_set_binary_value_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->reponse_set_binary_value(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -2628,18 +2772,17 @@ void ResponseScan::MergeFrom(const ::google::protobuf::Message& from) {
 
 void ResponseScan::MergeFrom(const ResponseScan& from) {
   GOOGLE_CHECK_NE(&from, this);
+  response_get_binary_value_.MergeFrom(from.response_get_binary_value_);
+  reponse_set_binary_value_.MergeFrom(from.reponse_set_binary_value_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_type()) {
+      set_type(from.type());
+    }
     if (from.has_uuid()) {
       set_uuid(from.uuid());
     }
     if (from.has_timestamp()) {
       set_timestamp(from.timestamp());
-    }
-    if (from.has_response_get_binary_value()) {
-      mutable_response_get_binary_value()->::message_scan::ResponseScan_ResponseGetBinaryValue::MergeFrom(from.response_get_binary_value());
-    }
-    if (from.has_reponse_set_binary_value()) {
-      mutable_reponse_set_binary_value()->::message_scan::ResponseScan_ResponseSetBinaryValue::MergeFrom(from.reponse_set_binary_value());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2658,23 +2801,18 @@ void ResponseScan::CopyFrom(const ResponseScan& from) {
 }
 
 bool ResponseScan::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
 
-  if (has_response_get_binary_value()) {
-    if (!this->response_get_binary_value().IsInitialized()) return false;
-  }
-  if (has_reponse_set_binary_value()) {
-    if (!this->reponse_set_binary_value().IsInitialized()) return false;
-  }
   return true;
 }
 
 void ResponseScan::Swap(ResponseScan* other) {
   if (other != this) {
+    std::swap(type_, other->type_);
     std::swap(uuid_, other->uuid_);
     std::swap(timestamp_, other->timestamp_);
-    std::swap(response_get_binary_value_, other->response_get_binary_value_);
-    std::swap(reponse_set_binary_value_, other->reponse_set_binary_value_);
+    response_get_binary_value_.Swap(&other->response_get_binary_value_);
+    reponse_set_binary_value_.Swap(&other->reponse_set_binary_value_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

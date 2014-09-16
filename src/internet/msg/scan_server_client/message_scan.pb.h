@@ -86,8 +86,12 @@ inline bool RequestScan_FileType_Parse(
 }
 enum RequestScan_RequestType {
   RequestScan_RequestType_REGISTER = 1,
-  RequestScan_RequestType_SCAN = 2,
-  RequestScan_RequestType_RESULT = 3
+  RequestScan_RequestType_REGISTER_SUCCESS = 2,
+  RequestScan_RequestType_REGISTER_UNSUCCESS = 3,
+  RequestScan_RequestType_SCAN = 4,
+  RequestScan_RequestType_SCAN_SUCCESS = 5,
+  RequestScan_RequestType_SCAN_UNSUCCESS = 6,
+  RequestScan_RequestType_RESULT = 7
 };
 bool RequestScan_RequestType_IsValid(int value);
 const RequestScan_RequestType RequestScan_RequestType_RequestType_MIN = RequestScan_RequestType_REGISTER;
@@ -103,6 +107,73 @@ inline bool RequestScan_RequestType_Parse(
     const ::std::string& name, RequestScan_RequestType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<RequestScan_RequestType>(
     RequestScan_RequestType_descriptor(), name, value);
+}
+enum ResponseScan_EncodeType {
+  ResponseScan_EncodeType_MD5 = 1,
+  ResponseScan_EncodeType_MD5_HEADER = 2,
+  ResponseScan_EncodeType_MD5_BODY = 3,
+  ResponseScan_EncodeType_SHA_1 = 4,
+  ResponseScan_EncodeType_SHA_256 = 5,
+  ResponseScan_EncodeType_SSDEEP = 6
+};
+bool ResponseScan_EncodeType_IsValid(int value);
+const ResponseScan_EncodeType ResponseScan_EncodeType_EncodeType_MIN = ResponseScan_EncodeType_MD5;
+const ResponseScan_EncodeType ResponseScan_EncodeType_EncodeType_MAX = ResponseScan_EncodeType_SSDEEP;
+const int ResponseScan_EncodeType_EncodeType_ARRAYSIZE = ResponseScan_EncodeType_EncodeType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ResponseScan_EncodeType_descriptor();
+inline const ::std::string& ResponseScan_EncodeType_Name(ResponseScan_EncodeType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ResponseScan_EncodeType_descriptor(), value);
+}
+inline bool ResponseScan_EncodeType_Parse(
+    const ::std::string& name, ResponseScan_EncodeType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ResponseScan_EncodeType>(
+    ResponseScan_EncodeType_descriptor(), name, value);
+}
+enum ResponseScan_FileType {
+  ResponseScan_FileType_PE = 1,
+  ResponseScan_FileType_ELF = 2,
+  ResponseScan_FileType_PROCESS = 3
+};
+bool ResponseScan_FileType_IsValid(int value);
+const ResponseScan_FileType ResponseScan_FileType_FileType_MIN = ResponseScan_FileType_PE;
+const ResponseScan_FileType ResponseScan_FileType_FileType_MAX = ResponseScan_FileType_PROCESS;
+const int ResponseScan_FileType_FileType_ARRAYSIZE = ResponseScan_FileType_FileType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ResponseScan_FileType_descriptor();
+inline const ::std::string& ResponseScan_FileType_Name(ResponseScan_FileType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ResponseScan_FileType_descriptor(), value);
+}
+inline bool ResponseScan_FileType_Parse(
+    const ::std::string& name, ResponseScan_FileType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ResponseScan_FileType>(
+    ResponseScan_FileType_descriptor(), name, value);
+}
+enum ResponseScan_ResponseType {
+  ResponseScan_ResponseType_REGISTER = 1,
+  ResponseScan_ResponseType_REGISTER_SUCCESS = 2,
+  ResponseScan_ResponseType_REGISTER_UNSUCCESS = 3,
+  ResponseScan_ResponseType_SCAN = 4,
+  ResponseScan_ResponseType_SCAN_SUCCESS = 5,
+  ResponseScan_ResponseType_SCAN_UNSUCCESS = 6,
+  ResponseScan_ResponseType_RESULT = 7
+};
+bool ResponseScan_ResponseType_IsValid(int value);
+const ResponseScan_ResponseType ResponseScan_ResponseType_ResponseType_MIN = ResponseScan_ResponseType_REGISTER;
+const ResponseScan_ResponseType ResponseScan_ResponseType_ResponseType_MAX = ResponseScan_ResponseType_RESULT;
+const int ResponseScan_ResponseType_ResponseType_ARRAYSIZE = ResponseScan_ResponseType_ResponseType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ResponseScan_ResponseType_descriptor();
+inline const ::std::string& ResponseScan_ResponseType_Name(ResponseScan_ResponseType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ResponseScan_ResponseType_descriptor(), value);
+}
+inline bool ResponseScan_ResponseType_Parse(
+    const ::std::string& name, ResponseScan_ResponseType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ResponseScan_ResponseType>(
+    ResponseScan_ResponseType_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -160,26 +231,26 @@ class RequestScan_RequestGetBinaryValue : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string binary = 1;
+  // optional bytes binary = 1;
   inline bool has_binary() const;
   inline void clear_binary();
   static const int kBinaryFieldNumber = 1;
   inline const ::std::string& binary() const;
   inline void set_binary(const ::std::string& value);
   inline void set_binary(const char* value);
-  inline void set_binary(const char* value, size_t size);
+  inline void set_binary(const void* value, size_t size);
   inline ::std::string* mutable_binary();
   inline ::std::string* release_binary();
   inline void set_allocated_binary(::std::string* binary);
 
-  // optional string file_name = 2;
+  // optional bytes file_name = 2;
   inline bool has_file_name() const;
   inline void clear_file_name();
   static const int kFileNameFieldNumber = 2;
   inline const ::std::string& file_name() const;
   inline void set_file_name(const ::std::string& value);
   inline void set_file_name(const char* value);
-  inline void set_file_name(const char* value, size_t size);
+  inline void set_file_name(const void* value, size_t size);
   inline ::std::string* mutable_file_name();
   inline ::std::string* release_file_name();
   inline void set_allocated_file_name(::std::string* file_name);
@@ -292,26 +363,26 @@ class RequestScan_RequestSetBinaryValue : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string binary = 1;
+  // optional bytes binary = 1;
   inline bool has_binary() const;
   inline void clear_binary();
   static const int kBinaryFieldNumber = 1;
   inline const ::std::string& binary() const;
   inline void set_binary(const ::std::string& value);
   inline void set_binary(const char* value);
-  inline void set_binary(const char* value, size_t size);
+  inline void set_binary(const void* value, size_t size);
   inline ::std::string* mutable_binary();
   inline ::std::string* release_binary();
   inline void set_allocated_binary(::std::string* binary);
 
-  // optional string file_name = 2;
+  // optional bytes file_name = 2;
   inline bool has_file_name() const;
   inline void clear_file_name();
   static const int kFileNameFieldNumber = 2;
   inline const ::std::string& file_name() const;
   inline void set_file_name(const ::std::string& value);
   inline void set_file_name(const char* value);
-  inline void set_file_name(const char* value, size_t size);
+  inline void set_file_name(const void* value, size_t size);
   inline ::std::string* mutable_file_name();
   inline ::std::string* release_file_name();
   inline void set_allocated_file_name(::std::string* file_name);
@@ -480,7 +551,11 @@ class RequestScan : public ::google::protobuf::Message {
 
   typedef RequestScan_RequestType RequestType;
   static const RequestType REGISTER = RequestScan_RequestType_REGISTER;
+  static const RequestType REGISTER_SUCCESS = RequestScan_RequestType_REGISTER_SUCCESS;
+  static const RequestType REGISTER_UNSUCCESS = RequestScan_RequestType_REGISTER_UNSUCCESS;
   static const RequestType SCAN = RequestScan_RequestType_SCAN;
+  static const RequestType SCAN_SUCCESS = RequestScan_RequestType_SCAN_SUCCESS;
+  static const RequestType SCAN_UNSUCCESS = RequestScan_RequestType_SCAN_UNSUCCESS;
   static const RequestType RESULT = RequestScan_RequestType_RESULT;
   static inline bool RequestType_IsValid(int value) {
     return RequestScan_RequestType_IsValid(value);
@@ -512,38 +587,41 @@ class RequestScan : public ::google::protobuf::Message {
   inline ::message_scan::RequestScan_RequestType type() const;
   inline void set_type(::message_scan::RequestScan_RequestType value);
 
-  // required string uuid = 2;
+  // required bytes uuid = 2;
   inline bool has_uuid() const;
   inline void clear_uuid();
   static const int kUuidFieldNumber = 2;
   inline const ::std::string& uuid() const;
   inline void set_uuid(const ::std::string& value);
   inline void set_uuid(const char* value);
-  inline void set_uuid(const char* value, size_t size);
+  inline void set_uuid(const void* value, size_t size);
   inline ::std::string* mutable_uuid();
   inline ::std::string* release_uuid();
   inline void set_allocated_uuid(::std::string* uuid);
 
-  // required string timestamp = 3;
+  // required bytes timestamp = 3;
   inline bool has_timestamp() const;
   inline void clear_timestamp();
   static const int kTimestampFieldNumber = 3;
   inline const ::std::string& timestamp() const;
   inline void set_timestamp(const ::std::string& value);
   inline void set_timestamp(const char* value);
-  inline void set_timestamp(const char* value, size_t size);
+  inline void set_timestamp(const void* value, size_t size);
   inline ::std::string* mutable_timestamp();
   inline ::std::string* release_timestamp();
   inline void set_allocated_timestamp(::std::string* timestamp);
 
-  // optional .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
-  inline bool has_request_get_binary_value() const;
+  // repeated .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
+  inline int request_get_binary_value_size() const;
   inline void clear_request_get_binary_value();
   static const int kRequestGetBinaryValueFieldNumber = 4;
-  inline const ::message_scan::RequestScan_RequestGetBinaryValue& request_get_binary_value() const;
-  inline ::message_scan::RequestScan_RequestGetBinaryValue* mutable_request_get_binary_value();
-  inline ::message_scan::RequestScan_RequestGetBinaryValue* release_request_get_binary_value();
-  inline void set_allocated_request_get_binary_value(::message_scan::RequestScan_RequestGetBinaryValue* request_get_binary_value);
+  inline const ::message_scan::RequestScan_RequestGetBinaryValue& request_get_binary_value(int index) const;
+  inline ::message_scan::RequestScan_RequestGetBinaryValue* mutable_request_get_binary_value(int index);
+  inline ::message_scan::RequestScan_RequestGetBinaryValue* add_request_get_binary_value();
+  inline const ::google::protobuf::RepeatedPtrField< ::message_scan::RequestScan_RequestGetBinaryValue >&
+      request_get_binary_value() const;
+  inline ::google::protobuf::RepeatedPtrField< ::message_scan::RequestScan_RequestGetBinaryValue >*
+      mutable_request_get_binary_value();
 
   // repeated .message_scan.RequestScan.RequestSetBinaryValue request_set_binary_value = 5;
   inline int request_set_binary_value_size() const;
@@ -565,14 +643,12 @@ class RequestScan : public ::google::protobuf::Message {
   inline void clear_has_uuid();
   inline void set_has_timestamp();
   inline void clear_has_timestamp();
-  inline void set_has_request_get_binary_value();
-  inline void clear_has_request_get_binary_value();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* uuid_;
   ::std::string* timestamp_;
-  ::message_scan::RequestScan_RequestGetBinaryValue* request_get_binary_value_;
+  ::google::protobuf::RepeatedPtrField< ::message_scan::RequestScan_RequestGetBinaryValue > request_get_binary_value_;
   ::google::protobuf::RepeatedPtrField< ::message_scan::RequestScan_RequestSetBinaryValue > request_set_binary_value_;
   int type_;
 
@@ -642,43 +718,50 @@ class ResponseScan_ResponseGetBinaryValue : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string binary = 1;
+  // optional bytes binary = 1;
   inline bool has_binary() const;
   inline void clear_binary();
   static const int kBinaryFieldNumber = 1;
   inline const ::std::string& binary() const;
   inline void set_binary(const ::std::string& value);
   inline void set_binary(const char* value);
-  inline void set_binary(const char* value, size_t size);
+  inline void set_binary(const void* value, size_t size);
   inline ::std::string* mutable_binary();
   inline ::std::string* release_binary();
   inline void set_allocated_binary(::std::string* binary);
 
-  // required string file_name = 2;
+  // optional bytes file_name = 2;
   inline bool has_file_name() const;
   inline void clear_file_name();
   static const int kFileNameFieldNumber = 2;
   inline const ::std::string& file_name() const;
   inline void set_file_name(const ::std::string& value);
   inline void set_file_name(const char* value);
-  inline void set_file_name(const char* value, size_t size);
+  inline void set_file_name(const void* value, size_t size);
   inline ::std::string* mutable_file_name();
   inline ::std::string* release_file_name();
   inline void set_allocated_file_name(::std::string* file_name);
 
-  // optional bool status = 3;
-  inline bool has_status() const;
-  inline void clear_status();
-  static const int kStatusFieldNumber = 3;
-  inline bool status() const;
-  inline void set_status(bool value);
-
-  // optional uint64 file_size = 4;
+  // optional uint64 file_size = 3;
   inline bool has_file_size() const;
   inline void clear_file_size();
-  static const int kFileSizeFieldNumber = 4;
+  static const int kFileSizeFieldNumber = 3;
   inline ::google::protobuf::uint64 file_size() const;
   inline void set_file_size(::google::protobuf::uint64 value);
+
+  // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+  inline bool has_scan_type() const;
+  inline void clear_scan_type();
+  static const int kScanTypeFieldNumber = 4;
+  inline ::message_scan::ResponseScan_EncodeType scan_type() const;
+  inline void set_scan_type(::message_scan::ResponseScan_EncodeType value);
+
+  // optional .message_scan.ResponseScan.FileType file_type = 5;
+  inline bool has_file_type() const;
+  inline void clear_file_type();
+  static const int kFileTypeFieldNumber = 5;
+  inline ::message_scan::ResponseScan_FileType file_type() const;
+  inline void set_file_type(::message_scan::ResponseScan_FileType value);
 
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan.ResponseGetBinaryValue)
  private:
@@ -686,20 +769,23 @@ class ResponseScan_ResponseGetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_binary();
   inline void set_has_file_name();
   inline void clear_has_file_name();
-  inline void set_has_status();
-  inline void clear_has_status();
   inline void set_has_file_size();
   inline void clear_has_file_size();
+  inline void set_has_scan_type();
+  inline void clear_has_scan_type();
+  inline void set_has_file_type();
+  inline void clear_has_file_type();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* binary_;
   ::std::string* file_name_;
   ::google::protobuf::uint64 file_size_;
-  bool status_;
+  int scan_type_;
+  int file_type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -764,43 +850,50 @@ class ResponseScan_ResponseSetBinaryValue : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string binary = 1;
+  // optional bytes binary = 1;
   inline bool has_binary() const;
   inline void clear_binary();
   static const int kBinaryFieldNumber = 1;
   inline const ::std::string& binary() const;
   inline void set_binary(const ::std::string& value);
   inline void set_binary(const char* value);
-  inline void set_binary(const char* value, size_t size);
+  inline void set_binary(const void* value, size_t size);
   inline ::std::string* mutable_binary();
   inline ::std::string* release_binary();
   inline void set_allocated_binary(::std::string* binary);
 
-  // required string file_name = 2;
+  // optional bytes file_name = 2;
   inline bool has_file_name() const;
   inline void clear_file_name();
   static const int kFileNameFieldNumber = 2;
   inline const ::std::string& file_name() const;
   inline void set_file_name(const ::std::string& value);
   inline void set_file_name(const char* value);
-  inline void set_file_name(const char* value, size_t size);
+  inline void set_file_name(const void* value, size_t size);
   inline ::std::string* mutable_file_name();
   inline ::std::string* release_file_name();
   inline void set_allocated_file_name(::std::string* file_name);
 
-  // optional bool status = 3;
-  inline bool has_status() const;
-  inline void clear_status();
-  static const int kStatusFieldNumber = 3;
-  inline bool status() const;
-  inline void set_status(bool value);
-
-  // optional uint64 file_size = 4;
+  // optional uint64 file_size = 3;
   inline bool has_file_size() const;
   inline void clear_file_size();
-  static const int kFileSizeFieldNumber = 4;
+  static const int kFileSizeFieldNumber = 3;
   inline ::google::protobuf::uint64 file_size() const;
   inline void set_file_size(::google::protobuf::uint64 value);
+
+  // optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+  inline bool has_scan_type() const;
+  inline void clear_scan_type();
+  static const int kScanTypeFieldNumber = 4;
+  inline ::message_scan::ResponseScan_EncodeType scan_type() const;
+  inline void set_scan_type(::message_scan::ResponseScan_EncodeType value);
+
+  // optional .message_scan.ResponseScan.FileType file_type = 5;
+  inline bool has_file_type() const;
+  inline void clear_file_type();
+  static const int kFileTypeFieldNumber = 5;
+  inline ::message_scan::ResponseScan_FileType file_type() const;
+  inline void set_file_type(::message_scan::ResponseScan_FileType value);
 
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan.ResponseSetBinaryValue)
  private:
@@ -808,20 +901,23 @@ class ResponseScan_ResponseSetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_binary();
   inline void set_has_file_name();
   inline void clear_has_file_name();
-  inline void set_has_status();
-  inline void clear_has_status();
   inline void set_has_file_size();
   inline void clear_has_file_size();
+  inline void set_has_scan_type();
+  inline void clear_has_scan_type();
+  inline void set_has_file_type();
+  inline void clear_has_file_type();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* binary_;
   ::std::string* file_name_;
   ::google::protobuf::uint64 file_size_;
-  bool status_;
+  int scan_type_;
+  int file_type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -887,70 +983,164 @@ class ResponseScan : public ::google::protobuf::Message {
   typedef ResponseScan_ResponseGetBinaryValue ResponseGetBinaryValue;
   typedef ResponseScan_ResponseSetBinaryValue ResponseSetBinaryValue;
 
+  typedef ResponseScan_EncodeType EncodeType;
+  static const EncodeType MD5 = ResponseScan_EncodeType_MD5;
+  static const EncodeType MD5_HEADER = ResponseScan_EncodeType_MD5_HEADER;
+  static const EncodeType MD5_BODY = ResponseScan_EncodeType_MD5_BODY;
+  static const EncodeType SHA_1 = ResponseScan_EncodeType_SHA_1;
+  static const EncodeType SHA_256 = ResponseScan_EncodeType_SHA_256;
+  static const EncodeType SSDEEP = ResponseScan_EncodeType_SSDEEP;
+  static inline bool EncodeType_IsValid(int value) {
+    return ResponseScan_EncodeType_IsValid(value);
+  }
+  static const EncodeType EncodeType_MIN =
+    ResponseScan_EncodeType_EncodeType_MIN;
+  static const EncodeType EncodeType_MAX =
+    ResponseScan_EncodeType_EncodeType_MAX;
+  static const int EncodeType_ARRAYSIZE =
+    ResponseScan_EncodeType_EncodeType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  EncodeType_descriptor() {
+    return ResponseScan_EncodeType_descriptor();
+  }
+  static inline const ::std::string& EncodeType_Name(EncodeType value) {
+    return ResponseScan_EncodeType_Name(value);
+  }
+  static inline bool EncodeType_Parse(const ::std::string& name,
+      EncodeType* value) {
+    return ResponseScan_EncodeType_Parse(name, value);
+  }
+
+  typedef ResponseScan_FileType FileType;
+  static const FileType PE = ResponseScan_FileType_PE;
+  static const FileType ELF = ResponseScan_FileType_ELF;
+  static const FileType PROCESS = ResponseScan_FileType_PROCESS;
+  static inline bool FileType_IsValid(int value) {
+    return ResponseScan_FileType_IsValid(value);
+  }
+  static const FileType FileType_MIN =
+    ResponseScan_FileType_FileType_MIN;
+  static const FileType FileType_MAX =
+    ResponseScan_FileType_FileType_MAX;
+  static const int FileType_ARRAYSIZE =
+    ResponseScan_FileType_FileType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  FileType_descriptor() {
+    return ResponseScan_FileType_descriptor();
+  }
+  static inline const ::std::string& FileType_Name(FileType value) {
+    return ResponseScan_FileType_Name(value);
+  }
+  static inline bool FileType_Parse(const ::std::string& name,
+      FileType* value) {
+    return ResponseScan_FileType_Parse(name, value);
+  }
+
+  typedef ResponseScan_ResponseType ResponseType;
+  static const ResponseType REGISTER = ResponseScan_ResponseType_REGISTER;
+  static const ResponseType REGISTER_SUCCESS = ResponseScan_ResponseType_REGISTER_SUCCESS;
+  static const ResponseType REGISTER_UNSUCCESS = ResponseScan_ResponseType_REGISTER_UNSUCCESS;
+  static const ResponseType SCAN = ResponseScan_ResponseType_SCAN;
+  static const ResponseType SCAN_SUCCESS = ResponseScan_ResponseType_SCAN_SUCCESS;
+  static const ResponseType SCAN_UNSUCCESS = ResponseScan_ResponseType_SCAN_UNSUCCESS;
+  static const ResponseType RESULT = ResponseScan_ResponseType_RESULT;
+  static inline bool ResponseType_IsValid(int value) {
+    return ResponseScan_ResponseType_IsValid(value);
+  }
+  static const ResponseType ResponseType_MIN =
+    ResponseScan_ResponseType_ResponseType_MIN;
+  static const ResponseType ResponseType_MAX =
+    ResponseScan_ResponseType_ResponseType_MAX;
+  static const int ResponseType_ARRAYSIZE =
+    ResponseScan_ResponseType_ResponseType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  ResponseType_descriptor() {
+    return ResponseScan_ResponseType_descriptor();
+  }
+  static inline const ::std::string& ResponseType_Name(ResponseType value) {
+    return ResponseScan_ResponseType_Name(value);
+  }
+  static inline bool ResponseType_Parse(const ::std::string& name,
+      ResponseType* value) {
+    return ResponseScan_ResponseType_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
-  // required string uuid = 1;
+  // required .message_scan.ResponseScan.ResponseType type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::message_scan::ResponseScan_ResponseType type() const;
+  inline void set_type(::message_scan::ResponseScan_ResponseType value);
+
+  // required bytes uuid = 2;
   inline bool has_uuid() const;
   inline void clear_uuid();
-  static const int kUuidFieldNumber = 1;
+  static const int kUuidFieldNumber = 2;
   inline const ::std::string& uuid() const;
   inline void set_uuid(const ::std::string& value);
   inline void set_uuid(const char* value);
-  inline void set_uuid(const char* value, size_t size);
+  inline void set_uuid(const void* value, size_t size);
   inline ::std::string* mutable_uuid();
   inline ::std::string* release_uuid();
   inline void set_allocated_uuid(::std::string* uuid);
 
-  // required string timestamp = 2;
+  // required bytes timestamp = 3;
   inline bool has_timestamp() const;
   inline void clear_timestamp();
-  static const int kTimestampFieldNumber = 2;
+  static const int kTimestampFieldNumber = 3;
   inline const ::std::string& timestamp() const;
   inline void set_timestamp(const ::std::string& value);
   inline void set_timestamp(const char* value);
-  inline void set_timestamp(const char* value, size_t size);
+  inline void set_timestamp(const void* value, size_t size);
   inline ::std::string* mutable_timestamp();
   inline ::std::string* release_timestamp();
   inline void set_allocated_timestamp(::std::string* timestamp);
 
-  // optional .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 3;
-  inline bool has_response_get_binary_value() const;
+  // repeated .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 4;
+  inline int response_get_binary_value_size() const;
   inline void clear_response_get_binary_value();
-  static const int kResponseGetBinaryValueFieldNumber = 3;
-  inline const ::message_scan::ResponseScan_ResponseGetBinaryValue& response_get_binary_value() const;
-  inline ::message_scan::ResponseScan_ResponseGetBinaryValue* mutable_response_get_binary_value();
-  inline ::message_scan::ResponseScan_ResponseGetBinaryValue* release_response_get_binary_value();
-  inline void set_allocated_response_get_binary_value(::message_scan::ResponseScan_ResponseGetBinaryValue* response_get_binary_value);
+  static const int kResponseGetBinaryValueFieldNumber = 4;
+  inline const ::message_scan::ResponseScan_ResponseGetBinaryValue& response_get_binary_value(int index) const;
+  inline ::message_scan::ResponseScan_ResponseGetBinaryValue* mutable_response_get_binary_value(int index);
+  inline ::message_scan::ResponseScan_ResponseGetBinaryValue* add_response_get_binary_value();
+  inline const ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseGetBinaryValue >&
+      response_get_binary_value() const;
+  inline ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseGetBinaryValue >*
+      mutable_response_get_binary_value();
 
-  // optional .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 4;
-  inline bool has_reponse_set_binary_value() const;
+  // repeated .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 5;
+  inline int reponse_set_binary_value_size() const;
   inline void clear_reponse_set_binary_value();
-  static const int kReponseSetBinaryValueFieldNumber = 4;
-  inline const ::message_scan::ResponseScan_ResponseSetBinaryValue& reponse_set_binary_value() const;
-  inline ::message_scan::ResponseScan_ResponseSetBinaryValue* mutable_reponse_set_binary_value();
-  inline ::message_scan::ResponseScan_ResponseSetBinaryValue* release_reponse_set_binary_value();
-  inline void set_allocated_reponse_set_binary_value(::message_scan::ResponseScan_ResponseSetBinaryValue* reponse_set_binary_value);
+  static const int kReponseSetBinaryValueFieldNumber = 5;
+  inline const ::message_scan::ResponseScan_ResponseSetBinaryValue& reponse_set_binary_value(int index) const;
+  inline ::message_scan::ResponseScan_ResponseSetBinaryValue* mutable_reponse_set_binary_value(int index);
+  inline ::message_scan::ResponseScan_ResponseSetBinaryValue* add_reponse_set_binary_value();
+  inline const ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseSetBinaryValue >&
+      reponse_set_binary_value() const;
+  inline ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseSetBinaryValue >*
+      mutable_reponse_set_binary_value();
 
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan)
  private:
+  inline void set_has_type();
+  inline void clear_has_type();
   inline void set_has_uuid();
   inline void clear_has_uuid();
   inline void set_has_timestamp();
   inline void clear_has_timestamp();
-  inline void set_has_response_get_binary_value();
-  inline void clear_has_response_get_binary_value();
-  inline void set_has_reponse_set_binary_value();
-  inline void clear_has_reponse_set_binary_value();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* uuid_;
   ::std::string* timestamp_;
-  ::message_scan::ResponseScan_ResponseGetBinaryValue* response_get_binary_value_;
-  ::message_scan::ResponseScan_ResponseSetBinaryValue* reponse_set_binary_value_;
+  ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseGetBinaryValue > response_get_binary_value_;
+  ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseSetBinaryValue > reponse_set_binary_value_;
+  int type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -966,7 +1156,7 @@ class ResponseScan : public ::google::protobuf::Message {
 
 // RequestScan_RequestGetBinaryValue
 
-// optional string binary = 1;
+// optional bytes binary = 1;
 inline bool RequestScan_RequestGetBinaryValue::has_binary() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -999,7 +1189,7 @@ inline void RequestScan_RequestGetBinaryValue::set_binary(const char* value) {
   }
   binary_->assign(value);
 }
-inline void RequestScan_RequestGetBinaryValue::set_binary(const char* value, size_t size) {
+inline void RequestScan_RequestGetBinaryValue::set_binary(const void* value, size_t size) {
   set_has_binary();
   if (binary_ == &::google::protobuf::internal::kEmptyString) {
     binary_ = new ::std::string;
@@ -1036,7 +1226,7 @@ inline void RequestScan_RequestGetBinaryValue::set_allocated_binary(::std::strin
   }
 }
 
-// optional string file_name = 2;
+// optional bytes file_name = 2;
 inline bool RequestScan_RequestGetBinaryValue::has_file_name() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1069,7 +1259,7 @@ inline void RequestScan_RequestGetBinaryValue::set_file_name(const char* value) 
   }
   file_name_->assign(value);
 }
-inline void RequestScan_RequestGetBinaryValue::set_file_name(const char* value, size_t size) {
+inline void RequestScan_RequestGetBinaryValue::set_file_name(const void* value, size_t size) {
   set_has_file_name();
   if (file_name_ == &::google::protobuf::internal::kEmptyString) {
     file_name_ = new ::std::string;
@@ -1178,7 +1368,7 @@ inline void RequestScan_RequestGetBinaryValue::set_file_type(::message_scan::Req
 
 // RequestScan_RequestSetBinaryValue
 
-// optional string binary = 1;
+// optional bytes binary = 1;
 inline bool RequestScan_RequestSetBinaryValue::has_binary() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1211,7 +1401,7 @@ inline void RequestScan_RequestSetBinaryValue::set_binary(const char* value) {
   }
   binary_->assign(value);
 }
-inline void RequestScan_RequestSetBinaryValue::set_binary(const char* value, size_t size) {
+inline void RequestScan_RequestSetBinaryValue::set_binary(const void* value, size_t size) {
   set_has_binary();
   if (binary_ == &::google::protobuf::internal::kEmptyString) {
     binary_ = new ::std::string;
@@ -1248,7 +1438,7 @@ inline void RequestScan_RequestSetBinaryValue::set_allocated_binary(::std::strin
   }
 }
 
-// optional string file_name = 2;
+// optional bytes file_name = 2;
 inline bool RequestScan_RequestSetBinaryValue::has_file_name() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1281,7 +1471,7 @@ inline void RequestScan_RequestSetBinaryValue::set_file_name(const char* value) 
   }
   file_name_->assign(value);
 }
-inline void RequestScan_RequestSetBinaryValue::set_file_name(const char* value, size_t size) {
+inline void RequestScan_RequestSetBinaryValue::set_file_name(const void* value, size_t size) {
   set_has_file_name();
   if (file_name_ == &::google::protobuf::internal::kEmptyString) {
     file_name_ = new ::std::string;
@@ -1413,7 +1603,7 @@ inline void RequestScan::set_type(::message_scan::RequestScan_RequestType value)
   type_ = value;
 }
 
-// required string uuid = 2;
+// required bytes uuid = 2;
 inline bool RequestScan::has_uuid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1446,7 +1636,7 @@ inline void RequestScan::set_uuid(const char* value) {
   }
   uuid_->assign(value);
 }
-inline void RequestScan::set_uuid(const char* value, size_t size) {
+inline void RequestScan::set_uuid(const void* value, size_t size) {
   set_has_uuid();
   if (uuid_ == &::google::protobuf::internal::kEmptyString) {
     uuid_ = new ::std::string;
@@ -1483,7 +1673,7 @@ inline void RequestScan::set_allocated_uuid(::std::string* uuid) {
   }
 }
 
-// required string timestamp = 3;
+// required bytes timestamp = 3;
 inline bool RequestScan::has_timestamp() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1516,7 +1706,7 @@ inline void RequestScan::set_timestamp(const char* value) {
   }
   timestamp_->assign(value);
 }
-inline void RequestScan::set_timestamp(const char* value, size_t size) {
+inline void RequestScan::set_timestamp(const void* value, size_t size) {
   set_has_timestamp();
   if (timestamp_ == &::google::protobuf::internal::kEmptyString) {
     timestamp_ = new ::std::string;
@@ -1553,42 +1743,29 @@ inline void RequestScan::set_allocated_timestamp(::std::string* timestamp) {
   }
 }
 
-// optional .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
-inline bool RequestScan::has_request_get_binary_value() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void RequestScan::set_has_request_get_binary_value() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void RequestScan::clear_has_request_get_binary_value() {
-  _has_bits_[0] &= ~0x00000008u;
+// repeated .message_scan.RequestScan.RequestGetBinaryValue request_get_binary_value = 4;
+inline int RequestScan::request_get_binary_value_size() const {
+  return request_get_binary_value_.size();
 }
 inline void RequestScan::clear_request_get_binary_value() {
-  if (request_get_binary_value_ != NULL) request_get_binary_value_->::message_scan::RequestScan_RequestGetBinaryValue::Clear();
-  clear_has_request_get_binary_value();
+  request_get_binary_value_.Clear();
 }
-inline const ::message_scan::RequestScan_RequestGetBinaryValue& RequestScan::request_get_binary_value() const {
-  return request_get_binary_value_ != NULL ? *request_get_binary_value_ : *default_instance_->request_get_binary_value_;
+inline const ::message_scan::RequestScan_RequestGetBinaryValue& RequestScan::request_get_binary_value(int index) const {
+  return request_get_binary_value_.Get(index);
 }
-inline ::message_scan::RequestScan_RequestGetBinaryValue* RequestScan::mutable_request_get_binary_value() {
-  set_has_request_get_binary_value();
-  if (request_get_binary_value_ == NULL) request_get_binary_value_ = new ::message_scan::RequestScan_RequestGetBinaryValue;
+inline ::message_scan::RequestScan_RequestGetBinaryValue* RequestScan::mutable_request_get_binary_value(int index) {
+  return request_get_binary_value_.Mutable(index);
+}
+inline ::message_scan::RequestScan_RequestGetBinaryValue* RequestScan::add_request_get_binary_value() {
+  return request_get_binary_value_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::message_scan::RequestScan_RequestGetBinaryValue >&
+RequestScan::request_get_binary_value() const {
   return request_get_binary_value_;
 }
-inline ::message_scan::RequestScan_RequestGetBinaryValue* RequestScan::release_request_get_binary_value() {
-  clear_has_request_get_binary_value();
-  ::message_scan::RequestScan_RequestGetBinaryValue* temp = request_get_binary_value_;
-  request_get_binary_value_ = NULL;
-  return temp;
-}
-inline void RequestScan::set_allocated_request_get_binary_value(::message_scan::RequestScan_RequestGetBinaryValue* request_get_binary_value) {
-  delete request_get_binary_value_;
-  request_get_binary_value_ = request_get_binary_value;
-  if (request_get_binary_value) {
-    set_has_request_get_binary_value();
-  } else {
-    clear_has_request_get_binary_value();
-  }
+inline ::google::protobuf::RepeatedPtrField< ::message_scan::RequestScan_RequestGetBinaryValue >*
+RequestScan::mutable_request_get_binary_value() {
+  return &request_get_binary_value_;
 }
 
 // repeated .message_scan.RequestScan.RequestSetBinaryValue request_set_binary_value = 5;
@@ -1620,7 +1797,7 @@ RequestScan::mutable_request_set_binary_value() {
 
 // ResponseScan_ResponseGetBinaryValue
 
-// required string binary = 1;
+// optional bytes binary = 1;
 inline bool ResponseScan_ResponseGetBinaryValue::has_binary() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1653,7 +1830,7 @@ inline void ResponseScan_ResponseGetBinaryValue::set_binary(const char* value) {
   }
   binary_->assign(value);
 }
-inline void ResponseScan_ResponseGetBinaryValue::set_binary(const char* value, size_t size) {
+inline void ResponseScan_ResponseGetBinaryValue::set_binary(const void* value, size_t size) {
   set_has_binary();
   if (binary_ == &::google::protobuf::internal::kEmptyString) {
     binary_ = new ::std::string;
@@ -1690,7 +1867,7 @@ inline void ResponseScan_ResponseGetBinaryValue::set_allocated_binary(::std::str
   }
 }
 
-// required string file_name = 2;
+// optional bytes file_name = 2;
 inline bool ResponseScan_ResponseGetBinaryValue::has_file_name() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1723,7 +1900,7 @@ inline void ResponseScan_ResponseGetBinaryValue::set_file_name(const char* value
   }
   file_name_->assign(value);
 }
-inline void ResponseScan_ResponseGetBinaryValue::set_file_name(const char* value, size_t size) {
+inline void ResponseScan_ResponseGetBinaryValue::set_file_name(const void* value, size_t size) {
   set_has_file_name();
   if (file_name_ == &::google::protobuf::internal::kEmptyString) {
     file_name_ = new ::std::string;
@@ -1760,37 +1937,15 @@ inline void ResponseScan_ResponseGetBinaryValue::set_allocated_file_name(::std::
   }
 }
 
-// optional bool status = 3;
-inline bool ResponseScan_ResponseGetBinaryValue::has_status() const {
+// optional uint64 file_size = 3;
+inline bool ResponseScan_ResponseGetBinaryValue::has_file_size() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void ResponseScan_ResponseGetBinaryValue::set_has_status() {
+inline void ResponseScan_ResponseGetBinaryValue::set_has_file_size() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void ResponseScan_ResponseGetBinaryValue::clear_has_status() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void ResponseScan_ResponseGetBinaryValue::clear_status() {
-  status_ = false;
-  clear_has_status();
-}
-inline bool ResponseScan_ResponseGetBinaryValue::status() const {
-  return status_;
-}
-inline void ResponseScan_ResponseGetBinaryValue::set_status(bool value) {
-  set_has_status();
-  status_ = value;
-}
-
-// optional uint64 file_size = 4;
-inline bool ResponseScan_ResponseGetBinaryValue::has_file_size() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void ResponseScan_ResponseGetBinaryValue::set_has_file_size() {
-  _has_bits_[0] |= 0x00000008u;
-}
 inline void ResponseScan_ResponseGetBinaryValue::clear_has_file_size() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void ResponseScan_ResponseGetBinaryValue::clear_file_size() {
   file_size_ = GOOGLE_ULONGLONG(0);
@@ -1804,11 +1959,57 @@ inline void ResponseScan_ResponseGetBinaryValue::set_file_size(::google::protobu
   file_size_ = value;
 }
 
+// optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+inline bool ResponseScan_ResponseGetBinaryValue::has_scan_type() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_has_scan_type() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ResponseScan_ResponseGetBinaryValue::clear_has_scan_type() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ResponseScan_ResponseGetBinaryValue::clear_scan_type() {
+  scan_type_ = 1;
+  clear_has_scan_type();
+}
+inline ::message_scan::ResponseScan_EncodeType ResponseScan_ResponseGetBinaryValue::scan_type() const {
+  return static_cast< ::message_scan::ResponseScan_EncodeType >(scan_type_);
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_scan_type(::message_scan::ResponseScan_EncodeType value) {
+  assert(::message_scan::ResponseScan_EncodeType_IsValid(value));
+  set_has_scan_type();
+  scan_type_ = value;
+}
+
+// optional .message_scan.ResponseScan.FileType file_type = 5;
+inline bool ResponseScan_ResponseGetBinaryValue::has_file_type() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_has_file_type() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ResponseScan_ResponseGetBinaryValue::clear_has_file_type() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ResponseScan_ResponseGetBinaryValue::clear_file_type() {
+  file_type_ = 1;
+  clear_has_file_type();
+}
+inline ::message_scan::ResponseScan_FileType ResponseScan_ResponseGetBinaryValue::file_type() const {
+  return static_cast< ::message_scan::ResponseScan_FileType >(file_type_);
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_file_type(::message_scan::ResponseScan_FileType value) {
+  assert(::message_scan::ResponseScan_FileType_IsValid(value));
+  set_has_file_type();
+  file_type_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // ResponseScan_ResponseSetBinaryValue
 
-// required string binary = 1;
+// optional bytes binary = 1;
 inline bool ResponseScan_ResponseSetBinaryValue::has_binary() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1841,7 +2042,7 @@ inline void ResponseScan_ResponseSetBinaryValue::set_binary(const char* value) {
   }
   binary_->assign(value);
 }
-inline void ResponseScan_ResponseSetBinaryValue::set_binary(const char* value, size_t size) {
+inline void ResponseScan_ResponseSetBinaryValue::set_binary(const void* value, size_t size) {
   set_has_binary();
   if (binary_ == &::google::protobuf::internal::kEmptyString) {
     binary_ = new ::std::string;
@@ -1878,7 +2079,7 @@ inline void ResponseScan_ResponseSetBinaryValue::set_allocated_binary(::std::str
   }
 }
 
-// required string file_name = 2;
+// optional bytes file_name = 2;
 inline bool ResponseScan_ResponseSetBinaryValue::has_file_name() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1911,7 +2112,7 @@ inline void ResponseScan_ResponseSetBinaryValue::set_file_name(const char* value
   }
   file_name_->assign(value);
 }
-inline void ResponseScan_ResponseSetBinaryValue::set_file_name(const char* value, size_t size) {
+inline void ResponseScan_ResponseSetBinaryValue::set_file_name(const void* value, size_t size) {
   set_has_file_name();
   if (file_name_ == &::google::protobuf::internal::kEmptyString) {
     file_name_ = new ::std::string;
@@ -1948,37 +2149,15 @@ inline void ResponseScan_ResponseSetBinaryValue::set_allocated_file_name(::std::
   }
 }
 
-// optional bool status = 3;
-inline bool ResponseScan_ResponseSetBinaryValue::has_status() const {
+// optional uint64 file_size = 3;
+inline bool ResponseScan_ResponseSetBinaryValue::has_file_size() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void ResponseScan_ResponseSetBinaryValue::set_has_status() {
+inline void ResponseScan_ResponseSetBinaryValue::set_has_file_size() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void ResponseScan_ResponseSetBinaryValue::clear_has_status() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void ResponseScan_ResponseSetBinaryValue::clear_status() {
-  status_ = false;
-  clear_has_status();
-}
-inline bool ResponseScan_ResponseSetBinaryValue::status() const {
-  return status_;
-}
-inline void ResponseScan_ResponseSetBinaryValue::set_status(bool value) {
-  set_has_status();
-  status_ = value;
-}
-
-// optional uint64 file_size = 4;
-inline bool ResponseScan_ResponseSetBinaryValue::has_file_size() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void ResponseScan_ResponseSetBinaryValue::set_has_file_size() {
-  _has_bits_[0] |= 0x00000008u;
-}
 inline void ResponseScan_ResponseSetBinaryValue::clear_has_file_size() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void ResponseScan_ResponseSetBinaryValue::clear_file_size() {
   file_size_ = GOOGLE_ULONGLONG(0);
@@ -1992,19 +2171,88 @@ inline void ResponseScan_ResponseSetBinaryValue::set_file_size(::google::protobu
   file_size_ = value;
 }
 
+// optional .message_scan.ResponseScan.EncodeType scan_type = 4;
+inline bool ResponseScan_ResponseSetBinaryValue::has_scan_type() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_has_scan_type() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ResponseScan_ResponseSetBinaryValue::clear_has_scan_type() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ResponseScan_ResponseSetBinaryValue::clear_scan_type() {
+  scan_type_ = 1;
+  clear_has_scan_type();
+}
+inline ::message_scan::ResponseScan_EncodeType ResponseScan_ResponseSetBinaryValue::scan_type() const {
+  return static_cast< ::message_scan::ResponseScan_EncodeType >(scan_type_);
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_scan_type(::message_scan::ResponseScan_EncodeType value) {
+  assert(::message_scan::ResponseScan_EncodeType_IsValid(value));
+  set_has_scan_type();
+  scan_type_ = value;
+}
+
+// optional .message_scan.ResponseScan.FileType file_type = 5;
+inline bool ResponseScan_ResponseSetBinaryValue::has_file_type() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_has_file_type() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ResponseScan_ResponseSetBinaryValue::clear_has_file_type() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ResponseScan_ResponseSetBinaryValue::clear_file_type() {
+  file_type_ = 1;
+  clear_has_file_type();
+}
+inline ::message_scan::ResponseScan_FileType ResponseScan_ResponseSetBinaryValue::file_type() const {
+  return static_cast< ::message_scan::ResponseScan_FileType >(file_type_);
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_file_type(::message_scan::ResponseScan_FileType value) {
+  assert(::message_scan::ResponseScan_FileType_IsValid(value));
+  set_has_file_type();
+  file_type_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // ResponseScan
 
-// required string uuid = 1;
-inline bool ResponseScan::has_uuid() const {
+// required .message_scan.ResponseScan.ResponseType type = 1;
+inline bool ResponseScan::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ResponseScan::set_has_uuid() {
+inline void ResponseScan::set_has_type() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ResponseScan::clear_has_uuid() {
+inline void ResponseScan::clear_has_type() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void ResponseScan::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::message_scan::ResponseScan_ResponseType ResponseScan::type() const {
+  return static_cast< ::message_scan::ResponseScan_ResponseType >(type_);
+}
+inline void ResponseScan::set_type(::message_scan::ResponseScan_ResponseType value) {
+  assert(::message_scan::ResponseScan_ResponseType_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// required bytes uuid = 2;
+inline bool ResponseScan::has_uuid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ResponseScan::set_has_uuid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ResponseScan::clear_has_uuid() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void ResponseScan::clear_uuid() {
   if (uuid_ != &::google::protobuf::internal::kEmptyString) {
@@ -2029,7 +2277,7 @@ inline void ResponseScan::set_uuid(const char* value) {
   }
   uuid_->assign(value);
 }
-inline void ResponseScan::set_uuid(const char* value, size_t size) {
+inline void ResponseScan::set_uuid(const void* value, size_t size) {
   set_has_uuid();
   if (uuid_ == &::google::protobuf::internal::kEmptyString) {
     uuid_ = new ::std::string;
@@ -2066,15 +2314,15 @@ inline void ResponseScan::set_allocated_uuid(::std::string* uuid) {
   }
 }
 
-// required string timestamp = 2;
+// required bytes timestamp = 3;
 inline bool ResponseScan::has_timestamp() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void ResponseScan::set_has_timestamp() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void ResponseScan::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void ResponseScan::clear_timestamp() {
   if (timestamp_ != &::google::protobuf::internal::kEmptyString) {
@@ -2099,7 +2347,7 @@ inline void ResponseScan::set_timestamp(const char* value) {
   }
   timestamp_->assign(value);
 }
-inline void ResponseScan::set_timestamp(const char* value, size_t size) {
+inline void ResponseScan::set_timestamp(const void* value, size_t size) {
   set_has_timestamp();
   if (timestamp_ == &::google::protobuf::internal::kEmptyString) {
     timestamp_ = new ::std::string;
@@ -2136,80 +2384,54 @@ inline void ResponseScan::set_allocated_timestamp(::std::string* timestamp) {
   }
 }
 
-// optional .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 3;
-inline bool ResponseScan::has_response_get_binary_value() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void ResponseScan::set_has_response_get_binary_value() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void ResponseScan::clear_has_response_get_binary_value() {
-  _has_bits_[0] &= ~0x00000004u;
+// repeated .message_scan.ResponseScan.ResponseGetBinaryValue response_get_binary_value = 4;
+inline int ResponseScan::response_get_binary_value_size() const {
+  return response_get_binary_value_.size();
 }
 inline void ResponseScan::clear_response_get_binary_value() {
-  if (response_get_binary_value_ != NULL) response_get_binary_value_->::message_scan::ResponseScan_ResponseGetBinaryValue::Clear();
-  clear_has_response_get_binary_value();
+  response_get_binary_value_.Clear();
 }
-inline const ::message_scan::ResponseScan_ResponseGetBinaryValue& ResponseScan::response_get_binary_value() const {
-  return response_get_binary_value_ != NULL ? *response_get_binary_value_ : *default_instance_->response_get_binary_value_;
+inline const ::message_scan::ResponseScan_ResponseGetBinaryValue& ResponseScan::response_get_binary_value(int index) const {
+  return response_get_binary_value_.Get(index);
 }
-inline ::message_scan::ResponseScan_ResponseGetBinaryValue* ResponseScan::mutable_response_get_binary_value() {
-  set_has_response_get_binary_value();
-  if (response_get_binary_value_ == NULL) response_get_binary_value_ = new ::message_scan::ResponseScan_ResponseGetBinaryValue;
+inline ::message_scan::ResponseScan_ResponseGetBinaryValue* ResponseScan::mutable_response_get_binary_value(int index) {
+  return response_get_binary_value_.Mutable(index);
+}
+inline ::message_scan::ResponseScan_ResponseGetBinaryValue* ResponseScan::add_response_get_binary_value() {
+  return response_get_binary_value_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseGetBinaryValue >&
+ResponseScan::response_get_binary_value() const {
   return response_get_binary_value_;
 }
-inline ::message_scan::ResponseScan_ResponseGetBinaryValue* ResponseScan::release_response_get_binary_value() {
-  clear_has_response_get_binary_value();
-  ::message_scan::ResponseScan_ResponseGetBinaryValue* temp = response_get_binary_value_;
-  response_get_binary_value_ = NULL;
-  return temp;
-}
-inline void ResponseScan::set_allocated_response_get_binary_value(::message_scan::ResponseScan_ResponseGetBinaryValue* response_get_binary_value) {
-  delete response_get_binary_value_;
-  response_get_binary_value_ = response_get_binary_value;
-  if (response_get_binary_value) {
-    set_has_response_get_binary_value();
-  } else {
-    clear_has_response_get_binary_value();
-  }
+inline ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseGetBinaryValue >*
+ResponseScan::mutable_response_get_binary_value() {
+  return &response_get_binary_value_;
 }
 
-// optional .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 4;
-inline bool ResponseScan::has_reponse_set_binary_value() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void ResponseScan::set_has_reponse_set_binary_value() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void ResponseScan::clear_has_reponse_set_binary_value() {
-  _has_bits_[0] &= ~0x00000008u;
+// repeated .message_scan.ResponseScan.ResponseSetBinaryValue reponse_set_binary_value = 5;
+inline int ResponseScan::reponse_set_binary_value_size() const {
+  return reponse_set_binary_value_.size();
 }
 inline void ResponseScan::clear_reponse_set_binary_value() {
-  if (reponse_set_binary_value_ != NULL) reponse_set_binary_value_->::message_scan::ResponseScan_ResponseSetBinaryValue::Clear();
-  clear_has_reponse_set_binary_value();
+  reponse_set_binary_value_.Clear();
 }
-inline const ::message_scan::ResponseScan_ResponseSetBinaryValue& ResponseScan::reponse_set_binary_value() const {
-  return reponse_set_binary_value_ != NULL ? *reponse_set_binary_value_ : *default_instance_->reponse_set_binary_value_;
+inline const ::message_scan::ResponseScan_ResponseSetBinaryValue& ResponseScan::reponse_set_binary_value(int index) const {
+  return reponse_set_binary_value_.Get(index);
 }
-inline ::message_scan::ResponseScan_ResponseSetBinaryValue* ResponseScan::mutable_reponse_set_binary_value() {
-  set_has_reponse_set_binary_value();
-  if (reponse_set_binary_value_ == NULL) reponse_set_binary_value_ = new ::message_scan::ResponseScan_ResponseSetBinaryValue;
+inline ::message_scan::ResponseScan_ResponseSetBinaryValue* ResponseScan::mutable_reponse_set_binary_value(int index) {
+  return reponse_set_binary_value_.Mutable(index);
+}
+inline ::message_scan::ResponseScan_ResponseSetBinaryValue* ResponseScan::add_reponse_set_binary_value() {
+  return reponse_set_binary_value_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseSetBinaryValue >&
+ResponseScan::reponse_set_binary_value() const {
   return reponse_set_binary_value_;
 }
-inline ::message_scan::ResponseScan_ResponseSetBinaryValue* ResponseScan::release_reponse_set_binary_value() {
-  clear_has_reponse_set_binary_value();
-  ::message_scan::ResponseScan_ResponseSetBinaryValue* temp = reponse_set_binary_value_;
-  reponse_set_binary_value_ = NULL;
-  return temp;
-}
-inline void ResponseScan::set_allocated_reponse_set_binary_value(::message_scan::ResponseScan_ResponseSetBinaryValue* reponse_set_binary_value) {
-  delete reponse_set_binary_value_;
-  reponse_set_binary_value_ = reponse_set_binary_value;
-  if (reponse_set_binary_value) {
-    set_has_reponse_set_binary_value();
-  } else {
-    clear_has_reponse_set_binary_value();
-  }
+inline ::google::protobuf::RepeatedPtrField< ::message_scan::ResponseScan_ResponseSetBinaryValue >*
+ResponseScan::mutable_reponse_set_binary_value() {
+  return &reponse_set_binary_value_;
 }
 
 
@@ -2232,6 +2454,18 @@ inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::RequestScan_File
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::RequestScan_RequestType>() {
   return ::message_scan::RequestScan_RequestType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::ResponseScan_EncodeType>() {
+  return ::message_scan::ResponseScan_EncodeType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::ResponseScan_FileType>() {
+  return ::message_scan::ResponseScan_FileType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::ResponseScan_ResponseType>() {
+  return ::message_scan::ResponseScan_ResponseType_descriptor();
 }
 
 }  // namespace google

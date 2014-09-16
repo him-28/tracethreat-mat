@@ -35,7 +35,7 @@
 
 #include <vector>
 
-#include "internet/utils/common.hpp"	
+#include "internet/utils/common.hpp"
 
 #include "internet/logger/logging.hpp"
 
@@ -46,13 +46,13 @@ namespace internet
 {
     namespace asio = boost::asio;
 
-    class scan_connection : public boost::enable_shared_from_this<scan_connection>
+    class scan_connection	 : public boost::enable_shared_from_this<scan_connection>
     {
 
         public:
             typedef boost::shared_ptr<scan_connection> pointer;
             typedef boost::shared_ptr<message_scan::RequestScan>  MsgsRequestPointer;
-            typedef boost::shared_ptr<message_scan::ResponseScan> MsgsReponsePointer;
+            typedef boost::shared_ptr<message_scan::ResponseScan> MsgsResponsePointer;
 
             static pointer create(asio::io_service& io_service) {
 
@@ -73,27 +73,53 @@ namespace internet
 
             packedmessage_scan<message_scan::RequestScan> msgs_packed_request_scan;
 
-						std::map<uint64_t, file_detail_scan> fd_scan_map;
+            std::map<std::string, file_detail_scan> fd_scan_map;
 
             scan_connection(asio::io_service& io_service) :
                 msgs_socket(io_service),
                 msgs_packed_request_scan(boost::shared_ptr<message_scan::RequestScan>(
-                        new message_scan::RequestScan())){
+                        new message_scan::RequestScan())) {
 
 
             }
 
-            void handle_read_header(const boost::system::error_code& error);
+            void handle_read_header(const boost::system::error_code& error, std::size_t bytes);
 
             void handle_read_body(const boost::system::error_code& error);
 
-            void handle_request();
+            // Register
+            void handle_read_register(const boost::system::error_code& error);
+
+						void handle_request_detail_register(const boost::system::error_code& error);
+
+            //Pack Header and Body in member function.
+            void handle_request_register(MsgsRequestPointer msgs_request);
+
+
+            typename scan_connection::MsgsResponsePointer
+            prepare_response_register();
+
+
+            // Scan
+            void handle_read_scan(const boost::system::error_code& error);
+
+            typename scan_connection::MsgsResponsePointer
+            prepare_response_scan(MsgsRequestPointer  msg_request);
+
+            void handle_request_scan(MsgsRequestPointer msgs_request);
+
 
             void start_read_header();
 
+            void start_read_header(const boost::system::error_code& error, std::size_t bytes);
+
             void start_read_body(unsigned msgs_length);
 
-            MsgsReponsePointer prepare_response(MsgsRequestPointer req);
+
+            MsgsResponsePointer prepare_response(MsgsRequestPointer req);
+
+
+            MsgsRequestPointer request_ptr;
 
     };
 

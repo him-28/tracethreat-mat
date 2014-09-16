@@ -30,7 +30,7 @@
 
 namespace internet
 {
-		typedef std::vector<uint8_t> data_buffer;
+    typedef std::vector<uint8_t> data_buffer;
 
     template<typename MessageType>
     class packedmessage_scan
@@ -40,13 +40,17 @@ namespace internet
             typedef boost::shared_ptr<MessageType> message_pointer;
 
             packedmessage_scan(message_pointer msg = message_pointer()) : msgs(msg) { }
-					
-						unsigned decode_header(const data_buffer & buffer)const;
 
-						bool unpack(const data_buffer & buffer);
-	
-						message_pointer get_msg();
-						
+            unsigned decode_header(const data_buffer& buffer)const;
+
+            bool pack(data_buffer& buffer)const;
+
+            bool unpack(const data_buffer& buffer);
+
+            void encode_header(data_buffer& buffer, unsigned size)const;
+
+            message_pointer get_msg();
+
         private:
             message_pointer  msgs;
     };

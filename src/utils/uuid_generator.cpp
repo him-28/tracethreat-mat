@@ -1,5 +1,5 @@
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 Chatsiri Rattana.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
 */
 
 /*  Titles			                                          Authors	         Date
- *
+ *  -UUID support SHM of file in memory mode.
+ *  -UUID Internal and External file scanning.            R.Chatsiri       28/08/2014
  *
  */
 
@@ -25,6 +26,8 @@
 #include "boost/lexical_cast.hpp"
 #include <sstream>
 
+namespace utils{
+
 const std::string  uuid_generator::generate(uint64_t  tid)
 {
 		this->tid_ = tid;
@@ -32,7 +35,7 @@ const std::string  uuid_generator::generate(uint64_t  tid)
 		{
 				return generate();	
 		}	 
-	return std::string();
+	return std::string("");
 }
 
 std::string uuid_generator::generate()
@@ -41,7 +44,6 @@ std::string uuid_generator::generate()
 		   boost::uuids::uuid uid;
     	 std::stringstream ss;
 			 ss << uid; 
-			 //this->uuid_map.insert(std::make_pair<uint64_t, std::string>(this->tid_,ss.str()));
 			 return ss.str();
 }
 
@@ -60,3 +62,7 @@ bool uuid_generator::search_thread_depend(uint64_t  tid)
 		}
 		return false;
 }
+
+}
+
+

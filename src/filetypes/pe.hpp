@@ -235,10 +235,13 @@ typedef struct IMAGE_SECTION_HEADER *PIMAGE_SECTION_HEADER;
 #include "boost/scoped_array.hpp"
 
 struct MAPPED_FILE_PE {
+		//File Descriptor
     FILE_DESCRIPTOR   file;
+		//File size.
     size_t            size;
+    // Data in file.
     uint8_t 					*data;
-    //unsigned char     *file_name;
+
     std::string file_name;
     //If scan found infected file.
     std::string file_sig;
@@ -257,6 +260,9 @@ struct MAPPED_FILE_PE {
     uint8_t          status;
     //MD5 of file.
     uint64_t         file_map_md5;
+		//Internal or External Message
+		//uint8_t          msg_type;
+		uint8_t         msg_type;
 };
 
 struct MAMORY_BLOCK_PE {
@@ -278,15 +284,6 @@ struct IMAGE_NT_HEADERS_EXT {
 
 };
 
-//cli pe.h
-/*
-#include "clamav.h"
-#include "execs.h"
-#include "others.h"
-#include "cltypes.h"
-#include "fmap.h"
-#include "bcfeatures.h"
-*/
 
 /** @file */
 /** Header for this PE file
