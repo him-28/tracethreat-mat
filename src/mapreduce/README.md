@@ -1,1 +1,0 @@
-- Supported auto creates virus signature file by sha-256
