@@ -32,6 +32,20 @@ namespace internet
 {
     typedef std::vector<uint8_t> data_buffer;
 
+		template<class CharContainer>
+		std::string show_hex(const CharContainer & c){
+			std::string hex;
+			char buf[16];
+			typename CharContainer::const_iterator i;
+			for(i = c.begin();
+					i != c.end();
+					++i){
+						std::sprintf(buf, "%02X ", static_cast<unsigned>(*i) & 0xFF); 
+				    hex += buf;
+				}
+			return hex;
+		}
+
     template<typename MessageType>
     class packedmessage_scan
     {
@@ -51,6 +65,7 @@ namespace internet
 
             message_pointer get_msg();
 
+						~packedmessage_scan(){ }
         private:
             message_pointer  msgs;
     };

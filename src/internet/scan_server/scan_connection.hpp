@@ -35,6 +35,8 @@
 
 #include <vector>
 
+#include "scan/scan_file_controller.hpp"
+
 #include "internet/utils/common.hpp"
 
 #include "internet/logger/logging.hpp"
@@ -88,17 +90,25 @@ namespace internet
             void handle_read_body(const boost::system::error_code& error);
 
             // Register
-            void handle_read_register(const boost::system::error_code& error);
+            //void handle_read_register(const boost::system::error_code& error);
 
-						void handle_request_detail_register(const boost::system::error_code& error);
+            //void handle_request_detail_register(const boost::system::error_code& error);
 
             //Pack Header and Body in member function.
-            void handle_request_register(MsgsRequestPointer msgs_request);
+            //void handle_request_register(MsgsRequestPointer msgs_request);
 
 
             typename scan_connection::MsgsResponsePointer
             prepare_response_register();
 
+
+						//Response
+						void write_response(MsgsRequestPointer  request_ptr, MsgsResponsePointer  response_ptr);
+
+
+						void write_data_response(MsgsResponsePointer  response_ptr);
+			
+						void read_response(const boost::system::error_code& error);
 
             // Scan
             void handle_read_scan(const boost::system::error_code& error);
@@ -111,7 +121,7 @@ namespace internet
 
             void start_read_header();
 
-            void start_read_header(const boost::system::error_code& error, std::size_t bytes);
+           // void start_read_header(const boost::system::error_code& error, std::size_t bytes);
 
             void start_read_body(unsigned msgs_length);
 
@@ -120,6 +130,18 @@ namespace internet
 
 
             MsgsRequestPointer request_ptr;
+
+            //deploy engine.
+            bool deploy_scan_engine(std::vector<struct utils::meta_sig *>
+                    *meta_sig_vec, std::string shm_sig_name);
+
+            //internal message scanning.
+            std::vector<struct utils::meta_sig *>  meta_sig_vec;
+
+            policy::scan_file_controller   *scan_file_col;
+
+            std::map<utils::filetype_code, boost::any> file_map;
+            std::map<utils::filetype_code, std::vector<const char *> > file_name_map;
 
     };
 
