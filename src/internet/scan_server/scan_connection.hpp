@@ -89,17 +89,9 @@ namespace internet
 
             void handle_read_body(const boost::system::error_code& error);
 
-            // Register
-            //void handle_read_register(const boost::system::error_code& error);
-
-            //void handle_request_detail_register(const boost::system::error_code& error);
-
-            //Pack Header and Body in member function.
-            //void handle_request_register(MsgsRequestPointer msgs_request);
-
-
+ 
             typename scan_connection::MsgsResponsePointer
-            prepare_response_register();
+            prepare_response_register(MsgsRequestPointer);
 
 
 						//Response
@@ -121,7 +113,6 @@ namespace internet
 
             void start_read_header();
 
-           // void start_read_header(const boost::system::error_code& error, std::size_t bytes);
 
             void start_read_body(unsigned msgs_length);
 

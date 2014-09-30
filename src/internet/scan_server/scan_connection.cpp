@@ -71,9 +71,9 @@ namespace internet
 
             msgs_socket.async_write_some(
                     asio::buffer(write_buffer),
-                    boost::bind(&scan_connection::handle_read_scan,
-                            shared_from_this(),
-                            asio::placeholders::error));
+                    boost::bind(&scan_connection::start_read_header,//handle_read_scan
+                            shared_from_this()));
+            //asio::placeholders::error));
 
         } catch(boost::system::system_error& error) {
             LOG(INFO)<<"Server : handle_request_scan , error : "<<error.code();
@@ -83,84 +83,18 @@ namespace internet
 
     //___________________________ Register ________________________
     typename scan_connection::MsgsResponsePointer scan_connection::
-    prepare_response_register()
+    prepare_response_register(MsgsRequestPointer  msgs_request)
     {
         LOG(INFO)<<"Server : prepare_response_register";
 
         //[-]Verify UUID
         //[-]Sucess to verfity not repeatedly UUID in scanning system.
         MsgsResponsePointer  register_response(new message_scan::ResponseScan);
-        register_response->set_uuid(std::string("b8000000-0000-0000-5019-f10000000000"));
-        register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS); //SCAN_SUCCESS
+        register_response->set_uuid(msgs_request->uuid());
+        register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
         register_response->set_timestamp(std::string("0:0:0:0"));
         return register_response;
     }
-/*
-    void scan_connection::handle_read_register(const boost::system::error_code& error)
-    {
-        LOG(INFO)<<"Server : handle_read_register, Start read header, send to start_read_header";
-
-        msgs_read_buffer.resize(HEADER_SIZE);
-        msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
-                boost::bind(&scan_connection::start_read_header, shared_from_this()));
-
-    }
-*/
-/*
-    void scan_connection::handle_request_detail_register(const boost::system::error_code& error)
-    {
-
-        try {
-
-            //write data back to client.
-            MsgsResponsePointer response_ptr =
-                    prepare_response_register();
-
-            std::vector<uint8_t> write_buffer;
-            packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
-            resp_msg.pack(write_buffer);
-
-            msgs_socket.async_write_some(
-                    asio::buffer(write_buffer),
-                    boost::bind(&scan_connection::handle_read_register,
-                            shared_from_this(),
-                            asio::placeholders::error));
-
-            LOG(INFO)<<"Server : handle_request_detail_register, write response to client completed 2sd.";
-        } catch(boost::system::system_error& error) {
-            LOG(INFO)<<"server : handle_request_detail_register , error : "<<error.code();
-        }
-
-    }
-*/
-
-/*
-    void scan_connection::handle_request_register(MsgsRequestPointer msgs_request)
-    {
-
-        try {
-
-            //write data back to client.
-            MsgsResponsePointer response_ptr =
-                    prepare_response_register();
-
-            std::vector<uint8_t> write_buffer;
-            packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
-            resp_msg.pack(write_buffer);
-
-            msgs_socket.async_write_some(
-                    asio::buffer(write_buffer),
-                    boost::bind(&scan_connection::handle_request_detail_register,
-                            shared_from_this(),
-                            asio::placeholders::error));
-
-            LOG(INFO)<<"Server : handle_request_register, write response to client completed 1st.";
-
-        } catch(boost::system::system_error& error) {
-            LOG(INFO)<<"server : handle_request_register , error : "<<error.code();
-        }
-    }
-*/
 
     void scan_connection::read_response(const boost::system::error_code& error)
     {
@@ -178,18 +112,29 @@ namespace internet
     void scan_connection::write_data_response(MsgsResponsePointer  response_ptr)
     {
 
+        LOG(INFO)<<"------------------------Write Data Response--------------------------";
+
+        LOG(INFO)<<"Server : write_data_response, Send response to client msgs type :"<<
+                response_ptr->type();
 
         try {
+            /*
+                        std::vector<uint8_t> write_buffer;
+                        packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
+                        resp_msg.pack(write_buffer);
 
-            std::vector<uint8_t> write_buffer;
-            packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
-            resp_msg.pack(write_buffer);
+                        msgs_socket.async_write_some(
+                                asio::buffer(write_buffer),
+                                boost::bind(&scan_connection::read_response,
+                                        shared_from_this(),
+                                        asio::placeholders::error));
+            */
 
-            msgs_socket.async_write_some(
-                    asio::buffer(write_buffer),
-                    boost::bind(&scan_connection::read_response,
-                            shared_from_this(),
-                            asio::placeholders::error));
+            msgs_read_buffer.resize(HEADER_SIZE);
+            msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
+                    boost::bind(&scan_connection::handle_read_header, shared_from_this(),
+                            _1, _2));
+
 
             LOG(INFO)<<"Server : write_data_response , write data to client completed 2rd.";
 
@@ -197,13 +142,19 @@ namespace internet
             LOG(INFO)<<"server : write_data_response , error : "<<error.code();
         }
 
+        LOG(INFO)<<"-----------------------------------------------------------------";
+
 
     }
 
     void scan_connection::write_response(MsgsRequestPointer  request_ptr, MsgsResponsePointer response_ptr)
     {
 
+        LOG(INFO)<<"------------------------Write Response--------------------------";
+
         try {
+
+            LOG(INFO)<<"Server :  write_response, Client request msgs type : "<<request_ptr->type();
 
             std::vector<uint8_t> write_buffer;
             packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
@@ -215,13 +166,15 @@ namespace internet
                             shared_from_this(),
                             response_ptr));
 
-            //scan_connection::start_read_header();
-            LOG(INFO)<<"Server : write_response , write response to client completed 1st.";
+            LOG(INFO)<<"Server : write_response, write response to client completed 1st.";
 
         } catch(boost::system::system_error& error) {
-            LOG(INFO)<<"server : write_response  , error : "<<error.code();
+
+            LOG(INFO)<<"server : write_response, error : "<<error.code();
+
         }
 
+        LOG(INFO)<<"-------------------------------------------------------------";
 
     }
 
@@ -240,24 +193,27 @@ namespace internet
     {
         LOG(INFO)<<"Server : handle_read_body  ";
 
-        if(request_ptr->type() == message_scan::RequestScan::REGISTER) {
-            //handle_request_register(request_ptr);
-            write_response(request_ptr, prepare_response_register());
-        }//if register
-
         //Read body before send to handle_request
         if(msgs_packed_request_scan.unpack(msgs_read_buffer)) {
             request_ptr = msgs_packed_request_scan.get_msg();
 
-            LOG(INFO)<<"Server : Message type : "<<  request_ptr->type();
+            LOG(INFO)<<"------------------Read Body-----------------------------";
+
+            LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
+            LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
+
+            if(request_ptr->type() == message_scan::RequestScan::REGISTER) {
+                LOG(INFO)<<"------------------- REGISTER TYPE---------------";
+                write_response(request_ptr, prepare_response_register(request_ptr));
+                LOG(INFO)<<"----------------END REGISTER TYPE---------------";
+            }//if register
+
 
             //Register UUID and IP address
             if(request_ptr->type() == message_scan::RequestScan::SCAN) {
 
-                LOG(INFO)<<"---------------------------------------------------";
+                LOG(INFO)<<"---------------------SCAN TYPE--------------------";
 
-                LOG(INFO)<<"Server : Register type, UUID request from client : " <<
-                        request_ptr->uuid();
                 LOG(INFO)<<"Server : Register internal message size : " <<
                         request_ptr->request_set_binary_value_size();
 
@@ -341,13 +297,14 @@ namespace internet
                 handle_request_register(request_ptr);
                 */
                 //handle_request_register(request_ptr);
-                LOG(INFO)<<"-----------------------------------------------------";
-                //[-] Create handle reponse scan from client.
+                LOG(INFO)<<"------------------END SCAN TYPE-------------------";
+
             }// If scanning type
 
         } else {
             LOG(INFO)<<" Server : Cannot unpack message from client ";
-        }
+        }//if-else unpack
+
     }//scan_connection::handle_read_body
 
     void scan_connection::handle_read_header(
