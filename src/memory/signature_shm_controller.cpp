@@ -63,10 +63,7 @@ namespace memory
                 //success for filter type.
             }
 
-
         }
-
-
 
         return false;
     }

@@ -107,28 +107,27 @@ namespace utils
 
     };
 
-    // CPP supported stream file.
-    template<typename StructFileType, typename PointerType,
-             typename FileType = struct common_stream_filetype<StructFileType,PointerType > >
+    template<typename FileType = struct common_filetype>
     class file_stream_handler : public ifile<FileType>
     {
 
         public:
 
             file_stream_handler() { };
+
             bool file_read();
+
             bool set_filepath(char const *file_path);
 
-            typename FileType::file_ptr *get_file() const {
-                return const_cast<typename FileType::file_ptr *>(p2file); // pointer to file description
-            }
-            typename FileType::s_position& get_begin() const;
-            typename FileType::s_position& get_end() const;
+		        virtual typename FileType::file_ptr *get_file() const;
+
+            bool read_all_line(std::vector<std::string> & str_line_vec);
+
         private:
-            typename FileType::s_filetype sf;
-            typename FileType::file_ptr *p2file;
             const char *file_path;
+						const char *str_line;
             std::ifstream file_stream_read;
+            std::vector<std::string>  str_line_vec;
     };
 
 

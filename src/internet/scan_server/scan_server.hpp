@@ -34,7 +34,10 @@ namespace internet
 
         public:
 
-            scan_server(boost::asio::io_service& io_service, std::string ip_addr, unsigned port);
+            scan_server(boost::asio::io_service& io_service, 
+												std::string ip_addr, 
+												unsigned port,
+												const char * file_path);
 
             ~scan_server();
 

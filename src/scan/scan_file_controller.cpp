@@ -27,31 +27,59 @@ namespace policy
     //Plan-00004: Initial SHM Signature type.
     template<typename MAPPED_FILE>
     bool scan_pe_internet_controller<MAPPED_FILE>::
-    load_database(std::vector<struct utils::meta_sig *>   *meta_sig_vec,
+    load_database(std::vector<struct utils::meta_sig *> * meta_sig_vec,
             std::string shm_sig_name)
     {
-        sig_shm_pe.initial_shm_sigtype(meta_sig_vec, shm_sig_name);
+        if(meta_sig_vec->empty() || shm_sig_name.empty()) {
+            logger->write_info("Engine-PE cannot initial for shm_sig_type");
+            return false;
+        }
+
+        this->meta_sig_vec = meta_sig_vec;
+
+        if(sig_shm_pe.initial_shm_sigtype(meta_sig_vec, shm_sig_name)){
+					logger->write_info("Engine-PE, Shared Memory initials completed.");
+				  return true;
+				}
+
+				return false;
     }
 
-    //Load engine.-
+    //Load and Register engine. Frist step to scanning.
     template<typename MAPPED_FILE>
     bool scan_pe_internet_controller<MAPPED_FILE>::load_engine(utils::filetype_code  file_type)
     {
-			   //Signature Engine initials for scanning.
-        if(!sig_engine.create_engine(this->meta_sig_vec, file_type)) {
+        //Signature Engine initials for scanning.
+        if(!sig_engine.create_engine(*this->meta_sig_vec, file_type)) {
             logger->write_info("Engine-PE cannot intial for internet scanning.");
-						return false;
+            return false;
         }
-     
+
         //Register Engine for scanning.
         sigtype_code = utils::filetype_code_map(file_type);
         //Create Register Class
         tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::register_actire_type(sigtype_code,
                 tbbscan::actire_pe_engine<char, tbbscan::tbb_allocator>::create);
-        //Create ACTire engine from signature that register
+        return true;
+    }
+
+
+    //Add file type to find engine loads  map of mapActireEngine in actire_engine_factory class.
+    //Class must set beforce call scan_file.
+    template<typename MAPPED_FILE>
+    bool scan_pe_internet_controller<MAPPED_FILE>
+    ::find_engine(utils::filetype_code  file_type)
+    {
+        //Set engine for scanning virus.
+        sigtype_code = utils::filetype_code_map(file_type);
         iactire_concur_engine_scanner = tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::
                 create_actire_engine(sigtype_code);
-				return true;
+
+        //If cannot find engine in system
+        if(iactire_concur_engine_scanner == NULL)
+            return false;
+
+        return true;
     }
 
 
@@ -60,7 +88,7 @@ namespace policy
     template<typename MAPPED_FILE>
     bool scan_pe_internet_controller<MAPPED_FILE>::scan_file()
     {
-        if(pef_policy != NULL) {
+        if(pef_policy == NULL) {
             logger->write_info("PE-File Policy is NULL, Scan_pe_internet cannot scan virus");
             return false;
         }
@@ -71,16 +99,19 @@ namespace policy
     }
 
     template<typename MAPPED_FILE>
-    bool scan_pe_internet_controller<MAPPED_FILE>::set_file(std::vector<MAPPED_FILE *>   *mapped_file_vec)
+    bool scan_pe_internet_controller<MAPPED_FILE>::set_file(
+            std::vector<MAPPED_FILE *>   *mapped_file_vec,
+            std::vector<const char *>     *file_type_vec)
     {
         //send to scan_pe policy based class.
         pef_policy = new fpolicy::pe_file_policy<struct MAPPED_FILE_PE>();
         pef_policy->set_mapped_file(mapped_file_vec);
+        pef_policy->set_file_type(file_type_vec);
     }
 
     template<typename MAPPED_FILE>
-    std::vector<utils::file_scan_result<MAPPED_FILE> *> 
-			scan_pe_internet_controller<MAPPED_FILE>::get_scan_result()
+    std::vector<utils::file_scan_result<MAPPED_FILE> *>
+    scan_pe_internet_controller<MAPPED_FILE>::get_scan_result()
     {
 
     }
@@ -88,7 +119,15 @@ namespace policy
     template<typename MAPPED_FILE>
     std::string scan_pe_internet_controller<MAPPED_FILE>::get_name_controller() const
     {
-				return "Name controller is : scan_pe_internet_controller";
+        return "Name controller is : scan_pe_internet_controller";
     }
 
+    template<typename MAPPED_FILE>
+    scan_pe_internet_controller<MAPPED_FILE>::~scan_pe_internet_controller()
+    {
+        
+    }
+
+    template class scan_pe_internet_controller<MAPPED_FILE_PE>;
+		
 }

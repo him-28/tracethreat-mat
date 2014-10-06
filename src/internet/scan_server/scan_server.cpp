@@ -14,10 +14,11 @@ namespace internet
     {
         public:
 
-            impl(asio::io_service& io_service, std::string ip_addr, unsigned port):
+            impl(asio::io_service& io_service, std::string ip_addr, unsigned port, const char * file_path):
                 scan_monitor_connection(new asio::io_service::work(io_service)), // Handle Async Connection
                 acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::address::from_string(ip_addr), port)),
-                io_service_(io_service)
+                io_service_(io_service),
+								file_sig_path(file_path)
                 {
 
                 LOG(INFO)<<" Scan server start...";
@@ -38,7 +39,10 @@ namespace internet
             }
 
             void start_accept() {
-                scan_connection::pointer  new_connection = internet::scan_connection::create(io_service_);
+
+                scan_connection::pointer  new_connection = 
+										internet::scan_connection::create(io_service_,file_sig_path);
+
                 acceptor.async_accept(new_connection->get_socket(),
                         boost::bind(&scan_server::impl::handle_accept,
                                 this,
@@ -67,6 +71,8 @@ namespace internet
             //prviate all
             asio::ip::tcp::acceptor  acceptor;
             asio::io_service& io_service_;
+						std::string file_sig_path;
+
 
             boost::thread_group scan_connection_thread;
             boost::scoped_ptr<asio::io_service::work> scan_monitor_connection;
@@ -74,11 +80,15 @@ namespace internet
 
     };
 
-    scan_server::scan_server(asio::io_service& io_service, std::string ip_addr, unsigned port)
-        : impl_(new scan_server::impl(io_service, ip_addr, port))
+    scan_server::scan_server(asio::io_service& io_service, 
+				std::string ip_addr, 
+				unsigned port, 
+				const char * file_path)
+        : impl_(new scan_server::impl(io_service, ip_addr, port, file_path))
     {
 
     }
+
 
 
     scan_server::~scan_server()

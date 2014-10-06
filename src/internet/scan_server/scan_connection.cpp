@@ -1,9 +1,13 @@
 #include "utils/base/common.hpp"
 
 #include "internet/scan_server/scan_connection.hpp"
+//#include "gensign/clamavsig.hpp"
 
 namespace internet
 {
+
+		using parser::clamav_sig;
+		using parser::hdb_sig;
 
     //____________________________ Scan_connection __________________________________
     asio::ip::tcp::socket& scan_connection::get_socket()
@@ -34,50 +38,15 @@ namespace internet
     typename scan_connection::MsgsResponsePointer scan_connection::
     prepare_response_scan(MsgsRequestPointer  msg_request)
     {
-        LOG(INFO)<<"Server : prepare_response_scan";
         MsgsResponsePointer  scan_response(new message_scan::ResponseScan);
         scan_response->set_uuid(msg_request->uuid());
         scan_response->set_type(message_scan::ResponseScan::SCAN_SUCCESS);
         scan_response->set_timestamp(std::string("0:0:0:0"));
+
+        LOG(INFO)<<"Server : prepare_response_scan success";
+
         return scan_response;
 
-    }
-
-    void scan_connection::handle_read_scan(const boost::system::error_code& error)
-    {
-        LOG(INFO)<<"Server : handle_read_scan, Start read header, send to handle_read_header ";
-
-        msgs_read_buffer.resize(HEADER_SIZE);
-        msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
-                boost::bind(&scan_connection::handle_read_header, shared_from_this(), //this
-                        _1, _2));
-
-
-    }
-
-
-    void scan_connection::handle_request_scan(MsgsRequestPointer msgs_request)
-    {
-        LOG(INFO)<<"Server : handle_request_scan";
-
-        try {
-
-            //write data back to client.
-            MsgsResponsePointer response_ptr =
-                    prepare_response_scan(msgs_request);
-            std::vector<uint8_t> write_buffer;
-            packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
-            resp_msg.pack(write_buffer);
-
-            msgs_socket.async_write_some(
-                    asio::buffer(write_buffer),
-                    boost::bind(&scan_connection::start_read_header,//handle_read_scan
-                            shared_from_this()));
-            //asio::placeholders::error));
-
-        } catch(boost::system::system_error& error) {
-            LOG(INFO)<<"Server : handle_request_scan , error : "<<error.code();
-        }
     }
 
 
@@ -85,7 +54,6 @@ namespace internet
     typename scan_connection::MsgsResponsePointer scan_connection::
     prepare_response_register(MsgsRequestPointer  msgs_request)
     {
-        LOG(INFO)<<"Server : prepare_response_register";
 
         //[-]Verify UUID
         //[-]Sucess to verfity not repeatedly UUID in scanning system.
@@ -93,59 +61,12 @@ namespace internet
         register_response->set_uuid(msgs_request->uuid());
         register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
         register_response->set_timestamp(std::string("0:0:0:0"));
+
+        LOG(INFO)<<"Server : prepare_response_register success";
+
         return register_response;
     }
 
-    void scan_connection::read_response(const boost::system::error_code& error)
-    {
-
-        LOG(INFO)<<"Server : read_response.";
-
-        msgs_read_buffer.resize(HEADER_SIZE);
-        msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
-                boost::bind(&scan_connection::handle_read_header, shared_from_this(),
-                        _1, _2));
-
-        LOG(INFO)<<"Server : read_response, read data from client";
-    }
-
-    void scan_connection::write_data_response(MsgsResponsePointer  response_ptr)
-    {
-
-        LOG(INFO)<<"------------------------Write Data Response--------------------------";
-
-        LOG(INFO)<<"Server : write_data_response, Send response to client msgs type :"<<
-                response_ptr->type();
-
-        try {
-            /*
-                        std::vector<uint8_t> write_buffer;
-                        packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
-                        resp_msg.pack(write_buffer);
-
-                        msgs_socket.async_write_some(
-                                asio::buffer(write_buffer),
-                                boost::bind(&scan_connection::read_response,
-                                        shared_from_this(),
-                                        asio::placeholders::error));
-            */
-
-            msgs_read_buffer.resize(HEADER_SIZE);
-            msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
-                    boost::bind(&scan_connection::handle_read_header, shared_from_this(),
-                            _1, _2));
-
-
-            LOG(INFO)<<"Server : write_data_response , write data to client completed 2rd.";
-
-        } catch(boost::system::system_error& error) {
-            LOG(INFO)<<"server : write_data_response , error : "<<error.code();
-        }
-
-        LOG(INFO)<<"-----------------------------------------------------------------";
-
-
-    }
 
     void scan_connection::write_response(MsgsRequestPointer  request_ptr, MsgsResponsePointer response_ptr)
     {
@@ -162,9 +83,8 @@ namespace internet
 
             msgs_socket.async_write_some(
                     asio::buffer(write_buffer),
-                    boost::bind(&scan_connection::write_data_response,
-                            shared_from_this(),
-                            response_ptr));
+                    boost::bind(&scan_connection::start_read_header,
+                            shared_from_this()));
 
             LOG(INFO)<<"Server : write_response, write response to client completed 1st.";
 
@@ -218,8 +138,13 @@ namespace internet
                         request_ptr->request_set_binary_value_size();
 
                 utils::filetype_code file_type;
+
                 struct MAPPED_FILE_PE *s_mapped_fpe;
+
                 const char *file_name;
+
+                std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
+                std::vector<const char *>       file_type_vec;
 
                 for(int count_msg = 0;
                         count_msg < request_ptr->request_set_binary_value_size();
@@ -228,27 +153,17 @@ namespace internet
                     const message_scan::RequestScan::RequestSetBinaryValue& msg_scan =
                             request_ptr->request_set_binary_value(count_msg);
 
-                    std::vector<MAPPED_FILE_PE *>   *fpe_vec;
-                    std::vector<const char *>       *fname_vec;
 
                     switch(msg_scan.file_type()) {
 
 
                     case message_scan::RequestScan::PE :
-                        LOG(INFO)<<"Server : Message PE scanning file name :  "<<
-                                msg_scan.file_name();
 
-                        //set file_type for specific file type.
-                        fpe_vec = boost::any_cast<std::vector<MAPPED_FILE_PE *> >
-                                (&file_map.find(utils::pe_file)->second);
 
-                        //Pe type finds in file_name map. std::map allocated before find.
-                        //We use reference to value and change its in s_mapped_fpe.
-                        fname_vec = &file_name_map.find(utils::pe_file)->second;
-
+                        mapped_file_vec.push_back(new MAPPED_FILE_PE);
 
                         //get last elements after push back new object.
-                        s_mapped_fpe = fpe_vec->back();
+                        s_mapped_fpe = mapped_file_vec.back();
                         //set external signature
                         s_mapped_fpe->msg_type = utils::external_msg;
                         //set File name
@@ -258,14 +173,23 @@ namespace internet
                         //set size of data
                         s_mapped_fpe->size = msg_scan.binary().size();
 
+
+                        //Pe type finds in file_name map. std::map allocated before find.
+                        //We use reference to value and change its in s_mapped_fpe.
+                        //fname_vec = &file_name_map.find(utils::pe_file)->second;
+
                         //File Name
-                        fpe_vec->push_back(new MAPPED_FILE_PE);
                         //Initial first value.
-                        fname_vec->push_back(std::string("").c_str());
+                        file_type_vec.push_back(std::string("").c_str());
                         //Get reference of last file name initialed.
-                        file_name = fname_vec->back();
+                        file_name = file_type_vec.back();
                         //Set file name
                         file_name = msg_scan.file_name().c_str();
+
+                        LOG(INFO)<<"Server : Message PE scanning file name : "<<
+                                msg_scan.file_name();
+                        LOG(INFO)<<"Binary data    : "<< msg_scan.binary();
+                        LOG(INFO)<<"File  type     : "<< msg_scan.file_type();
 
                         break;
 
@@ -288,16 +212,21 @@ namespace internet
 
                 }//for
 
-                /*
-                                //[] Scanning virus.
-                                scan_file_col->set_file(mapped_file_vec, file_type_vec);
-                                // Find Engine for file type.
-                                scan_file_col->find_engine(file_type);
-                                // Scan file
-                handle_request_register(request_ptr);
-                */
-                //handle_request_register(request_ptr);
+
+                //Scanning virus.
+                scan_file_pe->set_file(&mapped_file_vec, &file_type_vec);
+                // Find Engine for file type.
+                if(scan_file_pe->find_engine(utils::pe_file)){	
+										LOG(INFO)<<"Server : Find PE-Engine scanning after register success!";
+								}
+                // Scan file
+								if(scan_file_pe->scan_file()){
+										LOG(INFO)<<"Server : Scan file success!";
+								}
+								
                 LOG(INFO)<<"------------------END SCAN TYPE-------------------";
+
+                write_response(request_ptr, prepare_response_scan(request_ptr));
 
             }// If scanning type
 
@@ -337,30 +266,83 @@ namespace internet
 
     }//start_read_body
 
+    //[x] Load database
+    //[x] Load clamav signature hdb extension.
+    //[-] Suppor Multiple load support another scanning type.
+    bool scan_connection::deploy_scan_system()
+    {
+  
+    }
+
 
     //Deploy scanning system and load object before call scan_file member function.
-    bool scan_connection::deploy_scan_engine(
-            std::vector<struct utils::meta_sig *> *meta_sig_vec,
-            std::string shm_sig_name)
+    bool scan_connection::deploy_scan_engine()
     {
 
         LOG(INFO)<<"Start deploy scan engine.";
 
+				LOG(INFO)<<"Signature Database path : " << file_sig_path_;
+
+        sig_parse = new parser::hdb_sig();
+
+				msig_parse_vec = new std::vector<parser::meta_sigparse*>();
+
+			  sig_parse->parse_file_sig(file_sig_path_.c_str(), msig_parse_vec);
+
+				LOG(INFO)<<"Sig size : "<<msig_parse_vec->size();
+
+        if(msig_parse_vec->empty()) {
+            LOG(INFO)<<"Server : Signature DB deploy system is not signature.";
+            return false;
+        }
+
         //Load PE Scanning engine.
         LOG(INFO)<<"PE Scanning Engine start.";
-        scan_file_col = new policy::scan_pe_internet_controller<struct MAPPED_FILE_PE>();
+        scan_file_pe = new policy::scan_pe_internet_controller<struct MAPPED_FILE_PE>();
 
-        if(scan_file_col->load_database(meta_sig_vec, shm_sig_name)) {
+			 std::vector<utils::meta_sig*> msig_vec;//(msig_parse_vec->size());
+
+			  std::vector<parser::meta_sigparse*>::iterator iter_msig_parse;
+
+				int count_sig = 0;
+				for(iter_msig_parse = msig_parse_vec->begin();
+						iter_msig_parse != msig_parse_vec->end();
+						++iter_msig_parse){
+
+						parser::meta_sigparse  * msig_parse = *iter_msig_parse;
+
+						LOG(INFO)<<" Sig : " << msig_parse->md5;
+						LOG(INFO)<<" Virname : " << msig_parse->virname;
+
+						LOG(INFO)<<"[Test] PE File test only, Please change type when to production!";
+
+						msig_vec.push_back(new struct utils::meta_sig);
+				  	utils::meta_sig * msig = msig_vec[count_sig];
+
+						msig->sig = new char(msig_parse->md5.length());
+						msig->sig = msig_parse->md5.c_str();
+
+						msig->sig_type = utils::pe_file;
+
+						msig->sig_size = msig_parse->md5.length();
+						msig->virname = new char(msig_parse->virname.length());
+						msig->virname = msig_parse->virname.c_str();
+
+						count_sig++;
+				}
+			 					
+        if(scan_file_pe->load_database(&msig_vec, "shm-pe")) {
             LOG(INFO)<<" PE Scanning cannot load_database";
             return false;
         }
 
-        if(scan_file_col->load_engine(utils::pe_file)) {
+        if(scan_file_pe->load_engine(utils::pe_file)) {
             LOG(INFO)<<"  PE Scanning cannot load_engine";
             return false;
         }
-
-        LOG(INFO)<<"Deploy system success";
+					
+        LOG(INFO)<<"Deploy system success!";
+        return true;
     }
 
 }

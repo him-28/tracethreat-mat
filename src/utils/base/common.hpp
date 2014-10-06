@@ -43,6 +43,11 @@ namespace utils
         const char *virname;  // virus name
         const char *file_name;  // result file name
 
+			  //std::string sig;   // signature full.
+        //std::string virname;  // virus name
+        //std::string file_name;  // result file name
+
+
         //support OCL
         uint8_t  sig_type; // MD5, SHA-1, SHA-256
         uint64_t offset; // offset start search virus
@@ -55,13 +60,15 @@ namespace utils
         uint64_t       index_start;
         std::size_t    state;
 
+				//meta_sig(){ }
+
         meta_sig():
             sig_type(0),
             offset(0),
-            sig(""),
-            virname(""),
-            sig_detail(""),
-            state(0) { }
+            state(0) { sig = ""; virname = ""; sig_detail=""; file_name=""; }
+	
+				meta_sig(int sig_size, int virname_sig) : sig(new char(sig_size)),
+				virname(new char(virname_sig)){ }
 
     };
 

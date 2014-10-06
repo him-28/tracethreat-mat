@@ -76,8 +76,6 @@ namespace utils
     template<typename FileType>
     bool file_handler<FileType>::get_fdetail_create()
     {
-        //    if(file_d)  return true;
-
         return false;
     }
 
@@ -105,7 +103,7 @@ namespace utils
                         iter_dir != dir_end;
                         ++iter_dir) {
                     file_path_vec.push_back(iter_dir->path().string());
-										logger->write_info("Get File dir", iter_dir->path().string());
+                    logger->write_info("Get File dir", iter_dir->path().string());
                 }//for
             }//else if
             else {
@@ -117,26 +115,25 @@ namespace utils
 
     }
 
-		template<typename FileType>
-		std::vector<std::string> file_handler<FileType>::get_full_path()
-		{
-			return file_path_vec;
-		}
+    template<typename FileType>
+    std::vector<std::string> file_handler<FileType>::get_full_path()
+    {
+        return file_path_vec;
+    }
 
-		template<typename FileType>
-		bool file_handler<FileType>::write_file(std::vector<char> & buffer_vec)
-		{
-				std::ofstream outfile(file_path, std::ios::out | std::ios::binary);
-				outfile.write(&buffer_vec[0], buffer_vec.size());
-		}
+    template<typename FileType>
+    bool file_handler<FileType>::write_file(std::vector<char>& buffer_vec)
+    {
+        std::ofstream outfile(file_path, std::ios::out | std::ios::binary);
+        outfile.write(&buffer_vec[0], buffer_vec.size());
+    }
 
     template class file_handler<common_filetype>;
-    //template class file_handler<common_openfile_type>;
 
-		//____________________________ File stream handler ________________________________________________
+    //____________________________ File stream handler ________________________________________________
     //file_strem
-    template<typename FileType,typename StructFileType, typename PointerType>
-    bool file_stream_handler<FileType,StructFileType, PointerType>::file_read()
+    template<typename FileType>
+    bool file_stream_handler<FileType>::file_read()
     {
         file_stream_read.open(this->file_path);
 
@@ -147,9 +144,8 @@ namespace utils
         return true;
     }
 
-
-    template<typename FileType,typename StructFileType, typename PointerType>
-    bool file_stream_handler<FileType,StructFileType, PointerType>::set_filepath(char const *file_path)
+    template<typename FileType>
+    bool file_stream_handler<FileType>::set_filepath(char const *file_path)
     {
         this->file_path = file_path;
 
@@ -159,17 +155,30 @@ namespace utils
         return false;
     }
 
-    /*
-    template<typename FileType,typename StructFileType, typename PointerType>
-    typename  FileType::file_ptr * file_stream_handler<FileType, StructFileType, PointerType>
-    ::get_file() const
+		template<typename FileType>
+    typename FileType::file_ptr *file_stream_handler<FileType>::get_file()const 
     {
-    return const_cast<typename FileType::file_ptr *>(p2file); // pointer to file description
+        return 0;
     }
-    */
 
-    template class file_stream_handler<struct MAPPED_FILE_PE, char,
-             struct common_stream_filetype<struct MAPPED_FILE_PE, char> >;
+    template<typename FileType>
+    bool file_stream_handler<FileType>::read_all_line(std::vector<std::string> & str_line_vec)
+    {
+        std::string line;
+
+        str_line_vec.clear();
+
+        while(std::getline(file_stream_read,line)) {
+            str_line_vec.push_back(line);
+        }
+				
+				if(str_line_vec.empty())
+					return false;						
+
+        return true;
+    }
+
+    template class file_stream_handler<common_filetype>;
 
 
 

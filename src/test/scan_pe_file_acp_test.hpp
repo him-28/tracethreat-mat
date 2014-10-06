@@ -134,41 +134,9 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     boost::shared_ptr<std::vector<char> >   symbol_shared_ptr  = acp.get_symbol_shared_ptr();
     boost::shared_ptr<std::vector<size_t> >  state_shared_ptr = acp.get_state_shared_ptr();
 
-		/*
-    // Second, Send Symbol and State vector to  file_scan_policy
-    // list_file_tye insert file name, s_mapped_fpe inserted  file_type details.
-    utils::file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
-
-    //EXPECT_TRUE(fileoffset_h.mapped_file(&file_type_vec, &mapped_file_vec, fileoffset_h));
-		EXPECT_TRUE(fileoffset_h.mapped_file(file_type_vec, mapped_file_vec, fileoffset_h, file_sig));
-
-		uint64_t sum_file_size= 0;
-
-    boost::shared_ptr<std::vector<MAPPED_FILE_PE * > > mappedf_vec_ptr =
-            fileoffset_h.get_mappedf_vec_ptr();
-
-
-    std::vector<MAPPED_FILE_PE *> *mapped_file_pe_vec = mappedf_vec_ptr.get();
-
-    typename std::vector<MAPPED_FILE_PE *>::iterator iter_mapped_file;
-
-    MAPPED_FILE_PE *mf_pe;
-
-    for(iter_mapped_file = mapped_file_pe_vec->begin(); 
-				iter_mapped_file != mapped_file_pe_vec->end(); 
-				++iter_mapped_file) {
-        mf_pe = *iter_mapped_file;
-				unsigned char * data = mf_pe->data;
-				size_t size = mf_pe->size;
-        sum_file_size += size;
-        ASSERT_TRUE(*data != NULL);
-    }
-		*/
-
+		
     memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>
                 sig_shm_pe;
-
-
 
     //Initial engine.
     // Call  Signature Engine.
