@@ -6,8 +6,8 @@
 namespace internet
 {
 
-		using parser::clamav_sig;
-		using parser::hdb_sig;
+    using parser::clamav_sig;
+    using parser::hdb_sig;
 
     //____________________________ Scan_connection __________________________________
     asio::ip::tcp::socket& scan_connection::get_socket()
@@ -214,16 +214,18 @@ namespace internet
 
 
                 //Scanning virus.
-                scan_file_pe->set_file(&mapped_file_vec, &file_type_vec);
+                scan_file_->set_file(&mapped_file_vec, &file_type_vec);
+
                 // Find Engine for file type.
-                if(scan_file_pe->find_engine(utils::pe_file)){	
-										LOG(INFO)<<"Server : Find PE-Engine scanning after register success!";
-								}
+                if(scan_file_->find_engine(utils::pe_file)) {
+                    LOG(INFO)<<"Server : Find PE-Engine scanning after register success!";
+                }
+
                 // Scan file
-								if(scan_file_pe->scan_file()){
-										LOG(INFO)<<"Server : Scan file success!";
-								}
-								
+                if(scan_file_->scan_file()) {
+                    LOG(INFO)<<"Server : Scan file success!";
+                }
+
                 LOG(INFO)<<"------------------END SCAN TYPE-------------------";
 
                 write_response(request_ptr, prepare_response_scan(request_ptr));
@@ -266,83 +268,5 @@ namespace internet
 
     }//start_read_body
 
-    //[x] Load database
-    //[x] Load clamav signature hdb extension.
-    //[-] Suppor Multiple load support another scanning type.
-    bool scan_connection::deploy_scan_system()
-    {
-  
-    }
-
-
-    //Deploy scanning system and load object before call scan_file member function.
-    bool scan_connection::deploy_scan_engine()
-    {
-
-        LOG(INFO)<<"Start deploy scan engine.";
-
-				LOG(INFO)<<"Signature Database path : " << file_sig_path_;
-
-        sig_parse = new parser::hdb_sig();
-
-				msig_parse_vec = new std::vector<parser::meta_sigparse*>();
-
-			  sig_parse->parse_file_sig(file_sig_path_.c_str(), msig_parse_vec);
-
-				LOG(INFO)<<"Sig size : "<<msig_parse_vec->size();
-
-        if(msig_parse_vec->empty()) {
-            LOG(INFO)<<"Server : Signature DB deploy system is not signature.";
-            return false;
-        }
-
-        //Load PE Scanning engine.
-        LOG(INFO)<<"PE Scanning Engine start.";
-        scan_file_pe = new policy::scan_pe_internet_controller<struct MAPPED_FILE_PE>();
-
-			 std::vector<utils::meta_sig*> msig_vec;//(msig_parse_vec->size());
-
-			  std::vector<parser::meta_sigparse*>::iterator iter_msig_parse;
-
-				int count_sig = 0;
-				for(iter_msig_parse = msig_parse_vec->begin();
-						iter_msig_parse != msig_parse_vec->end();
-						++iter_msig_parse){
-
-						parser::meta_sigparse  * msig_parse = *iter_msig_parse;
-
-						LOG(INFO)<<" Sig : " << msig_parse->md5;
-						LOG(INFO)<<" Virname : " << msig_parse->virname;
-
-						LOG(INFO)<<"[Test] PE File test only, Please change type when to production!";
-
-						msig_vec.push_back(new struct utils::meta_sig);
-				  	utils::meta_sig * msig = msig_vec[count_sig];
-
-						msig->sig = new char(msig_parse->md5.length());
-						msig->sig = msig_parse->md5.c_str();
-
-						msig->sig_type = utils::pe_file;
-
-						msig->sig_size = msig_parse->md5.length();
-						msig->virname = new char(msig_parse->virname.length());
-						msig->virname = msig_parse->virname.c_str();
-
-						count_sig++;
-				}
-			 					
-        if(scan_file_pe->load_database(&msig_vec, "shm-pe")) {
-            LOG(INFO)<<" PE Scanning cannot load_database";
-            return false;
-        }
-
-        if(scan_file_pe->load_engine(utils::pe_file)) {
-            LOG(INFO)<<"  PE Scanning cannot load_engine";
-            return false;
-        }
-					
-        LOG(INFO)<<"Deploy system success!";
-        return true;
-    }
 
 }

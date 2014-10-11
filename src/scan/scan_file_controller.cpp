@@ -37,12 +37,12 @@ namespace policy
 
         this->meta_sig_vec = meta_sig_vec;
 
-        if(sig_shm_pe.initial_shm_sigtype(meta_sig_vec, shm_sig_name)){
+        if(!sig_shm_pe.initial_shm_sigtype(meta_sig_vec, shm_sig_name)){
 					logger->write_info("Engine-PE, Shared Memory initials completed.");
-				  return true;
+				  return false;
 				}
 
-				return false;
+				return true;
     }
 
     //Load and Register engine. Frist step to scanning.
@@ -63,7 +63,8 @@ namespace policy
         return true;
     }
 
-
+    //Plan-00004 : Initial engine only one time to performs system to scann file from server 
+    //and anaother system.
     //Add file type to find engine loads  map of mapActireEngine in actire_engine_factory class.
     //Class must set beforce call scan_file.
     template<typename MAPPED_FILE>

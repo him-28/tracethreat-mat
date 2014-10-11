@@ -12,7 +12,7 @@ TEST(ScanClient, connection_client)
 
     utils::file_scan_request *fs;
     fs = new utils::file_scan_request;
-    fs->binary = std::string("57e74475afff4601965ba88a319d20f8");//std::string("e5949a143be892323217b183e13a8789bc328e");
+    fs->binary = std::string("f33867592e3ecf226eb7b32fcdf8a531");//std::string("e5949a143be892323217b183e13a8789bc328e");
     fs->file_name = std::string("/home/testlab/zbot-test1.exe");
     fs->file_size = 50000;
     fs->scan_type = message_scan::RequestScan::MD5;

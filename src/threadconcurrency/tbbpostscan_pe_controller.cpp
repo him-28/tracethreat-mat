@@ -66,7 +66,15 @@ namespace controller
                     size_hex,
                     file_name_md5)) {
 
-            }//if
+            }//if	
+
+						
+						//Check bug parallel insert
+						for(int count_str = 0; count_str < buff_sync_internal->buff->binary_hex.size(); count_str++)
+						{
+							std::cout<<"Test input : "<< buff_sync_internal->buff->binary_hex[count_str]<<std::endl;				
+						}
+						
 
         }//for
 
@@ -138,6 +146,7 @@ namespace controller
 
                     logger->write_info("End Prepair data");
 
+
         }//for
 
                 logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, End Load data to task",
@@ -195,6 +204,8 @@ namespace controller
                 monitor.wait();
             }
         }//sync
+
+			logger->write_info("tbbpostscan_pe_controller::task_start, Completed task");
 
 			return true;
     }

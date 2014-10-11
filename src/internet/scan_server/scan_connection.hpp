@@ -60,11 +60,12 @@ namespace internet
             typedef boost::shared_ptr<message_scan::RequestScan>  MsgsRequestPointer;
             typedef boost::shared_ptr<message_scan::ResponseScan> MsgsResponsePointer;
 
-            typedef boost::shared_ptr<utils::meta_sig>  msig_ptr;
+						typedef policy::scan_internet_controller<struct MAPPED_FILE_PE>  scan_file_type;
 
-            static pointer create(asio::io_service& io_service, std::string file_sig_path) {
+
+            static pointer create(asio::io_service& io_service, scan_file_type * scan_file) {
 							  
-                return scan_connection::pointer(new scan_connection(io_service, file_sig_path));
+                return scan_connection::pointer(new scan_connection(io_service, scan_file));
 
             }//, message_scan& msgs);
 
@@ -83,17 +84,11 @@ namespace internet
 
             std::map<std::string, file_detail_scan> fd_scan_map;
 
-            scan_connection(asio::io_service& io_service, std::string file_sig_path) :
+            scan_connection(asio::io_service& io_service, scan_file_type * scan_file) :
                 msgs_socket(io_service),
                 msgs_packed_request_scan(boost::shared_ptr<message_scan::RequestScan>(
                         new message_scan::RequestScan())),
-								file_sig_path_(file_sig_path) {
-
-
-								//[x] Call to scanning system.
-								if(deploy_scan_engine()){
-										LOG(INFO)<<"Deploy scan engine completed.";
-								}
+								scan_file_(scan_file) {
 
                 //[x] Initial data support map file detail container.
                 //[x] Initial data support map file name container.
@@ -140,21 +135,17 @@ namespace internet
 						//Signature database path.
 						std::string file_sig_path_;
 
-						//Load scan type support scanning system.
-						bool deploy_scan_system();
-
-            //deploy engine.
-            bool deploy_scan_engine();
-
 						parser::sig_parser * sig_parse;
 
-		 	    	std::vector<msig_ptr>  msig_ptr_vec; 
+		 	    	//std::vector<msig_ptr>  msig_ptr_vec; 
 
-						std::vector<parser::meta_sigparse*>  * msig_parse_vec; 
+						//std::vector<parser::meta_sigparse*>  * msig_parse_vec; 
 
             //policy::scan_file_controller   *scan_file_col;
-						policy::scan_pe_internet_controller<struct MAPPED_FILE_PE> * scan_file_pe;
+						//policy::scan_pe_internet_controller<struct MAPPED_FILE_PE> * scan_file_pe;
 
+						//policy::scan_internet_controller<struct MAPPED_FILE_PE> * scan_file;
+					  scan_file_type * scan_file_;
             //std::map<utils::filetype_code, boost::any> file_map;
             //std::map<utils::filetype_code, std::vector<const char *> > file_name_map;
 

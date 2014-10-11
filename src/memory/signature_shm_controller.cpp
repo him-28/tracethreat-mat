@@ -65,7 +65,7 @@ namespace memory
 
         }
 
-        return false;
+        return true;
     }
 
     template<typename SignatureTypeMemory, typename SignatureInternal>
@@ -258,6 +258,7 @@ namespace memory
     ~signature_shm_pe_controller()
     {
         //managed_shm_ptr->destroy_ptr(sig_set_ptr);
+       // delete signature_ret_ptr;
     }
 
     template<typename SignatureTypeMemory, typename SignatureInternal>
