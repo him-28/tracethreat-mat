@@ -20,7 +20,6 @@
 
 #include "utils/base/common.hpp"
 
-#define FILE_ON 2
 
 namespace data_str    = data_structure;
 namespace fpolicy = policy;
@@ -29,6 +28,8 @@ using namespace utils;
 using namespace memory;
 
 
+//External test: f_handler.file_full_path
+//("/home/chatsiri/sda1/workspacemalware/malware_debug/pack_test_case_01");
 
 
 class ScanACTireParallel : public ::testing::Test
@@ -40,14 +41,20 @@ class ScanACTireParallel : public ::testing::Test
 
         virtual void SetUp() {
             //load binary file pe.
-            f_handler.file_full_path("/home/chatsiri/sda1/workspacemalware/malware_debug/pack_test_case_01");
-						std::vector<std::string> all_files = f_handler.get_full_path();
+            f_handler.file_full_path("/home/chatsiri/workspacecpp/pthread_sync_ocl/src/infected_file_test");
+            //Get all file on path .
+            std::vector<std::string> all_files = f_handler.get_full_path();
+            //OpenCL kernel file.
             opencl_file_path    = "/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl/cl/tire_parallel.cl";
+            //Signature file.
             file_sig            = "/home/chatsiri/Dropbox/reversing_engineer/write_sig/signature_trojan.hdb";
 
+            //Load mapped_file object to vector.
             for(int count_file = 0; count_file < all_files.size(); count_file++) {
-								file_type_vec.push_back(all_files[count_file].c_str());
-            		mapped_file_vec.push_back(new MAPPED_FILE_PE);
+                file_type_vec.push_back(all_files[count_file].c_str());
+                mapped_file_vec.push_back(new MAPPED_FILE_PE);
+                s_mapped_fpe =  mapped_file_vec[count_file];
+                s_mapped_fpe->msg_type = utils::internal_msg;
             }
 
             //support signature base scanning.
@@ -75,10 +82,9 @@ class ScanACTireParallel : public ::testing::Test
 
         //read file.
         std::vector<const char *> file_type_vec;
-        struct MAPPED_FILE_PE *s_mapped_fpe;
         std::vector<MAPPED_FILE_PE *> mapped_file_vec;
+        struct MAPPED_FILE_PE *s_mapped_fpe;
         const char *file_sig;
-        std::string file_name_offset[FILE_ON];
         std::string  opencl_file_path;
 
         //read file handler
@@ -110,15 +116,9 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     std::vector<std::string> keywords;
     const char *input;
 
-    //keywords =  boost::assign::list_of("4c01b821685421cd70207369");
-
-    //keywords =  boost::assign::list_of("09cd21b8014ccd215468"); //support c++ standard
 
     keywords =  {"09cd21b8014ccd215468"}; //support c++0x
 
-    //("8d2e1a0abb1a")("cc8de2b1");
-
-    //boost::assign::list_of("4bc647")("4b537db2e3a337")("4b53abf");
     input    = (char *)malloc(sizeof(char *) * std::string("a824bc647c46d04b537db2e3a33711").size());
     input    = "a824bc647c46d04b537db2e3a33711";
 
@@ -134,34 +134,9 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
     boost::shared_ptr<std::vector<char> >   symbol_shared_ptr  = acp.get_symbol_shared_ptr();
     boost::shared_ptr<std::vector<size_t> >  state_shared_ptr = acp.get_state_shared_ptr();
 
-    // Second, Send Symbol and State vector to  file_scan_policy
-    // list_file_tye insert file name, s_mapped_fpe inserted  file_type details.
-    utils::file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
-
-    EXPECT_TRUE(fileoffset_h.mapped_file(&file_type_vec, &mapped_file_vec, fileoffset_h));
-
-
-    boost::shared_ptr<std::vector<MAPPED_FILE_PE * > > mappedf_vec_ptr =
-            fileoffset_h.get_mappedf_vec_ptr();
-
-
-    std::vector<MAPPED_FILE_PE *> *mapf_vec_ptr = mappedf_vec_ptr.get();
-
-    typename std::vector<MAPPED_FILE_PE *>::iterator iter_mapf_vec;
-
-    MAPPED_FILE_PE *mf_pe;
-
-    for(iter_mapf_vec = mapf_vec_ptr->begin(); iter_mapf_vec != mapf_vec_ptr->end(); ++iter_mapf_vec) {
-        mf_pe = *iter_mapf_vec;
-        size_t data_size = mf_pe->size;
-        EXPECT_GT(data_size,0);
-    }
-
-
+		
     memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>
                 sig_shm_pe;
-
-
 
     //Initial engine.
     // Call  Signature Engine.
@@ -189,7 +164,9 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
 
     pef_policy->set_opencl_file_path(opencl_file_path);
 
-    pef_policy->set_mapped_file(mapf_vec_ptr); //mf_pe
+    pef_policy->set_mapped_file(&mapped_file_vec); //mapped_file_pe_vec
+
+		pef_policy->set_file_type(&file_type_vec);
 
     //signature initial to map (Plant-00004: SHM support )
     sig_shm_pe.initial_shm_sigtype(&meta_sig_vec, shm_name);
@@ -201,7 +178,7 @@ TEST_F(ScanACTireParallel, scan_file_policy_pe_type)
 
     sf_policy.scan_pe(pef_policy,&sig_shm_pe, &sig_engine, iactire_engine_scanner);
 
-    EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
+    //EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
 
 }
 

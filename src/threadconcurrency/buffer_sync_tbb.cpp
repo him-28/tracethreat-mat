@@ -81,8 +81,8 @@ namespace controller
 
 
     template<typename Buffer, typename MAPPED_FILE>
-    bool BufferSyncTBB<Buffer, MAPPED_FILE>::filemd5_regis_tbb(uint64_t fmd5_id, 
-				const char * file_name)
+    bool BufferSyncTBB<Buffer, MAPPED_FILE>::filemd5_regis_tbb(uint64_t fmd5_id,
+            const char *file_name)
     {
 
         // file_name_md5 is thread_id
@@ -96,8 +96,9 @@ namespace controller
         s_tbb_ptr =  pair_slot.second;
         s_tbb_ptr = new MAPPED_FILE;
         s_tbb_ptr->file_map_md5 = fmd5_id;
-				s_tbb_ptr->file_name    = file_name;
-				s_tbb_ptr->end_point    = 0;
+        s_tbb_ptr->file_name    = file_name;
+        s_tbb_ptr->end_point    = 0;
+
         if(!map_fmd5_id->insert(std::make_pair(fmd5_id, s_tbb_ptr)).second) {
             //TODO: thread_id(file_name_md5) has on map
             return true;
@@ -115,7 +116,7 @@ namespace controller
             uint64_t fmd5_id)
     {
         //check binary length
-			  logger->write_info("BufferSyncTBB::write_binary_hex_tbb, file size",
+        logger->write_info("BufferSyncTBB::write_binary_hex_tbb, file size",
                 boost::lexical_cast<std::string>(size_hex));
 
         std::map<uint64_t, MAPPED_FILE *>   *map_fmd5_id =
@@ -161,29 +162,29 @@ namespace controller
             s_tbb->start_point = temp_start;
 
             s_tbb->end_point   = s_tbb->start_point + size_hex;
-						std::cout<<"Start point " << temp_start <<", End point : " << s_tbb->end_point <<std::endl;
-						std::cout<<"Map map_fmd5_id size(fmd5_tbb_map) : " << map_fmd5_id->size() <<std::endl;
+            std::cout<<"Start point " << temp_start <<", End point : " << s_tbb->end_point <<std::endl;
+            std::cout<<"Map map_fmd5_id size(fmd5_tbb_map) : " << map_fmd5_id->size() <<std::endl;
             return true;
         }
 
         return false;
     }
 
-	
-		//Append parallel insert binary stream to concurren_vector
+
+    //Append parallel insert binary stream to concurren_vector
     struct AppendBuffer {
         typedef tbb::concurrent_vector<char> binary_hex_type;
         binary_hex_type& binary_hex_;
-				char * str_hex_;
-        AppendBuffer(binary_hex_type& _binary_hex, char * str_hex) : 
-							binary_hex_(_binary_hex),
-							str_hex_(str_hex) { }
+        char *str_hex_;
+        AppendBuffer(binary_hex_type& _binary_hex, char *str_hex) :
+            binary_hex_(_binary_hex),
+            str_hex_(str_hex) { }
         void operator()(const tbb::blocked_range<uint64_t>&   range) const {
 
             for(uint64_t count_strhex = range.begin();
                     count_strhex != range.end();
                     ++count_strhex) {
-								binary_hex_.push_back(str_hex_[count_strhex]);
+                binary_hex_.push_back(str_hex_[count_strhex]);
             }// for
         }// operator ()
 
@@ -200,19 +201,20 @@ namespace controller
         if(size_hex == 0)
             return false;
 
+
         //http://www.devx.com/cplus/Article/33334/0/page/2
         //memcpy(&binary_x.at(*binary_x.grow_by(size_hex)), char_hex , size_hex + 1);
         //memcpy(&buff->binary_hex[*buff->binary_hex.grow_by(size_hex)], char_hex, size_hex+1);
-				/*
-				tbb::parallel_for(tbb::blocked_range<uint64_t>(0, size_hex), append_buff());
-        buff->binary_hex.insert(buff->binary_hex.end(),
-        char_hex,
-        char_hex + size_hex); // insert char hex to vector elements.
-        */
 
-				//https://gist.github.com/Chatsiri/3756912b63b1f325c788
-				tbb::parallel_for(tbb::blocked_range<uint64_t>(0, size_hex), 
-					AppendBuffer(buff->binary_hex, const_cast<char*>(char_hex)));
+        //	tbb::parallel_for(tbb::blocked_range<uint64_t>(0, size_hex), append_buff());
+        buff->binary_hex.insert(buff->binary_hex.end(),
+                char_hex,
+                char_hex + size_hex); // insert char hex to vector elements.
+
+
+        //https://gist.github.com/Chatsiri/3756912b63b1f325c788
+        //tbb::parallel_for(tbb::blocked_range<uint64_t>(0, size_hex),
+        //	AppendBuffer(buff->binary_hex, const_cast<char*>(char_hex)));
 
         return true;
     }
@@ -223,9 +225,11 @@ namespace controller
     {
         size_summary = size_summary * 2 + 1;
 
-        buff->binary_hex = tbb::concurrent_vector<char>(size_summary);
+        //buff->binary_hex = tbb::concurrent_vector<char>(size_summary);
+        buff->binary_hex = std::vector<char>(size_summary);
 
-        if(buff->binary_hex.size() != size_summary) return false;
+        if(buff->binary_hex.size() != size_summary)
+            return false;
 
         return true;
     }

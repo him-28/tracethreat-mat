@@ -68,6 +68,7 @@ namespace utils
 				std::string s_file_sig = file_sig;
         MAPPED_FILE *mapped_file_ptr;
 
+				
         if(!file_name_vec.size() || !mapped_vec.size()) {
             logger->write_info("Not data on file_name or mapped file");
             return false;
@@ -212,11 +213,12 @@ namespace utils
         const char *file_name;
         std::string s_file_name;
         MAPPED_FILE *mapped_file_ptr;
-
+				
         if(!file_name_vec->size() || !mapped_vec->size()) {
             logger->write_info("Not data on file_name or mapped file");
             return false;
         }
+				
 
         for(iter_files = file_name_vec->begin();
                 iter_files != file_name_vec->end();

@@ -37,7 +37,8 @@ namespace controller
 
         fmd5_map_type  fmd5_tbb_map;
 
-        tbb::concurrent_vector<char> binary_hex;   // input hex of char type.
+        //tbb::concurrent_vector<char> binary_hex;   // input hex of char type.
+				std::vector<char> binary_hex;   // input hex of char type.
 
 				MAPPED_FILE  * mapped_file;
     };

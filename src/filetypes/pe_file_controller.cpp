@@ -17,26 +17,26 @@ namespace filetypes
     template<typename MAPPED_FILE>
     utils::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
             signature_shm_type  *sig_shm_pe,
-            sig_engine_type *sig_engine,
+            signature_engine_type *sig_engine,
             iactire_engine_scanner_type   *iactire_engine_scanner)
     {
         //PE_FILE_CONTROLLER call AC-DFS algorithms.
         logger->write_info("Start pe_file_controller<MAPPED_FILE>::scan actire-parallel tbb",
                 hnmav_util::format_type::type_header);
 
-				//[x] Summary file size for sending to File Shared-Memory System.
-        size_t summary_file_size = 0;
-        typename std::vector<MAPPED_FILE_PE *>::iterator iter_mapped_file;
+				typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
 
-        for(iter_mapped_file = mapped_file_pe->begin();
-                iter_mapped_file != mapped_file_pe->end();
-                ++iter_mapped_file) {
-            MAPPED_FILE_PE *mf_pe = *iter_mapped_file;
-            size_t size  = mf_pe->size;
-            summary_file_size += size;
-        }
+				size_t summary_file_size = 0;
 
-				//[x] Initial File Shared-Memory System.
+        //summary file size of all
+        for(iter_mapped_files = mapped_file_pe->begin();
+                iter_mapped_files != mapped_file_pe->end();
+                ++iter_mapped_files) {
+            MAPPED_FILE   *mf_pe = *iter_mapped_files;
+            summary_file_size += mf_pe->size;
+        }//end-for loop
+
+				f_shm_handler.set_shm_name(uuid_gen.generate());
         f_shm_handler.initial_shm(summary_file_size);
         f_shm_handler.initial_file_shm(mapped_file_pe);
 
@@ -46,13 +46,15 @@ namespace filetypes
 
         //Add Search PE Engine to thread controller.
         tbbpostscan_pe_col.add_search_engine(iactire_engine_scanner);
-				//Initial tasks per worker.
+
         tbbpostscan_pe_col.init_syntbb_workload(f_shm_handler.get_map_str_shm(),
                 sig_shm_pe,
                 f_shm_handler.get_map_file_size(),
                 mapped_file_pe);
-				//Start Search Engine.
+
         tbbpostscan_pe_col.task_start();
+
+				f_shm_handler.delete_file_shm();
 
         return utils::infected_found;
     }
