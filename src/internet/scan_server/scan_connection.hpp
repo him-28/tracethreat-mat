@@ -89,22 +89,7 @@ namespace internet
                 msgs_packed_request_scan(boost::shared_ptr<message_scan::RequestScan>(
                         new message_scan::RequestScan())),
 								scan_file_(scan_file) {
-
-                //[x] Initial data support map file detail container.
-                //[x] Initial data support map file name container.
-                LOG(INFO)<<"Scan connections initial type support";
-
-								//[x] Initial internal logger
-								//initial_internal_logger();
-							
-								//Second solution support multiple file scanning.
-                //auto pos = file_map.find(utils::pe_file);
-                //pos->second  = std::vector<MAPPED_FILE_PE *>();
-                //file_name_map.insert(std::make_pair<utils::filetype_code, std::vector<const char *> >
-                //        (utils::pe_file, std::vector<const char *>()));
-
-                LOG(INFO)<<"PE type supported";
-
+ 
             }
 
 						//Frist response to client.
@@ -118,6 +103,9 @@ namespace internet
 						//Scanning steps
            typename scan_connection::MsgsResponsePointer
             prepare_response_scan(MsgsRequestPointer  msg_request);
+
+						//Handle scan engine.
+				    bool handle_scan_process(MsgsRequestPointer request_ptr);
 
             //Response
             void write_response(MsgsRequestPointer  request_ptr, MsgsResponsePointer  response_ptr);
@@ -137,18 +125,8 @@ namespace internet
 
 						parser::sig_parser * sig_parse;
 
-		 	    	//std::vector<msig_ptr>  msig_ptr_vec; 
-
-						//std::vector<parser::meta_sigparse*>  * msig_parse_vec; 
-
-            //policy::scan_file_controller   *scan_file_col;
-						//policy::scan_pe_internet_controller<struct MAPPED_FILE_PE> * scan_file_pe;
-
-						//policy::scan_internet_controller<struct MAPPED_FILE_PE> * scan_file;
 					  scan_file_type * scan_file_;
-            //std::map<utils::filetype_code, boost::any> file_map;
-            //std::map<utils::filetype_code, std::vector<const char *> > file_name_map;
-
+ 
     };
 
 }

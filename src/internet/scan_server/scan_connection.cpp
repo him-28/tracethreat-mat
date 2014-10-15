@@ -1,7 +1,6 @@
 #include "utils/base/common.hpp"
 
 #include "internet/scan_server/scan_connection.hpp"
-//#include "gensign/clamavsig.hpp"
 
 namespace internet
 {
@@ -98,6 +97,105 @@ namespace internet
 
     }
 
+    bool	scan_connection::handle_scan_process(MsgsRequestPointer request_ptr)
+    {
+
+        LOG(INFO)<<"Server : Register internal message size : " <<
+                request_ptr->request_set_binary_value_size();
+
+        utils::filetype_code file_type;
+
+        struct MAPPED_FILE_PE *s_mapped_fpe;
+
+        const char *file_name;
+
+        std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
+        std::vector<const char *>       file_type_vec;
+
+
+        for(int count_msg = 0;
+                count_msg < request_ptr->request_set_binary_value_size();
+                count_msg++) {
+
+            const message_scan::RequestScan::RequestSetBinaryValue& msg_scan =
+                    request_ptr->request_set_binary_value(count_msg);
+
+
+            switch(msg_scan.file_type()) {
+
+
+            case message_scan::RequestScan::PE :
+
+
+                mapped_file_vec.push_back(new MAPPED_FILE_PE);
+
+                //get last elements after push back new object.
+                s_mapped_fpe = mapped_file_vec.back();
+                //set external signature
+                s_mapped_fpe->msg_type = utils::external_msg;
+                //set File name
+                s_mapped_fpe->file_name = msg_scan.file_name();
+                //set Data
+                s_mapped_fpe->data =  (uint8_t *)(msg_scan.binary().c_str());
+                //set size of data
+                s_mapped_fpe->size = msg_scan.binary().size();
+
+
+                //Pe type finds in file_name map. std::map allocated before find.
+                //We use reference to value and change its in s_mapped_fpe.
+                //fname_vec = &file_name_map.find(utils::pe_file)->second;
+
+                //File Name
+                //Initial first value.
+                file_type_vec.push_back(std::string("").c_str());
+                //Get reference of last file name initialed.
+                file_name = file_type_vec.back();
+                //Set file name
+                file_name = msg_scan.file_name().c_str();
+
+                LOG(INFO)<<"Server : Message PE scanning file name : "<<
+                        msg_scan.file_name();
+                LOG(INFO)<<"Binary data    : "<< msg_scan.binary();
+                LOG(INFO)<<"File  type     : "<< msg_scan.file_type();
+
+                break;
+
+            case message_scan::RequestScan::ELF :
+                LOG(INFO)<<"Server : Message ELF scanning file name : "<<
+                        msg_scan.file_name();
+                break;
+
+            case message_scan::RequestScan::PROCESS :
+                LOG(INFO)<<"Server : Message PROCESS scanning file name : "<<
+                        msg_scan.file_name();
+                break;
+
+            default:
+                LOG(INFO)<<"Server : Not type scanning support file name : "<<
+                        msg_scan.file_name();
+                break;
+
+            }//switch
+
+        }//for
+
+
+        //Scanning virus.
+        scan_file_->set_file(&mapped_file_vec, &file_type_vec);
+
+        // Find Engine for file type.
+        if(scan_file_->find_engine(utils::pe_file)) {
+            LOG(INFO)<<"Server : Find PE-Engine scanning after register success!";
+        }
+
+        // Scan file
+        if(scan_file_->scan_file()) {
+            LOG(INFO)<<"Server : Scan file success!";
+        }
+
+        return true;
+    }
+
     //_________________________  Read Message request from server________________
     //[x]Loop check file type : PE, ELF and PROCESS.
     //[-]Certificate verify client connect to server.
@@ -122,115 +220,42 @@ namespace internet
             LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
             LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
 
-            if(request_ptr->type() == message_scan::RequestScan::REGISTER) {
+            std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
+            std::vector<const char *>       file_type_vec;
+
+            switch(request_ptr->type()) {
+
+            case message_scan::RequestScan::REGISTER :
+
                 LOG(INFO)<<"------------------- REGISTER TYPE---------------";
+
                 write_response(request_ptr, prepare_response_register(request_ptr));
+
                 LOG(INFO)<<"----------------END REGISTER TYPE---------------";
-            }//if register
 
+                break;
 
-            //Register UUID and IP address
-            if(request_ptr->type() == message_scan::RequestScan::SCAN) {
+            case message_scan::RequestScan::SCAN :
 
                 LOG(INFO)<<"---------------------SCAN TYPE--------------------";
-
-                LOG(INFO)<<"Server : Register internal message size : " <<
-                        request_ptr->request_set_binary_value_size();
-
-                utils::filetype_code file_type;
-
-                struct MAPPED_FILE_PE *s_mapped_fpe;
-
-                const char *file_name;
-
-                std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
-                std::vector<const char *>       file_type_vec;
-
-                for(int count_msg = 0;
-                        count_msg < request_ptr->request_set_binary_value_size();
-                        count_msg++) {
-
-                    const message_scan::RequestScan::RequestSetBinaryValue& msg_scan =
-                            request_ptr->request_set_binary_value(count_msg);
-
-
-                    switch(msg_scan.file_type()) {
-
-
-                    case message_scan::RequestScan::PE :
-
-
-                        mapped_file_vec.push_back(new MAPPED_FILE_PE);
-
-                        //get last elements after push back new object.
-                        s_mapped_fpe = mapped_file_vec.back();
-                        //set external signature
-                        s_mapped_fpe->msg_type = utils::external_msg;
-                        //set File name
-                        s_mapped_fpe->file_name = msg_scan.file_name();
-                        //set Data
-                        s_mapped_fpe->data =  (uint8_t *)(msg_scan.binary().c_str());
-                        //set size of data
-                        s_mapped_fpe->size = msg_scan.binary().size();
-
-
-                        //Pe type finds in file_name map. std::map allocated before find.
-                        //We use reference to value and change its in s_mapped_fpe.
-                        //fname_vec = &file_name_map.find(utils::pe_file)->second;
-
-                        //File Name
-                        //Initial first value.
-                        file_type_vec.push_back(std::string("").c_str());
-                        //Get reference of last file name initialed.
-                        file_name = file_type_vec.back();
-                        //Set file name
-                        file_name = msg_scan.file_name().c_str();
-
-                        LOG(INFO)<<"Server : Message PE scanning file name : "<<
-                                msg_scan.file_name();
-                        LOG(INFO)<<"Binary data    : "<< msg_scan.binary();
-                        LOG(INFO)<<"File  type     : "<< msg_scan.file_type();
-
-                        break;
-
-                    case message_scan::RequestScan::ELF :
-                        LOG(INFO)<<"Server : Message ELF scanning file name : "<<
-                                msg_scan.file_name();
-                        break;
-
-                    case message_scan::RequestScan::PROCESS :
-                        LOG(INFO)<<"Server : Message PROCESS scanning file name : "<<
-                                msg_scan.file_name();
-                        break;
-
-                    default:
-                        LOG(INFO)<<"Server : Not type scanning support file name : "<<
-                                msg_scan.file_name();
-                        break;
-
-                    }//switch
-
-                }//for
-
-
-                //Scanning virus.
-                scan_file_->set_file(&mapped_file_vec, &file_type_vec);
-
-                // Find Engine for file type.
-                if(scan_file_->find_engine(utils::pe_file)) {
-                    LOG(INFO)<<"Server : Find PE-Engine scanning after register success!";
+               
+                if(!handle_scan_process(request_ptr)) {
+                    LOG(INFO)<<" Cannot scanning message from client.";
                 }
 
-                // Scan file
-                if(scan_file_->scan_file()) {
-                    LOG(INFO)<<"Server : Scan file success!";
-                }
-
-                LOG(INFO)<<"------------------END SCAN TYPE-------------------";
+							 LOG(INFO)<<"------------------END SCAN TYPE-------------------";
 
                 write_response(request_ptr, prepare_response_scan(request_ptr));
 
-            }// If scanning type
+                break;
+
+            case message_scan::RequestScan::CLOSE_CONNECTION :
+
+                break;
+
+            default :
+                break;
+            }
 
         } else {
             LOG(INFO)<<" Server : Cannot unpack message from client ";

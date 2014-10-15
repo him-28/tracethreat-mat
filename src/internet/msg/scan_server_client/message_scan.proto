@@ -46,16 +46,17 @@ message RequestScan{
 			SCAN_SUCCESS = 5;
 			SCAN_UNSUCCESS = 6;
 			RESULT = 7;
+			CLOSE_CONNECTION = 8;
 		}
 
-		required RequestType  type     = 1;
-		required bytes  	   uuid 		 = 2; // Machine UUID send from client.
-		required bytes      timestamp = 3;
+		required RequestType  type     	= 1;
+		required bytes  	   uuid 		 	= 2; // Machine UUID send from client.
+		required bytes      timestamp 	= 3;
 		//required bytes type = 3; // Request types between server and client.
 		message RequestGetBinaryValue{
-			optional bytes binary     = 1;   // Binary file.
-			optional bytes file_name  = 2;   // File name.
-			optional uint64 file_size  = 3;
+			optional bytes binary     	= 1;   // Binary file.
+			optional bytes file_name  	= 2;   // File name.
+			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
 
@@ -64,8 +65,8 @@ message RequestScan{
 		repeated RequestGetBinaryValue request_get_binary_value = 4;
 
 		message RequestSetBinaryValue{
-			optional bytes binary      = 1;   // Binary file.
-			optional bytes file_name   = 2;   // File name.
+			optional bytes binary      	= 1;   // Binary file.
+			optional bytes file_name   	= 2;   // File name.
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
@@ -103,17 +104,18 @@ message ResponseScan{
 			SCAN_SUCCESS = 5;
 			SCAN_UNSUCCESS = 6;
 			RESULT = 7;
+			CLOSE_CONNECTION = 8;
 		}
 
-		required ResponseType  type     = 1;
-		required bytes  	   uuid 		 = 2; // Machine UUID send from client.
-		required bytes      timestamp = 3;
+		required ResponseType  type      = 1;
+		required bytes  	   	 uuid 		 = 2; // Machine UUID send from client.
+		required bytes         timestamp = 3;
 
 
 		message ResponseGetBinaryValue{
-			optional bytes binary     = 1;   // Binary file.
-			optional bytes file_name  = 2;   // File name.
-			optional uint64 file_size  = 3;
+			optional bytes binary     	= 1;   // Binary file.
+			optional bytes file_name  	= 2;   // File name.
+			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
 		}
@@ -122,8 +124,8 @@ message ResponseScan{
 
 		message ResponseSetBinaryValue{
 
-			optional bytes binary      = 1;   // Binary file.
-			optional bytes file_name   = 2;   // File name.
+			optional bytes binary      	= 1;   // Binary file.
+			optional bytes file_name   	= 2;   // File name.
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.

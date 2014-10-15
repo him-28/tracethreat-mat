@@ -46,15 +46,15 @@ namespace internet
 
                 scan_connection::pointer  new_connection =
                         internet::scan_connection::create(io_service_, scan_file);
-
+								
                 acceptor.async_accept(new_connection->get_socket(),
                         boost::bind(&scan_server::impl::handle_accept,
                                 this,
                                 new_connection,
                                 asio::placeholders::error));
 
-                LOG(INFO)<<" Start accept client connect to server";
-
+                LOG(INFO)<<"Server : Start accept client connect to server";
+								LOG(INFO)<<"Server : thread id : " <<boost::this_thread::get_id();
             }
 
 
@@ -62,7 +62,7 @@ namespace internet
                     const boost::system::error_code& error) {
                 if(!error) {
 
-                    LOG(INFO)<<" Connection start...";
+                    LOG(INFO)<<" Server : Connection start...";
 
                     //Call to scan_connection::start() member function of scan_connection.
                     connection->start();
@@ -75,17 +75,18 @@ namespace internet
             //Deploy scanning system and load object before call scan_file member function.
             bool deploy_scan_engine() {
 
-                LOG(INFO)<<"Start deploy scan engine.";
+                LOG(INFO)<<"Server : Start deploy scan engine.";
 
-                LOG(INFO)<<"Signature Database path : " << file_sig_path;
-
+   
                 sig_parse = new parser::hdb_sig();
 
                 msig_parse_vec = new std::vector<parser::meta_sigparse *>();
 
                 sig_parse->parse_file_sig(file_sig_path.c_str(), msig_parse_vec);
 
-                LOG(INFO)<<"Sig size : "<<msig_parse_vec->size();
+                LOG(INFO)<<"Server : Signature Database path : " << file_sig_path;
+
+                LOG(INFO)<<"Server : Signature size : "<<msig_parse_vec->size();
 
                 if(msig_parse_vec->empty()) {
                     LOG(INFO)<<"Server : Signature DB deploy system is not signature.";
@@ -93,7 +94,8 @@ namespace internet
                 }
 
                 //Load PE Scanning engine.
-                LOG(INFO)<<"PE Scanning Engine start.";
+                LOG(INFO)<<"Server : PE Scanning Engine start.";
+
                 scan_file = new policy::scan_pe_internet_controller<struct MAPPED_FILE_PE>();
 
                 std::vector<utils::meta_sig *> msig_vec;
@@ -108,8 +110,8 @@ namespace internet
 
                     parser::meta_sigparse   *msig_parse = *iter_msig_parse;
 
-                    LOG(INFO)<<" Sig : " << msig_parse->md5;
-                    LOG(INFO)<<" Virname : " << msig_parse->virname;
+                    LOG(INFO)<<" Server : Signature : " << msig_parse->md5;
+                    LOG(INFO)<<" Server : Virname   : " << msig_parse->virname;
 
                     LOG(INFO)<<"[Test] PE File test only, Please change type when to production!";
 
@@ -138,7 +140,7 @@ namespace internet
                     return false;
                 }
 
-                LOG(INFO)<<"Deploy system success!";
+                LOG(INFO)<<"Server : Deploy system success!";
                 return true;
             }
 
@@ -152,16 +154,12 @@ namespace internet
             boost::thread_group scan_connection_thread;
             boost::scoped_ptr<asio::io_service::work> scan_monitor_connection;
 
-						//Scanning system.
-						//std::string file_sig_path_;
-
 						parser::sig_parser * sig_parse;
 
 		 	    	std::vector<msig_ptr>  msig_ptr_vec; 
 
 						std::vector<parser::meta_sigparse*>  * msig_parse_vec; 
 
-						//policy::scan_pe_internet_controller<struct MAPPED_FILE_PE> * scan_file_pe;
         		policy::scan_internet_controller<struct MAPPED_FILE_PE> * scan_file;
 
 

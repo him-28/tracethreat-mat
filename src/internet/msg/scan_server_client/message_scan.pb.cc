@@ -224,7 +224,7 @@ void protobuf_AddDesc_message_5fscan_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\022message_scan.proto\022\014message_scan\"\224\007\n\013R"
+    "\n\022message_scan.proto\022\014message_scan\"\252\007\n\013R"
     "equestScan\0223\n\004type\030\001 \002(\0162%.message_scan."
     "RequestScan.RequestType\022\014\n\004uuid\030\002 \002(\014\022\021\n"
     "\ttimestamp\030\003 \002(\014\022Q\n\030request_get_binary_v"
@@ -244,34 +244,35 @@ void protobuf_AddDesc_message_5fscan_2eproto() {
     "leType\"W\n\nEncodeType\022\007\n\003MD5\020\001\022\016\n\nMD5_HEA"
     "DER\020\002\022\014\n\010MD5_BODY\020\003\022\t\n\005SHA_1\020\004\022\013\n\007SHA_25"
     "6\020\005\022\n\n\006SSDEEP\020\006\"(\n\010FileType\022\006\n\002PE\020\001\022\007\n\003E"
-    "LF\020\002\022\013\n\007PROCESS\020\003\"\205\001\n\013RequestType\022\014\n\010REG"
+    "LF\020\002\022\013\n\007PROCESS\020\003\"\233\001\n\013RequestType\022\014\n\010REG"
     "ISTER\020\001\022\024\n\020REGISTER_SUCCESS\020\002\022\026\n\022REGISTE"
     "R_UNSUCCESS\020\003\022\010\n\004SCAN\020\004\022\020\n\014SCAN_SUCCESS\020"
-    "\005\022\022\n\016SCAN_UNSUCCESS\020\006\022\n\n\006RESULT\020\007\"\243\007\n\014Re"
-    "sponseScan\0225\n\004type\030\001 \002(\0162\'.message_scan."
-    "ResponseScan.ResponseType\022\014\n\004uuid\030\002 \002(\014\022"
-    "\021\n\ttimestamp\030\003 \002(\014\022T\n\031response_get_binar"
-    "y_value\030\004 \003(\01321.message_scan.ResponseSca"
-    "n.ResponseGetBinaryValue\022S\n\030reponse_set_"
-    "binary_value\030\005 \003(\01321.message_scan.Respon"
-    "seScan.ResponseSetBinaryValue\032\300\001\n\026Respon"
-    "seGetBinaryValue\022\016\n\006binary\030\001 \001(\014\022\021\n\tfile"
-    "_name\030\002 \001(\014\022\021\n\tfile_size\030\003 \001(\004\0228\n\tscan_t"
-    "ype\030\004 \001(\0162%.message_scan.ResponseScan.En"
-    "codeType\0226\n\tfile_type\030\005 \001(\0162#.message_sc"
-    "an.ResponseScan.FileType\032\300\001\n\026ResponseSet"
-    "BinaryValue\022\016\n\006binary\030\001 \001(\014\022\021\n\tfile_name"
-    "\030\002 \001(\014\022\021\n\tfile_size\030\003 \001(\004\0228\n\tscan_type\030\004"
-    " \001(\0162%.message_scan.ResponseScan.EncodeT"
-    "ype\0226\n\tfile_type\030\005 \001(\0162#.message_scan.Re"
-    "sponseScan.FileType\"W\n\nEncodeType\022\007\n\003MD5"
-    "\020\001\022\016\n\nMD5_HEADER\020\002\022\014\n\010MD5_BODY\020\003\022\t\n\005SHA_"
-    "1\020\004\022\013\n\007SHA_256\020\005\022\n\n\006SSDEEP\020\006\"(\n\010FileType"
-    "\022\006\n\002PE\020\001\022\007\n\003ELF\020\002\022\013\n\007PROCESS\020\003\"\206\001\n\014Respo"
-    "nseType\022\014\n\010REGISTER\020\001\022\024\n\020REGISTER_SUCCES"
-    "S\020\002\022\026\n\022REGISTER_UNSUCCESS\020\003\022\010\n\004SCAN\020\004\022\020\n"
-    "\014SCAN_SUCCESS\020\005\022\022\n\016SCAN_UNSUCCESS\020\006\022\n\n\006R"
-    "ESULT\020\007", 1887);
+    "\005\022\022\n\016SCAN_UNSUCCESS\020\006\022\n\n\006RESULT\020\007\022\024\n\020CLO"
+    "SE_CONNECTION\020\010\"\271\007\n\014ResponseScan\0225\n\004type"
+    "\030\001 \002(\0162\'.message_scan.ResponseScan.Respo"
+    "nseType\022\014\n\004uuid\030\002 \002(\014\022\021\n\ttimestamp\030\003 \002(\014"
+    "\022T\n\031response_get_binary_value\030\004 \003(\01321.me"
+    "ssage_scan.ResponseScan.ResponseGetBinar"
+    "yValue\022S\n\030reponse_set_binary_value\030\005 \003(\013"
+    "21.message_scan.ResponseScan.ResponseSet"
+    "BinaryValue\032\300\001\n\026ResponseGetBinaryValue\022\016"
+    "\n\006binary\030\001 \001(\014\022\021\n\tfile_name\030\002 \001(\014\022\021\n\tfil"
+    "e_size\030\003 \001(\004\0228\n\tscan_type\030\004 \001(\0162%.messag"
+    "e_scan.ResponseScan.EncodeType\0226\n\tfile_t"
+    "ype\030\005 \001(\0162#.message_scan.ResponseScan.Fi"
+    "leType\032\300\001\n\026ResponseSetBinaryValue\022\016\n\006bin"
+    "ary\030\001 \001(\014\022\021\n\tfile_name\030\002 \001(\014\022\021\n\tfile_siz"
+    "e\030\003 \001(\004\0228\n\tscan_type\030\004 \001(\0162%.message_sca"
+    "n.ResponseScan.EncodeType\0226\n\tfile_type\030\005"
+    " \001(\0162#.message_scan.ResponseScan.FileTyp"
+    "e\"W\n\nEncodeType\022\007\n\003MD5\020\001\022\016\n\nMD5_HEADER\020\002"
+    "\022\014\n\010MD5_BODY\020\003\022\t\n\005SHA_1\020\004\022\013\n\007SHA_256\020\005\022\n"
+    "\n\006SSDEEP\020\006\"(\n\010FileType\022\006\n\002PE\020\001\022\007\n\003ELF\020\002\022"
+    "\013\n\007PROCESS\020\003\"\234\001\n\014ResponseType\022\014\n\010REGISTE"
+    "R\020\001\022\024\n\020REGISTER_SUCCESS\020\002\022\026\n\022REGISTER_UN"
+    "SUCCESS\020\003\022\010\n\004SCAN\020\004\022\020\n\014SCAN_SUCCESS\020\005\022\022\n"
+    "\016SCAN_UNSUCCESS\020\006\022\n\n\006RESULT\020\007\022\024\n\020CLOSE_C"
+    "ONNECTION\020\010", 1931);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "message_scan.proto", &protobuf_RegisterTypes);
   RequestScan::default_instance_ = new RequestScan();
@@ -363,6 +364,7 @@ bool RequestScan_RequestType_IsValid(int value) {
     case 5:
     case 6:
     case 7:
+    case 8:
       return true;
     default:
       return false;
@@ -377,6 +379,7 @@ const RequestScan_RequestType RequestScan::SCAN;
 const RequestScan_RequestType RequestScan::SCAN_SUCCESS;
 const RequestScan_RequestType RequestScan::SCAN_UNSUCCESS;
 const RequestScan_RequestType RequestScan::RESULT;
+const RequestScan_RequestType RequestScan::CLOSE_CONNECTION;
 const RequestScan_RequestType RequestScan::RequestType_MIN;
 const RequestScan_RequestType RequestScan::RequestType_MAX;
 const int RequestScan::RequestType_ARRAYSIZE;
@@ -1629,6 +1632,7 @@ bool ResponseScan_ResponseType_IsValid(int value) {
     case 5:
     case 6:
     case 7:
+    case 8:
       return true;
     default:
       return false;
@@ -1643,6 +1647,7 @@ const ResponseScan_ResponseType ResponseScan::SCAN;
 const ResponseScan_ResponseType ResponseScan::SCAN_SUCCESS;
 const ResponseScan_ResponseType ResponseScan::SCAN_UNSUCCESS;
 const ResponseScan_ResponseType ResponseScan::RESULT;
+const ResponseScan_ResponseType ResponseScan::CLOSE_CONNECTION;
 const ResponseScan_ResponseType ResponseScan::ResponseType_MIN;
 const ResponseScan_ResponseType ResponseScan::ResponseType_MAX;
 const int ResponseScan::ResponseType_ARRAYSIZE;

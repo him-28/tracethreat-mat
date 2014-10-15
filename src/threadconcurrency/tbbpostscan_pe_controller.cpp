@@ -69,12 +69,12 @@ namespace controller
             }//if	
 
 						
-						//Check bug parallel insert
+						/*//Check bug parallel insert
 						for(int count_str = 0; count_str < buff_sync_internal->buff->binary_hex.size(); count_str++)
 						{
 							std::cout<<"Test input : "<< buff_sync_internal->buff->binary_hex[count_str]<<std::endl;				
 						}
-						
+						*/
 
         }//for
 
