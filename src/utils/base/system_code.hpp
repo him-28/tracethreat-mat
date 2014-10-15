@@ -43,6 +43,10 @@
 #define MULTIPLE_TBB_MODE         		151 /* Thread Building Block(TBB) Mode */
 #define MULTIPLE_OCL_TBB_MODE     		152 /* OCL and TBB mix mode. Load balance concept. */
 
+//Internal and External Message type.
+#define INTERNAL_MSG                  160
+#define EXTERNAL_MSG                  161
+
 //______________________ Number not depend on consequenctial number _________________________
 //File size
 #define FILESIZE_MD5     							32  /* MD5 size */ 
@@ -78,6 +82,12 @@ namespace utils
         filesize_sha1   = FILESIZE_SHA1,
         fileIsze_sha256 =  FILESIZE_SHA256
     } sigtype_size;
+
+
+		typedef enum MSG_TYPE{
+			 internal_msg = INTERNAL_MSG,
+			 external_msg = EXTERNAL_MSG
+		}msg_type;
 
     typedef enum SCANNING_MODE{
         multiple_ocl_mode = MULTIPLE_OCL_MODE,

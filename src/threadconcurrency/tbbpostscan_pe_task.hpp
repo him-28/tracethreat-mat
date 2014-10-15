@@ -32,8 +32,10 @@ namespace controller
 						
             tbbpostscan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout);
             //Binary hex.
-            bool set_file(tbb::concurrent_vector<char> *_binary_hex_input);
-					
+           // bool set_file(tbb::concurrent_vector<char> *_binary_hex_input);
+	
+            bool set_file(std::vector<char> *_binary_hex_input);
+				
 						bool set_file_name(const char * _file_name);
             //Signature support pe type.
             bool set_signature(std::vector<struct utils::meta_sig*> *_msig);
@@ -65,7 +67,9 @@ namespace controller
             uint64_t       			start_point;
             uint64_t     	 			end_point;
             const char 					*file_name;
-            tbb::concurrent_vector<char> *binary_hex_input_;
+            //tbb::concurrent_vector<char> *binary_hex_input_;
+				    std::vector<char> *binary_hex_input_;
+
 
 
             size_t& _count;

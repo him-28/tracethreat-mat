@@ -1,0 +1,13 @@
+#ifndef INTERNET_SERVICE_SUBSCRIBE_SERVER_HPP
+#define INTERNET_SERVICE_SUBSCRIBE_SERVER_HPP
+
+
+class subscribe_server{
+
+
+
+
+};
+
+
+#endif /* INTERNET_SERVICE_SUBSCRIBE_SERVER_HPP */

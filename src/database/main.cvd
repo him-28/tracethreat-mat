@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Date: Sat, 26 Jul 2014 07:54:52 GMT
+Server: Apache/2.2.14
+Last-Modified: Tue, 17 Sep 2013 20:47:10 GMT
+ETag: "146038c4f-3db8ef8-4e69a6cb50f80"
+Accept-Ranges: bytes
+Content-Length: 64720632
+Cache-Control: max-age=0
+Expires: Sat, 26 Jul 2014 07:54:52 GMT
+Content-Type: text/plain
+Connection: close
+
+ClamAV-VDB:17 Sep 2013 10-57 -0400:55:2424225:60:6c03be24ae2171478e0de317e3661e36:U44YuTP7vNpU3sZVfI54S78bkaJluqmkJCFX8skaNcNUPoTLnTxXtSuOwWufwn+M+21kGR0CO7hvU3K+44YuOA92rMNNNmKOJOnli+lGv972THU2dkCL+491C6Y4Q+169wIW+Zp/TyH93yt75qGv8vanBM1QdyXk8fnDvsOlC4:neo:1379429848                                                                                                                                                                                                                                                     ‹

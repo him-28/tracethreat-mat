@@ -21,8 +21,8 @@
 
 #include "utils/logger/clutil_logger.hpp"
 
-#include "utils/base/system_code.hpp"
-
+#include "utils/base/common.hpp"
+#include "utils/uuid_generator.hpp"
 
 #include "memory/file_shm_handler.hpp"
 
@@ -70,12 +70,13 @@ namespace filetypes
 namespace filetypes
 {
 
-
+		
     namespace h_util = hnmav_util;
     namespace dstr   = data_structure;
     namespace kernel_ocl = hnmav_kernel;
-
+		
     using memory::signature_shm;
+		using utils::uuid_generator;
 
     template<typename MAPPED_FILE = struct MAPPED_FILE_PE>
     class pe_file_controller
@@ -95,7 +96,7 @@ namespace filetypes
             typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
             				signature_shm_type;
 
-            typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine_type;
+            typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  signature_engine_type;
 
 						/*
             typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            				 signature_shm_type;
@@ -145,7 +146,7 @@ namespace filetypes
             utils::scan_file_code scan(
 										std::vector<MAPPED_FILE *> *mapped_file_pe,
                     signature_shm_type  *sig_shm,
-                    sig_engine_type *sig_engine,
+                    signature_engine_type *sig_engine,
                     iactire_engine_scanner_type   *iactire_engine_scanner);
 
 
@@ -185,6 +186,8 @@ namespace filetypes
 
             //set file_shm
             memory::file_shm_handler<MAPPED_FILE>  f_shm_handler;
+
+						utils::uuid_generator uuid_gen;
 
             //Load TBB
             controller::tbbpostscan_pe_controller<controller::

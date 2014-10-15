@@ -2,7 +2,7 @@
 #define UTILS_UUID_GENERATOR_HPP
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 Chatsiri Rattana.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@
 #include <boost/uuid/uuid_io.hpp>  
 #include <map>
 
+namespace utils{
+
 class uuid_generator{
 
 public:
@@ -39,8 +41,12 @@ public:
 
 		  bool search_thread_depend(uint64_t tid);	
 private:
-	  std::map<uint64_t, std::string>  uuid_thread_map;
+	  std::map<uint64_t, std::string>  uuid_map;
 		uint64_t tid_;
 };
+
+
+}
+
 
 #endif /* UTILS_UUID_GEN_HPP */

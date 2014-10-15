@@ -19,7 +19,7 @@
 //#include "test/utils_base_timer_queue.hpp"
 
 //Stable test ac_tire and ocl class
-//#include "test/scan_pe_file_acp_test.hpp"
+#include "test/scan_pe_file_acp_test.hpp"
 
 
 //#2 -stable
@@ -39,7 +39,8 @@
 // AC Engine TBB
 //#include "test/tbbpostscan_pe_task_test.hpp"
 //#include "test/tbbpostscan_pe_controller_test.hpp"
-#include "test/bloomfilter_concurrency_test.hpp"
+//#include "test/bloomfilter_concurrency_test.hpp"
+
 
 /*
 #include "test/clutil_platform_test.hpp"
@@ -64,7 +65,7 @@
 
 //#include "test/wrapper_rules_tests.hpp"
 
-#include "test/md5_hash_test.hpp"
+//#include "test/md5_hash_test.hpp"
 
 GTEST_API_ int main(int argc, char **argv)
 {
