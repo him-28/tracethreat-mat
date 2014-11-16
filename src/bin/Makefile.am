@@ -1,4 +1,5 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src -I/usr/include -std=c++0x @AM_CXXFLAGS@
+AM_CXXFLAGS = -I$(top_srcdir)/src -I/usr/include -std=c++11 @AM_CXXFLAGS@
+#AM_LDFLAGS = -L/usr/lib/x86_64-linux-gnu/ -ldl @AM_LDFLAGS@
 
 bin_PROGRAMS = tsyncocl
 

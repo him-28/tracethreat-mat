@@ -19,7 +19,7 @@
 //#include "test/utils_base_timer_queue.hpp"
 
 //Stable test ac_tire and ocl class
-#include "test/scan_pe_file_acp_test.hpp"
+//#include "test/scan_pe_file_acp_test.hpp"
 
 
 //#2 -stable
@@ -62,6 +62,8 @@
 
 */
 
+//Test folly queue memory
+#include "test/queue_shm_controller_test.hpp"
 
 //#include "test/wrapper_rules_tests.hpp"
 

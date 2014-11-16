@@ -1,5 +1,5 @@
 # debug, optimized
-AM_CXXFLAGS   = -I$(top_srcdir)/src -I/home/chatsiri/sda1/workspacecpp/clamav-devel-hnmav -std=c++0x  @AM_CXXFLAGS@
+AM_CXXFLAGS   = -I$(top_srcdir)/src -I/home/chatsiri/sda1/workspacecpp/clamav-devel-hnmav -std=c++11  @AM_CXXFLAGS@
 
 # Make src file 
 # libarries for control threads
@@ -13,6 +13,9 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/utils/file_calculate.hpp \
  $(top_builddir)/src/utils/base/timer_queue.hpp \
  $(top_builddir)/src/utils/connector/result_infected.hpp \
+ $(top_builddir)/src/utils/connector/iconnector.hpp \
+ $(top_builddir)/src/utils/connector/mongo_connector.hpp \
+ $(top_builddir)/src/utils/connector/threat_info_db.hpp \
  $(top_builddir)/src/utils/hash.hpp \
  $(top_builddir)/src/exception/datastructure_exception.hpp \
  $(top_builddir)/src/exception/failure_handler_code.hpp \
@@ -26,6 +29,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/memory/file_shm_handler.hpp \
  $(top_builddir)/src/memory/signature_shm_base.hpp \
  $(top_builddir)/src/memory/signature_shm_controller.hpp \
+ $(top_builddir)/src/memory/queue_shm_controller.hpp \
  $(top_builddir)/src/threadconcurrency/thread_manager.hpp \
  $(top_builddir)/src/threadconcurrency/platformthread_factory.hpp \
  $(top_builddir)/src/threadconcurrency/monitor_controller.hpp \
@@ -59,21 +63,14 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
 
 
 
-
-
-
-
-
-
-
-
-
-
 # library
 libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp thread_controller.cpp buffer_sync.cpp semaphore_controller.cpp thread_barrier_controller.cpp \
 	$(top_builddir)/src/utils/file_calculate.cpp  \
   $(top_builddir)/src/utils/base/timer_queue.cpp \
   $(top_builddir)/src/utils/connector/result_infected.cpp \
+	$(top_builddir)/src/utils/connector/result_infected.cpp \
+	$(top_builddir)/src/utils/connector/mongo_connector.cpp \
+	$(top_builddir)/src/utils/connector/threat_info_db.cpp \
   $(top_builddir)/src/utils/hash.cpp \
  	$(top_builddir)/src/exception/failure_handler_code.cpp \
   $(top_builddir)/src/exception/datastructure_exception.cpp \
@@ -86,6 +83,7 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/ocl/utils/clutil_commandqueue.cpp \
   $(top_builddir)/src/memory/file_shm_handler.cpp \
   $(top_builddir)/src/memory/signature_shm_controller.cpp \
+  $(top_builddir)/src/memory/queue_shm_controller.cpp \
   $(top_builddir)/src/threadconcurrency/thread_manager.cpp \
   $(top_builddir)/src/threadconcurrency/monitor_controller.cpp \
   $(top_builddir)/src/threadconcurrency/posixthread_factory.cpp \

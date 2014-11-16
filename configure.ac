@@ -29,7 +29,7 @@ AC_CHECK_HEADERS([iostream])
 #m4_pattern_allow([AC_PROG_LIBTOOL])
 #AC_PROG_LIBTOOL
 
-LIBS="-lgtest -lboost_thread -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem -lboost_timer -lOpenCL -lrt -lclamav -lprotobuf $LIBS"
+LIBS="-lgtest -lglog -lboost_thread -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem -lboost_timer -lOpenCL -lrt -lclamav -lprotobuf -ldl -lfolly -lmongoclient $LIBS"
 
 AC_TYPE_SIZE_T
 ##################################
@@ -43,14 +43,16 @@ AC_SUBST([LIBS])
 
 AC_SUBST([AM_CFLAGS])
 
+
 #check library function
 AC_CONFIG_HEADERS([config.h])
+
+#AC_CONFIG_FILES([src/wrapper/Makefile])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/threadsyncocl/Makefile])
 AC_CONFIG_FILES([src/data_structure/Makefile])
 AC_CONFIG_FILES([src/ocl/Makefile])
-AC_CONFIG_FILES([src/wrapper/Makefile])
 AC_CONFIG_FILES([src/utils/Makefile])
 AC_CONFIG_FILES([src/exception/Makefile])
 AC_CONFIG_FILES([src/filetypes/Makefile])

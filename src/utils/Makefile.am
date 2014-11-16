@@ -1,5 +1,7 @@
 # debug, optimized
-AM_CXXFLAGS   = -I$(top_srcdir)/src -std=c++0x @AM_CXXFLAGS@
+AM_CXXFLAGS   = -I$(top_srcdir)/src -std=c++11 @AM_CXXFLAGS@
+
+#AM_LDFLAGS = -L/usr/lib/x86_64-linux-gnu/ -ldl @AM_LDFLAGS@
 
 # Make src file 
 # libarries for control threads
@@ -16,7 +18,11 @@ logger/format_logger.hpp \
 logger/clutil_logger.hpp \
 base/system_code.hpp \
 base/timer_queue.hpp \
+../msg/message_tracethreat.pb.h \
 connector/result_infected.hpp \
+connector/iconnector.hpp \
+connector/mongo_connector.hpp \
+connector/threat_info_db.hpp \
 file_offset_handler.hpp \
 convert.hpp \
 md5_hash.hpp \
@@ -31,8 +37,9 @@ logger/format_logger.cpp \
 logger/clutil_logger.cpp \
 base/timer_queue.cpp \
 connector/result_infected.cpp \
+connector/mongo_connector.cpp \
+connector/threat_info_db.cpp \
 file_offset_handler.cpp \
 md5_hash.cpp \
 uuid_generator.cpp \
 hash.cpp
-
