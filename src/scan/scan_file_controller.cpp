@@ -87,10 +87,11 @@ namespace policy
 
     //Initial file received from client
     template<typename MAPPED_FILE>
-    typename scan_pe_internet_controller<MAPPED_FILE>::threatinfo_ptr_type 
+    typename scan_pe_internet_controller<MAPPED_FILE>::threatinfo_ptr_type * 
 		scan_pe_internet_controller<MAPPED_FILE>::scan_file()
     {
-				threatinfo_ptr_type  threatinfo_ptr(new message_tracethreat::InfectedFileInfo);
+				threatinfo_ptr_type * threatinfo_ptr = new message_tracethreat::InfectedFileInfo();
+
         if(pef_policy == NULL) {
             logger->write_info("PE-File Policy is NULL, Scan_pe_internet cannot scan virus");
             return threatinfo_ptr;

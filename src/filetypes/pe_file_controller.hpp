@@ -106,7 +106,7 @@ namespace filetypes
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             				iactire_engine_scanner_type;
 
-						typedef boost::shared_ptr<message_tracethreat::InfectedFileInfo>  threatinfo_ptr_type;
+						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
 
             pe_file_controller();
 
@@ -146,7 +146,7 @@ namespace filetypes
             inline int32_t convert_ec32(uint16_t *buffer);
 
 						//utils::scan_file_code 
-            threatinfo_ptr_type scan(
+            threatinfo_ptr_type * scan(
 										std::vector<MAPPED_FILE *> *mapped_file_pe,
                     signature_shm_type  *sig_shm,
                     signature_engine_type *sig_engine,

@@ -189,9 +189,10 @@ namespace internet
         }
 
         // Scan file
-        if(scan_file_->scan_file()) {
-            LOG(INFO)<<"Server : Scan file success!";
-        }
+        threatinfo_ptr_type * threatinfo_ptr = scan_file_->scan_file();
+				
+        LOG(INFO)<<"Server : Scan file success!, File name from module : "<<threatinfo_ptr->file_name();
+        
 
         return true;
     }

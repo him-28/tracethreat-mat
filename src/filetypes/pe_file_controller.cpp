@@ -25,7 +25,7 @@ namespace filetypes
     * @return Message of Infected File detail in msg/ directory
     */
     template<typename MAPPED_FILE>
-    typename pe_file_controller<MAPPED_FILE>::threatinfo_ptr_type
+    typename pe_file_controller<MAPPED_FILE>::threatinfo_ptr_type *
     pe_file_controller<MAPPED_FILE>::scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
             signature_shm_type  *sig_shm,
             signature_engine_type *sig_engine,
@@ -65,11 +65,13 @@ namespace filetypes
 
         tbbpostscan_pe_col.task_start();
 
-        threatinfo_ptr_type threat_info_ptr = tbbpostscan_pe_col.get_threatinfo();
+        threatinfo_ptr_type * threat_info_ptr = tbbpostscan_pe_col.get_threatinfo();
+
+				logger->write_info("!Result file name ", threat_info_ptr->file_name());
 
         f_shm_handler.delete_file_shm();
 
-        return threat_info_ptr;//utils::infected_found;
+        return threat_info_ptr;
     }
 
     /**

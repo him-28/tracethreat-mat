@@ -9,6 +9,7 @@ namespace controller
         _monitor(monitor),
         _count(count),
         _timeout(timeout),
+				threatinfo_ptr(new tbbpostscan_pe_task::threatinfo_ptr_type),		
         _done(false)
     {
 
@@ -74,7 +75,7 @@ namespace controller
 
     }
 
-		tbbpostscan_pe_task::threatinfo_ptr_type  
+		tbbpostscan_pe_task::threatinfo_ptr_type * 
 		tbbpostscan_pe_task::
 		get_threatinfo(){
 				return threatinfo_ptr;

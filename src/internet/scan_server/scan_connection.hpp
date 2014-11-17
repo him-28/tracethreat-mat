@@ -62,6 +62,7 @@ namespace internet
 
 						typedef policy::scan_internet_controller<struct MAPPED_FILE_PE>  scan_file_type;
 
+						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
 
             static pointer create(asio::io_service& io_service, scan_file_type * scan_file) {
 							  

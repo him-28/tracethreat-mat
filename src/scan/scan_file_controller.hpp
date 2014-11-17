@@ -52,7 +52,7 @@ namespace policy
     {
 
         public:
-						typedef boost::shared_ptr<message_tracethreat::InfectedFileInfo>  threatinfo_ptr_type;
+						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
 
             virtual bool load_database(std::vector<struct utils::meta_sig *> *meta_sig_vec,
                     std::string shm_sig_name) = 0;
@@ -61,7 +61,7 @@ namespace policy
 
             virtual  bool find_engine(utils::filetype_code  file_type) = 0;
 
-            virtual  threatinfo_ptr_type scan_file() = 0;
+            virtual  threatinfo_ptr_type * scan_file() = 0;
 
             virtual  bool set_file(std::vector<MAPPED_FILE *>   *mapped_file_vec,
                     std::vector<const char *>     *file_type_vec) = 0;
@@ -77,7 +77,7 @@ namespace policy
 
             typedef  tbbscan::iactire_engine<char, tbbscan::tbb_allocator> iactire_concur_engine_type;
 
-						typedef boost::shared_ptr<message_tracethreat::InfectedFileInfo>  threatinfo_ptr_type;
+						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
 
             virtual bool load_database(std::vector<struct utils::meta_sig *> *meta_sig_vec,
                     std::string shm_sig_name);
@@ -86,7 +86,7 @@ namespace policy
 
             virtual bool find_engine(utils::filetype_code  file_type);
 
-            virtual threatinfo_ptr_type scan_file();
+            virtual threatinfo_ptr_type * scan_file();
 
             virtual bool set_file(std::vector<MAPPED_FILE *>   *mapped_file_vec,
                     std::vector<const char *>     *file_type_vec);

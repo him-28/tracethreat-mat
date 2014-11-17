@@ -66,15 +66,15 @@ namespace controller
                     size_hex,
                     file_name_md5)) {
 
-            }//if	
+            }//if
 
-						
-						/*//Check bug parallel insert
-						for(int count_str = 0; count_str < buff_sync_internal->buff->binary_hex.size(); count_str++)
-						{
-							std::cout<<"Test input : "<< buff_sync_internal->buff->binary_hex[count_str]<<std::endl;				
-						}
-						*/
+
+            /*//Check bug parallel insert
+            for(int count_str = 0; count_str < buff_sync_internal->buff->binary_hex.size(); count_str++)
+            {
+            	std::cout<<"Test input : "<< buff_sync_internal->buff->binary_hex[count_str]<<std::endl;
+            }
+            */
 
         }//for
 
@@ -106,9 +106,9 @@ namespace controller
 
             std::vector<std::string> data_sig;
             tbbscan::result_callback<std::vector<std::string> >  res_callback(data_sig);
-						task_count   = map_fmd5_id->size(); // Size of map contain number of file per task.
-						worker_count = map_fmd5_id->size(); // worker[ task-1, task-2, task-3..]. tasks per work.
-						timeout_     = 1000LL; //default
+            task_count   = map_fmd5_id->size(); // Size of map contain number of file per task.
+            worker_count = map_fmd5_id->size(); // worker[ task-1, task-2, task-3..]. tasks per work.
+            timeout_     = 1000LL; //default
             tbbscan_pe_task =
                     new tbbpostscan_pe_task(monitor, task_count, timeout_);
 
@@ -119,13 +119,13 @@ namespace controller
             tbbscan_pe_task->set_callback(&res_callback);
             tbbscan_pe_task->set_sig_engine(actire_engine_);
             tbbscan_pe_task->set_search_engine(iactire_concur_);
-						/*
-						printf("\nCheck Position\n");
-						tbb::concurrent_vector<char> test_vec = buff_sync_internal->buff->binary_hex;
-						for(int count_start = start_point; count_start < 60; count_start++)
-							printf("%c", test_vec[count_start]);
-						printf("\nEnd Position\n");
-						*/
+            /*
+            printf("\nCheck Position\n");
+            tbb::concurrent_vector<char> test_vec = buff_sync_internal->buff->binary_hex;
+            for(int count_start = start_point; count_start < 60; count_start++)
+            	printf("%c", test_vec[count_start]);
+            printf("\nEnd Position\n");
+            */
             //insert to tasks per thread.
             tasks_tbbscan_pe.insert(boost::shared_ptr<tbbpostscan_pe_task_type>(tbbscan_pe_task));
 
@@ -144,14 +144,14 @@ namespace controller
             logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, File stream size",
                     boost::lexical_cast<std::string>(buff_sync_internal->buff->binary_hex.size()));
 
-                    logger->write_info("End Prepair data");
+            logger->write_info("End Prepair data");
 
 
         }//for
 
-                logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, End Load data to task",
-                        hnmav_util::format_type::type_center);
-				return true;
+        logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, End Load data to task",
+                hnmav_util::format_type::type_center);
+        return true;
     }
 
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
@@ -159,7 +159,7 @@ namespace controller
     add_sig_engine(actire_sig_engine_type *_actire_engine)
     {
         actire_engine_ = _actire_engine;
-				return true;
+        return true;
     }
 
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
@@ -167,7 +167,7 @@ namespace controller
     add_search_engine(iactire_concur_type   *_iactire_concur)
     {
         iactire_concur_ = _iactire_concur;
-				return true;
+        return true;
     }
 
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
@@ -177,8 +177,8 @@ namespace controller
         logger->write_info("tbbpostscan_pe_controller::task_start, Start Task",
                 hnmav_util::format_type::type_center);
 
-				logger->write_info("tbbpostscan_pe_controller::task_start, Task size",
-							 boost::lexical_cast<std::string>(tasks_tbbscan_pe.size()));
+        logger->write_info("tbbpostscan_pe_controller::task_start, Task size",
+                boost::lexical_cast<std::string>(tasks_tbbscan_pe.size()));
 
         boost::shared_ptr<thread_manager>  thread_m =
                 thread_manager::new_simple_thread_manager(worker_count);
@@ -188,14 +188,13 @@ namespace controller
 
         thread_m->start();
 
-				typename std::set<boost::shared_ptr<tbbpostscan_pe_task> >::iterator ix;
+        typename std::set<boost::shared_ptr<tbbpostscan_pe_task> >::iterator ix;
+
         for(ix = tasks_tbbscan_pe.begin();
                 ix != tasks_tbbscan_pe.end();
                 ++ix) {
 
             thread_m->add(*ix);
-					  tbbpostscan_pe_task * pe_scan_task = ix->get();
-						threatinfo_ptr = pe_scan_task->get_threatinfo();
         }//for
 
         {
@@ -207,9 +206,17 @@ namespace controller
             }
         }//sync
 
-			logger->write_info("tbbpostscan_pe_controller::task_start, Completed task");
+        logger->write_info("tbbpostscan_pe_controller::task_start, Completed task");
 
-			return true;
+        for(ix = tasks_tbbscan_pe.begin();
+                ix != tasks_tbbscan_pe.end();
+                ++ix) {
+
+						tbbpostscan_pe_task * pe_scan_task = ix->get();
+						threatinfo_ptr = pe_scan_task->get_threatinfo();
+						std::cout<<"Threatinfo : " << threatinfo_ptr->file_name()<<std::endl;
+				}
+        return true;
     }
 
     template class tbbpostscan_pe_controller<BufferSyncTBB<struct data_tbb_process<struct MAPPED_FILE_PE>,
