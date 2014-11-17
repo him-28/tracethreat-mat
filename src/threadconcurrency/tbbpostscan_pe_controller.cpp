@@ -194,6 +194,8 @@ namespace controller
                 ++ix) {
 
             thread_m->add(*ix);
+					  tbbpostscan_pe_task * pe_scan_task = ix->get();
+						threatinfo_ptr = pe_scan_task->get_threatinfo();
         }//for
 
         {

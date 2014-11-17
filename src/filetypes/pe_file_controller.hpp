@@ -33,6 +33,8 @@
 
 #include "threadconcurrency/tbbpostscan_pe_controller.hpp"
 
+#include "msg/message_tracethreat.pb.h"
+
 // Big endian supported type.
 union unaligned_64 {
     uint64_t una_u64;
@@ -104,6 +106,7 @@ namespace filetypes
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             				iactire_engine_scanner_type;
 
+						typedef boost::shared_ptr<message_tracethreat::InfectedFileInfo>  threatinfo_ptr_type;
 
             pe_file_controller();
 
@@ -142,8 +145,8 @@ namespace filetypes
             */
             inline int32_t convert_ec32(uint16_t *buffer);
 
-
-            utils::scan_file_code scan(
+						//utils::scan_file_code 
+            threatinfo_ptr_type scan(
 										std::vector<MAPPED_FILE *> *mapped_file_pe,
                     signature_shm_type  *sig_shm,
                     signature_engine_type *sig_engine,

@@ -13,10 +13,21 @@ namespace filetypes
 
     }
 
-
+    //utils::scan_file_code
+    /**
+    * @brief PE_file_controller::scan() for scan binary or MD5,SHA-256 and SSDeep matchs Signature file.
+    *
+    * @param mapped_file_pe Map file detail such binary and md5 of file.
+    * @param sig_shm Shared Memory(SHM)-Signature in memory.
+    * @param sig_engine Signature Engine contain in AC-Tire.
+    * @param iactire_engine_scanner  AC-Tire Engine for scanning.
+    *
+    * @return Message of Infected File detail in msg/ directory
+    */
     template<typename MAPPED_FILE>
-    utils::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
-            signature_shm_type  *sig_shm_pe,
+    typename pe_file_controller<MAPPED_FILE>::threatinfo_ptr_type
+    pe_file_controller<MAPPED_FILE>::scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
+            signature_shm_type  *sig_shm,
             signature_engine_type *sig_engine,
             iactire_engine_scanner_type   *iactire_engine_scanner)
     {
@@ -24,9 +35,9 @@ namespace filetypes
         logger->write_info("Start pe_file_controller<MAPPED_FILE>::scan actire-parallel tbb",
                 hnmav_util::format_type::type_header);
 
-				typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
+        typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
 
-				size_t summary_file_size = 0;
+        size_t summary_file_size = 0;
 
         //summary file size of all
         for(iter_mapped_files = mapped_file_pe->begin();
@@ -36,7 +47,7 @@ namespace filetypes
             summary_file_size += mf_pe->size;
         }//end-for loop
 
-				f_shm_handler.set_shm_name(uuid_gen.generate());
+        f_shm_handler.set_shm_name(uuid_gen.generate());
         f_shm_handler.initial_shm(summary_file_size);
         f_shm_handler.initial_file_shm(mapped_file_pe);
 
@@ -48,17 +59,30 @@ namespace filetypes
         tbbpostscan_pe_col.add_search_engine(iactire_engine_scanner);
 
         tbbpostscan_pe_col.init_syntbb_workload(f_shm_handler.get_map_str_shm(),
-                sig_shm_pe,
+                sig_shm,
                 f_shm_handler.get_map_file_size(),
                 mapped_file_pe);
 
         tbbpostscan_pe_col.task_start();
 
-				f_shm_handler.delete_file_shm();
+        threatinfo_ptr_type threat_info_ptr = tbbpostscan_pe_col.get_threatinfo();
 
-        return utils::infected_found;
+        f_shm_handler.delete_file_shm();
+
+        return threat_info_ptr;//utils::infected_found;
     }
 
+    /**
+    * @brief Pe_file_controller::scan() overload parameter support OCL scans virus on GPU based.
+    *
+    * @param symbol_vec  Insert Symbol such as signature file.
+    * @param state_vec   State of Symbol.
+    * @param mapped_file_pe_vec  Vector contains file details.
+    * @param kernel_file_path_ptr  Kernel path such extension .ocl
+    * @param sig_shm Shared Memory (SHM) of Signature.
+    *
+    * @return Success code.
+    */
     template<typename MAPPED_FILE>
     utils::scan_file_code  pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
             std::vector<size_t> *state_vec,

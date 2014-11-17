@@ -29,6 +29,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::EnumDescriptor* InfectedFileInfo_EncodeType_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* InfectedFileInfo_FileType_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* InfectedFileInfo_StatusResult_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor* InfectedFileInfo_PackType_descriptor_ = NULL;
 
 }  // namespace
 
@@ -40,10 +41,16 @@ void protobuf_AssignDesc_message_5ftracethreat_2eproto() {
       "message_tracethreat.proto");
   GOOGLE_CHECK(file != NULL);
   InfectedFileInfo_descriptor_ = file->message_type(0);
-  static const int InfectedFileInfo_offsets_[4] = {
+  static const int InfectedFileInfo_offsets_[10] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, pack_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, uuid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, machine_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, ip_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, encode_sig_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, file_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, file_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, status_result_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, virus_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo, infected_file_info_value_),
   };
   InfectedFileInfo_reflection_ =
@@ -58,12 +65,13 @@ void protobuf_AssignDesc_message_5ftracethreat_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(InfectedFileInfo));
   InfectedFileInfo_InfectedFileInfoValue_descriptor_ = InfectedFileInfo_descriptor_->nested_type(0);
-  static const int InfectedFileInfo_InfectedFileInfoValue_offsets_[5] = {
+  static const int InfectedFileInfo_InfectedFileInfoValue_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo_InfectedFileInfoValue, encode_sign_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo_InfectedFileInfoValue, file_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo_InfectedFileInfoValue, status_result_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo_InfectedFileInfoValue, file_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo_InfectedFileInfoValue, binary_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InfectedFileInfo_InfectedFileInfoValue, virus_name_),
   };
   InfectedFileInfo_InfectedFileInfoValue_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -79,6 +87,7 @@ void protobuf_AssignDesc_message_5ftracethreat_2eproto() {
   InfectedFileInfo_EncodeType_descriptor_ = InfectedFileInfo_descriptor_->enum_type(0);
   InfectedFileInfo_FileType_descriptor_ = InfectedFileInfo_descriptor_->enum_type(1);
   InfectedFileInfo_StatusResult_descriptor_ = InfectedFileInfo_descriptor_->enum_type(2);
+  InfectedFileInfo_PackType_descriptor_ = InfectedFileInfo_descriptor_->enum_type(3);
 }
 
 namespace {
@@ -114,22 +123,31 @@ void protobuf_AddDesc_message_5ftracethreat_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\031message_tracethreat.proto\022\023message_tra"
-    "cethreat\"\347\004\n\020InfectedFileInfo\022\014\n\004uuid\030\001 "
-    "\002(\014\022\024\n\014machine_name\030\002 \002(\014\022\n\n\002ip\030\003 \002(\014\022]\n"
-    "\030infected_file_info_value\030\004 \003(\0132;.messag"
-    "e_tracethreat.InfectedFileInfo.InfectedF"
-    "ileInfoValue\032\224\002\n\025InfectedFileInfoValue\022J"
-    "\n\020encode_sign_type\030\001 \002(\01620.message_trace"
-    "threat.InfectedFileInfo.EncodeType\022A\n\tfi"
-    "le_type\030\002 \002(\0162..message_tracethreat.Infe"
-    "ctedFileInfo.FileType\022I\n\rstatus_result\030\003"
-    " \002(\01622.message_tracethreat.InfectedFileI"
-    "nfo.StatusResult\022\021\n\tfile_name\030\004 \002(\014\022\016\n\006b"
-    "inary\030\005 \002(\014\"W\n\nEncodeType\022\007\n\003MD5\020\001\022\016\n\nMD"
-    "5_HEADER\020\002\022\014\n\010MD5_BODY\020\003\022\t\n\005SHA_1\020\004\022\013\n\007S"
-    "HA_256\020\005\022\n\n\006SSDEEP\020\006\"(\n\010FileType\022\006\n\002PE\020\001"
-    "\022\007\n\003ELF\020\002\022\013\n\007PROCESS\020\003\"*\n\014StatusResult\022\014"
-    "\n\010POSITIVE\020\001\022\014\n\010NEGATIVE\020\002", 666);
+    "cethreat\"\266\007\n\020InfectedFileInfo\022A\n\tpack_ty"
+    "pe\030\001 \002(\0162..message_tracethreat.InfectedF"
+    "ileInfo.PackType\022\014\n\004uuid\030\002 \001(\014\022\024\n\014machin"
+    "e_name\030\003 \001(\014\022\n\n\002ip\030\004 \001(\014\022I\n\017encode_sig_t"
+    "ype\030\005 \001(\01620.message_tracethreat.Infected"
+    "FileInfo.EncodeType\022\021\n\tfile_name\030\006 \001(\014\022\021"
+    "\n\tfile_type\030\007 \001(\014\022I\n\rstatus_result\030\010 \001(\016"
+    "22.message_tracethreat.InfectedFileInfo."
+    "StatusResult\022\022\n\nvirus_name\030\t \001(\014\022]\n\030infe"
+    "cted_file_info_value\030\n \003(\0132;.message_tra"
+    "cethreat.InfectedFileInfo.InfectedFileIn"
+    "foValue\032\250\002\n\025InfectedFileInfoValue\022J\n\020enc"
+    "ode_sign_type\030\001 \002(\01620.message_tracethrea"
+    "t.InfectedFileInfo.EncodeType\022A\n\tfile_ty"
+    "pe\030\002 \002(\0162..message_tracethreat.InfectedF"
+    "ileInfo.FileType\022I\n\rstatus_result\030\003 \002(\0162"
+    "2.message_tracethreat.InfectedFileInfo.S"
+    "tatusResult\022\021\n\tfile_name\030\004 \002(\014\022\016\n\006binary"
+    "\030\005 \002(\014\022\022\n\nvirus_name\030\006 \002(\014\"W\n\nEncodeType"
+    "\022\007\n\003MD5\020\001\022\016\n\nMD5_HEADER\020\002\022\014\n\010MD5_BODY\020\003\022"
+    "\t\n\005SHA_1\020\004\022\013\n\007SHA_256\020\005\022\n\n\006SSDEEP\020\006\"(\n\010F"
+    "ileType\022\006\n\002PE\020\001\022\007\n\003ELF\020\002\022\013\n\007PROCESS\020\003\"*\n"
+    "\014StatusResult\022\014\n\010POSITIVE\020\001\022\014\n\010NEGATIVE\020"
+    "\002\"&\n\010PackType\022\014\n\010PACK_ONE\020\001\022\014\n\010PACK_ALL\020"
+    "\002", 1001);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "message_tracethreat.proto", &protobuf_RegisterTypes);
   InfectedFileInfo::default_instance_ = new InfectedFileInfo();
@@ -221,12 +239,34 @@ const InfectedFileInfo_StatusResult InfectedFileInfo::StatusResult_MIN;
 const InfectedFileInfo_StatusResult InfectedFileInfo::StatusResult_MAX;
 const int InfectedFileInfo::StatusResult_ARRAYSIZE;
 #endif  // _MSC_VER
+const ::google::protobuf::EnumDescriptor* InfectedFileInfo_PackType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return InfectedFileInfo_PackType_descriptor_;
+}
+bool InfectedFileInfo_PackType_IsValid(int value) {
+  switch(value) {
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const InfectedFileInfo_PackType InfectedFileInfo::PACK_ONE;
+const InfectedFileInfo_PackType InfectedFileInfo::PACK_ALL;
+const InfectedFileInfo_PackType InfectedFileInfo::PackType_MIN;
+const InfectedFileInfo_PackType InfectedFileInfo::PackType_MAX;
+const int InfectedFileInfo::PackType_ARRAYSIZE;
+#endif  // _MSC_VER
 #ifndef _MSC_VER
 const int InfectedFileInfo_InfectedFileInfoValue::kEncodeSignTypeFieldNumber;
 const int InfectedFileInfo_InfectedFileInfoValue::kFileTypeFieldNumber;
 const int InfectedFileInfo_InfectedFileInfoValue::kStatusResultFieldNumber;
 const int InfectedFileInfo_InfectedFileInfoValue::kFileNameFieldNumber;
 const int InfectedFileInfo_InfectedFileInfoValue::kBinaryFieldNumber;
+const int InfectedFileInfo_InfectedFileInfoValue::kVirusNameFieldNumber;
 #endif  // !_MSC_VER
 
 InfectedFileInfo_InfectedFileInfoValue::InfectedFileInfo_InfectedFileInfoValue()
@@ -250,6 +290,7 @@ void InfectedFileInfo_InfectedFileInfoValue::SharedCtor() {
   status_result_ = 1;
   file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   binary_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  virus_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -263,6 +304,9 @@ void InfectedFileInfo_InfectedFileInfoValue::SharedDtor() {
   }
   if (binary_ != &::google::protobuf::internal::kEmptyString) {
     delete binary_;
+  }
+  if (virus_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete virus_name_;
   }
   if (this != default_instance_) {
   }
@@ -302,6 +346,11 @@ void InfectedFileInfo_InfectedFileInfoValue::Clear() {
     if (has_binary()) {
       if (binary_ != &::google::protobuf::internal::kEmptyString) {
         binary_->clear();
+      }
+    }
+    if (has_virus_name()) {
+      if (virus_name_ != &::google::protobuf::internal::kEmptyString) {
+        virus_name_->clear();
       }
     }
   }
@@ -401,6 +450,20 @@ bool InfectedFileInfo_InfectedFileInfoValue::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(50)) goto parse_virus_name;
+        break;
+      }
+
+      // required bytes virus_name = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_virus_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_virus_name()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -453,6 +516,12 @@ void InfectedFileInfo_InfectedFileInfoValue::SerializeWithCachedSizes(
       5, this->binary(), output);
   }
 
+  // required bytes virus_name = 6;
+  if (has_virus_name()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      6, this->virus_name(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -491,6 +560,13 @@ void InfectedFileInfo_InfectedFileInfoValue::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         5, this->binary(), target);
+  }
+
+  // required bytes virus_name = 6;
+  if (has_virus_name()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        6, this->virus_name(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -536,6 +612,13 @@ int InfectedFileInfo_InfectedFileInfoValue::ByteSize() const {
           this->binary());
     }
 
+    // required bytes virus_name = 6;
+    if (has_virus_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->virus_name());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -578,6 +661,9 @@ void InfectedFileInfo_InfectedFileInfoValue::MergeFrom(const InfectedFileInfo_In
     if (from.has_binary()) {
       set_binary(from.binary());
     }
+    if (from.has_virus_name()) {
+      set_virus_name(from.virus_name());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -595,7 +681,7 @@ void InfectedFileInfo_InfectedFileInfoValue::CopyFrom(const InfectedFileInfo_Inf
 }
 
 bool InfectedFileInfo_InfectedFileInfoValue::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000001f) != 0x0000001f) return false;
+  if ((_has_bits_[0] & 0x0000003f) != 0x0000003f) return false;
 
   return true;
 }
@@ -607,6 +693,7 @@ void InfectedFileInfo_InfectedFileInfoValue::Swap(InfectedFileInfo_InfectedFileI
     std::swap(status_result_, other->status_result_);
     std::swap(file_name_, other->file_name_);
     std::swap(binary_, other->binary_);
+    std::swap(virus_name_, other->virus_name_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -625,9 +712,15 @@ void InfectedFileInfo_InfectedFileInfoValue::Swap(InfectedFileInfo_InfectedFileI
 // -------------------------------------------------------------------
 
 #ifndef _MSC_VER
+const int InfectedFileInfo::kPackTypeFieldNumber;
 const int InfectedFileInfo::kUuidFieldNumber;
 const int InfectedFileInfo::kMachineNameFieldNumber;
 const int InfectedFileInfo::kIpFieldNumber;
+const int InfectedFileInfo::kEncodeSigTypeFieldNumber;
+const int InfectedFileInfo::kFileNameFieldNumber;
+const int InfectedFileInfo::kFileTypeFieldNumber;
+const int InfectedFileInfo::kStatusResultFieldNumber;
+const int InfectedFileInfo::kVirusNameFieldNumber;
 const int InfectedFileInfo::kInfectedFileInfoValueFieldNumber;
 #endif  // !_MSC_VER
 
@@ -647,9 +740,15 @@ InfectedFileInfo::InfectedFileInfo(const InfectedFileInfo& from)
 
 void InfectedFileInfo::SharedCtor() {
   _cached_size_ = 0;
+  pack_type_ = 1;
   uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  encode_sig_type_ = 1;
+  file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  file_type_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  status_result_ = 1;
+  virus_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -666,6 +765,15 @@ void InfectedFileInfo::SharedDtor() {
   }
   if (ip_ != &::google::protobuf::internal::kEmptyString) {
     delete ip_;
+  }
+  if (file_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete file_name_;
+  }
+  if (file_type_ != &::google::protobuf::internal::kEmptyString) {
+    delete file_type_;
+  }
+  if (virus_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete virus_name_;
   }
   if (this != default_instance_) {
   }
@@ -694,6 +802,7 @@ InfectedFileInfo* InfectedFileInfo::New() const {
 
 void InfectedFileInfo::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    pack_type_ = 1;
     if (has_uuid()) {
       if (uuid_ != &::google::protobuf::internal::kEmptyString) {
         uuid_->clear();
@@ -709,6 +818,25 @@ void InfectedFileInfo::Clear() {
         ip_->clear();
       }
     }
+    encode_sig_type_ = 1;
+    if (has_file_name()) {
+      if (file_name_ != &::google::protobuf::internal::kEmptyString) {
+        file_name_->clear();
+      }
+    }
+    if (has_file_type()) {
+      if (file_type_ != &::google::protobuf::internal::kEmptyString) {
+        file_type_->clear();
+      }
+    }
+    status_result_ = 1;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (has_virus_name()) {
+      if (virus_name_ != &::google::protobuf::internal::kEmptyString) {
+        virus_name_->clear();
+      }
+    }
   }
   infected_file_info_value_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -721,21 +849,42 @@ bool InfectedFileInfo::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required bytes uuid = 1;
+      // required .message_tracethreat.InfectedFileInfo.PackType pack_type = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::message_tracethreat::InfectedFileInfo_PackType_IsValid(value)) {
+            set_pack_type(static_cast< ::message_tracethreat::InfectedFileInfo_PackType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_uuid;
+        break;
+      }
+
+      // optional bytes uuid = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_uuid:
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_uuid()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_machine_name;
+        if (input->ExpectTag(26)) goto parse_machine_name;
         break;
       }
 
-      // required bytes machine_name = 2;
-      case 2: {
+      // optional bytes machine_name = 3;
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_machine_name:
@@ -744,12 +893,12 @@ bool InfectedFileInfo::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_ip;
+        if (input->ExpectTag(34)) goto parse_ip;
         break;
       }
 
-      // required bytes ip = 3;
-      case 3: {
+      // optional bytes ip = 4;
+      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_ip:
@@ -758,12 +907,96 @@ bool InfectedFileInfo::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(34)) goto parse_infected_file_info_value;
+        if (input->ExpectTag(40)) goto parse_encode_sig_type;
         break;
       }
 
-      // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 4;
-      case 4: {
+      // optional .message_tracethreat.InfectedFileInfo.EncodeType encode_sig_type = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_encode_sig_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::message_tracethreat::InfectedFileInfo_EncodeType_IsValid(value)) {
+            set_encode_sig_type(static_cast< ::message_tracethreat::InfectedFileInfo_EncodeType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(5, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(50)) goto parse_file_name;
+        break;
+      }
+
+      // optional bytes file_name = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_file_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_file_name()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(58)) goto parse_file_type;
+        break;
+      }
+
+      // optional bytes file_type = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_file_type:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_file_type()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(64)) goto parse_status_result;
+        break;
+      }
+
+      // optional .message_tracethreat.InfectedFileInfo.StatusResult status_result = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_status_result:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::message_tracethreat::InfectedFileInfo_StatusResult_IsValid(value)) {
+            set_status_result(static_cast< ::message_tracethreat::InfectedFileInfo_StatusResult >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(8, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(74)) goto parse_virus_name;
+        break;
+      }
+
+      // optional bytes virus_name = 9;
+      case 9: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_virus_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_virus_name()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(82)) goto parse_infected_file_info_value;
+        break;
+      }
+
+      // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 10;
+      case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_infected_file_info_value:
@@ -772,7 +1005,7 @@ bool InfectedFileInfo::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(34)) goto parse_infected_file_info_value;
+        if (input->ExpectTag(82)) goto parse_infected_file_info_value;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -795,28 +1028,64 @@ bool InfectedFileInfo::MergePartialFromCodedStream(
 
 void InfectedFileInfo::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required bytes uuid = 1;
+  // required .message_tracethreat.InfectedFileInfo.PackType pack_type = 1;
+  if (has_pack_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->pack_type(), output);
+  }
+
+  // optional bytes uuid = 2;
   if (has_uuid()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      1, this->uuid(), output);
+      2, this->uuid(), output);
   }
 
-  // required bytes machine_name = 2;
+  // optional bytes machine_name = 3;
   if (has_machine_name()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      2, this->machine_name(), output);
+      3, this->machine_name(), output);
   }
 
-  // required bytes ip = 3;
+  // optional bytes ip = 4;
   if (has_ip()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      3, this->ip(), output);
+      4, this->ip(), output);
   }
 
-  // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 4;
+  // optional .message_tracethreat.InfectedFileInfo.EncodeType encode_sig_type = 5;
+  if (has_encode_sig_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      5, this->encode_sig_type(), output);
+  }
+
+  // optional bytes file_name = 6;
+  if (has_file_name()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      6, this->file_name(), output);
+  }
+
+  // optional bytes file_type = 7;
+  if (has_file_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      7, this->file_type(), output);
+  }
+
+  // optional .message_tracethreat.InfectedFileInfo.StatusResult status_result = 8;
+  if (has_status_result()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      8, this->status_result(), output);
+  }
+
+  // optional bytes virus_name = 9;
+  if (has_virus_name()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      9, this->virus_name(), output);
+  }
+
+  // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 10;
   for (int i = 0; i < this->infected_file_info_value_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->infected_file_info_value(i), output);
+      10, this->infected_file_info_value(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -827,32 +1096,71 @@ void InfectedFileInfo::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* InfectedFileInfo::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required bytes uuid = 1;
+  // required .message_tracethreat.InfectedFileInfo.PackType pack_type = 1;
+  if (has_pack_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->pack_type(), target);
+  }
+
+  // optional bytes uuid = 2;
   if (has_uuid()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        1, this->uuid(), target);
+        2, this->uuid(), target);
   }
 
-  // required bytes machine_name = 2;
+  // optional bytes machine_name = 3;
   if (has_machine_name()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->machine_name(), target);
+        3, this->machine_name(), target);
   }
 
-  // required bytes ip = 3;
+  // optional bytes ip = 4;
   if (has_ip()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->ip(), target);
+        4, this->ip(), target);
   }
 
-  // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 4;
+  // optional .message_tracethreat.InfectedFileInfo.EncodeType encode_sig_type = 5;
+  if (has_encode_sig_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      5, this->encode_sig_type(), target);
+  }
+
+  // optional bytes file_name = 6;
+  if (has_file_name()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        6, this->file_name(), target);
+  }
+
+  // optional bytes file_type = 7;
+  if (has_file_type()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        7, this->file_type(), target);
+  }
+
+  // optional .message_tracethreat.InfectedFileInfo.StatusResult status_result = 8;
+  if (has_status_result()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      8, this->status_result(), target);
+  }
+
+  // optional bytes virus_name = 9;
+  if (has_virus_name()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        9, this->virus_name(), target);
+  }
+
+  // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 10;
   for (int i = 0; i < this->infected_file_info_value_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        4, this->infected_file_info_value(i), target);
+        10, this->infected_file_info_value(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -866,29 +1174,70 @@ int InfectedFileInfo::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required bytes uuid = 1;
+    // required .message_tracethreat.InfectedFileInfo.PackType pack_type = 1;
+    if (has_pack_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->pack_type());
+    }
+
+    // optional bytes uuid = 2;
     if (has_uuid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->uuid());
     }
 
-    // required bytes machine_name = 2;
+    // optional bytes machine_name = 3;
     if (has_machine_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->machine_name());
     }
 
-    // required bytes ip = 3;
+    // optional bytes ip = 4;
     if (has_ip()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->ip());
     }
 
+    // optional .message_tracethreat.InfectedFileInfo.EncodeType encode_sig_type = 5;
+    if (has_encode_sig_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->encode_sig_type());
+    }
+
+    // optional bytes file_name = 6;
+    if (has_file_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->file_name());
+    }
+
+    // optional bytes file_type = 7;
+    if (has_file_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->file_type());
+    }
+
+    // optional .message_tracethreat.InfectedFileInfo.StatusResult status_result = 8;
+    if (has_status_result()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->status_result());
+    }
+
   }
-  // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 4;
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional bytes virus_name = 9;
+    if (has_virus_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->virus_name());
+    }
+
+  }
+  // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 10;
   total_size += 1 * this->infected_file_info_value_size();
   for (int i = 0; i < this->infected_file_info_value_size(); i++) {
     total_size +=
@@ -923,6 +1272,9 @@ void InfectedFileInfo::MergeFrom(const InfectedFileInfo& from) {
   GOOGLE_CHECK_NE(&from, this);
   infected_file_info_value_.MergeFrom(from.infected_file_info_value_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_pack_type()) {
+      set_pack_type(from.pack_type());
+    }
     if (from.has_uuid()) {
       set_uuid(from.uuid());
     }
@@ -931,6 +1283,23 @@ void InfectedFileInfo::MergeFrom(const InfectedFileInfo& from) {
     }
     if (from.has_ip()) {
       set_ip(from.ip());
+    }
+    if (from.has_encode_sig_type()) {
+      set_encode_sig_type(from.encode_sig_type());
+    }
+    if (from.has_file_name()) {
+      set_file_name(from.file_name());
+    }
+    if (from.has_file_type()) {
+      set_file_type(from.file_type());
+    }
+    if (from.has_status_result()) {
+      set_status_result(from.status_result());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_virus_name()) {
+      set_virus_name(from.virus_name());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -949,7 +1318,7 @@ void InfectedFileInfo::CopyFrom(const InfectedFileInfo& from) {
 }
 
 bool InfectedFileInfo::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   for (int i = 0; i < infected_file_info_value_size(); i++) {
     if (!this->infected_file_info_value(i).IsInitialized()) return false;
@@ -959,9 +1328,15 @@ bool InfectedFileInfo::IsInitialized() const {
 
 void InfectedFileInfo::Swap(InfectedFileInfo* other) {
   if (other != this) {
+    std::swap(pack_type_, other->pack_type_);
     std::swap(uuid_, other->uuid_);
     std::swap(machine_name_, other->machine_name_);
     std::swap(ip_, other->ip_);
+    std::swap(encode_sig_type_, other->encode_sig_type_);
+    std::swap(file_name_, other->file_name_);
+    std::swap(file_type_, other->file_type_);
+    std::swap(status_result_, other->status_result_);
+    std::swap(virus_name_, other->virus_name_);
     infected_file_info_value_.Swap(&other->infected_file_info_value_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

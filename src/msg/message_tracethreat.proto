@@ -42,10 +42,24 @@ message InfectedFileInfo{
 		POSITIVE =  1;
 		NEGATIVE =  2;
 	}
-	
-	required bytes uuid = 1;	
-  required bytes machine_name = 2;
-	required bytes ip = 3;
+
+	enum PackType {
+		PACK_ONE = 1;
+		PACK_ALL = 2;
+	}
+
+	required PackType pack_type = 1; //if PackType::PACK_ALL use InfectedFileInfoValue
+
+	optional bytes uuid = 2;	
+  optional bytes machine_name = 3;
+	optional bytes ip = 4;
+ 
+
+	optional EncodeType encode_sig_type = 5;
+	optional bytes file_name = 6;
+	optional bytes file_type = 7;
+	optional StatusResult status_result = 8;
+  optional bytes virus_name = 9;
 
 	message InfectedFileInfoValue{
 		required EncodeType encode_sign_type = 1;
@@ -53,8 +67,9 @@ message InfectedFileInfo{
 		required StatusResult status_result  = 3;
 		required bytes file_name             = 4;
 		required bytes binary                = 5;
+		required bytes virus_name            = 6;
 	}
 
-	repeated InfectedFileInfoValue infected_file_info_value = 4;
+	repeated InfectedFileInfoValue infected_file_info_value = 10;
 
 }

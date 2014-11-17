@@ -74,15 +74,21 @@ namespace controller
 
     }
 
+		tbbpostscan_pe_task::threatinfo_ptr_type  
+		tbbpostscan_pe_task::
+		get_threatinfo(){
+				return threatinfo_ptr;
+		}
+
     void tbbpostscan_pe_task::
     run()
     {
         goto_ = &actire_engine_->get_goto_fn();
         failure_ = &actire_engine_->get_failure_fn();
         output_ = &actire_engine_->get_output_fn();
-
-
-        bool res = iactire_concur_->search_parallel(*goto_,
+				//threatinfo_ptr_type threatinfo_ptr(new message_tracethreat::InfectedFileInfo);
+				//return value to queue system.
+        threatinfo_ptr = iactire_concur_->search_parallel(*goto_,
                 *failure_,
                 *output_,
                 *call_back_,

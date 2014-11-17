@@ -99,6 +99,25 @@ inline bool InfectedFileInfo_StatusResult_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<InfectedFileInfo_StatusResult>(
     InfectedFileInfo_StatusResult_descriptor(), name, value);
 }
+enum InfectedFileInfo_PackType {
+  InfectedFileInfo_PackType_PACK_ONE = 1,
+  InfectedFileInfo_PackType_PACK_ALL = 2
+};
+bool InfectedFileInfo_PackType_IsValid(int value);
+const InfectedFileInfo_PackType InfectedFileInfo_PackType_PackType_MIN = InfectedFileInfo_PackType_PACK_ONE;
+const InfectedFileInfo_PackType InfectedFileInfo_PackType_PackType_MAX = InfectedFileInfo_PackType_PACK_ALL;
+const int InfectedFileInfo_PackType_PackType_ARRAYSIZE = InfectedFileInfo_PackType_PackType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* InfectedFileInfo_PackType_descriptor();
+inline const ::std::string& InfectedFileInfo_PackType_Name(InfectedFileInfo_PackType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    InfectedFileInfo_PackType_descriptor(), value);
+}
+inline bool InfectedFileInfo_PackType_Parse(
+    const ::std::string& name, InfectedFileInfo_PackType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<InfectedFileInfo_PackType>(
+    InfectedFileInfo_PackType_descriptor(), name, value);
+}
 // ===================================================================
 
 class InfectedFileInfo_InfectedFileInfoValue : public ::google::protobuf::Message {
@@ -200,6 +219,18 @@ class InfectedFileInfo_InfectedFileInfoValue : public ::google::protobuf::Messag
   inline ::std::string* release_binary();
   inline void set_allocated_binary(::std::string* binary);
 
+  // required bytes virus_name = 6;
+  inline bool has_virus_name() const;
+  inline void clear_virus_name();
+  static const int kVirusNameFieldNumber = 6;
+  inline const ::std::string& virus_name() const;
+  inline void set_virus_name(const ::std::string& value);
+  inline void set_virus_name(const char* value);
+  inline void set_virus_name(const void* value, size_t size);
+  inline ::std::string* mutable_virus_name();
+  inline ::std::string* release_virus_name();
+  inline void set_allocated_virus_name(::std::string* virus_name);
+
   // @@protoc_insertion_point(class_scope:message_tracethreat.InfectedFileInfo.InfectedFileInfoValue)
  private:
   inline void set_has_encode_sign_type();
@@ -212,6 +243,8 @@ class InfectedFileInfo_InfectedFileInfoValue : public ::google::protobuf::Messag
   inline void clear_has_file_name();
   inline void set_has_binary();
   inline void clear_has_binary();
+  inline void set_has_virus_name();
+  inline void clear_has_virus_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -219,10 +252,11 @@ class InfectedFileInfo_InfectedFileInfoValue : public ::google::protobuf::Messag
   int file_type_;
   ::std::string* file_name_;
   ::std::string* binary_;
+  ::std::string* virus_name_;
   int status_result_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5ftracethreat_2eproto();
   friend void protobuf_AssignDesc_message_5ftracethreat_2eproto();
@@ -364,12 +398,43 @@ class InfectedFileInfo : public ::google::protobuf::Message {
     return InfectedFileInfo_StatusResult_Parse(name, value);
   }
 
+  typedef InfectedFileInfo_PackType PackType;
+  static const PackType PACK_ONE = InfectedFileInfo_PackType_PACK_ONE;
+  static const PackType PACK_ALL = InfectedFileInfo_PackType_PACK_ALL;
+  static inline bool PackType_IsValid(int value) {
+    return InfectedFileInfo_PackType_IsValid(value);
+  }
+  static const PackType PackType_MIN =
+    InfectedFileInfo_PackType_PackType_MIN;
+  static const PackType PackType_MAX =
+    InfectedFileInfo_PackType_PackType_MAX;
+  static const int PackType_ARRAYSIZE =
+    InfectedFileInfo_PackType_PackType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  PackType_descriptor() {
+    return InfectedFileInfo_PackType_descriptor();
+  }
+  static inline const ::std::string& PackType_Name(PackType value) {
+    return InfectedFileInfo_PackType_Name(value);
+  }
+  static inline bool PackType_Parse(const ::std::string& name,
+      PackType* value) {
+    return InfectedFileInfo_PackType_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
-  // required bytes uuid = 1;
+  // required .message_tracethreat.InfectedFileInfo.PackType pack_type = 1;
+  inline bool has_pack_type() const;
+  inline void clear_pack_type();
+  static const int kPackTypeFieldNumber = 1;
+  inline ::message_tracethreat::InfectedFileInfo_PackType pack_type() const;
+  inline void set_pack_type(::message_tracethreat::InfectedFileInfo_PackType value);
+
+  // optional bytes uuid = 2;
   inline bool has_uuid() const;
   inline void clear_uuid();
-  static const int kUuidFieldNumber = 1;
+  static const int kUuidFieldNumber = 2;
   inline const ::std::string& uuid() const;
   inline void set_uuid(const ::std::string& value);
   inline void set_uuid(const char* value);
@@ -378,10 +443,10 @@ class InfectedFileInfo : public ::google::protobuf::Message {
   inline ::std::string* release_uuid();
   inline void set_allocated_uuid(::std::string* uuid);
 
-  // required bytes machine_name = 2;
+  // optional bytes machine_name = 3;
   inline bool has_machine_name() const;
   inline void clear_machine_name();
-  static const int kMachineNameFieldNumber = 2;
+  static const int kMachineNameFieldNumber = 3;
   inline const ::std::string& machine_name() const;
   inline void set_machine_name(const ::std::string& value);
   inline void set_machine_name(const char* value);
@@ -390,10 +455,10 @@ class InfectedFileInfo : public ::google::protobuf::Message {
   inline ::std::string* release_machine_name();
   inline void set_allocated_machine_name(::std::string* machine_name);
 
-  // required bytes ip = 3;
+  // optional bytes ip = 4;
   inline bool has_ip() const;
   inline void clear_ip();
-  static const int kIpFieldNumber = 3;
+  static const int kIpFieldNumber = 4;
   inline const ::std::string& ip() const;
   inline void set_ip(const ::std::string& value);
   inline void set_ip(const char* value);
@@ -402,10 +467,60 @@ class InfectedFileInfo : public ::google::protobuf::Message {
   inline ::std::string* release_ip();
   inline void set_allocated_ip(::std::string* ip);
 
-  // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 4;
+  // optional .message_tracethreat.InfectedFileInfo.EncodeType encode_sig_type = 5;
+  inline bool has_encode_sig_type() const;
+  inline void clear_encode_sig_type();
+  static const int kEncodeSigTypeFieldNumber = 5;
+  inline ::message_tracethreat::InfectedFileInfo_EncodeType encode_sig_type() const;
+  inline void set_encode_sig_type(::message_tracethreat::InfectedFileInfo_EncodeType value);
+
+  // optional bytes file_name = 6;
+  inline bool has_file_name() const;
+  inline void clear_file_name();
+  static const int kFileNameFieldNumber = 6;
+  inline const ::std::string& file_name() const;
+  inline void set_file_name(const ::std::string& value);
+  inline void set_file_name(const char* value);
+  inline void set_file_name(const void* value, size_t size);
+  inline ::std::string* mutable_file_name();
+  inline ::std::string* release_file_name();
+  inline void set_allocated_file_name(::std::string* file_name);
+
+  // optional bytes file_type = 7;
+  inline bool has_file_type() const;
+  inline void clear_file_type();
+  static const int kFileTypeFieldNumber = 7;
+  inline const ::std::string& file_type() const;
+  inline void set_file_type(const ::std::string& value);
+  inline void set_file_type(const char* value);
+  inline void set_file_type(const void* value, size_t size);
+  inline ::std::string* mutable_file_type();
+  inline ::std::string* release_file_type();
+  inline void set_allocated_file_type(::std::string* file_type);
+
+  // optional .message_tracethreat.InfectedFileInfo.StatusResult status_result = 8;
+  inline bool has_status_result() const;
+  inline void clear_status_result();
+  static const int kStatusResultFieldNumber = 8;
+  inline ::message_tracethreat::InfectedFileInfo_StatusResult status_result() const;
+  inline void set_status_result(::message_tracethreat::InfectedFileInfo_StatusResult value);
+
+  // optional bytes virus_name = 9;
+  inline bool has_virus_name() const;
+  inline void clear_virus_name();
+  static const int kVirusNameFieldNumber = 9;
+  inline const ::std::string& virus_name() const;
+  inline void set_virus_name(const ::std::string& value);
+  inline void set_virus_name(const char* value);
+  inline void set_virus_name(const void* value, size_t size);
+  inline ::std::string* mutable_virus_name();
+  inline ::std::string* release_virus_name();
+  inline void set_allocated_virus_name(::std::string* virus_name);
+
+  // repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 10;
   inline int infected_file_info_value_size() const;
   inline void clear_infected_file_info_value();
-  static const int kInfectedFileInfoValueFieldNumber = 4;
+  static const int kInfectedFileInfoValueFieldNumber = 10;
   inline const ::message_tracethreat::InfectedFileInfo_InfectedFileInfoValue& infected_file_info_value(int index) const;
   inline ::message_tracethreat::InfectedFileInfo_InfectedFileInfoValue* mutable_infected_file_info_value(int index);
   inline ::message_tracethreat::InfectedFileInfo_InfectedFileInfoValue* add_infected_file_info_value();
@@ -416,22 +531,40 @@ class InfectedFileInfo : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:message_tracethreat.InfectedFileInfo)
  private:
+  inline void set_has_pack_type();
+  inline void clear_has_pack_type();
   inline void set_has_uuid();
   inline void clear_has_uuid();
   inline void set_has_machine_name();
   inline void clear_has_machine_name();
   inline void set_has_ip();
   inline void clear_has_ip();
+  inline void set_has_encode_sig_type();
+  inline void clear_has_encode_sig_type();
+  inline void set_has_file_name();
+  inline void clear_has_file_name();
+  inline void set_has_file_type();
+  inline void clear_has_file_type();
+  inline void set_has_status_result();
+  inline void clear_has_status_result();
+  inline void set_has_virus_name();
+  inline void clear_has_virus_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* uuid_;
   ::std::string* machine_name_;
+  int pack_type_;
+  int encode_sig_type_;
   ::std::string* ip_;
+  ::std::string* file_name_;
+  ::std::string* file_type_;
+  ::std::string* virus_name_;
   ::google::protobuf::RepeatedPtrField< ::message_tracethreat::InfectedFileInfo_InfectedFileInfoValue > infected_file_info_value_;
+  int status_result_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5ftracethreat_2eproto();
   friend void protobuf_AssignDesc_message_5ftracethreat_2eproto();
@@ -656,19 +789,112 @@ inline void InfectedFileInfo_InfectedFileInfoValue::set_allocated_binary(::std::
   }
 }
 
+// required bytes virus_name = 6;
+inline bool InfectedFileInfo_InfectedFileInfoValue::has_virus_name() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void InfectedFileInfo_InfectedFileInfoValue::set_has_virus_name() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void InfectedFileInfo_InfectedFileInfoValue::clear_has_virus_name() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void InfectedFileInfo_InfectedFileInfoValue::clear_virus_name() {
+  if (virus_name_ != &::google::protobuf::internal::kEmptyString) {
+    virus_name_->clear();
+  }
+  clear_has_virus_name();
+}
+inline const ::std::string& InfectedFileInfo_InfectedFileInfoValue::virus_name() const {
+  return *virus_name_;
+}
+inline void InfectedFileInfo_InfectedFileInfoValue::set_virus_name(const ::std::string& value) {
+  set_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    virus_name_ = new ::std::string;
+  }
+  virus_name_->assign(value);
+}
+inline void InfectedFileInfo_InfectedFileInfoValue::set_virus_name(const char* value) {
+  set_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    virus_name_ = new ::std::string;
+  }
+  virus_name_->assign(value);
+}
+inline void InfectedFileInfo_InfectedFileInfoValue::set_virus_name(const void* value, size_t size) {
+  set_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    virus_name_ = new ::std::string;
+  }
+  virus_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* InfectedFileInfo_InfectedFileInfoValue::mutable_virus_name() {
+  set_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    virus_name_ = new ::std::string;
+  }
+  return virus_name_;
+}
+inline ::std::string* InfectedFileInfo_InfectedFileInfoValue::release_virus_name() {
+  clear_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = virus_name_;
+    virus_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void InfectedFileInfo_InfectedFileInfoValue::set_allocated_virus_name(::std::string* virus_name) {
+  if (virus_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete virus_name_;
+  }
+  if (virus_name) {
+    set_has_virus_name();
+    virus_name_ = virus_name;
+  } else {
+    clear_has_virus_name();
+    virus_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // InfectedFileInfo
 
-// required bytes uuid = 1;
-inline bool InfectedFileInfo::has_uuid() const {
+// required .message_tracethreat.InfectedFileInfo.PackType pack_type = 1;
+inline bool InfectedFileInfo::has_pack_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void InfectedFileInfo::set_has_uuid() {
+inline void InfectedFileInfo::set_has_pack_type() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void InfectedFileInfo::clear_has_uuid() {
+inline void InfectedFileInfo::clear_has_pack_type() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void InfectedFileInfo::clear_pack_type() {
+  pack_type_ = 1;
+  clear_has_pack_type();
+}
+inline ::message_tracethreat::InfectedFileInfo_PackType InfectedFileInfo::pack_type() const {
+  return static_cast< ::message_tracethreat::InfectedFileInfo_PackType >(pack_type_);
+}
+inline void InfectedFileInfo::set_pack_type(::message_tracethreat::InfectedFileInfo_PackType value) {
+  assert(::message_tracethreat::InfectedFileInfo_PackType_IsValid(value));
+  set_has_pack_type();
+  pack_type_ = value;
+}
+
+// optional bytes uuid = 2;
+inline bool InfectedFileInfo::has_uuid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void InfectedFileInfo::set_has_uuid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void InfectedFileInfo::clear_has_uuid() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void InfectedFileInfo::clear_uuid() {
   if (uuid_ != &::google::protobuf::internal::kEmptyString) {
@@ -730,15 +956,15 @@ inline void InfectedFileInfo::set_allocated_uuid(::std::string* uuid) {
   }
 }
 
-// required bytes machine_name = 2;
+// optional bytes machine_name = 3;
 inline bool InfectedFileInfo::has_machine_name() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void InfectedFileInfo::set_has_machine_name() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void InfectedFileInfo::clear_has_machine_name() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void InfectedFileInfo::clear_machine_name() {
   if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
@@ -800,15 +1026,15 @@ inline void InfectedFileInfo::set_allocated_machine_name(::std::string* machine_
   }
 }
 
-// required bytes ip = 3;
+// optional bytes ip = 4;
 inline bool InfectedFileInfo::has_ip() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void InfectedFileInfo::set_has_ip() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void InfectedFileInfo::clear_has_ip() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void InfectedFileInfo::clear_ip() {
   if (ip_ != &::google::protobuf::internal::kEmptyString) {
@@ -870,7 +1096,263 @@ inline void InfectedFileInfo::set_allocated_ip(::std::string* ip) {
   }
 }
 
-// repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 4;
+// optional .message_tracethreat.InfectedFileInfo.EncodeType encode_sig_type = 5;
+inline bool InfectedFileInfo::has_encode_sig_type() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void InfectedFileInfo::set_has_encode_sig_type() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void InfectedFileInfo::clear_has_encode_sig_type() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void InfectedFileInfo::clear_encode_sig_type() {
+  encode_sig_type_ = 1;
+  clear_has_encode_sig_type();
+}
+inline ::message_tracethreat::InfectedFileInfo_EncodeType InfectedFileInfo::encode_sig_type() const {
+  return static_cast< ::message_tracethreat::InfectedFileInfo_EncodeType >(encode_sig_type_);
+}
+inline void InfectedFileInfo::set_encode_sig_type(::message_tracethreat::InfectedFileInfo_EncodeType value) {
+  assert(::message_tracethreat::InfectedFileInfo_EncodeType_IsValid(value));
+  set_has_encode_sig_type();
+  encode_sig_type_ = value;
+}
+
+// optional bytes file_name = 6;
+inline bool InfectedFileInfo::has_file_name() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void InfectedFileInfo::set_has_file_name() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void InfectedFileInfo::clear_has_file_name() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void InfectedFileInfo::clear_file_name() {
+  if (file_name_ != &::google::protobuf::internal::kEmptyString) {
+    file_name_->clear();
+  }
+  clear_has_file_name();
+}
+inline const ::std::string& InfectedFileInfo::file_name() const {
+  return *file_name_;
+}
+inline void InfectedFileInfo::set_file_name(const ::std::string& value) {
+  set_has_file_name();
+  if (file_name_ == &::google::protobuf::internal::kEmptyString) {
+    file_name_ = new ::std::string;
+  }
+  file_name_->assign(value);
+}
+inline void InfectedFileInfo::set_file_name(const char* value) {
+  set_has_file_name();
+  if (file_name_ == &::google::protobuf::internal::kEmptyString) {
+    file_name_ = new ::std::string;
+  }
+  file_name_->assign(value);
+}
+inline void InfectedFileInfo::set_file_name(const void* value, size_t size) {
+  set_has_file_name();
+  if (file_name_ == &::google::protobuf::internal::kEmptyString) {
+    file_name_ = new ::std::string;
+  }
+  file_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* InfectedFileInfo::mutable_file_name() {
+  set_has_file_name();
+  if (file_name_ == &::google::protobuf::internal::kEmptyString) {
+    file_name_ = new ::std::string;
+  }
+  return file_name_;
+}
+inline ::std::string* InfectedFileInfo::release_file_name() {
+  clear_has_file_name();
+  if (file_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = file_name_;
+    file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void InfectedFileInfo::set_allocated_file_name(::std::string* file_name) {
+  if (file_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete file_name_;
+  }
+  if (file_name) {
+    set_has_file_name();
+    file_name_ = file_name;
+  } else {
+    clear_has_file_name();
+    file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes file_type = 7;
+inline bool InfectedFileInfo::has_file_type() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void InfectedFileInfo::set_has_file_type() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void InfectedFileInfo::clear_has_file_type() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void InfectedFileInfo::clear_file_type() {
+  if (file_type_ != &::google::protobuf::internal::kEmptyString) {
+    file_type_->clear();
+  }
+  clear_has_file_type();
+}
+inline const ::std::string& InfectedFileInfo::file_type() const {
+  return *file_type_;
+}
+inline void InfectedFileInfo::set_file_type(const ::std::string& value) {
+  set_has_file_type();
+  if (file_type_ == &::google::protobuf::internal::kEmptyString) {
+    file_type_ = new ::std::string;
+  }
+  file_type_->assign(value);
+}
+inline void InfectedFileInfo::set_file_type(const char* value) {
+  set_has_file_type();
+  if (file_type_ == &::google::protobuf::internal::kEmptyString) {
+    file_type_ = new ::std::string;
+  }
+  file_type_->assign(value);
+}
+inline void InfectedFileInfo::set_file_type(const void* value, size_t size) {
+  set_has_file_type();
+  if (file_type_ == &::google::protobuf::internal::kEmptyString) {
+    file_type_ = new ::std::string;
+  }
+  file_type_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* InfectedFileInfo::mutable_file_type() {
+  set_has_file_type();
+  if (file_type_ == &::google::protobuf::internal::kEmptyString) {
+    file_type_ = new ::std::string;
+  }
+  return file_type_;
+}
+inline ::std::string* InfectedFileInfo::release_file_type() {
+  clear_has_file_type();
+  if (file_type_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = file_type_;
+    file_type_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void InfectedFileInfo::set_allocated_file_type(::std::string* file_type) {
+  if (file_type_ != &::google::protobuf::internal::kEmptyString) {
+    delete file_type_;
+  }
+  if (file_type) {
+    set_has_file_type();
+    file_type_ = file_type;
+  } else {
+    clear_has_file_type();
+    file_type_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .message_tracethreat.InfectedFileInfo.StatusResult status_result = 8;
+inline bool InfectedFileInfo::has_status_result() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void InfectedFileInfo::set_has_status_result() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void InfectedFileInfo::clear_has_status_result() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void InfectedFileInfo::clear_status_result() {
+  status_result_ = 1;
+  clear_has_status_result();
+}
+inline ::message_tracethreat::InfectedFileInfo_StatusResult InfectedFileInfo::status_result() const {
+  return static_cast< ::message_tracethreat::InfectedFileInfo_StatusResult >(status_result_);
+}
+inline void InfectedFileInfo::set_status_result(::message_tracethreat::InfectedFileInfo_StatusResult value) {
+  assert(::message_tracethreat::InfectedFileInfo_StatusResult_IsValid(value));
+  set_has_status_result();
+  status_result_ = value;
+}
+
+// optional bytes virus_name = 9;
+inline bool InfectedFileInfo::has_virus_name() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void InfectedFileInfo::set_has_virus_name() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void InfectedFileInfo::clear_has_virus_name() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void InfectedFileInfo::clear_virus_name() {
+  if (virus_name_ != &::google::protobuf::internal::kEmptyString) {
+    virus_name_->clear();
+  }
+  clear_has_virus_name();
+}
+inline const ::std::string& InfectedFileInfo::virus_name() const {
+  return *virus_name_;
+}
+inline void InfectedFileInfo::set_virus_name(const ::std::string& value) {
+  set_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    virus_name_ = new ::std::string;
+  }
+  virus_name_->assign(value);
+}
+inline void InfectedFileInfo::set_virus_name(const char* value) {
+  set_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    virus_name_ = new ::std::string;
+  }
+  virus_name_->assign(value);
+}
+inline void InfectedFileInfo::set_virus_name(const void* value, size_t size) {
+  set_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    virus_name_ = new ::std::string;
+  }
+  virus_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* InfectedFileInfo::mutable_virus_name() {
+  set_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    virus_name_ = new ::std::string;
+  }
+  return virus_name_;
+}
+inline ::std::string* InfectedFileInfo::release_virus_name() {
+  clear_has_virus_name();
+  if (virus_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = virus_name_;
+    virus_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void InfectedFileInfo::set_allocated_virus_name(::std::string* virus_name) {
+  if (virus_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete virus_name_;
+  }
+  if (virus_name) {
+    set_has_virus_name();
+    virus_name_ = virus_name;
+  } else {
+    clear_has_virus_name();
+    virus_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .message_tracethreat.InfectedFileInfo.InfectedFileInfoValue infected_file_info_value = 10;
 inline int InfectedFileInfo::infected_file_info_value_size() const {
   return infected_file_info_value_.size();
 }
@@ -915,6 +1397,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::message_tracethreat::InfectedF
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::message_tracethreat::InfectedFileInfo_StatusResult>() {
   return ::message_tracethreat::InfectedFileInfo_StatusResult_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::message_tracethreat::InfectedFileInfo_PackType>() {
+  return ::message_tracethreat::InfectedFileInfo_PackType_descriptor();
 }
 
 }  // namespace google

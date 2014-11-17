@@ -8,6 +8,8 @@
 #include "threadconcurrency/platformthread_factory.hpp"
 #include "threadconcurrency/util_thread.hpp"
 
+#include "msg/message_tracethreat.pb.h"
+
 namespace controller
 {
 
@@ -29,6 +31,8 @@ namespace controller
 
             typedef tbb::concurrent_unordered_map<std::size_t, std::set<struct utils::meta_sig *> >
                     output_type;
+
+						typedef boost::shared_ptr<message_tracethreat::InfectedFileInfo>  threatinfo_ptr_type;
 						
             tbbpostscan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout);
             //Binary hex.
@@ -47,6 +51,8 @@ namespace controller
             bool set_search_engine(iactire_concur_type *_iactire_concur);
 
 						bool set_point(uint64_t _start_point, uint64_t _end_point);
+
+						threatinfo_ptr_type  get_threatinfo();
 
             void run();
 					 
@@ -81,7 +87,8 @@ namespace controller
             monitor_controller& _monitor;
 
 						monitor_controller _sleep;
-					
+
+						threatinfo_ptr_type  threatinfo_ptr;					
     };
 
 }

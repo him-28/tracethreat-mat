@@ -59,7 +59,8 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.hpp \
  $(top_builddir)/src/internet/scan_client/basic_scan_dir.hpp \
  $(top_builddir)/src/internet/scan_client/scan_dir_impl.hpp \
- $(top_builddir)/src/internet/scan_client/packedmessage_scan_client.hpp
+ $(top_builddir)/src/internet/scan_client/packedmessage_scan_client.hpp \
+ $(top_builddir)/src/msg/message_tracethreat.pb.h
 
 
 
