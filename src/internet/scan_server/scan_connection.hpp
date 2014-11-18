@@ -62,7 +62,9 @@ namespace internet
 
 						typedef policy::scan_internet_controller<struct MAPPED_FILE_PE>  scan_file_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
+						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+		
+						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 
             static pointer create(asio::io_service& io_service, scan_file_type * scan_file) {
 							  
@@ -120,6 +122,7 @@ namespace internet
             void handle_read_body(const boost::system::error_code& error);
  
             MsgsRequestPointer request_ptr;
+
 
 						//Signature database path.
 						std::string file_sig_path_;

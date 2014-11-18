@@ -41,7 +41,7 @@ namespace internet
         scan_response->set_uuid(msg_request->uuid());
         scan_response->set_type(message_scan::ResponseScan::SCAN_SUCCESS);
         scan_response->set_timestamp(std::string("0:0:0:0"));
-
+			  //scan_response->set_file_name(msg_request->file_name());
         LOG(INFO)<<"Server : prepare_response_scan success";
 
         return scan_response;
@@ -189,10 +189,19 @@ namespace internet
         }
 
         // Scan file
-        threatinfo_ptr_type * threatinfo_ptr = scan_file_->scan_file();
+        //threatinfo_ptr_type * threatinfo_ptr = 
+        threatinfo_vec_type threatinfo_vec = scan_file_->scan_file();
 				
-        LOG(INFO)<<"Server : Scan file success!, File name from module : "<<threatinfo_ptr->file_name();
-        
+        //LOG(INFO)<<"Server : Scan file success!, File name from module : "<<threatinfo_ptr->file_name();
+         LOG(INFO)<<"Server : Scan file success!, File name from module : "<<threatinfo_vec.size();
+				
+				threatinfo_vec_type::iterator iter_threatinfo_vec;
+				for(iter_threatinfo_vec = threatinfo_vec.begin();
+						iter_threatinfo_vec != threatinfo_vec.end();
+						++iter_threatinfo_vec){
+						threatinfo_type * threat_info = *iter_threatinfo_vec;
+						LOG(INFO)<<"Server scan file name : " << threat_info->file_name() <<", Success! ";
+				} 
 
         return true;
     }

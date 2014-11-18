@@ -76,8 +76,9 @@ namespace policy
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             iactire_engine_scanner_type;
 
-						typedef message_tracethreat::InfectedFileInfo threatinfo_ptr_type;
+						typedef message_tracethreat::InfectedFileInfo threatinfo_type;
 
+						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
             /**
             * @brief
             */
@@ -89,15 +90,14 @@ namespace policy
             file_scan_policy();
 
 
-            //std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
-            threatinfo_ptr_type *
+            threatinfo_vec_type &
             scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
                     sig_shm_type   *sig_shm_pe,
                     sig_engine_type *sig_engine,
                     iactire_engine_scanner_type *iactire_engine_scanner);
 
-            //std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
-            threatinfo_ptr_type *
+
+            threatinfo_vec_type &
             scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
                     std::vector<MAPPED_FILE *> *mapped_file_vec,
                     memory::signature_shm<struct memory::meta_sig,
@@ -143,7 +143,7 @@ namespace policy
             *
             * @return
             */
-            virtual threatinfo_ptr_type * 
+            virtual threatinfo_vec_type & 
 										scan_file_type(std::vector<const char *> *file_type_vec,
                     std::vector<MAPPED_FILE *> *mapped_file_pe,
                     sig_shm_type  *sig_shm,
@@ -158,7 +158,7 @@ namespace policy
             *
             * @return
             */
-            virtual threatinfo_ptr_type *
+            virtual threatinfo_vec_type &
 									  scan_file_type(std::vector<MAPPED_FILE *> *mapped_file,
                     memory::signature_shm<struct memory::meta_sig,
                     struct memory::meta_sig_mem> * sig_shm) = 0;
@@ -258,13 +258,6 @@ namespace policy
              typename FilePolicySetter = default_file_policy_args<MAPPED_FILE> >
     class scan_file_policy
     {
-        private:
-            //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
-
-            typedef file_policy_selector<FilePolicySetter>  policy;
-
 
         public:
 
@@ -276,12 +269,14 @@ namespace policy
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             iactire_engine_scanner_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
+						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
 
-
+						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
+	
+						 
             // pe type support
             //std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
-            threatinfo_ptr_type *
+            threatinfo_vec_type &
             scan_pe(file_scan_policy<MAPPED_FILE> *obj_fconl_policy,
                     sig_shm_type *sig_shm,
                     sig_engine_type *sig_engine,
@@ -322,6 +317,16 @@ namespace policy
 
 
             }
+
+        private:
+            //logger
+            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
+            h_util::clutil_logging<std::string, int>    *logger;
+
+            typedef file_policy_selector<FilePolicySetter>  policy;
+						
+						threatinfo_vec_type  threatinfo_vec;
+
     };
 
 
@@ -350,13 +355,15 @@ namespace policy
             typedef controller::BufferSync< struct controller::data_ocl_process<MAPPED_FILE>, MAPPED_FILE>
                     buffer_sync;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
+						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+
+						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 
             pe_file_policy();
 
             ~pe_file_policy();
 
-            virtual threatinfo_ptr_type *
+            virtual threatinfo_vec_type &
 										scan_file_type(std::vector<const char *> *file_type_vec,
                     std::vector<MAPPED_FILE *> *mapped_file_pe,
                     sig_shm_type  *sig_shm,
@@ -364,7 +371,7 @@ namespace policy
                     iactire_engine_scanner_type   *iactire_engine_scanner);
 
 
-            virtual threatinfo_ptr_type *
+            virtual threatinfo_vec_type &
 										scan_file_type(std::vector<MAPPED_FILE *> *mapped_file,
                     memory::signature_shm<struct memory::meta_sig,
                     struct memory::meta_sig_mem> * sig_shm);
@@ -416,7 +423,6 @@ namespace policy
 
             std::vector<const char *> *get_file_type();
 
-            //data_structure::iparallel<SymbolT, StateT> *ipara
             template<typename SymbolT, typename StateT>
             std::vector<struct utils::file_scan_result<MAPPED_FILE> * >&
             set_sig_buffer(std::vector<SymbolT> node_symbol, std::vector<StateT> node_state) {
@@ -435,6 +441,8 @@ namespace policy
             fileoffset_type  fileoffset_h;
 
             pe_layout_controller_type pe_layout;
+
+						threatinfo_vec_type threatinfo_vec;
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

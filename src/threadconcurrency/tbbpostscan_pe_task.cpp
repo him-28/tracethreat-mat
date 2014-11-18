@@ -9,7 +9,7 @@ namespace controller
         _monitor(monitor),
         _count(count),
         _timeout(timeout),
-				threatinfo_ptr(new tbbpostscan_pe_task::threatinfo_ptr_type),		
+				threatinfo(new tbbpostscan_pe_task::threatinfo_type),
         _done(false)
     {
 
@@ -75,10 +75,16 @@ namespace controller
 
     }
 
-		tbbpostscan_pe_task::threatinfo_ptr_type * 
+		tbbpostscan_pe_task::threatinfo_type * 
+		tbbpostscan_pe_task::
+		get_threatinfo_ptr(){
+				return threatinfo;
+		}
+
+		tbbpostscan_pe_task::threatinfo_vec_type & 
 		tbbpostscan_pe_task::
 		get_threatinfo(){
-				return threatinfo_ptr;
+				return threatinfo_vec; 
 		}
 
     void tbbpostscan_pe_task::
@@ -87,9 +93,9 @@ namespace controller
         goto_ = &actire_engine_->get_goto_fn();
         failure_ = &actire_engine_->get_failure_fn();
         output_ = &actire_engine_->get_output_fn();
-				//threatinfo_ptr_type threatinfo_ptr(new message_tracethreat::InfectedFileInfo);
+
 				//return value to queue system.
-        threatinfo_ptr = iactire_concur_->search_parallel(*goto_,
+        threatinfo = iactire_concur_->search_parallel(*goto_,
                 *failure_,
                 *output_,
                 *call_back_,
@@ -98,6 +104,7 @@ namespace controller
                 file_name,
                 binary_hex_input_);
 
+				threatinfo_vec.push_back(threatinfo);
 
         _startTime = util_thread::current_time();
 
@@ -108,7 +115,7 @@ namespace controller
             try {
                 _sleep.wait(_timeout);
             } catch(exceptions::timed_out_exception& e) {
-                std::cout<<" Thread exceptions::timed_out_exception& " <<std::endl;
+                //std::cout<<" Thread exceptions::timed_out_exception& " <<std::endl;
             } catch(...) {
                 assert(0);
             }
@@ -122,7 +129,7 @@ namespace controller
         {
             synchronized s(_monitor);
 
-            std::cout << "Thread-PE-" << _count << " completed " << std::endl;
+            //std::cout << "Thread-PE-" << _count << " completed " << std::endl;
 
             _count--;
 

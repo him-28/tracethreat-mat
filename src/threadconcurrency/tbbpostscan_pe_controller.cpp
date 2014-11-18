@@ -213,8 +213,8 @@ namespace controller
                 ++ix) {
 
 						tbbpostscan_pe_task * pe_scan_task = ix->get();
-						threatinfo_ptr = pe_scan_task->get_threatinfo();
-						std::cout<<"Threatinfo : " << threatinfo_ptr->file_name()<<std::endl;
+						threatinfo_vec = pe_scan_task->get_threatinfo();
+						std::cout<<"Threatinfo size : " << threatinfo_vec.size()<<std::endl;
 				}
         return true;
     }

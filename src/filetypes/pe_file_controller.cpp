@@ -25,7 +25,7 @@ namespace filetypes
     * @return Message of Infected File detail in msg/ directory
     */
     template<typename MAPPED_FILE>
-    typename pe_file_controller<MAPPED_FILE>::threatinfo_ptr_type *
+    typename pe_file_controller<MAPPED_FILE>::threatinfo_vec_type &
     pe_file_controller<MAPPED_FILE>::scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
             signature_shm_type  *sig_shm,
             signature_engine_type *sig_engine,
@@ -52,10 +52,10 @@ namespace filetypes
         f_shm_handler.initial_file_shm(mapped_file_pe);
 
         //[x] initial step for scanning multiple file with actire-parallel.
-        //Add Signature Engine to thread controller.
+        //[x]Add Signature Engine to thread controller.
         tbbpostscan_pe_col.add_sig_engine(sig_engine);
 
-        //Add Search PE Engine to thread controller.
+        //[x]Add Search PE Engine to thread controller.
         tbbpostscan_pe_col.add_search_engine(iactire_engine_scanner);
 
         tbbpostscan_pe_col.init_syntbb_workload(f_shm_handler.get_map_str_shm(),
@@ -65,13 +65,11 @@ namespace filetypes
 
         tbbpostscan_pe_col.task_start();
 
-        threatinfo_ptr_type * threat_info_ptr = tbbpostscan_pe_col.get_threatinfo();
-
-				logger->write_info("!Result file name ", threat_info_ptr->file_name());
 
         f_shm_handler.delete_file_shm();
 
-        return threat_info_ptr;
+        return tbbpostscan_pe_col.get_threatinfo();
+
     }
 
     /**

@@ -45,7 +45,10 @@ namespace controller
 					  typedef tbbpostscan_pe_task tbbpostscan_pe_task_type;
 
 
-						typedef message_tracethreat::InfectedFileInfo threatinfo_ptr_type;
+						typedef message_tracethreat::InfectedFileInfo threatinfo_type;
+	
+						typedef std::vector<threatinfo_type*> threatinfo_vec_type;
+
             //File structure for scanning.
             //Files insert to shm, thus all file contains on vector file-shm( Key : md5 of file.)
             //Mapped file size (Keys are  md5 file of files, value : Sizes of files)
@@ -65,7 +68,7 @@ namespace controller
             //run multiple file scanning this member function.
             bool task_start();
 
-						threatinfo_ptr_type * get_threatinfo(){ return threatinfo_ptr; }
+						threatinfo_vec_type & get_threatinfo(){ return threatinfo_vec; }
 
         private:
             //pe engine scanning
@@ -85,7 +88,8 @@ namespace controller
             tbbpostscan_pe_task *tbbscan_pe_task;
             monitor_controller  monitor;
 
-						threatinfo_ptr_type  * threatinfo_ptr;
+						threatinfo_vec_type  threatinfo_vec;
+
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
             h_util::clutil_logging<std::string, int>    *logger;

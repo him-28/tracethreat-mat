@@ -29,7 +29,7 @@ namespace policy
     * @param iactire_engine_scanner   AC-Tire engine of TBBScanning.
     */
     template<typename MAPPED_FILE>
-		typename pe_file_policy<MAPPED_FILE>::threatinfo_ptr_type *
+    typename pe_file_policy<MAPPED_FILE>::threatinfo_vec_type &
     pe_file_policy<MAPPED_FILE>::
     scan_file_type(std::vector<const char *> *file_type_vec,
             std::vector<MAPPED_FILE *> *mapped_file_pe,
@@ -41,14 +41,13 @@ namespace policy
         //Check Internal or Exteranl scanning.
         bool internal_msg = false;
 
-				threatinfo_ptr_type * threatinfo_ptr = new message_tracethreat::InfectedFileInfo(); 
-
         if(file_type_vec->empty()) {
             logger->write_info("Start pe_file_policy<MAPPED_FILE>::scan_file_type, file empty");
-            return threatinfo_ptr;
+            return threatinfo_vec;
         }
 
         typename std::vector<MAPPED_FILE *>::iterator iter_files;
+
         for(iter_files = mapped_file_pe->begin();
                 iter_files != mapped_file_pe->end();
                 ++iter_files) {
@@ -77,17 +76,16 @@ namespace policy
         //[x]Add Sig-SHM.
         //[x]Add File-SHM * Declares on scan() member function of pe_file_controller.
         //[x]Add AC-Tire TBB Scanning.
-        threatinfo_ptr = pe_fconl.scan(mapped_file_pe, 
-																														sig_shm, 
-																														sig_engine, 
-																														iactire_engine_scanner);
+        threatinfo_vec = pe_fconl.scan(mapped_file_pe,
+                sig_shm,
+                sig_engine,
+                iactire_engine_scanner);
 
-				logger->write_info("!Result scanning file name ", threatinfo_ptr->file_name());
         //Unmapped file after scan completed.
         if(internal_msg)
-       		 fileoffset_h.unmapped_file(*mapped_file_pe);
+            fileoffset_h.unmapped_file(*mapped_file_pe);
 
-        return threatinfo_ptr;
+        return threatinfo_vec;
     }
 
 
@@ -98,7 +96,7 @@ namespace policy
     * @param sig_shm  SHM-Signature insert to OCL
     */
     template<typename MAPPED_FILE>
-		typename pe_file_policy<MAPPED_FILE>::threatinfo_ptr_type *
+    typename pe_file_policy<MAPPED_FILE>::threatinfo_vec_type &
     pe_file_policy<MAPPED_FILE>::
     scan_file_type(std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
             memory::signature_shm<struct memory::meta_sig,
@@ -200,8 +198,8 @@ namespace policy
     * @param iactire_engine_scanner  ACTire Engine scanning.
     */
     template<typename MAPPED_FILE>
-    //std::vector<struct utils::file_scan_result<MAPPED_FILE>* >& 
-    typename file_scan_policy<MAPPED_FILE>::threatinfo_ptr_type *
+    //std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
+    typename file_scan_policy<MAPPED_FILE>::threatinfo_vec_type &
     file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
             sig_shm_type   *sig_shm,
@@ -231,7 +229,7 @@ namespace policy
                 sig_engine,
                 iactire_engine_scanner);
 
-       
+
         //TODO: Pluging for scanning.
         //f_col_policy->load_plugins_type(mapp_file, pl_result);
 
@@ -246,9 +244,9 @@ namespace policy
     * @param sig_shm SHM-Signature.
     */
     template<typename MAPPED_FILE>
-    //std::vector<struct utils::file_scan_result<MAPPED_FILE>* >& 
-    typename file_scan_policy<MAPPED_FILE>::threatinfo_ptr_type * 
-		file_scan_policy<MAPPED_FILE>::
+    //std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
+    typename file_scan_policy<MAPPED_FILE>::threatinfo_vec_type &
+    file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
             std::vector<MAPPED_FILE *> *mapped_file_vec,
             memory::signature_shm<struct memory::meta_sig,

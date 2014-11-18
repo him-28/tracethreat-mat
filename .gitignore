@@ -61,3 +61,6 @@ tmp/*
 src/test/.deps/*
 src/test/.deps/
 src/test/test_suite
+
+/src/internet/test_server/test_server
+/src/internet/test_client/test_client

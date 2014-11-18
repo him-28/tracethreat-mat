@@ -72,13 +72,13 @@ namespace filetypes
 namespace filetypes
 {
 
-		
+
     namespace h_util = hnmav_util;
     namespace dstr   = data_structure;
     namespace kernel_ocl = hnmav_kernel;
-		
+
     using memory::signature_shm;
-		using utils::uuid_generator;
+    using utils::uuid_generator;
 
     template<typename MAPPED_FILE = struct MAPPED_FILE_PE>
     class pe_file_controller
@@ -96,17 +96,19 @@ namespace filetypes
                     >	 load_ocl_system_type;
 
             typedef memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem>
-            				signature_shm_type;
+                        signature_shm_type;
 
             typedef tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  signature_engine_type;
 
-						/*
+            /*
             typedef memory::signature_shm_pe_controller<struct memory::meta_sig, struct memory::meta_sig_mem>            				 signature_shm_type;
-						*/
+            */
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
-            				iactire_engine_scanner_type;
+            iactire_engine_scanner_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
+            typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+
+						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 
             pe_file_controller();
 
@@ -145,9 +147,9 @@ namespace filetypes
             */
             inline int32_t convert_ec32(uint16_t *buffer);
 
-						//utils::scan_file_code 
-            threatinfo_ptr_type * scan(
-										std::vector<MAPPED_FILE *> *mapped_file_pe,
+            //utils::scan_file_code
+            threatinfo_vec_type &
+            scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
                     signature_shm_type  *sig_shm,
                     signature_engine_type *sig_engine,
                     iactire_engine_scanner_type   *iactire_engine_scanner);
@@ -190,7 +192,7 @@ namespace filetypes
             //set file_shm
             memory::file_shm_handler<MAPPED_FILE>  f_shm_handler;
 
-						utils::uuid_generator uuid_gen;
+            utils::uuid_generator uuid_gen;
 
             //Load TBB
             controller::tbbpostscan_pe_controller<controller::

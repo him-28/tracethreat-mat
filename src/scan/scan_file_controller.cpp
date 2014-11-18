@@ -27,7 +27,7 @@ namespace policy
     //Plan-00004: Initial SHM Signature type.
     template<typename MAPPED_FILE>
     bool scan_pe_internet_controller<MAPPED_FILE>::
-    load_database(std::vector<struct utils::meta_sig *> * meta_sig_vec,
+    load_database(std::vector<struct utils::meta_sig *> *meta_sig_vec,
             std::string shm_sig_name)
     {
         if(meta_sig_vec->empty() || shm_sig_name.empty()) {
@@ -37,12 +37,12 @@ namespace policy
 
         this->meta_sig_vec = meta_sig_vec;
 
-        if(!sig_shm_pe.initial_shm_sigtype(meta_sig_vec, shm_sig_name)){
-					logger->write_info("Engine-PE, Shared Memory initials completed.");
-				  return false;
-				}
+        if(!sig_shm_pe.initial_shm_sigtype(meta_sig_vec, shm_sig_name)) {
+            logger->write_info("Engine-PE, Shared Memory initials completed.");
+            return false;
+        }
 
-				return true;
+        return true;
     }
 
     //Load and Register engine. Frist step to scanning.
@@ -63,7 +63,7 @@ namespace policy
         return true;
     }
 
-    //Plan-00004 : Initial engine only one time to performs system to scann file from server 
+    //Plan-00004 : Initial engine only one time to performs system to scann file from server
     //and anaother system.
     //Add file type to find engine loads  map of mapActireEngine in actire_engine_factory class.
     //Class must set beforce call scan_file.
@@ -87,22 +87,22 @@ namespace policy
 
     //Initial file received from client
     template<typename MAPPED_FILE>
-    typename scan_pe_internet_controller<MAPPED_FILE>::threatinfo_ptr_type * 
-		scan_pe_internet_controller<MAPPED_FILE>::scan_file()
+    typename scan_pe_internet_controller<MAPPED_FILE>::threatinfo_vec_type&
+    scan_pe_internet_controller<MAPPED_FILE>::scan_file()
     {
-				threatinfo_ptr_type * threatinfo_ptr = new message_tracethreat::InfectedFileInfo();
 
         if(pef_policy == NULL) {
             logger->write_info("PE-File Policy is NULL, Scan_pe_internet cannot scan virus");
-            return threatinfo_ptr;
+            return threatinfo_vec;
         }
 
-        threatinfo_ptr = 
-				sf_policy.scan_pe(pef_policy,&sig_shm_pe, &sig_engine, iactire_concur_engine_scanner);
+        //threatinfo_ptr =
+        threatinfo_vec = sf_policy.scan_pe(pef_policy,
+                &sig_shm_pe,
+                &sig_engine,
+                iactire_concur_engine_scanner);
 
-				logger->write_info("Result in file name ", threatinfo_ptr->file_name());
-
-				return threatinfo_ptr;
+        return threatinfo_vec;
     }
 
     template<typename MAPPED_FILE>
@@ -132,9 +132,9 @@ namespace policy
     template<typename MAPPED_FILE>
     scan_pe_internet_controller<MAPPED_FILE>::~scan_pe_internet_controller()
     {
-        
+
     }
 
     template class scan_pe_internet_controller<MAPPED_FILE_PE>;
-		
+
 }

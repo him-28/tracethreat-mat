@@ -1,6 +1,8 @@
 #ifndef CONTROLLER_TBBPOSTSCAN_PE_TASK_HPP
 #define CONTROLLER_TBBPOSTSCAN_PE_TASK_HPP
 
+#include <vector>
+
 #include "tbbscan/data_structure/actire_concurrency.hpp"
 
 #include "threadconcurrency/thread_manager.hpp"
@@ -9,6 +11,7 @@
 #include "threadconcurrency/util_thread.hpp"
 
 #include "msg/message_tracethreat.pb.h"
+
 
 namespace controller
 {
@@ -32,16 +35,17 @@ namespace controller
             typedef tbb::concurrent_unordered_map<std::size_t, std::set<struct utils::meta_sig *> >
                     output_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_ptr_type;
-						
+						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+
+					  typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
+	
             tbbpostscan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout);
-            //Binary hex.
-           // bool set_file(tbb::concurrent_vector<char> *_binary_hex_input);
 	
             bool set_file(std::vector<char> *_binary_hex_input);
 				
 						bool set_file_name(const char * _file_name);
-            //Signature support pe type.
+ 
+           //Signature support pe type.
             bool set_signature(std::vector<struct utils::meta_sig*> *_msig);
 
             bool set_callback(res_callback_type *res_callback);
@@ -52,7 +56,9 @@ namespace controller
 
 						bool set_point(uint64_t _start_point, uint64_t _end_point);
 
-						threatinfo_ptr_type * get_threatinfo();
+						threatinfo_type * get_threatinfo_ptr();
+
+						threatinfo_vec_type & get_threatinfo();
 
             void run();
 					 
@@ -88,7 +94,9 @@ namespace controller
 
 						monitor_controller _sleep;
 
-						threatinfo_ptr_type * threatinfo_ptr;					
+						threatinfo_type *    threatinfo;			
+	
+						threatinfo_vec_type  threatinfo_vec;	
     };
 
 }

@@ -1,7 +1,0 @@
-rule malware : z-bot
-{
-		string:
-			$a = {60 E8 00 00 B8}
-		string:
-			$b = {E8 58 83 3D 50 00 00}
-}
