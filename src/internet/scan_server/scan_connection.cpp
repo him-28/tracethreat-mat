@@ -189,11 +189,7 @@ namespace internet
         }
 
         // Scan file
-        //threatinfo_ptr_type * threatinfo_ptr = 
         threatinfo_vec_type threatinfo_vec = scan_file_->scan_file();
-				
-        //LOG(INFO)<<"Server : Scan file success!, File name from module : "<<threatinfo_ptr->file_name();
-         LOG(INFO)<<"Server : Scan file success!, File name from module : "<<threatinfo_vec.size();
 				
 				threatinfo_vec_type::iterator iter_threatinfo_vec;
 				for(iter_threatinfo_vec = threatinfo_vec.begin();

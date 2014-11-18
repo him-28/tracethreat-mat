@@ -45,9 +45,7 @@ std::ostream& Logger::Start(LogSeverity severity,
 #elif  __linux__
     ctime_r(&tm, time_string);
 #endif
-    return GetStream(severity) << time_string
-            << " " << file << ":" << line
-            << " (" << function << ") " << std::flush;
+    return GetStream(severity) << time_string << " " << file << ":" << line << " (" << function << ") " << std::flush;
 }
 
 Logger::~Logger()

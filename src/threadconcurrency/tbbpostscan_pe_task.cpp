@@ -94,16 +94,9 @@ namespace controller
         failure_ = &actire_engine_->get_failure_fn();
         output_ = &actire_engine_->get_output_fn();
 
-				//return value to queue system.
-        threatinfo = iactire_concur_->search_parallel(*goto_,
-                *failure_,
-                *output_,
-                *call_back_,
-                start_point,
-                end_point,
-                file_name,
-                binary_hex_input_);
 
+				std::cout<<"!Result file Name : " << threatinfo->file_name() <<std::endl;
+				
 				threatinfo_vec.push_back(threatinfo);
 
         _startTime = util_thread::current_time();
@@ -130,6 +123,17 @@ namespace controller
             synchronized s(_monitor);
 
             //std::cout << "Thread-PE-" << _count << " completed " << std::endl;
+					  threatinfo = new message_tracethreat::InfectedFileInfo(); 
+
+						//return value to queue system.
+        		threatinfo = iactire_concur_->search_parallel(*goto_,
+                *failure_,
+                *output_,
+                *call_back_,
+                start_point,
+                end_point,
+                file_name,
+                binary_hex_input_);
 
             _count--;
 
