@@ -42,12 +42,12 @@ namespace controller
 
             typedef tbbscan::iactire_engine<char, true> iactire_concur_type;
 
-					  typedef tbbpostscan_pe_task tbbpostscan_pe_task_type;
+            typedef tbbpostscan_pe_task tbbpostscan_pe_task_type;
 
 
-						typedef message_tracethreat::InfectedFileInfo threatinfo_type;
-	
-						typedef std::vector<threatinfo_type*> threatinfo_vec_type;
+            typedef message_tracethreat::InfectedFileInfo threatinfo_type;
+
+            typedef std::vector<threatinfo_type *> threatinfo_vec_type;
 
             //File structure for scanning.
             //Files insert to shm, thus all file contains on vector file-shm( Key : md5 of file.)
@@ -68,7 +68,14 @@ namespace controller
             //run multiple file scanning this member function.
             bool task_start();
 
-						threatinfo_vec_type & get_threatinfo(){ return threatinfo_vec; }
+            threatinfo_vec_type& get_threatinfo() {
+
+							//	logger->write_info("Result threat infomation size " << 
+							//			boost::lexical_cast<std::string>(res_callback.get_result().size()));
+
+                //treatinfo_vec.swap(res_callback.get_result());
+                return res_callback.get_result();
+            }
 
         private:
             //pe engine scanning
@@ -88,7 +95,9 @@ namespace controller
             tbbpostscan_pe_task *tbbscan_pe_task;
             monitor_controller  monitor;
 
-						threatinfo_vec_type  threatinfo_vec;
+            threatinfo_vec_type  threatinfo_vec;
+
+            tbbscan::result_callback<std::vector<threatinfo_type *>, threatinfo_type> res_callback;
 
             //logger
             boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;

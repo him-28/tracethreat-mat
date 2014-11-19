@@ -4,6 +4,24 @@
 
 namespace controller
 {
+
+
+    /*//Check bug parallel insert
+    for(int count_str = 0; count_str < buff_sync_internal->buff->binary_hex.size(); count_str++)
+    {
+    	std::cout<<"Test input : "<< buff_sync_internal->buff->binary_hex[count_str]<<std::endl;
+    }
+    */
+
+    /*
+    printf("\nCheck Position\n");
+    tbb::concurrent_vector<char> test_vec = buff_sync_internal->buff->binary_hex;
+    for(int count_start = start_point; count_start < 60; count_start++)
+    	printf("%c", test_vec[count_start]);
+    printf("\nEnd Position\n");
+    */
+
+
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
     bool tbbpostscan_pe_controller<BufferSync, MAPPED_FILE, SignatureTypeMemory>::init_syntbb_workload(
             typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
@@ -15,13 +33,9 @@ namespace controller
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, Start Load data to task",
                 hnmav_util::format_type::type_center);
 
-        std::vector<std::string>  sig_key_vec;
-        //struct tbbscan::results_callback<std::vector<std::string> >  res_callback(sig_key_vec);
-        //typename tbbpostscan_pe_task<MAPPED_FILE, SignatureTypeMemory>::res_callback_type res_callback;
         //[x] Get all data from mapped_file_vec for invoke file_name in order hash data.
         //[x]  Insert binary from File-SHM to write_binary_hex is contains all binary hex file.
 
-        //new BufferSyncTBB();
         buff_sync_internal  = new BufferSync();
         boost::hash<char *>  hash_file_name;
 
@@ -68,14 +82,6 @@ namespace controller
 
             }//if
 
-
-            /*//Check bug parallel insert
-            for(int count_str = 0; count_str < buff_sync_internal->buff->binary_hex.size(); count_str++)
-            {
-            	std::cout<<"Test input : "<< buff_sync_internal->buff->binary_hex[count_str]<<std::endl;
-            }
-            */
-
         }//for
 
         //[x] Get Position per file add to task search.
@@ -104,8 +110,6 @@ namespace controller
             uint64_t end_point   = s_tbb->end_point;
 
 
-            std::vector<std::string> data_sig;
-            tbbscan::result_callback<std::vector<std::string> >  res_callback(data_sig);
             task_count   = map_fmd5_id->size(); // Size of map contain number of file per task.
             worker_count = map_fmd5_id->size(); // worker[ task-1, task-2, task-3..]. tasks per work.
             timeout_     = 1000LL; //default
@@ -119,13 +123,7 @@ namespace controller
             tbbscan_pe_task->set_callback(&res_callback);
             tbbscan_pe_task->set_sig_engine(actire_engine_);
             tbbscan_pe_task->set_search_engine(iactire_concur_);
-            /*
-            printf("\nCheck Position\n");
-            tbb::concurrent_vector<char> test_vec = buff_sync_internal->buff->binary_hex;
-            for(int count_start = start_point; count_start < 60; count_start++)
-            	printf("%c", test_vec[count_start]);
-            printf("\nEnd Position\n");
-            */
+
             //insert to tasks per thread.
             tasks_tbbscan_pe.insert(boost::shared_ptr<tbbpostscan_pe_task_type>(tbbscan_pe_task));
 
@@ -208,14 +206,6 @@ namespace controller
 
         logger->write_info("tbbpostscan_pe_controller::task_start, Completed task");
 
-        for(ix = tasks_tbbscan_pe.begin();
-                ix != tasks_tbbscan_pe.end();
-                ++ix) {
-
-						tbbpostscan_pe_task * pe_scan_task = ix->get();
-						threatinfo_vec = pe_scan_task->get_threatinfo();
-						std::cout<<"Threatinfo size : " << threatinfo_vec.size()<<std::endl;
-				}
         return true;
     }
 

@@ -22,8 +22,6 @@ namespace controller
     {
         public:
 						
-            typedef struct tbbscan::result_callback<std::vector<std::string> > res_callback_type;
-
             typedef tbbscan::actire_sig_engine<char, true>  actire_sig_engine_type;
 
             typedef tbbscan::iactire_engine<char, true> iactire_concur_type;
@@ -38,7 +36,12 @@ namespace controller
 						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
 
 					  typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
+
+						typedef std::vector<threatinfo_type*>  rcb_container_type;
 	
+            typedef struct tbbscan::result_callback<rcb_container_type, threatinfo_type> 
+							result_callback_type;
+
             tbbpostscan_pe_task(monitor_controller& monitor, size_t& count, int64_t timeout);
 	
             bool set_file(std::vector<char> *_binary_hex_input);
@@ -48,7 +51,9 @@ namespace controller
            //Signature support pe type.
             bool set_signature(std::vector<struct utils::meta_sig*> *_msig);
 
-            bool set_callback(res_callback_type *res_callback);
+            bool set_callback(result_callback_type *res_callback);
+
+						rcb_container_type & get_callback();				
 
             bool set_sig_engine(actire_sig_engine_type *_actire_engine);
 
@@ -75,7 +80,7 @@ namespace controller
             goto_type 					*goto_;
             failure_type 				*failure_;
             output_type   			*output_;
-            res_callback_type   *call_back_;
+            result_callback_type   *call_back_;
             uint64_t       			start_point;
             uint64_t     	 			end_point;
             const char 					*file_name;
