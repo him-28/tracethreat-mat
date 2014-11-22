@@ -22,16 +22,17 @@ namespace internet
                 file_sig_path(file_path) {
 
                 LOG(INFO)<<"Server : Scan server start...";
-								LOG(INFO)<<"Server : Load scanning engine...";
+                LOG(INFO)<<"Server : Load scanning engine...";
 
-		            if(!deploy_scan_engine())
-										LOG(INFO)<<"Server : deploy scan engine compeleted.";	
+                if(!deploy_scan_engine())
+                    LOG(INFO)<<"Server : deploy scan engine compeleted.";
 
                 start_accept();
                 start_thread_accept(CPU_THREAD_SIZE);
             }
 
             void listen_thread() {
+                //boost::recursive_mutex::scoped_lock lock(res_mux);
                 io_service_.run();
             }
 
@@ -40,13 +41,16 @@ namespace internet
                     scan_connection_thread.create_thread(
                             boost::bind(&scan_server::impl::listen_thread, this));
                 }
+
+	                scan_connection_thread.join_all();
+
             }
 
             void start_accept() {
 
                 scan_connection::pointer  new_connection =
                         internet::scan_connection::create(io_service_, scan_file);
-								
+
                 acceptor.async_accept(new_connection->get_socket(),
                         boost::bind(&scan_server::impl::handle_accept,
                                 this,
@@ -54,7 +58,7 @@ namespace internet
                                 asio::placeholders::error));
 
                 LOG(INFO)<<"Server : Start accept client connect to server";
-								LOG(INFO)<<"Server : thread id : " <<boost::this_thread::get_id();
+                LOG(INFO)<<"Server : thread id : " <<boost::this_thread::get_id();
             }
 
 
@@ -77,7 +81,7 @@ namespace internet
 
                 LOG(INFO)<<"Server : Start deploy scan engine.";
 
-   
+
                 sig_parse = new parser::hdb_sig();
 
                 msig_parse_vec = new std::vector<parser::meta_sigparse *>();
@@ -144,6 +148,9 @@ namespace internet
                 return true;
             }
 
+            ~impl() {
+                //scan_connection_thread.interrupt();
+            }
 
         private:
             //prviate all
@@ -154,13 +161,16 @@ namespace internet
             boost::thread_group scan_connection_thread;
             boost::scoped_ptr<asio::io_service::work> scan_monitor_connection;
 
-						parser::sig_parser * sig_parse;
+            parser::sig_parser *sig_parse;
 
-		 	    	std::vector<msig_ptr>  msig_ptr_vec; 
+            std::vector<msig_ptr>  msig_ptr_vec;
 
-						std::vector<parser::meta_sigparse*>  * msig_parse_vec; 
+            std::vector<parser::meta_sigparse *>   *msig_parse_vec;
 
-        		policy::scan_internet_controller<struct MAPPED_FILE_PE> * scan_file;
+            policy::scan_internet_controller<struct MAPPED_FILE_PE> *scan_file;
+
+            //handle thread
+            //mutable boost::recursive_mutex res_mux;
 
 
     };

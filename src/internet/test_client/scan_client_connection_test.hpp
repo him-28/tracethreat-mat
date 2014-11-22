@@ -70,7 +70,13 @@ TEST(ScanClient, connection_client)
     std::string port("4050");
     boost::asio::io_service io_service;
     internet::service::scan_client::start(io_service,url_addr, port, fs_request_vec);
-    io_service.run();
+   	io_service.run();
+
+    boost::asio::io_service io_service1;
+    internet::service::scan_client::start(io_service1,url_addr, port, fs_request_vec);
+   	io_service1.run();
+
+
 
 }
 

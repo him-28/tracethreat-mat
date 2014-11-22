@@ -1,0 +1,11 @@
+#ifndef INTERNET_SECURITY_CONNECTION_HPP
+#define INTERNET_SECURITY_CONNECTION_HPP
+
+class security_connection{
+
+
+
+};
+
+
+#endif /* INTERNET_SECURITY_CONNECTION_HPP */

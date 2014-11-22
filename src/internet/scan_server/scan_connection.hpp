@@ -1,6 +1,9 @@
 #ifndef INTERNET_SCAN_CONNECTION_HPP
 #define INTERNET_SCAN_CONNECTION_HPP
 
+//Default timeout support client. We plan use configure from database configure of server service.
+#define TCP_SOCKET_TIMEOUT   60
+
 /*
 * Copyright 2014 Chatsiri Rattana.
 *
@@ -31,6 +34,7 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
+//#include <memory>
 #include <vector>
 
 #include "scan/scan_file_controller.hpp"
@@ -76,11 +80,14 @@ namespace internet
 
             void start();
 
+						~scan_connection(){		
+							
+						}
 
         private:
 
             asio::ip::tcp::socket msgs_socket;
-            //message_scan& msgs_scan_ref;
+
             std::vector<uint8_t> msgs_read_buffer;
 
             packedmessage_scan<message_scan::RequestScan> msgs_packed_request_scan;
@@ -91,8 +98,10 @@ namespace internet
                 msgs_socket(io_service),
                 msgs_packed_request_scan(boost::shared_ptr<message_scan::RequestScan>(
                         new message_scan::RequestScan())),
-								scan_file_(scan_file) {
- 
+								scan_file_(scan_file),
+								timer_(io_service, boost::posix_time::seconds(TCP_SOCKET_TIMEOUT)) {
+								//Start timer check timeout per connection.
+								start_socket_timer(); 
             }
 
 						//Frist response to client.
@@ -107,8 +116,14 @@ namespace internet
            typename scan_connection::MsgsResponsePointer
             prepare_response_scan(MsgsRequestPointer  msg_request);
 
+						typename scan_connection::MsgsResponsePointer
+						prepare_response_close(MsgsRequestPointer msg_request);
+
 						//Handle scan engine.
 				    bool handle_scan_process(MsgsRequestPointer request_ptr);
+
+						//Handle 
+						bool handle_close_process(MsgsRequestPointer request_ptr);
 
             //Response
             void write_response(MsgsRequestPointer  request_ptr, MsgsResponsePointer  response_ptr);
@@ -120,9 +135,21 @@ namespace internet
             void handle_read_header(const boost::system::error_code& error, std::size_t bytes);
 
             void handle_read_body(const boost::system::error_code& error);
- 
-            MsgsRequestPointer request_ptr;
 
+						//utils handler socket timeout connection 
+						//:"Boost asio::deadline_timer is resetting before timeout " http://goo.gl/ACSd19
+						bool refresh_socket_timer();
+		
+						//socket close
+						bool socket_timeout(const boost::system::error_code & error);
+						
+						//socket timeout initial 
+						void start_socket_timer();
+	
+						boost::asio::deadline_timer  timer_;
+
+						//Message request from server. 
+            MsgsRequestPointer request_ptr;
 
 						//Signature database path.
 						std::string file_sig_path_;
@@ -130,6 +157,10 @@ namespace internet
 						parser::sig_parser * sig_parse;
 
 					  scan_file_type * scan_file_;
+
+						//handle thread
+						//mutable boost::mutex res_mux;
+						//boost::unique_lock<boost::recursive_mutex> lock_;						
  
     };
 

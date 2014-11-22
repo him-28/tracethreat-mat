@@ -11,11 +11,15 @@ namespace internet
     //____________________________ Scan_connection __________________________________
     asio::ip::tcp::socket& scan_connection::get_socket()
     {
+       // boost::mutex::scoped_lock lock(res_mux);
+
         return msgs_socket;
     }
 
     void scan_connection::start()
     {
+      //  boost::mutex::scoped_lock lock(res_mux);
+
         LOG(INFO)<<"Server : Start server... ";
 
         start_read_header();
@@ -24,26 +28,94 @@ namespace internet
     //Read header is 4 bytes. End of bytes is size of body
     void scan_connection::start_read_header()
     {
+
+       // boost::mutex::scoped_lock  lock(res_mux);
+				//lock_.lock();
         LOG(INFO)<<"Server : start_read_header.";
+
         //Resize size for contains Header of packet.
         msgs_read_buffer.resize(HEADER_SIZE);
         msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
                 boost::bind(&scan_connection::handle_read_header, shared_from_this(),
                         _1, _2));
+
+        //Reset timer after read data completed.
+        refresh_socket_timer();
+			  //lock_.unlock();
     }
+
+    void scan_connection::
+    start_socket_timer()
+    {
+        //boost::mutex::scoped_lock lock(res_mux);
+        //lock_.lock();
+        timer_.async_wait(boost::bind(&scan_connection::socket_timeout,
+                this,
+                boost::asio::placeholders::error));
+        //lock_.unlock();
+    }
+
+    bool scan_connection::
+    socket_timeout(const boost::system::error_code& error)
+    {
+        //boost::mutex::scoped_lock lock(res_mux);
+			  //lock_.lock();
+        if(error != boost::asio::error::operation_aborted) {
+            msgs_socket.close();
+            return true;
+        }
+				//lock_.unlock();
+    }
+
+    bool scan_connection::
+    refresh_socket_timer()
+    {
+        //boost::mutex::scoped_lock lock(res_mux);
+				//lock_.lock();
+        if(msgs_socket.is_open()) {
+            timer_.expires_from_now(boost::posix_time::seconds(TCP_SOCKET_TIMEOUT));
+            timer_.async_wait(boost::bind(&scan_connection::socket_timeout,
+                    this,
+                    boost::asio::placeholders::error));
+        }
+				//lock_.unlock();
+        return false;
+    }
+
+
+    //_________________________ Close socket _____________________
+    //Force close socket.
+    typename scan_connection::MsgsResponsePointer scan_connection::
+    prepare_response_close(MsgsRequestPointer msg_request)
+    {
+        //boost::mutex::scoped_lock lock(res_mux);
+        //lock_.lock();
+        //[-] Add Security Module handle received/close socket from client.
+        MsgsResponsePointer close_response(new message_scan::ResponseScan);
+        close_response->set_uuid(msg_request->uuid());
+        close_response->set_type(message_scan::ResponseScan::CLOSE_CONNECTION);
+        close_response->set_timestamp(std::string("0:0:0:0"));
+        //Set close socket at here.
+        LOG(INFO)<"Server : prepare_reponse_close success";
+				//lock_.unlock()
+				return close_response;
+    }
+
 
 
     //_________________________ Scan ______________________________
     typename scan_connection::MsgsResponsePointer scan_connection::
     prepare_response_scan(MsgsRequestPointer  msg_request)
     {
+        //boost::mutex::scoped_lock lock(res_mux);
+        //lock_.lock();
         MsgsResponsePointer  scan_response(new message_scan::ResponseScan);
         scan_response->set_uuid(msg_request->uuid());
         scan_response->set_type(message_scan::ResponseScan::SCAN_SUCCESS);
         scan_response->set_timestamp(std::string("0:0:0:0"));
-			  //scan_response->set_file_name(msg_request->file_name());
+        //scan_response->set_file_name(msg_request->file_name());
         LOG(INFO)<<"Server : prepare_response_scan success";
-
+				//lock_.unlock();
         return scan_response;
 
     }
@@ -53,9 +125,12 @@ namespace internet
     typename scan_connection::MsgsResponsePointer scan_connection::
     prepare_response_register(MsgsRequestPointer  msgs_request)
     {
-
+				
+        //boost::mutex::scoped_lock lock(res_mux);
+        //lock_.lock();
         //[-]Verify UUID
         //[-]Sucess to verfity not repeatedly UUID in scanning system.
+        //[-]Add Security Module handle received/close socket from client.
         MsgsResponsePointer  register_response(new message_scan::ResponseScan);
         register_response->set_uuid(msgs_request->uuid());
         register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
@@ -63,13 +138,16 @@ namespace internet
 
         LOG(INFO)<<"Server : prepare_response_register success";
 
+				//lock_.unlock();
+
         return register_response;
     }
 
 
     void scan_connection::write_response(MsgsRequestPointer  request_ptr, MsgsResponsePointer response_ptr)
     {
-
+        //boost::mutex::scoped_lock lock(res_mux);
+				//lock_.lock();
         LOG(INFO)<<"------------------------Write Response--------------------------";
 
         try {
@@ -86,6 +164,8 @@ namespace internet
                             shared_from_this()));
 
             LOG(INFO)<<"Server : write_response, write response to client completed 1st.";
+            //refresh timer.
+            refresh_socket_timer();
 
         } catch(boost::system::system_error& error) {
 
@@ -94,12 +174,32 @@ namespace internet
         }
 
         LOG(INFO)<<"-------------------------------------------------------------";
+				//lock_.unlock();
+    }
 
+    bool  scan_connection::handle_close_process(MsgsRequestPointer request_ptr)
+    {
+				//lock_.lock();
+
+        //boost::mutex::scoped_lock lock(res_mux);
+
+        std::string uuid = request_ptr->uuid();
+
+        //UUID not value
+        if(uuid.empty()){
+						//lock_.unlock();
+            return false;
+				}
+        //Checking UUID from database.
+				//lock_.unlock();
+        return true;
     }
 
     bool	scan_connection::handle_scan_process(MsgsRequestPointer request_ptr)
     {
 
+        //boost::mutex::scoped_lock lock(res_mux);
+				//lock_.lock();
         LOG(INFO)<<"Server : Register internal message size : " <<
                 request_ptr->request_set_binary_value_size();
 
@@ -190,15 +290,16 @@ namespace internet
 
         // Scan file
         threatinfo_vec_type threatinfo_vec = scan_file_->scan_file();
-				
-				threatinfo_vec_type::iterator iter_threatinfo_vec;
-				for(iter_threatinfo_vec = threatinfo_vec.begin();
-						iter_threatinfo_vec != threatinfo_vec.end();
-						++iter_threatinfo_vec){
-						threatinfo_type * threat_info = *iter_threatinfo_vec;
-						LOG(INFO)<<"Server scan file name : " << threat_info->file_name() <<", Success! ";
-				} 
 
+        threatinfo_vec_type::iterator iter_threatinfo_vec;
+
+        for(iter_threatinfo_vec = threatinfo_vec.begin();
+                iter_threatinfo_vec != threatinfo_vec.end();
+                ++iter_threatinfo_vec) {
+            threatinfo_type *threat_info = *iter_threatinfo_vec;
+            LOG(INFO)<<"Server scan file name : " << threat_info->file_name() <<", Success! ";
+        }
+				//lock_.unlock();
         return true;
     }
 
@@ -215,6 +316,8 @@ namespace internet
 
     void scan_connection::handle_read_body(const boost::system::error_code& error)
     {
+        //boost::mutex::scoped_lock lock(res_mux);
+				//lock_.lock();
         LOG(INFO)<<"Server : handle_read_body  ";
 
         //Read body before send to handle_request
@@ -244,18 +347,32 @@ namespace internet
             case message_scan::RequestScan::SCAN :
 
                 LOG(INFO)<<"---------------------SCAN TYPE--------------------";
-               
+
                 if(!handle_scan_process(request_ptr)) {
                     LOG(INFO)<<" Cannot scanning message from client.";
                 }
 
-							 LOG(INFO)<<"------------------END SCAN TYPE-------------------";
+                LOG(INFO)<<"------------------END SCAN TYPE-------------------";
 
                 write_response(request_ptr, prepare_response_scan(request_ptr));
 
                 break;
 
             case message_scan::RequestScan::CLOSE_CONNECTION :
+                //Close socket in thread.
+                LOG(INFO)<<"-------------------- CLOSE Connection --------------";
+
+                if(!handle_close_process(request_ptr)) {
+                    LOG(INFO)<<" Cannot close message internal process problem";
+                }
+
+                write_response(request_ptr, prepare_response_close(request_ptr));
+
+                if(msgs_socket.is_open()) {
+                    msgs_socket.close();
+										//lock_.unlock();
+                    LOG(INFO)<<"-------------------- CLOSE Connection From Server compeleted -------------";
+                }
 
                 break;
 
@@ -266,13 +383,15 @@ namespace internet
         } else {
             LOG(INFO)<<" Server : Cannot unpack message from client ";
         }//if-else unpack
-
+			//lock_.unlock();
     }//scan_connection::handle_read_body
 
     void scan_connection::handle_read_header(
             const boost::system::error_code& error,
             std::size_t bytes)
     {
+        //boost::mutex::scoped_lock lock(res_mux);
+				//lock_.lock();
         LOG(INFO)<<"Server : handle_read_header , Start read header and unpack ";
 
         try {
@@ -284,10 +403,13 @@ namespace internet
         } catch(boost::system::system_error e) {
             LOG(INFO)<<"handle_read_header, error : " << e.code();
         }
+			 //lock_.unlock();
     }
 
     void scan_connection::start_read_body(unsigned msgs_length)
     {
+        //boost::mutex::scoped_lock lock(res_mux);
+				//lock_.lock();
         LOG(INFO)<<"Server : start_read_body ";
         msgs_read_buffer.resize(HEADER_SIZE + msgs_length);
         asio::mutable_buffers_1 buffer =
@@ -295,8 +417,9 @@ namespace internet
         asio::async_read(msgs_socket, buffer,
                 boost::bind(&scan_connection::handle_read_body, shared_from_this(),
                         asio::placeholders::error));
-
-
+        //Refresh socket
+        refresh_socket_timer();
+				//lock_.unlock();
     }//start_read_body
 
 
