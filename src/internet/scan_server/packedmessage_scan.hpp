@@ -55,6 +55,8 @@ namespace internet
 
             packedmessage_scan(message_pointer msg = message_pointer()) : msgs(msg) { }
 
+						//explicit packedmessage_scan() : msgs(message_pointer()){ }
+
             unsigned decode_header(const data_buffer& buffer)const;
 
             bool pack(data_buffer& buffer)const;

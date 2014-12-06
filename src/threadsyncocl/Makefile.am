@@ -54,6 +54,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/internet/client_fresh/updated_sign.hpp \
  $(top_builddir)/src/internet/scan_server/scan_server.hpp \
  $(top_builddir)/src/internet/scan_server/scan_connection.hpp \
+ $(top_builddir)/src/internet/scan_server/security_connection.hpp \
  $(top_builddir)/src/internet/scan_client/scan_client.hpp \
  $(top_builddir)/src/internet/scan_client/scan_dir.hpp \
  $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.hpp \
@@ -106,6 +107,7 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/internet/client_fresh/updated_sign.cpp \
   $(top_builddir)/src/internet/scan_server/scan_server.cpp \
   $(top_builddir)/src/internet/scan_server/scan_connection.cpp \
+  $(top_builddir)/src/internet/scan_server/security_connection.cpp \
   $(top_builddir)/src/internet/scan_client/scan_client.cpp \
   $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.cpp \
   $(top_builddir)/src/internet/scan_client/basic_scan_dir.cpp \

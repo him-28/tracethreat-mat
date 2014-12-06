@@ -245,10 +245,10 @@ void protobuf_AddDesc_message_5fscan_2eproto() {
     "DER\020\002\022\014\n\010MD5_BODY\020\003\022\t\n\005SHA_1\020\004\022\013\n\007SHA_25"
     "6\020\005\022\n\n\006SSDEEP\020\006\"(\n\010FileType\022\006\n\002PE\020\001\022\007\n\003E"
     "LF\020\002\022\013\n\007PROCESS\020\003\"\233\001\n\013RequestType\022\014\n\010REG"
-    "ISTER\020\001\022\024\n\020REGISTER_SUCCESS\020\002\022\026\n\022REGISTE"
-    "R_UNSUCCESS\020\003\022\010\n\004SCAN\020\004\022\020\n\014SCAN_SUCCESS\020"
-    "\005\022\022\n\016SCAN_UNSUCCESS\020\006\022\n\n\006RESULT\020\007\022\024\n\020CLO"
-    "SE_CONNECTION\020\010\"\271\007\n\014ResponseScan\0225\n\004type"
+    "ISTER\020\001\022\010\n\004SCAN\020\002\022\024\n\020CLOSE_CONNECTION\020\003\022"
+    "\024\n\020REGISTER_SUCCESS\020\004\022\026\n\022REGISTER_UNSUCC"
+    "ESS\020\005\022\020\n\014SCAN_SUCCESS\020\006\022\022\n\016SCAN_UNSUCCES"
+    "S\020\007\022\n\n\006RESULT\020\010\"\271\007\n\014ResponseScan\0225\n\004type"
     "\030\001 \002(\0162\'.message_scan.ResponseScan.Respo"
     "nseType\022\014\n\004uuid\030\002 \002(\014\022\021\n\ttimestamp\030\003 \002(\014"
     "\022T\n\031response_get_binary_value\030\004 \003(\01321.me"
@@ -269,10 +269,10 @@ void protobuf_AddDesc_message_5fscan_2eproto() {
     "\022\014\n\010MD5_BODY\020\003\022\t\n\005SHA_1\020\004\022\013\n\007SHA_256\020\005\022\n"
     "\n\006SSDEEP\020\006\"(\n\010FileType\022\006\n\002PE\020\001\022\007\n\003ELF\020\002\022"
     "\013\n\007PROCESS\020\003\"\234\001\n\014ResponseType\022\014\n\010REGISTE"
-    "R\020\001\022\024\n\020REGISTER_SUCCESS\020\002\022\026\n\022REGISTER_UN"
-    "SUCCESS\020\003\022\010\n\004SCAN\020\004\022\020\n\014SCAN_SUCCESS\020\005\022\022\n"
-    "\016SCAN_UNSUCCESS\020\006\022\n\n\006RESULT\020\007\022\024\n\020CLOSE_C"
-    "ONNECTION\020\010", 1931);
+    "R\020\001\022\010\n\004SCAN\020\002\022\024\n\020CLOSE_CONNECTION\020\003\022\024\n\020R"
+    "EGISTER_SUCCESS\020\004\022\026\n\022REGISTER_UNSUCCESS\020"
+    "\005\022\020\n\014SCAN_SUCCESS\020\006\022\022\n\016SCAN_UNSUCCESS\020\007\022"
+    "\n\n\006RESULT\020\010", 1931);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "message_scan.proto", &protobuf_RegisterTypes);
   RequestScan::default_instance_ = new RequestScan();
@@ -373,13 +373,13 @@ bool RequestScan_RequestType_IsValid(int value) {
 
 #ifndef _MSC_VER
 const RequestScan_RequestType RequestScan::REGISTER;
+const RequestScan_RequestType RequestScan::SCAN;
+const RequestScan_RequestType RequestScan::CLOSE_CONNECTION;
 const RequestScan_RequestType RequestScan::REGISTER_SUCCESS;
 const RequestScan_RequestType RequestScan::REGISTER_UNSUCCESS;
-const RequestScan_RequestType RequestScan::SCAN;
 const RequestScan_RequestType RequestScan::SCAN_SUCCESS;
 const RequestScan_RequestType RequestScan::SCAN_UNSUCCESS;
 const RequestScan_RequestType RequestScan::RESULT;
-const RequestScan_RequestType RequestScan::CLOSE_CONNECTION;
 const RequestScan_RequestType RequestScan::RequestType_MIN;
 const RequestScan_RequestType RequestScan::RequestType_MAX;
 const int RequestScan::RequestType_ARRAYSIZE;
@@ -1641,13 +1641,13 @@ bool ResponseScan_ResponseType_IsValid(int value) {
 
 #ifndef _MSC_VER
 const ResponseScan_ResponseType ResponseScan::REGISTER;
+const ResponseScan_ResponseType ResponseScan::SCAN;
+const ResponseScan_ResponseType ResponseScan::CLOSE_CONNECTION;
 const ResponseScan_ResponseType ResponseScan::REGISTER_SUCCESS;
 const ResponseScan_ResponseType ResponseScan::REGISTER_UNSUCCESS;
-const ResponseScan_ResponseType ResponseScan::SCAN;
 const ResponseScan_ResponseType ResponseScan::SCAN_SUCCESS;
 const ResponseScan_ResponseType ResponseScan::SCAN_UNSUCCESS;
 const ResponseScan_ResponseType ResponseScan::RESULT;
-const ResponseScan_ResponseType ResponseScan::CLOSE_CONNECTION;
 const ResponseScan_ResponseType ResponseScan::ResponseType_MIN;
 const ResponseScan_ResponseType ResponseScan::ResponseType_MAX;
 const int ResponseScan::ResponseType_ARRAYSIZE;

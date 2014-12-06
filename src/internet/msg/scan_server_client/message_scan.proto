@@ -40,13 +40,13 @@ message RequestScan{
 
 		enum RequestType{
 			REGISTER = 1;
-			REGISTER_SUCCESS = 2;
-			REGISTER_UNSUCCESS = 3;
-      SCAN = 4;
-			SCAN_SUCCESS = 5;
-			SCAN_UNSUCCESS = 6;
-			RESULT = 7;
-			CLOSE_CONNECTION = 8;
+      SCAN = 2;
+			CLOSE_CONNECTION = 3;
+			REGISTER_SUCCESS = 4;
+			REGISTER_UNSUCCESS = 5;
+			SCAN_SUCCESS = 6;
+			SCAN_UNSUCCESS = 7;
+			RESULT = 8;
 		}
 
 		required RequestType  type     	= 1;
@@ -97,14 +97,16 @@ message ResponseScan{
 		}
 
 		enum ResponseType{
+
 			REGISTER = 1;
-			REGISTER_SUCCESS = 2;
-			REGISTER_UNSUCCESS = 3;
-      SCAN = 4;
-			SCAN_SUCCESS = 5;
-			SCAN_UNSUCCESS = 6;
-			RESULT = 7;
-			CLOSE_CONNECTION = 8;
+      SCAN = 2;
+			CLOSE_CONNECTION = 3;
+			REGISTER_SUCCESS = 4;
+			REGISTER_UNSUCCESS = 5;
+			SCAN_SUCCESS = 6;
+			SCAN_UNSUCCESS = 7;
+			RESULT = 8;
+
 		}
 
 		required ResponseType  type      = 1;

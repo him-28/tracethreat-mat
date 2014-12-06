@@ -86,17 +86,17 @@ inline bool RequestScan_FileType_Parse(
 }
 enum RequestScan_RequestType {
   RequestScan_RequestType_REGISTER = 1,
-  RequestScan_RequestType_REGISTER_SUCCESS = 2,
-  RequestScan_RequestType_REGISTER_UNSUCCESS = 3,
-  RequestScan_RequestType_SCAN = 4,
-  RequestScan_RequestType_SCAN_SUCCESS = 5,
-  RequestScan_RequestType_SCAN_UNSUCCESS = 6,
-  RequestScan_RequestType_RESULT = 7,
-  RequestScan_RequestType_CLOSE_CONNECTION = 8
+  RequestScan_RequestType_SCAN = 2,
+  RequestScan_RequestType_CLOSE_CONNECTION = 3,
+  RequestScan_RequestType_REGISTER_SUCCESS = 4,
+  RequestScan_RequestType_REGISTER_UNSUCCESS = 5,
+  RequestScan_RequestType_SCAN_SUCCESS = 6,
+  RequestScan_RequestType_SCAN_UNSUCCESS = 7,
+  RequestScan_RequestType_RESULT = 8
 };
 bool RequestScan_RequestType_IsValid(int value);
 const RequestScan_RequestType RequestScan_RequestType_RequestType_MIN = RequestScan_RequestType_REGISTER;
-const RequestScan_RequestType RequestScan_RequestType_RequestType_MAX = RequestScan_RequestType_CLOSE_CONNECTION;
+const RequestScan_RequestType RequestScan_RequestType_RequestType_MAX = RequestScan_RequestType_RESULT;
 const int RequestScan_RequestType_RequestType_ARRAYSIZE = RequestScan_RequestType_RequestType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* RequestScan_RequestType_descriptor();
@@ -154,17 +154,17 @@ inline bool ResponseScan_FileType_Parse(
 }
 enum ResponseScan_ResponseType {
   ResponseScan_ResponseType_REGISTER = 1,
-  ResponseScan_ResponseType_REGISTER_SUCCESS = 2,
-  ResponseScan_ResponseType_REGISTER_UNSUCCESS = 3,
-  ResponseScan_ResponseType_SCAN = 4,
-  ResponseScan_ResponseType_SCAN_SUCCESS = 5,
-  ResponseScan_ResponseType_SCAN_UNSUCCESS = 6,
-  ResponseScan_ResponseType_RESULT = 7,
-  ResponseScan_ResponseType_CLOSE_CONNECTION = 8
+  ResponseScan_ResponseType_SCAN = 2,
+  ResponseScan_ResponseType_CLOSE_CONNECTION = 3,
+  ResponseScan_ResponseType_REGISTER_SUCCESS = 4,
+  ResponseScan_ResponseType_REGISTER_UNSUCCESS = 5,
+  ResponseScan_ResponseType_SCAN_SUCCESS = 6,
+  ResponseScan_ResponseType_SCAN_UNSUCCESS = 7,
+  ResponseScan_ResponseType_RESULT = 8
 };
 bool ResponseScan_ResponseType_IsValid(int value);
 const ResponseScan_ResponseType ResponseScan_ResponseType_ResponseType_MIN = ResponseScan_ResponseType_REGISTER;
-const ResponseScan_ResponseType ResponseScan_ResponseType_ResponseType_MAX = ResponseScan_ResponseType_CLOSE_CONNECTION;
+const ResponseScan_ResponseType ResponseScan_ResponseType_ResponseType_MAX = ResponseScan_ResponseType_RESULT;
 const int ResponseScan_ResponseType_ResponseType_ARRAYSIZE = ResponseScan_ResponseType_ResponseType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ResponseScan_ResponseType_descriptor();
@@ -553,13 +553,13 @@ class RequestScan : public ::google::protobuf::Message {
 
   typedef RequestScan_RequestType RequestType;
   static const RequestType REGISTER = RequestScan_RequestType_REGISTER;
+  static const RequestType SCAN = RequestScan_RequestType_SCAN;
+  static const RequestType CLOSE_CONNECTION = RequestScan_RequestType_CLOSE_CONNECTION;
   static const RequestType REGISTER_SUCCESS = RequestScan_RequestType_REGISTER_SUCCESS;
   static const RequestType REGISTER_UNSUCCESS = RequestScan_RequestType_REGISTER_UNSUCCESS;
-  static const RequestType SCAN = RequestScan_RequestType_SCAN;
   static const RequestType SCAN_SUCCESS = RequestScan_RequestType_SCAN_SUCCESS;
   static const RequestType SCAN_UNSUCCESS = RequestScan_RequestType_SCAN_UNSUCCESS;
   static const RequestType RESULT = RequestScan_RequestType_RESULT;
-  static const RequestType CLOSE_CONNECTION = RequestScan_RequestType_CLOSE_CONNECTION;
   static inline bool RequestType_IsValid(int value) {
     return RequestScan_RequestType_IsValid(value);
   }
@@ -1041,13 +1041,13 @@ class ResponseScan : public ::google::protobuf::Message {
 
   typedef ResponseScan_ResponseType ResponseType;
   static const ResponseType REGISTER = ResponseScan_ResponseType_REGISTER;
+  static const ResponseType SCAN = ResponseScan_ResponseType_SCAN;
+  static const ResponseType CLOSE_CONNECTION = ResponseScan_ResponseType_CLOSE_CONNECTION;
   static const ResponseType REGISTER_SUCCESS = ResponseScan_ResponseType_REGISTER_SUCCESS;
   static const ResponseType REGISTER_UNSUCCESS = ResponseScan_ResponseType_REGISTER_UNSUCCESS;
-  static const ResponseType SCAN = ResponseScan_ResponseType_SCAN;
   static const ResponseType SCAN_SUCCESS = ResponseScan_ResponseType_SCAN_SUCCESS;
   static const ResponseType SCAN_UNSUCCESS = ResponseScan_ResponseType_SCAN_UNSUCCESS;
   static const ResponseType RESULT = ResponseScan_ResponseType_RESULT;
-  static const ResponseType CLOSE_CONNECTION = ResponseScan_ResponseType_CLOSE_CONNECTION;
   static inline bool ResponseType_IsValid(int value) {
     return ResponseScan_ResponseType_IsValid(value);
   }

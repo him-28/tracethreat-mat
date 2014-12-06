@@ -74,7 +74,7 @@ namespace internet
 							  
                 return scan_connection::pointer(new scan_connection(io_service, scan_file));
 
-            }//, message_scan& msgs);
+            }
 
             asio::ip::tcp::socket& get_socket();
 
@@ -158,10 +158,7 @@ namespace internet
 
 					  scan_file_type * scan_file_;
 
-						//handle thread
-						//mutable boost::mutex res_mux;
-						//boost::unique_lock<boost::recursive_mutex> lock_;						
- 
+						 
     };
 
 }
