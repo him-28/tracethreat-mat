@@ -137,7 +137,7 @@ namespace internet
             private:
                 folly::IOBufQueue::Options cl_options;
                 folly::IOBufQueue  iobuf_queue_;
-								std::vector<std::unique_ptr<folly::IOBuf> >  io_buf_front_;
+								std::vector<std::unique_ptr<folly::IOBuf> >  io_buffer_vec;
                 //buffer after encode in vector
                 std::vector<uint8_t>  buffer_;
 
@@ -147,18 +147,6 @@ namespace internet
                 std::map<message_scan::RequestScan::RequestType, int >  events_request_map;
         };
 
-        //Class IP_incident_controller will check IP report from UIID controller.
-        //RockDB record in passive store and IP_Incident_controller load to memory when
-        //UUID controller want to check IP.
-        class ip_incident_controller
-        {
-
-            public:
-
-
-            private:
-
-        };
 
         //Stage-2 After exchanged 3DES on SSL
         //[-]Encrypt/Decrypt message in second step.

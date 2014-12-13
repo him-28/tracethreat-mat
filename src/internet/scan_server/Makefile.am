@@ -13,6 +13,7 @@ libscan_server_a_HEADERS = scan_server.hpp \
 scan_connection.hpp \
 packedmessage_scan.hpp \
 security_connection.hpp \
+ip_controller.hpp \
 ../msg/scan_server_client/message_scan.pb.h \
 ../logger/logging.hpp \
 ../logger/stringprintf.hpp
@@ -24,6 +25,7 @@ libscan_server_a_SOURCES = $(libscan_server_a_HEADERS) scan_server.cpp \
 scan_connection.cpp \
 packedmessage_scan.cpp \
 security_connection.cpp \
+ip_controller.cpp \
 ../msg/scan_server_client/message_scan.pb.cc \
 ../logger/logging.cpp \
 ../logger/stringprintf.cpp

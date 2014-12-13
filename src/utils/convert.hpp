@@ -1,3 +1,4 @@
+#define NUMBER_OF_BIT 8
 /*
 * Copyright 2014 MTSec, Inc.
 *
@@ -32,7 +33,7 @@ namespace utils
 
     namespace convert
     {
-				
+
         //hexString.c : opensource.apple.com
         //File convert uint8_t byte to hex char pointer.
         static char byte_map[] = { '0', '1', '2', '3', '4', '5', '6',
@@ -88,6 +89,19 @@ namespace utils
             assert(ret == 2);
             assert(buff[2] == '\0');
             return buff;
+        }
+
+        //Convert int64_t and char: http://goo.gl/WSstZX
+        static void int64_to_char(char *char_value, int64_t number)
+        {
+            memcpy(char_value, &number, NUMBER_OF_BIT);
+        }
+
+        static int64_t char_to_int64bit(const char *char_value)
+        {
+            int64_t number = 0;
+            memcpy(&number, char_value, NUMBER_OF_BIT);
+            return number;
         }
 
 

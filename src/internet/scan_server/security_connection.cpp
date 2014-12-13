@@ -165,21 +165,22 @@ namespace internet
 
                     int interval_type  = new_type - old_type;
 
-                    LOG(INFO)<<"New type : "<<(int)new_type<<", Internal type : "<<(int)old_type
-                            <<", Interval type : " << interval_type;
+                    LOG(INFO)<<"New type : "<<(int)new_type
+														 <<", Internal type : "<<(int)old_type
+                             <<", Interval type : " << interval_type;
 
                     if((interval_type == INTERVAL_TYPE_SEQ) && (count_tail == io_buf_size) ) {
 
-                        std::unique_ptr<folly::IOBuf>  iobuffer_front =
+                        std::unique_ptr<folly::IOBuf>  iobuffer =
                                 folly::IOBuf::create(MESSAGE_INITIAL_SIZE);
 
                         std::string msg_parse;
 
                         msg_req->SerializeToString(&msg_parse);
 
-                        append(iobuffer_front, msg_parse);
+                        append(iobuffer, msg_parse);
 
-                        io_buffer_vec.push_back(std::move(iobuffer_front));
+                        io_buffer_vec.push_back(std::move(iobuffer));
 
 												LOG(INFO)<<"Message external register completed with Type : "<< msg_req->type();
 
