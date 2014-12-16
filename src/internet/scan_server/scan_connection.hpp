@@ -2,7 +2,9 @@
 #define INTERNET_SCAN_CONNECTION_HPP
 
 //Default timeout support client. We plan use configure from database configure of server service.
-#define TCP_SOCKET_TIMEOUT   60
+#define TCP_SOCKET_TIMEOUT   600000000000000000
+
+//#define NON_ENCRYPTION_ENULL eNULL
 
 /*
 * Copyright 2014 Chatsiri Rattana.
@@ -27,6 +29,7 @@
 #include <boost/thread.hpp>
 
 #include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
 #include <boost/bind.hpp>
 
 #include <boost/shared_ptr.hpp>
@@ -70,13 +73,22 @@ namespace internet
 		
 						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 
-            static pointer create(asio::io_service& io_service, scan_file_type * scan_file) {
+						typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
+
+						//typedef boost::shared_ptr<asio::io_service> & io_service_type;
+	
+						typedef asio::io_service & io_service_type;
+
+            static pointer create(io_service_type io_service, 
+																  scan_file_type * scan_file,
+																	asio::ssl::context & context) {
 							  
-                return scan_connection::pointer(new scan_connection(io_service, scan_file));
+                return scan_connection::pointer(new scan_connection(io_service, scan_file, context));
 
             }
 
-            asio::ip::tcp::socket& get_socket();
+            //asio::ip::tcp::socket& 
+						ssl_socket::lowest_layer_type & get_socket();
 
             void start();
 
@@ -85,8 +97,13 @@ namespace internet
 						}
 
         private:
+						//Set default is true. First step for SSL connection and fallback to snappy+3DES	
+						bool sslEnable;
 
-            asio::ip::tcp::socket msgs_socket;
+						asio::ssl::stream<asio::ip::tcp::socket> msgs_socket;
+            //asio::ip::tcp::socket msgs_socket;
+		
+						//asio::ssl::context context_;
 
             std::vector<uint8_t> msgs_read_buffer;
 
@@ -94,12 +111,16 @@ namespace internet
 
             std::map<std::string, file_detail_scan> fd_scan_map;
 
-            scan_connection(asio::io_service& io_service, scan_file_type * scan_file) :
-                msgs_socket(io_service),
+            scan_connection(io_service_type io_service,  //asio::io_service&
+														scan_file_type * scan_file,
+														asio::ssl::context & context) :
                 msgs_packed_request_scan(boost::shared_ptr<message_scan::RequestScan>(
                         new message_scan::RequestScan())),
 								scan_file_(scan_file),
-								timer_(io_service, boost::posix_time::seconds(TCP_SOCKET_TIMEOUT)) {
+								timer_(io_service, boost::posix_time::seconds(TCP_SOCKET_TIMEOUT)),
+                msgs_socket(io_service,  context)
+                {
+								LOG(INFO)<<" Scan_connection : start timer";
 								//Start timer check timeout per connection.
 								start_socket_timer(); 
             }
@@ -147,6 +168,10 @@ namespace internet
 						void start_socket_timer();
 	
 						boost::asio::deadline_timer  timer_;
+
+						void start_ssl_handshake();
+
+						void handle_handshake(const boost::system::error_code& error);
 
 						//Message request from server. 
             MsgsRequestPointer request_ptr;

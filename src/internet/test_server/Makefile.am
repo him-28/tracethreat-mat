@@ -8,7 +8,7 @@ test_server_SOURCES = test_server.cpp \
 environment_test.hpp
 
 test_server_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsyncocl \
- -lthreadsyncocl -lgtest -lgtest_main \
+ -lthreadsyncocl -lgtest -lgtest_main -lrocksdb \
  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/internet/scan_server -lscan_server \
  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils -lutils \
  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan/  -lscan \

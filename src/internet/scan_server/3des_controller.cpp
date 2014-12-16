@@ -1,5 +1,4 @@
-#ifndef INTERNET_SECURITY_SERVICE_CONTROLLER_HPP
-#define INTERNET_SECURITY_SERVICE_CONTROLLER_HPP
+#include "internet/scan_server/3des_controller.hpp"
 
 /*
 * Copyright 2014 Chatsiri Rattana.
@@ -18,27 +17,19 @@
 */
 
 /*  Titles			                                          Authors	         Date
- *
+ *- Initial load data from RocksDB                        R.Chatsiri
  */
 
 
-namespace internet{
+namespace internet
+{
 
-	namespace security{
-		
-			//RPC Service connection to tracthreat system.
-			class service{
-
-				public:
-						
-
-				private:
-
-			};
-
-	}//security
+    namespace security
+    {
 
 
-}//internet
 
-#endif /* INTERNET_SECURITY_SERVICE_CONTROLLER_HPP  */
+    }
+
+
+}

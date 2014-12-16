@@ -15,13 +15,31 @@ namespace internet
         public:
             typedef boost::shared_ptr<utils::meta_sig>  msig_ptr;
 
-            impl(asio::io_service& io_service, std::string ip_addr, unsigned port, const char *file_path):
+						//typedef boost::shared_ptr<asio::io_service> & io_service_type;
+
+						typedef asio::io_service & io_service_type;
+
+            impl(io_service_type io_service, std::string ip_addr, unsigned port, const char *file_path):
                 scan_monitor_connection(new asio::io_service::work(io_service)), // Handle Async Connection
                 acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::address::from_string(ip_addr), port)),
                 io_service_(io_service),
-                file_sig_path(file_path) {
+                file_sig_path(file_path),
+								context_(boost::asio::ssl::context::sslv23) {
 
                 LOG(INFO)<<"Server : Scan server start...";
+
+								LOG(INFO)<<"Server : Initial context ssl...";
+
+								context_.set_options(asio::ssl::context::default_workarounds
+																		 | asio::ssl::context::no_sslv2
+																		 | asio::ssl::context::single_dh_use);
+                context_.set_password_callback(boost::bind(&scan_server::impl::get_password, this));
+								context_.use_certificate_chain_file("server.pem");
+								context_.use_private_key_file("server.pem", asio::ssl::context::pem);
+								context_.use_tmp_dh_file("dh512.pem");
+
+								LOG(INFO)<<"Server : Initial context success.";							
+	
                 LOG(INFO)<<"Server : Load scanning engine...";
 
                 if(!deploy_scan_engine())
@@ -30,6 +48,10 @@ namespace internet
                 start_accept();
                 start_thread_accept(CPU_THREAD_SIZE);
             }
+
+						std::string get_password() const{
+								return "test";
+						}
 
             void listen_thread() {
                 //boost::recursive_mutex::scoped_lock lock(res_mux);
@@ -48,8 +70,10 @@ namespace internet
 
             void start_accept() {
 
+								LOG(INFO)<<"Server : New start_accept()";
+
                 scan_connection::pointer  new_connection =
-                        internet::scan_connection::create(io_service_, scan_file);
+                        internet::scan_connection::create(io_service_, scan_file, context_);
 
                 acceptor.async_accept(new_connection->get_socket(),
                         boost::bind(&scan_server::impl::handle_accept,
@@ -72,7 +96,9 @@ namespace internet
                     connection->start();
                     //Another client accept.
                     start_accept();
-                }
+                }else{
+										LOG(INFO)<<"Server : Error in handle_accept : "<< error.message();
+								}
             }
 
 
@@ -155,7 +181,11 @@ namespace internet
         private:
             //prviate all
             asio::ip::tcp::acceptor  acceptor;
-            asio::io_service& io_service_;
+						//Context call ssl
+						asio::ssl::context context_;
+						//Service of socket.
+            io_service_type  io_service_; // & io_service_
+						//File signature path
             std::string file_sig_path;
 
             boost::thread_group scan_connection_thread;
@@ -175,7 +205,7 @@ namespace internet
 
     };
 
-    scan_server::scan_server(asio::io_service& io_service,
+    scan_server::scan_server(io_service_type io_service,
             std::string ip_addr,
             unsigned port,
             const char *file_path)

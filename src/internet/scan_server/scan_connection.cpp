@@ -9,9 +9,11 @@ namespace internet
     using parser::hdb_sig;
 
     //____________________________ Scan_connection __________________________________
-    asio::ip::tcp::socket& scan_connection::get_socket()
+    //asio::ip::tcp::socket&
+    typename scan_connection::ssl_socket::lowest_layer_type&
+    scan_connection::get_socket()
     {
-        return msgs_socket;
+        return msgs_socket.lowest_layer();
     }
 
     void scan_connection::start()
@@ -19,7 +21,13 @@ namespace internet
 
         LOG(INFO)<<"Server : Start server... ";
 
-        start_read_header();
+        //start_read_header() : In case not initial with SSL;
+        //start_ssl_handshake();
+        LOG(INFO)<<"Server : Start() : SSL handshake";
+        msgs_socket.async_handshake(boost::asio::ssl::stream_base::server,
+                boost::bind(&scan_connection::handle_handshake, shared_from_this(),
+                        boost::asio::placeholders::error));
+
     }
 
     //Read header is 4 bytes. End of bytes is size of body
@@ -50,7 +58,7 @@ namespace internet
     socket_timeout(const boost::system::error_code& error)
     {
         if(error != boost::asio::error::operation_aborted) {
-            msgs_socket.close();
+            msgs_socket.lowest_layer().close();
             return true;
         }
     }
@@ -58,12 +66,13 @@ namespace internet
     bool scan_connection::
     refresh_socket_timer()
     {
-        if(msgs_socket.is_open()) {
+        if(msgs_socket.lowest_layer().is_open()) {
             timer_.expires_from_now(boost::posix_time::seconds(TCP_SOCKET_TIMEOUT));
             timer_.async_wait(boost::bind(&scan_connection::socket_timeout,
                     this,
                     boost::asio::placeholders::error));
         }
+
         return false;
     }
 
@@ -80,7 +89,7 @@ namespace internet
         close_response->set_timestamp(std::string("0:0:0:0"));
         //Set close socket at here.
         LOG(INFO)<"Server : prepare_reponse_close success";
-				return close_response;
+        return close_response;
     }
 
 
@@ -104,7 +113,7 @@ namespace internet
     typename scan_connection::MsgsResponsePointer scan_connection::
     prepare_response_register(MsgsRequestPointer  msgs_request)
     {
-				
+
         //[-]Verify UUID(UUID Controller)
         //[-]Sucess to verfity not repeatedly UUID in scanning system.
         //[-]Add Security Module handle received/close socket from client.
@@ -136,6 +145,8 @@ namespace internet
                     boost::bind(&scan_connection::start_read_header,
                             shared_from_this()));
 
+            //step for  write to client in NON-SSL mode.
+
             LOG(INFO)<<"Server : write_response, write response to client completed 1st.";
             //refresh timer.
             refresh_socket_timer();
@@ -155,10 +166,11 @@ namespace internet
         std::string uuid = request_ptr->uuid();
 
         //UUID not value
-        if(uuid.empty()){
-						//lock_.unlock();
+        if(uuid.empty()) {
+            //lock_.unlock();
             return false;
-				}
+        }
+
         //Checking UUID from database.
         return true;
     }
@@ -265,13 +277,14 @@ namespace internet
             threatinfo_type *threat_info = *iter_threatinfo_vec;
             LOG(INFO)<<"Server scan file name : " << threat_info->file_name() <<", Success! ";
         }
+
         return true;
     }
 
     //_________________________  Read Message request from server________________
     //[x]Loop check file type : PE, ELF and PROCESS.
     //[-]Certificate verify client connect to server(Certificate Controller).
-    //[-]Timer per client connection to server.
+    //[x]Timer per client connection to server.
     //[x-PE,-]Insert data to structure of type : such PE, ELF
     //[x]Set message type internal or external.utils::external_msg;
     //[x]Initial SHM per files scanning PE, ELF and PROCESS.
@@ -300,8 +313,13 @@ namespace internet
             case message_scan::RequestScan::REGISTER :
 
                 LOG(INFO)<<"------------------- REGISTER TYPE---------------";
-
+                //Write data register success and send symmetric key exchanged to client.
                 write_response(request_ptr, prepare_response_register(request_ptr));
+
+                LOG(INFO)<<"Fall back to Symmetric encryption key";
+                //Write 3DES message to client.That key exchanged success.
+                SSL_set_cipher_list(msgs_socket.native_handle(), "eNULL");
+                SSL_set_options(msgs_socket.native_handle(), SSL_OP_NO_COMPRESSION);
 
                 LOG(INFO)<<"----------------END REGISTER TYPE---------------";
 
@@ -331,8 +349,8 @@ namespace internet
 
                 write_response(request_ptr, prepare_response_close(request_ptr));
 
-                if(msgs_socket.is_open()) {
-                    msgs_socket.close();
+                if(msgs_socket.lowest_layer().is_open()) {
+                    msgs_socket.lowest_layer().close();
                     LOG(INFO)<<"-------------------- CLOSE Connection From Server compeleted -------------";
                 }
 
@@ -377,5 +395,33 @@ namespace internet
         refresh_socket_timer();
     }//start_read_body
 
+    //Frist step, Start socket SSL.
+    void scan_connection::start_ssl_handshake()
+    {
+        LOG(INFO)<<"Server : Start_ssl_handshake() : SSL handshake";
+        msgs_socket.async_handshake(boost::asio::ssl::stream_base::server,
+                boost::bind(&scan_connection::handle_handshake, this,
+                        boost::asio::placeholders::error));
+    }
+
+    void scan_connection::handle_handshake(const boost::system::error_code& error)
+    {
+        LOG(INFO)<<"Server : SSL Handle handshake";
+
+        if(!error) {
+            //start_read_header();
+            //Resize size for contains Header of packet.
+            msgs_read_buffer.resize(HEADER_SIZE);
+            msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
+                    boost::bind(&scan_connection::handle_read_header, shared_from_this(),
+                            _1, _2));
+
+            //Reset timer after read data completed.
+            refresh_socket_timer();
+
+        }else{
+						LOG(INFO)<<" Server : error  : " <<  error.message();
+				}
+    }
 
 }

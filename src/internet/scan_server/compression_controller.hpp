@@ -1,5 +1,5 @@
-#ifndef INTERNET_SECURITY_SERVICE_CONTROLLER_HPP
-#define INTERNET_SECURITY_SERVICE_CONTROLLER_HPP
+#ifndef INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP
+#define INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP
 
 /*
 * Copyright 2014 Chatsiri Rattana.
@@ -18,27 +18,27 @@
 */
 
 /*  Titles			                                          Authors	         Date
- *
+ * - Compression controller use Snappy-API                R.Chatsiri
  */
 
 
-namespace internet{
+namespace internet
+{
 
-	namespace security{
-		
-			//RPC Service connection to tracthreat system.
-			class service{
+    namespace security
+    {
 
-				public:
+				template<typename MessageType>
+        class compression_controller
+        {
+
 						
 
-				private:
-
-			};
-
-	}//security
+        }
 
 
-}//internet
+    }
 
-#endif /* INTERNET_SECURITY_SERVICE_CONTROLLER_HPP  */
+}
+
+#endif /* INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP */

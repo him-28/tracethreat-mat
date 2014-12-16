@@ -68,6 +68,8 @@ namespace internet
         }
 
         //Use lock with mutex
+        //Lock and return : http://goo.gl/Cr0KJg
+        //Return protected data : http://goo.gl/hwFhnL
         template<typename MessageType>
         bool ip_controller<MessageType>::
         store_ip(const  char   *ip, std::unique_ptr<MessageType>& msg_ptr)
