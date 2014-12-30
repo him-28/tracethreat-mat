@@ -47,7 +47,8 @@
 #include "internet/logger/logging.hpp"
 
 #include "internet/msg/scan_server_client/message_scan.pb.h"
-#include "internet/scan_server/packedmessage_scan.hpp"
+//#include "internet/scan_server/packedmessage_scan.hpp"
+#include "internet/msg/packedmessage_scan.hpp"
 
 #include "gensign/clamavsig.hpp"
 

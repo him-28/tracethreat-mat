@@ -8,7 +8,7 @@ lib_LIBRARIES = libthreadsyncocl.a
 #@install header to system
 libthreadsyncocl_adir = $(includedir)/threadsyncocl
 
-#Header
+#Header  $(top_builddir)/src/internet/scan_client/packedmessage_scan_client.hpp \
 libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/utils/file_calculate.hpp \
  $(top_builddir)/src/utils/base/timer_queue.hpp \
@@ -54,13 +54,17 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/internet/client_fresh/updated_sign.hpp \
  $(top_builddir)/src/internet/scan_server/scan_server.hpp \
  $(top_builddir)/src/internet/scan_server/scan_connection.hpp \
- $(top_builddir)/src/internet/scan_server/security_connection.hpp \
+ $(top_builddir)/src/internet/security/security_connection.hpp \
+ $(top_builddir)/src/internet/security/uuid_controller.hpp \
+ $(top_builddir)/src/internet/security/ip_controller.hpp \
+ $(top_builddir)/src/internet/security/aes_controller.hpp \
  $(top_builddir)/src/internet/scan_client/scan_client.hpp \
  $(top_builddir)/src/internet/scan_client/scan_dir.hpp \
  $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.hpp \
  $(top_builddir)/src/internet/scan_client/basic_scan_dir.hpp \
  $(top_builddir)/src/internet/scan_client/scan_dir_impl.hpp \
- $(top_builddir)/src/internet/scan_client/packedmessage_scan_client.hpp \
+ $(top_builddir)/src/internet/msg/packedmessage_scan_client.hpp \
+ $(top_builddir)/src/internet/msg/packedmessage_scan.hpp \
  $(top_builddir)/src/msg/message_tracethreat.pb.h
 
 
@@ -107,12 +111,16 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/internet/client_fresh/updated_sign.cpp \
   $(top_builddir)/src/internet/scan_server/scan_server.cpp \
   $(top_builddir)/src/internet/scan_server/scan_connection.cpp \
-  $(top_builddir)/src/internet/scan_server/security_connection.cpp \
+  $(top_builddir)/src/internet/security/security_connection.cpp \
+  $(top_builddir)/src/internet/security/uuid_controller.cpp \
+  $(top_builddir)/src/internet/security/ip_controller.cpp \
+  $(top_builddir)/src/internet/security/aes_controller.cpp \
   $(top_builddir)/src/internet/scan_client/scan_client.cpp \
   $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.cpp \
   $(top_builddir)/src/internet/scan_client/basic_scan_dir.cpp \
   $(top_builddir)/src/internet/scan_client/scan_dir_impl.cpp \
-  $(top_builddir)/src/internet/scan_client/packedmessage_scan_client.cpp
+  $(top_builddir)/src/internet/msg/packedmessage_scan_client.cpp \
+  $(top_builddir)/src/internet/msg/packedmessage_scan.cpp
 
 
 
@@ -142,4 +150,6 @@ $(top_builddir)/src/filestructure/libfilestructure.a \
 $(top_builddir)/src/gensign/libgensign.a \
 $(top_builddir)/src/internet/client_fresh/libclientfresh.a \
 $(top_builddir)/src/internet/scan_server/libscan_server.a \
-$(top_builddir)/src/internet/scan_client/libscan_client.a $(AM_LDFLAGS)$(AM_LDFLAGS)
+$(top_builddir)/src/internet/scan_client/libscan_client.a \
+$(top_builddir)/src/internet/security/libsecurity.a \
+$(top_builddir)/src/internet/msg/libmsg.a $(AM_LDFLAGS)$(AM_LDFLAGS)

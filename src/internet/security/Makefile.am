@@ -1,16 +1,20 @@
 # debug, optimized
-AM_CXXFLAGS   = -I$(top_srcdir)/src/ -std=c++11 @AM_CXXFLAGS@
+AM_CXXFLAGS   = -g -I$(top_srcdir)/src/ -std=c++11 @AM_CXXFLAGS@
 
 # Make src file 
 # libarries connect to internel client and server mode.
-lib_LIBRARIES = libscan_server.a
+lib_LIBRARIES = libsecurity.a
 
 #@install header to system
-libscan_server_adir = $(includedir)/internet/scan_server
+libsecurity_adir = $(includedir)/internet/scan_server
 
 #Header
-libscan_server_a_HEADERS = scan_server.hpp \
-scan_connection.hpp \
+libsecurity_a_HEADERS = encryption_controller.hpp \
+security_connection.hpp \
+aes_controller.hpp \
+compression_controller.hpp\
+ip_controller.hpp \
+uuid_controller.hpp \
 ../msg/packedmessage_scan.hpp \
 ../msg/scan_server_client/message_scan.pb.h \
 ../logger/logging.hpp \
@@ -19,11 +23,12 @@ scan_connection.hpp \
 # Not debug, If you want to debug declare : ../msg/scan_server_client/message_scan.pb.cc 
 
 # library
-libscan_server_a_SOURCES = $(libscan_server_a_HEADERS) scan_server.cpp \
-scan_connection.cpp \
+libsecurity_a_SOURCES = $(libsecurity_a_HEADERS) encryption_controller.cpp \
+security_connection.cpp \
+aes_controller.cpp \
+ip_controller.cpp \
+uuid_controller.cpp \
 ../msg/packedmessage_scan.cpp \
 ../msg/scan_server_client/message_scan.pb.cc \
 ../logger/logging.cpp \
 ../logger/stringprintf.cpp
-
-
