@@ -1,6 +1,3 @@
-#ifndef INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP
-#define INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP
-
 /*
 * Copyright 2014 Chatsiri Rattana.
 *
@@ -18,9 +15,9 @@
 */
 
 /*  Titles			                                          Authors	         Date
- * - Compression controller use Snappy-API                R.Chatsiri
+ * - Crypto message between server/client call to service.
+ *                                                        R.Chatsiri
  */
-
 
 namespace internet
 {
@@ -28,31 +25,17 @@ namespace internet
     namespace security
     {
 
-				template<typename MessageType>
-        class compression_controller
+        class crypto_connection
         {
 
             public:
 
-								compression_controller(): msg_(new MessageType){ }
-
-								typedef boost::shared_ptr<MessageType> msg_type;
-
-                bool	encode(const char * msg);
-
-                MessageType *get_msg();
-
-                bool  decode(const char * msg);
 
             private:
 
-                const char *msg_comp;
-								msg_type msg_;							
         };
-
 
     }
 
 }
 
-#endif /* INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP */

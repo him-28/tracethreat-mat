@@ -278,6 +278,30 @@ class RequestScan_RequestGetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::RequestScan_FileType file_type() const;
   inline void set_file_type(::message_scan::RequestScan_FileType value);
 
+  // optional bytes key = 6;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 6;
+  inline const ::std::string& key() const;
+  inline void set_key(const ::std::string& value);
+  inline void set_key(const char* value);
+  inline void set_key(const void* value, size_t size);
+  inline ::std::string* mutable_key();
+  inline ::std::string* release_key();
+  inline void set_allocated_key(::std::string* key);
+
+  // optional bytes iv = 7;
+  inline bool has_iv() const;
+  inline void clear_iv();
+  static const int kIvFieldNumber = 7;
+  inline const ::std::string& iv() const;
+  inline void set_iv(const ::std::string& value);
+  inline void set_iv(const char* value);
+  inline void set_iv(const void* value, size_t size);
+  inline ::std::string* mutable_iv();
+  inline ::std::string* release_iv();
+  inline void set_allocated_iv(::std::string* iv);
+
   // @@protoc_insertion_point(class_scope:message_scan.RequestScan.RequestGetBinaryValue)
  private:
   inline void set_has_binary();
@@ -290,6 +314,10 @@ class RequestScan_RequestGetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_scan_type();
   inline void set_has_file_type();
   inline void clear_has_file_type();
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_iv();
+  inline void clear_has_iv();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -298,9 +326,11 @@ class RequestScan_RequestGetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  ::std::string* key_;
+  ::std::string* iv_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -410,6 +440,30 @@ class RequestScan_RequestSetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::RequestScan_FileType file_type() const;
   inline void set_file_type(::message_scan::RequestScan_FileType value);
 
+  // optional bytes key = 6;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 6;
+  inline const ::std::string& key() const;
+  inline void set_key(const ::std::string& value);
+  inline void set_key(const char* value);
+  inline void set_key(const void* value, size_t size);
+  inline ::std::string* mutable_key();
+  inline ::std::string* release_key();
+  inline void set_allocated_key(::std::string* key);
+
+  // optional bytes iv = 7;
+  inline bool has_iv() const;
+  inline void clear_iv();
+  static const int kIvFieldNumber = 7;
+  inline const ::std::string& iv() const;
+  inline void set_iv(const ::std::string& value);
+  inline void set_iv(const char* value);
+  inline void set_iv(const void* value, size_t size);
+  inline ::std::string* mutable_iv();
+  inline ::std::string* release_iv();
+  inline void set_allocated_iv(::std::string* iv);
+
   // @@protoc_insertion_point(class_scope:message_scan.RequestScan.RequestSetBinaryValue)
  private:
   inline void set_has_binary();
@@ -422,6 +476,10 @@ class RequestScan_RequestSetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_scan_type();
   inline void set_has_file_type();
   inline void clear_has_file_type();
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_iv();
+  inline void clear_has_iv();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -430,9 +488,11 @@ class RequestScan_RequestSetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  ::std::string* key_;
+  ::std::string* iv_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -766,6 +826,30 @@ class ResponseScan_ResponseGetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::ResponseScan_FileType file_type() const;
   inline void set_file_type(::message_scan::ResponseScan_FileType value);
 
+  // optional bytes key = 6;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 6;
+  inline const ::std::string& key() const;
+  inline void set_key(const ::std::string& value);
+  inline void set_key(const char* value);
+  inline void set_key(const void* value, size_t size);
+  inline ::std::string* mutable_key();
+  inline ::std::string* release_key();
+  inline void set_allocated_key(::std::string* key);
+
+  // optional bytes iv = 7;
+  inline bool has_iv() const;
+  inline void clear_iv();
+  static const int kIvFieldNumber = 7;
+  inline const ::std::string& iv() const;
+  inline void set_iv(const ::std::string& value);
+  inline void set_iv(const char* value);
+  inline void set_iv(const void* value, size_t size);
+  inline ::std::string* mutable_iv();
+  inline ::std::string* release_iv();
+  inline void set_allocated_iv(::std::string* iv);
+
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan.ResponseGetBinaryValue)
  private:
   inline void set_has_binary();
@@ -778,6 +862,10 @@ class ResponseScan_ResponseGetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_scan_type();
   inline void set_has_file_type();
   inline void clear_has_file_type();
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_iv();
+  inline void clear_has_iv();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -786,9 +874,11 @@ class ResponseScan_ResponseGetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  ::std::string* key_;
+  ::std::string* iv_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -898,6 +988,30 @@ class ResponseScan_ResponseSetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::ResponseScan_FileType file_type() const;
   inline void set_file_type(::message_scan::ResponseScan_FileType value);
 
+  // optional bytes key = 6;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 6;
+  inline const ::std::string& key() const;
+  inline void set_key(const ::std::string& value);
+  inline void set_key(const char* value);
+  inline void set_key(const void* value, size_t size);
+  inline ::std::string* mutable_key();
+  inline ::std::string* release_key();
+  inline void set_allocated_key(::std::string* key);
+
+  // optional bytes iv = 7;
+  inline bool has_iv() const;
+  inline void clear_iv();
+  static const int kIvFieldNumber = 7;
+  inline const ::std::string& iv() const;
+  inline void set_iv(const ::std::string& value);
+  inline void set_iv(const char* value);
+  inline void set_iv(const void* value, size_t size);
+  inline ::std::string* mutable_iv();
+  inline ::std::string* release_iv();
+  inline void set_allocated_iv(::std::string* iv);
+
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan.ResponseSetBinaryValue)
  private:
   inline void set_has_binary();
@@ -910,6 +1024,10 @@ class ResponseScan_ResponseSetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_scan_type();
   inline void set_has_file_type();
   inline void clear_has_file_type();
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_iv();
+  inline void clear_has_iv();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -918,9 +1036,11 @@ class ResponseScan_ResponseSetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  ::std::string* key_;
+  ::std::string* iv_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -1368,6 +1488,146 @@ inline void RequestScan_RequestGetBinaryValue::set_file_type(::message_scan::Req
   file_type_ = value;
 }
 
+// optional bytes key = 6;
+inline bool RequestScan_RequestGetBinaryValue::has_key() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void RequestScan_RequestGetBinaryValue::set_has_key() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void RequestScan_RequestGetBinaryValue::clear_has_key() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void RequestScan_RequestGetBinaryValue::clear_key() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    key_->clear();
+  }
+  clear_has_key();
+}
+inline const ::std::string& RequestScan_RequestGetBinaryValue::key() const {
+  return *key_;
+}
+inline void RequestScan_RequestGetBinaryValue::set_key(const ::std::string& value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void RequestScan_RequestGetBinaryValue::set_key(const char* value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void RequestScan_RequestGetBinaryValue::set_key(const void* value, size_t size) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_RequestGetBinaryValue::mutable_key() {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  return key_;
+}
+inline ::std::string* RequestScan_RequestGetBinaryValue::release_key() {
+  clear_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = key_;
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_RequestGetBinaryValue::set_allocated_key(::std::string* key) {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (key) {
+    set_has_key();
+    key_ = key;
+  } else {
+    clear_has_key();
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes iv = 7;
+inline bool RequestScan_RequestGetBinaryValue::has_iv() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void RequestScan_RequestGetBinaryValue::set_has_iv() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void RequestScan_RequestGetBinaryValue::clear_has_iv() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void RequestScan_RequestGetBinaryValue::clear_iv() {
+  if (iv_ != &::google::protobuf::internal::kEmptyString) {
+    iv_->clear();
+  }
+  clear_has_iv();
+}
+inline const ::std::string& RequestScan_RequestGetBinaryValue::iv() const {
+  return *iv_;
+}
+inline void RequestScan_RequestGetBinaryValue::set_iv(const ::std::string& value) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(value);
+}
+inline void RequestScan_RequestGetBinaryValue::set_iv(const char* value) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(value);
+}
+inline void RequestScan_RequestGetBinaryValue::set_iv(const void* value, size_t size) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_RequestGetBinaryValue::mutable_iv() {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  return iv_;
+}
+inline ::std::string* RequestScan_RequestGetBinaryValue::release_iv() {
+  clear_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = iv_;
+    iv_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_RequestGetBinaryValue::set_allocated_iv(::std::string* iv) {
+  if (iv_ != &::google::protobuf::internal::kEmptyString) {
+    delete iv_;
+  }
+  if (iv) {
+    set_has_iv();
+    iv_ = iv;
+  } else {
+    clear_has_iv();
+    iv_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // RequestScan_RequestSetBinaryValue
@@ -1578,6 +1838,146 @@ inline void RequestScan_RequestSetBinaryValue::set_file_type(::message_scan::Req
   assert(::message_scan::RequestScan_FileType_IsValid(value));
   set_has_file_type();
   file_type_ = value;
+}
+
+// optional bytes key = 6;
+inline bool RequestScan_RequestSetBinaryValue::has_key() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void RequestScan_RequestSetBinaryValue::set_has_key() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void RequestScan_RequestSetBinaryValue::clear_has_key() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void RequestScan_RequestSetBinaryValue::clear_key() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    key_->clear();
+  }
+  clear_has_key();
+}
+inline const ::std::string& RequestScan_RequestSetBinaryValue::key() const {
+  return *key_;
+}
+inline void RequestScan_RequestSetBinaryValue::set_key(const ::std::string& value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void RequestScan_RequestSetBinaryValue::set_key(const char* value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void RequestScan_RequestSetBinaryValue::set_key(const void* value, size_t size) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_RequestSetBinaryValue::mutable_key() {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  return key_;
+}
+inline ::std::string* RequestScan_RequestSetBinaryValue::release_key() {
+  clear_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = key_;
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_RequestSetBinaryValue::set_allocated_key(::std::string* key) {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (key) {
+    set_has_key();
+    key_ = key;
+  } else {
+    clear_has_key();
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes iv = 7;
+inline bool RequestScan_RequestSetBinaryValue::has_iv() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void RequestScan_RequestSetBinaryValue::set_has_iv() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void RequestScan_RequestSetBinaryValue::clear_has_iv() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void RequestScan_RequestSetBinaryValue::clear_iv() {
+  if (iv_ != &::google::protobuf::internal::kEmptyString) {
+    iv_->clear();
+  }
+  clear_has_iv();
+}
+inline const ::std::string& RequestScan_RequestSetBinaryValue::iv() const {
+  return *iv_;
+}
+inline void RequestScan_RequestSetBinaryValue::set_iv(const ::std::string& value) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(value);
+}
+inline void RequestScan_RequestSetBinaryValue::set_iv(const char* value) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(value);
+}
+inline void RequestScan_RequestSetBinaryValue::set_iv(const void* value, size_t size) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_RequestSetBinaryValue::mutable_iv() {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  return iv_;
+}
+inline ::std::string* RequestScan_RequestSetBinaryValue::release_iv() {
+  clear_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = iv_;
+    iv_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_RequestSetBinaryValue::set_allocated_iv(::std::string* iv) {
+  if (iv_ != &::google::protobuf::internal::kEmptyString) {
+    delete iv_;
+  }
+  if (iv) {
+    set_has_iv();
+    iv_ = iv;
+  } else {
+    clear_has_iv();
+    iv_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------
@@ -2009,6 +2409,146 @@ inline void ResponseScan_ResponseGetBinaryValue::set_file_type(::message_scan::R
   file_type_ = value;
 }
 
+// optional bytes key = 6;
+inline bool ResponseScan_ResponseGetBinaryValue::has_key() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_has_key() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ResponseScan_ResponseGetBinaryValue::clear_has_key() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ResponseScan_ResponseGetBinaryValue::clear_key() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    key_->clear();
+  }
+  clear_has_key();
+}
+inline const ::std::string& ResponseScan_ResponseGetBinaryValue::key() const {
+  return *key_;
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_key(const ::std::string& value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_key(const char* value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_key(const void* value, size_t size) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_ResponseGetBinaryValue::mutable_key() {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  return key_;
+}
+inline ::std::string* ResponseScan_ResponseGetBinaryValue::release_key() {
+  clear_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = key_;
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_allocated_key(::std::string* key) {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (key) {
+    set_has_key();
+    key_ = key;
+  } else {
+    clear_has_key();
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes iv = 7;
+inline bool ResponseScan_ResponseGetBinaryValue::has_iv() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_has_iv() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ResponseScan_ResponseGetBinaryValue::clear_has_iv() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ResponseScan_ResponseGetBinaryValue::clear_iv() {
+  if (iv_ != &::google::protobuf::internal::kEmptyString) {
+    iv_->clear();
+  }
+  clear_has_iv();
+}
+inline const ::std::string& ResponseScan_ResponseGetBinaryValue::iv() const {
+  return *iv_;
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_iv(const ::std::string& value) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(value);
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_iv(const char* value) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(value);
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_iv(const void* value, size_t size) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_ResponseGetBinaryValue::mutable_iv() {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  return iv_;
+}
+inline ::std::string* ResponseScan_ResponseGetBinaryValue::release_iv() {
+  clear_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = iv_;
+    iv_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_ResponseGetBinaryValue::set_allocated_iv(::std::string* iv) {
+  if (iv_ != &::google::protobuf::internal::kEmptyString) {
+    delete iv_;
+  }
+  if (iv) {
+    set_has_iv();
+    iv_ = iv;
+  } else {
+    clear_has_iv();
+    iv_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // ResponseScan_ResponseSetBinaryValue
@@ -2219,6 +2759,146 @@ inline void ResponseScan_ResponseSetBinaryValue::set_file_type(::message_scan::R
   assert(::message_scan::ResponseScan_FileType_IsValid(value));
   set_has_file_type();
   file_type_ = value;
+}
+
+// optional bytes key = 6;
+inline bool ResponseScan_ResponseSetBinaryValue::has_key() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_has_key() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ResponseScan_ResponseSetBinaryValue::clear_has_key() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ResponseScan_ResponseSetBinaryValue::clear_key() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    key_->clear();
+  }
+  clear_has_key();
+}
+inline const ::std::string& ResponseScan_ResponseSetBinaryValue::key() const {
+  return *key_;
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_key(const ::std::string& value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_key(const char* value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_key(const void* value, size_t size) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_ResponseSetBinaryValue::mutable_key() {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  return key_;
+}
+inline ::std::string* ResponseScan_ResponseSetBinaryValue::release_key() {
+  clear_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = key_;
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_allocated_key(::std::string* key) {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (key) {
+    set_has_key();
+    key_ = key;
+  } else {
+    clear_has_key();
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes iv = 7;
+inline bool ResponseScan_ResponseSetBinaryValue::has_iv() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_has_iv() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ResponseScan_ResponseSetBinaryValue::clear_has_iv() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ResponseScan_ResponseSetBinaryValue::clear_iv() {
+  if (iv_ != &::google::protobuf::internal::kEmptyString) {
+    iv_->clear();
+  }
+  clear_has_iv();
+}
+inline const ::std::string& ResponseScan_ResponseSetBinaryValue::iv() const {
+  return *iv_;
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_iv(const ::std::string& value) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(value);
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_iv(const char* value) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(value);
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_iv(const void* value, size_t size) {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  iv_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_ResponseSetBinaryValue::mutable_iv() {
+  set_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    iv_ = new ::std::string;
+  }
+  return iv_;
+}
+inline ::std::string* ResponseScan_ResponseSetBinaryValue::release_iv() {
+  clear_has_iv();
+  if (iv_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = iv_;
+    iv_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_ResponseSetBinaryValue::set_allocated_iv(::std::string* iv) {
+  if (iv_ != &::google::protobuf::internal::kEmptyString) {
+    delete iv_;
+  }
+  if (iv) {
+    set_has_iv();
+    iv_ = iv;
+  } else {
+    clear_has_iv();
+    iv_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

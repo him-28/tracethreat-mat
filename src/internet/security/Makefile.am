@@ -9,12 +9,15 @@ lib_LIBRARIES = libsecurity.a
 libsecurity_adir = $(includedir)/internet/scan_server
 
 #Header
-libsecurity_a_HEADERS = encryption_controller.hpp \
-security_connection.hpp \
+libsecurity_a_HEADERS =  network_controller.hpp \
+encryption.hpp \
+encryption_service.hpp \
 aes_controller.hpp \
+aes_encryption.hpp \
 compression_controller.hpp\
 ip_controller.hpp \
 uuid_controller.hpp \
+load_security.hpp \
 ../msg/packedmessage_scan.hpp \
 ../msg/scan_server_client/message_scan.pb.h \
 ../logger/logging.hpp \
@@ -23,8 +26,8 @@ uuid_controller.hpp \
 # Not debug, If you want to debug declare : ../msg/scan_server_client/message_scan.pb.cc 
 
 # library
-libsecurity_a_SOURCES = $(libsecurity_a_HEADERS) encryption_controller.cpp \
-security_connection.cpp \
+libsecurity_a_SOURCES = $(libsecurity_a_HEADERS) network_controller.cpp \
+encryption_service.cpp \
 aes_controller.cpp \
 ip_controller.cpp \
 uuid_controller.cpp \

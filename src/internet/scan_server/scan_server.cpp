@@ -1,8 +1,11 @@
 #define  CPU_THREAD_SIZE 1
 #include "internet/scan_server/scan_server.hpp"
 #include "internet/scan_server/scan_connection.hpp"
+//Load system with class register.
+#include "internet/security/load_security.hpp"
 
-
+//CLASS_REGISTER_IMPLEMENT_REGISTRY(aes_controller,
+//        internet::security::encryption_controller<internet::security::aes_cbc>);
 
 namespace internet
 {
@@ -15,43 +18,48 @@ namespace internet
         public:
             typedef boost::shared_ptr<utils::meta_sig>  msig_ptr;
 
-						//typedef boost::shared_ptr<asio::io_service> & io_service_type;
+            //typedef boost::shared_ptr<asio::io_service> & io_service_type;
 
-						typedef asio::io_service & io_service_type;
+            typedef asio::io_service& io_service_type;
 
             impl(io_service_type io_service, std::string ip_addr, unsigned port, const char *file_path):
                 scan_monitor_connection(new asio::io_service::work(io_service)), // Handle Async Connection
                 acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::address::from_string(ip_addr), port)),
                 io_service_(io_service),
                 file_sig_path(file_path),
-								context_(boost::asio::ssl::context::sslv23) {
+                context_(boost::asio::ssl::context::sslv23) {
 
                 LOG(INFO)<<"Server : Scan server start...";
 
-								LOG(INFO)<<"Server : Initial context ssl...";
+                LOG(INFO)<<"Server : Initial context ssl...";
 
-								context_.set_options(asio::ssl::context::default_workarounds
-																		 | asio::ssl::context::no_sslv2
-																		 | asio::ssl::context::single_dh_use);
+                context_.set_options(asio::ssl::context::default_workarounds
+                        | asio::ssl::context::no_sslv2
+                        | asio::ssl::context::single_dh_use);
                 context_.set_password_callback(boost::bind(&scan_server::impl::get_password, this));
-								context_.use_certificate_chain_file("server.pem");
-								context_.use_private_key_file("server.pem", asio::ssl::context::pem);
-								context_.use_tmp_dh_file("dh512.pem");
+                context_.use_certificate_chain_file("server.pem");
+                context_.use_private_key_file("server.pem", asio::ssl::context::pem);
+                context_.use_tmp_dh_file("dh512.pem");
 
-								LOG(INFO)<<"Server : Initial context success.";							
-	
+                LOG(INFO)<<"Server : Initial context success.";
+
                 LOG(INFO)<<"Server : Load scanning engine...";
-
+                //deploy scanning engine, load database to SHM.
                 if(!deploy_scan_engine())
                     LOG(INFO)<<"Server : deploy scan engine compeleted.";
+
+								//load cryto and network security engine.
+								if(!load_system_engine())
+										LOG(INFO)<<"Server : Load system fail, Not completed steps to load component.";
+								
 
                 start_accept();
                 start_thread_accept(CPU_THREAD_SIZE);
             }
 
-						std::string get_password() const{
-								return "test";
-						}
+            std::string get_password() const {
+                return "test";
+            }
 
             void listen_thread() {
                 //boost::recursive_mutex::scoped_lock lock(res_mux);
@@ -64,13 +72,13 @@ namespace internet
                             boost::bind(&scan_server::impl::listen_thread, this));
                 }
 
-	                scan_connection_thread.join_all();
+                scan_connection_thread.join_all();
 
             }
 
             void start_accept() {
 
-								LOG(INFO)<<"Server : New start_accept()";
+                LOG(INFO)<<"Server : New start_accept()";
 
                 scan_connection::pointer  new_connection =
                         internet::scan_connection::create(io_service_, scan_file, context_);
@@ -96,11 +104,31 @@ namespace internet
                     connection->start();
                     //Another client accept.
                     start_accept();
-                }else{
-										LOG(INFO)<<"Server : Error in handle_accept : "<< error.message();
-								}
+                } else {
+                    LOG(INFO)<<"Server : Error in handle_accept : "<< error.message();
+                }
             }
 
+            bool load_system_engine() {
+                //Logging-monitoring system.
+
+
+                //Crypto and Network Security
+                LOG(INFO)<<"Server : Load security module.";
+                internet::security::get_encryption().reset(
+                        internet::security::create_encryption());
+
+                if(internet::security::get_encryption().get() == NULL) {
+                    LOG(INFO)<<"System cannot initial encryption engine";
+                    return false;
+                }
+
+                //Database
+
+
+                //Scan engine.
+
+            }
 
             //Deploy scanning system and load object before call scan_file member function.
             bool deploy_scan_engine() {
@@ -181,11 +209,11 @@ namespace internet
         private:
             //prviate all
             asio::ip::tcp::acceptor  acceptor;
-						//Context call ssl
-						asio::ssl::context context_;
-						//Service of socket.
+            //Context call ssl
+            asio::ssl::context context_;
+            //Service of socket.
             io_service_type  io_service_; // & io_service_
-						//File signature path
+            //File signature path
             std::string file_sig_path;
 
             boost::thread_group scan_connection_thread;

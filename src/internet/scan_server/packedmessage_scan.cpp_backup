@@ -1,4 +1,4 @@
-#include "internet/msg/packedmessage_scan.hpp"
+#include "internet/scan_server/packedmessage_scan.hpp"
 
 namespace internet
 {

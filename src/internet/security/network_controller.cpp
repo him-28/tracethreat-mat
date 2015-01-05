@@ -1,6 +1,3 @@
-#ifndef INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP
-#define INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP
-
 /*
 * Copyright 2014 Chatsiri Rattana.
 *
@@ -18,41 +15,23 @@
 */
 
 /*  Titles			                                          Authors	         Date
- * - Compression controller use Snappy-API                R.Chatsiri
+ * - Initial Queue Buffer for UUID_Controller.            R.Chatsiri
+ *   * Use queue because plan to adaptes multiple check .
+ * - The last line of defends after filtering IP & User connection to ServerScan system.
+ *                                                        R.Chatsiri
  */
 
+#include <boost/shared_ptr.hpp>
+
+#include "internet/security/network_controller.hpp"
 
 namespace internet
 {
 
     namespace security
     {
-
-				template<typename MessageType>
-        class compression_controller
-        {
-
-            public:
-
-								compression_controller(): msg_(new MessageType){ }
-
-								typedef boost::shared_ptr<MessageType> msg_type;
-
-                bool	encode(const char * msg);
-
-                MessageType *get_msg();
-
-                bool  decode(const char * msg);
-
-            private:
-
-                const char *msg_comp;
-								msg_type msg_;							
-        };
-
-
+				
+			 
     }
 
 }
-
-#endif /* INTERNET_SECURITY_COMPRESSION_CONTROLLER_HPP */

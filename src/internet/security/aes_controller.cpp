@@ -1,5 +1,3 @@
-#include "internet/security/aes_controller.hpp"
-
 /*
 * Copyright 2014 Chatsiri Rattana.
 *
@@ -22,7 +20,7 @@
  *
  */
 
-//#include <iostream>
+#include "internet/security/aes_controller.hpp"
 
 namespace internet
 {
@@ -33,7 +31,6 @@ namespace internet
         static void hex_print(const void *pv, size_t len)
         {
             const unsigned char *p = (const unsigned char *)pv;
-            //const uint8_t *p = (const uint8_t *)pv;
 
             if (NULL == pv)
                 printf("NULL");
@@ -48,14 +45,14 @@ namespace internet
         }
 
 
-        template<typename MessageType>
-        bool aes_controller<MessageType>::initial_engine()
+        //template<typename MessageType>
+        template<typename MessageType, typename EncryptType>
+        bool aes_controller<MessageType, EncryptType>::initial_engine()
         {
             //Random engine.
-            /*
+
             engine_rdrand = ENGINE_by_id("rdrand");
 
-            //engine_encrypts = ENGINE_by_id("encryption");
             if(engine_rdrand == NULL) {
                 return false;
             }
@@ -67,17 +64,23 @@ namespace internet
             if(!ENGINE_set_default(engine_rdrand, ENGINE_METHOD_RAND)) {
                 return false;
             }
-            			*/
+
             return true;
 
         }
 
-        template<typename MessageType>
-        internet::security::aes_cbc *aes_controller<MessageType>::
+        //template<typename MessageType>
+        template<typename MessageType, typename EncryptType>
+        EncryptType *aes_controller<MessageType, EncryptType>::
         initial_key(std::string ip, std::string uuid)
         {
-            typename aes_controller<MessageType>::skip_list_accessor_type skip_list_accessor(skip_list_ptr);
-            {
+            wait_sync();
+
+						  boost::lock_guard<mutex_t> lock_(enc_mutex);
+
+            typename aes_controller<MessageType, EncryptType>::
+            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
+            //{
                 //std::unique_ptr<aes_cbc> aes_ptr = folly::make_unique<aes_cbc>(ip, uuid);
                 aes_ptr = new aes_cbc(ip,uuid);
                 LOG(INFO)<<"Initial AES key for client IP : "<< aes_ptr->ip;
@@ -102,319 +105,136 @@ namespace internet
 
                 skip_list_accessor.insert(std::unique_ptr<aes_cbc>(aes_ptr));
 
+                //sync();
+
                 return aes_ptr;
 
-            }
+            //}
         }
 
-        template<typename MessageType>
-        bool aes_controller<MessageType>::find_key(std::string ip, std::string uuid)
+        template<typename MessageType, typename EncryptType>
+        bool aes_controller<MessageType, EncryptType>::find_key(std::string ip, std::string uuid)
         {
-            typename aes_controller<MessageType>::skip_list_accessor_type skip_list_accessor(skip_list_ptr);
+						boost::lock_guard<mutex_t> lock_(enc_mutex);
+
+            typename aes_controller<MessageType, EncryptType>::
+            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
 
             std::unique_ptr<aes_cbc> aes = folly::make_unique<aes_cbc>(ip, uuid);
 
             if(skip_list_accessor.find(aes) == skip_list_accessor.end()) {
+                aes_controller<MessageType, EncryptType>::sync();
                 return true;
             }
 
+            //sync();
             return false;
         }
 
-        //encrypt message
-        template<typename MessageType>
-        bool aes_controller<MessageType>::
-        encryption_msgs(std::vector<uint8_t>& msg_vec, aes_cbc *aes)
+        template<typename MessageType, typename EncryptType>
+        bool aes_controller<MessageType, EncryptType>::filter_key(const char *ip, const char *uuid)
         {
-            /*
-            						AES_KEY enc_key;
+						boost::lock_guard<mutex_t> lock_(enc_mutex);
 
-            						if(msg_vec.empty())
-            							return false;
+            wait_sync();
+            typename aes_controller<MessageType, EncryptType>::
+            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
 
+            std::unique_ptr<aes_cbc> aes = folly::make_unique<aes_cbc>(ip, uuid);
 
-                        aes->input_length = msg_vec.size();
-                        aes->enc_length = ((msg_vec.size()+ AES_BLOCK_SIZE)/ AES_BLOCK_SIZE)* AES_BLOCK_SIZE;
-                        aes->enc_msg = new uint8_t[aes->enc_length];
+            if(skip_list_accessor.find(aes) == skip_list_accessor.end()) {
+                aes_controller<MessageType, EncryptType>::sync();
+                return true;
+            }
 
-                        memset(aes->enc_msg, 0, sizeof(aes->enc_msg));
-
-
-                        AES_set_encrypt_key(aes->key, KEY_ENCRYPTION_SIZE, &enc_key);
-
-                        LOG(INFO)<<" Encryption message IP : "<< aes->ip <<", vector size : "<< msg_vec.size();
-                        LOG(INFO)<<" Encryption length : " << aes->enc_length;
-
-            						printf("Key Encryption : \t");
-                        hex_print((uint8_t *)&aes->key, KEY_SIZE);
-            						printf("IV  Encryption : \t");
-                        hex_print((uint8_t *)&aes->iv, AES_BLOCK_SIZE);
-
-                        AES_cbc_encrypt((uint8_t *)&msg_vec.front(),
-                                aes->enc_msg,
-                                aes->enc_length,
-                                &enc_key,
-                                aes->iv,
-                                AES_ENCRYPT);
-
-                        LOG(INFO)<<"Encryption success";
-            */
-            return true;
-        }//encryption
-
-        template<typename MessageType>
-        bool aes_controller<MessageType>::
-        decryption_msgs(std::vector<uint8_t>& msg_vec, aes_cbc *aes)
-        {
-            /*
-            						if(aes->input_length == 0)
-            								return false;
-
-            					printf("Message encryption input to decrypt in hex : \t");
-            		      hex_print((uint8_t *)&aes->enc_msg, aes->enc_length);
-            					//printf("Message Input length : \t");
-            		      //hex_print((unsigned char *)&msg_vec, aes->input_length);
-
-                        //set key
-                        AES_set_decrypt_key(aes->key, KEY_ENCRYPTION_SIZE, &dec_key);
-
-            						aes->dec_msg = new uint8_t[aes->input_length];
-
-            						msg_vec.resize(aes->input_length);
-
-                        AES_cbc_encrypt(aes->enc_msg,
-                                &msg_vec.front(),
-                                aes->enc_length,
-                                &dec_key,
-                                aes->iv,
-                                AES_DECRYPT);
-
-            						printf("Message after Decrypt hex : \t");
-                        hex_print((uint8_t *)&msg_vec.front(), msg_vec.size());
-
-            						//printf("Message after Decrypt hex : \t");
-                        //hex_print((uint8_t *)aes->dec_msg, msg_vec.size());
-
-            						//hex_print((unsigned char *)&aes->dec_msg, aes->input_length);
-            */
-            return true;
-
-        }//decryption
-
-
-        //encrypt message
-        template<typename MessageType>
-        bool aes_controller<MessageType>::
-        encryption_msgs(boost::shared_ptr<MessageType> msg_vec, aes_cbc *aes)
-        {
-            /*
-            aes->input_length = msg_vec->ByteSize();
-            aes->enc_length = ((msg_vec->ByteSize()+ AES_BLOCK_SIZE)/ AES_BLOCK_SIZE)* AES_BLOCK_SIZE;
-
-            //aes->enc_msg = new unsigned char[aes->enc_length];
-            //(unsigned char*)malloc(sizeof(unsigned char) * aes->enc_length);
-
-            unsigned char enc_msg[aes->enc_length];
-            memset(enc_msg, 0, sizeof(enc_msg));
-
-
-            printf("Encryption before  send to cbc : \t");
-            hex_print((unsigned char *)&enc_msg, aes->enc_length);
-
-            LOG(INFO)<<" aes->enc_msg, size : " << sizeof(aes->enc_msg);
-
-            //set key
-            AES_set_encrypt_key(aes->key, KEY_ENCRYPTION_SIZE, &enc_key);
-
-            LOG(INFO)<<" Encryption message IP : "<< aes->ip <<", vector size : "<< msg_vec->ByteSize();
-            LOG(INFO)<<" Encryption length : " << aes->enc_length;
-
-            printf("Key Encryption : \t");
-            hex_print((unsigned char *)&aes->key, KEY_SIZE);
-
-            printf("IV  Encryption : \t");
-            hex_print((unsigned char *)&aes->iv, AES_BLOCK_SIZE);
-
-            aes->msg = (unsigned char *)malloc(sizeof(unsigned char) * msg_vec->ByteSize());
-
-            memset(aes->msg, 0, sizeof(aes->msg));
-
-            msg_vec->SerializeToArray(&aes->msg, msg_vec->ByteSize());
-
-            printf("Message  Encrypted : \t");
-            hex_print((unsigned char *)&aes->msg, msg_vec->ByteSize());
-
-
-            AES_cbc_encrypt((unsigned char *)&aes->msg,
-            enc_msg,
-            aes->enc_length,
-            &enc_key,
-            aes->iv,
-            AES_ENCRYPT);
-
-            LOG(INFO)<<" Enc_msg size : " << sizeof(enc_msg);
-
-            aes->enc_msg = enc_msg;
-
-            printf("Message encryption in hex : \t");
-            hex_print((unsigned char *)&aes->enc_msg, aes->enc_length);
-
-            LOG(INFO)<<"Encryption success";
-            */
-            return true;
-        }//encryption
-
-        template<typename MessageType>
-        bool aes_controller<MessageType>::
-        decryption_msgs(boost::shared_ptr<MessageType> msg_vec, aes_cbc *aes)
-        {
-            /*
-            if(aes->input_length == 0)
+            //sync();
             return false;
+        }
 
-            printf("Message encryption input in hex : \t");
-            hex_print((unsigned char *)&aes->enc_msg, aes->enc_length);
-
-            //set key
-            AES_set_decrypt_key(aes->key, KEY_ENCRYPTION_SIZE, &dec_key);
-
-            unsigned char dec_msg[aes->input_length];
-
-            //aes->dec_msg = new unsigned char[aes->input_length];
-
-            memset(dec_msg, 0, sizeof(dec_msg));
-
-            printf("Message dec hex : \t");
-            hex_print((unsigned char *)dec_msg, aes->input_length);
-
-
-            AES_cbc_encrypt(aes->enc_msg,
-            dec_msg,
-            aes->enc_length,
-            &dec_key,
-            aes->iv,
-            AES_DECRYPT);
-
-            printf("Message after Decrypt hex : \t");
-            hex_print((unsigned char *)dec_msg, aes->input_length);
-
-            msg_vec->ParseFromArray(dec_msg, aes->input_length);
-
-            LOG(INFO)<<" UUID dec : " << msg_vec->uuid();
-            */
-            return true;
-
-        }//decryption
-
-        //encrypt message
-        template<typename MessageType>
-        bool aes_controller<MessageType>::
-        encryption_msgs(const char   *msg, std::size_t length, aes_cbc *aes)
+        template<typename MessageType, typename EncryptType>
+        bool aes_controller<MessageType, EncryptType>::
+        encryption_msgs(const char *msg, int msg_length, EncryptType *aes)
         {
-            /*
-            aes->input_length = length;
-            aes->enc_length = ((length+ AES_BLOCK_SIZE)/ AES_BLOCK_SIZE)* AES_BLOCK_SIZE;
-
-            unsigned char enc_msg[aes->enc_length];
-            memset(enc_msg, 0, sizeof(enc_msg));
+						boost::lock_guard<mutex_t> lock_(enc_mutex);
 
 
-            printf("Message before encrypt send to cbc : \t");
-            hex_print((unsigned char *)&enc_msg, aes->enc_length);
+            int bytes_written_length = 0;
 
-            //set key
-            AES_set_encrypt_key(aes->key, KEY_ENCRYPTION_SIZE, &enc_key);
+            aes->input_length = msg_length;
 
-            LOG(INFO)<<" Encryption message IP : "<< aes->ip
-            <<", Message size : "<< length
-            <<", Message Encryption length : "<< aes->enc_length;
+            EVP_CIPHER_CTX_init(&ctx_enc);
+            EVP_EncryptInit_ex(&ctx_enc, EVP_aes_128_cbc(), NULL, aes->key, aes->iv);
 
-            printf("Key Encryption : \t");
-            hex_print((unsigned char *)&aes->key, KEY_SIZE);
+            aes->input_length = msg_length + 1;
+            aes->enc_msg = (unsigned char *)malloc(aes->input_length+ MAX_PADDING_LEN);
 
-            printf("IV  Encryption : \t");
-            hex_print((unsigned char *)&aes->iv, AES_BLOCK_SIZE);
+            EVP_EncryptUpdate(&ctx_enc,
+                    aes->enc_msg,
+                    &bytes_written_length,
+                    (unsigned char *)msg,
+                    aes->input_length);
 
-            aes->msg = new unsigned char[length];
-            memset(aes->msg, 0, sizeof(aes->msg));
-            memcpy(aes->msg, msg, length);
+            aes->enc_length += bytes_written_length;
 
-            printf("Plain text : \t");
-            hex_print((unsigned char *)msg, length);
+            //LOG(INFO)<<"Input length : " << aes->input_length <<", Encrypt length : "<< aes->enc_length;
 
-            printf("Convert msg to aes->msg  : \t");
-            hex_print((unsigned char *)aes->msg, length);
+            EVP_EncryptFinal_ex(&ctx_enc,
+                    aes->enc_msg + bytes_written_length,
+                    &bytes_written_length);
 
-            AES_cbc_encrypt(aes->msg,
-            enc_msg,
-            aes->enc_length,
-            &enc_key,
-            aes->iv,
-            AES_ENCRYPT);
+            aes->enc_length += bytes_written_length;
 
-            aes->enc_msg = new unsigned char[aes->enc_length];
-            memset(aes->enc_msg, 0,  sizeof(aes->enc_msg));
-            memcpy(aes->enc_msg, enc_msg, aes->enc_length);
+            //LOG(INFO)<<"Input length : " << aes->input_length <<", Encrypt length : "<< aes->enc_length;
+            //sync();
 
-            printf("Message encryption in hex : \t");
-            hex_print((unsigned char *)&enc_msg, aes->enc_length);
-
-
-            printf("Message convert to encryption in hex : \t");
-            hex_print((unsigned char *)aes->enc_msg, aes->enc_length);
-
-            LOG(INFO)<<"Encryption success";
             return true;
-            }//encryption
+        }
 
-            template<typename MessageType>
-            bool aes_controller<MessageType>::
-            decryption_msgs(const char *msg, std::size_t length, aes_cbc *aes)
-            {
+        //template<typename MessageType>
+        template<typename MessageType, typename EncryptType>
+        bool aes_controller<MessageType, EncryptType>::
+        decryption_msgs(const char *msg, int msg_length, EncryptType *aes)
+        {
+						boost::lock_guard<mutex_t> lock_(enc_mutex);
 
-            if(aes->input_length == 0)
-            return false;
+            int bytes_written_length = 0;
 
-            printf("Message encryption input in hex : \t");
-            hex_print((unsigned char *)aes->enc_msg, aes->enc_length);
+            aes->dec_msg = (unsigned char *)malloc(aes->enc_length);
 
-            unsigned char dec_msg[aes->input_length];
-            memset(dec_msg, 0, sizeof(dec_msg));
+            EVP_CIPHER_CTX_init(&ctx_dec);
 
+            EVP_DecryptInit_ex(&ctx_dec, EVP_aes_128_cbc(), NULL, aes->key, aes->iv);
 
-            //set key
-            AES_set_decrypt_key(aes->key, KEY_ENCRYPTION_SIZE, &dec_key);
+            EVP_DecryptUpdate(&ctx_dec,
+                    aes->dec_msg,
+                    &bytes_written_length,
+                    aes->enc_msg,
+                    aes->enc_length);
 
-            printf("Message decryption hex : \t");
-            hex_print((unsigned char *)dec_msg, aes->input_length);
-
-            AES_cbc_encrypt(aes->enc_msg,
-            dec_msg,
-            aes->enc_length,
-            &dec_key,
-            aes->iv,
-            AES_DECRYPT);
+            aes->dec_length += bytes_written_length;
 
 
-            aes->dec_msg = new unsigned char[aes->input_length];
-            memset(aes->dec_msg, 0, sizeof(aes->dec_msg));
-            memcpy(aes->dec_msg, dec_msg, aes->input_length);
 
-            printf("Message after Decrypt hex : \t");
-            hex_print((unsigned char *)dec_msg, aes->input_length);
+            EVP_DecryptFinal_ex(&ctx_dec,
+                    aes->dec_msg + bytes_written_length,
+                    &bytes_written_length);
 
-            printf("Message after Decrypt hex : \t");
-            hex_print((unsigned char *)&aes->dec_msg, aes->input_length);
-            */
+            aes->dec_length += bytes_written_length;
+
+            //sync();
+
             return true;
 
         }//decryption
+
 
         //string type
-        template<typename MessageType>
-        bool aes_controller<MessageType>::
+        template<typename MessageType, typename EncryptType>
+        bool aes_controller<MessageType, EncryptType>::
         encryption_msgs(std::string msg, aes_cbc *aes)
         {
+						boost::lock_guard<mutex_t> lock_(enc_mutex);
+
             int bytes_written_length = 0;
 
             aes->input_length = msg.size();
@@ -433,7 +253,7 @@ namespace internet
 
             aes->enc_length += bytes_written_length;
 
-            LOG(INFO)<<"Input length : " << aes->input_length <<", Encrypt length : "<< aes->enc_length;
+            //LOG(INFO)<<"Input length : " << aes->input_length <<", Encrypt length : "<< aes->enc_length;
 
             EVP_EncryptFinal_ex(&ctx_enc,
                     aes->enc_msg + bytes_written_length,
@@ -441,29 +261,18 @@ namespace internet
 
             aes->enc_length += bytes_written_length;
 
-            LOG(INFO)<<"Input length : " << aes->input_length <<", Encrypt length : "<< aes->enc_length;
-
-            /*
-            EVP_EncryptUpdate(&ctx,
-            (unsigned char *)aes->enc_msg,
-            &aes->enc_length,
-            (unsigned char *)msg.data(),
-            aes->input_length );
-
-            EVP_EncryptFinal(&ctx,
-            (unsigned char *)&aes->enc_msg[aes->enc_length],
-            &aes->enc_length);
-            */
-
-            //LOG(INFO)<<"Encrypted message : " <<aes->enc_msg;
+            //LOG(INFO)<<"Input length : " << aes->input_length <<", Encrypt length : "<< aes->enc_length;
+            //sync();
 
             return true;
         }//encryption
 
-        template<typename MessageType>
-        bool aes_controller<MessageType>::
+        //template<typename MessageType>
+        template<typename MessageType, typename EncryptType>
+        bool aes_controller<MessageType, EncryptType>::
         decryption_msgs(std::string msg, aes_cbc *aes)
         {
+						boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             int bytes_written_length = 0;
 
@@ -481,7 +290,7 @@ namespace internet
 
             aes->dec_length += bytes_written_length;
 
-				
+
 
             EVP_DecryptFinal_ex(&ctx_dec,
                     aes->dec_msg + bytes_written_length,
@@ -489,35 +298,80 @@ namespace internet
 
             aes->dec_length += bytes_written_length;
 
+            //sync();
 
-            /*
-            aes->dec_msg  = new unsigned char[aes->input_length];
-
-            EVP_DecryptInit(&ctx, EVP_aes_128_cbc(), aes->key, aes->iv);
-
-            EVP_DecryptUpdate(&ctx,
-            (unsigned char *)aes->dec_msg,
-            &aes->dec_length,
-            (unsigned char*)aes->enc_msg,
-            aes->enc_length);
-
-            EVP_DecryptFinal(&ctx,
-            (unsigned char *)&aes->dec_msg,
-            &aes->output_length);
-
-            LOG(INFO)<<"Decrypted message : " << aes->dec_msg;
-            */
             return true;
 
         }//decryption
 
+        //lock mutex
+        template<typename MessageType, typename EncryptType>
+        void aes_controller<MessageType, EncryptType>::wait_sync()
+        {
+            //boost::unique_lock<boost::mutex> lock_(mutex_);
+            //boost::lock_guard<mutex_t> lock_(enc_mutex);
 
+            //sync_send = false;
+            /*
+            while(!sync_send) {
+            cond_.wait(lock_);
+            }//while
+            */
+        }
 
+        template<typename MessageType, typename EncryptType>
+        void aes_controller<MessageType, EncryptType>::sync()
+        {
+            //{
+            //boost::lock_guard<mutex_t> lock_(enc_mutex);
+            //    sync_send = true;
+            //}
+            //cond_.notify_all();
+        }
 
+        template<typename MessageType, typename EncryptType>
+        aes_controller<MessageType, EncryptType>::
+        ~aes_controller()
+        {
+				
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
 
+            //wait_sync();
+				
+            ENGINE_finish(engine_rdrand);
+            ENGINE_free(engine_rdrand);
+            ENGINE_cleanup();
+				
+/*
+            typename aes_controller<MessageType, EncryptType>::
+            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
 
-        template class aes_controller<message_scan::RequestScan>;
-        template class aes_controller<message_scan::ResponseScan>;
+						const std::unique_ptr<aes_cbc> * head = skip_list_accessor.first();
+
+						head = 0;
+*/
+/*
+						typename skip_list_type::iterator iter;
+
+						for(iter = skip_list_accessor.begin(); iter != skip_list_accessor.end(); ++iter){
+								    skip_list_accessor.remove(*iter);
+					  }
+
+*/						
+
+//						if(skip_list_accessor.size() != 0)  skip_list_ptr.reset();
+/*
+						LOG(INFO)<<"List size : " << skip_list_accessor.size();
+
+						//skip_list_ptr = NULL;
+						//skip_list_ptr.reset();
+					  std::shared_ptr<skip_list_type>().swap(skip_list_ptr);	
+*/
+            //delete aes_ptr;
+        }//~
+
+        template class aes_controller<message_scan::RequestScan, struct aes_cbc>;
+        template class aes_controller<message_scan::ResponseScan, struct aes_cbc>;
 
     }//security
 

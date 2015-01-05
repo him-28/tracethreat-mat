@@ -49,17 +49,18 @@ message RequestScan{
 			RESULT = 8;
 		}
 
-		required RequestType  type     	= 1;
+		required RequestType  type     	= 1; //Request types between server and client.
 		required bytes  	   uuid 		 	= 2; // Machine UUID send from client.
 		required bytes      timestamp 	= 3;
-		//required bytes type = 3; // Request types between server and client.
+
 		message RequestGetBinaryValue{
 			optional bytes binary     	= 1;   // Binary file.
 			optional bytes file_name  	= 2;   // File name.
 			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-
+			optional bytes key          =6;
+		  optional bytes iv           =7;
 		}
 
 		repeated RequestGetBinaryValue request_get_binary_value = 4;
@@ -70,10 +71,13 @@ message RequestScan{
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
+			optional bytes key          =6;
+		  optional bytes iv           =7;
 
 		}
 
 		repeated RequestSetBinaryValue  request_set_binary_value = 5;
+
 
 }
 
@@ -120,6 +124,9 @@ message ResponseScan{
 			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
+			optional bytes key          =6;
+		  optional bytes iv           =7;
+
 		}
 
 		repeated ResponseGetBinaryValue response_get_binary_value = 4;
@@ -131,6 +138,9 @@ message ResponseScan{
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
+			optional bytes key          =6;
+		  optional bytes iv           =7;
+
 		}
 
 		repeated ResponseSetBinaryValue  reponse_set_binary_value = 5;
