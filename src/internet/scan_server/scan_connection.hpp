@@ -54,6 +54,8 @@
 
 #include "utils/logger/clutil_logger.hpp"
 
+#include "internet/security/encryption.hpp"
+
 namespace internet
 {
     namespace asio = boost::asio;
@@ -82,9 +84,15 @@ namespace internet
 
             static pointer create(io_service_type io_service, 
 																  scan_file_type * scan_file,
-																	asio::ssl::context & context) {
+																	asio::ssl::context & context,
+																  internet::security::
+															     encryption_controller<internet::security::aes_cbc> & enc_controller
+                                  ) {
 							  
-                return scan_connection::pointer(new scan_connection(io_service, scan_file, context));
+                return scan_connection::pointer(new scan_connection(io_service, 
+                      scan_file, 
+                      context,
+                      enc_controller));
 
             }
 
@@ -114,13 +122,15 @@ namespace internet
 
             scan_connection(io_service_type io_service,  //asio::io_service&
 														scan_file_type * scan_file,
-														asio::ssl::context & context) :
+														asio::ssl::context & context,
+                            internet::security::
+															encryption_controller<internet::security::aes_cbc> & enc_controller) :
                 msgs_packed_request_scan(boost::shared_ptr<message_scan::RequestScan>(
                         new message_scan::RequestScan())),
 								scan_file_(scan_file),
 								timer_(io_service, boost::posix_time::seconds(TCP_SOCKET_TIMEOUT)),
-                msgs_socket(io_service,  context)
-                {
+                msgs_socket(io_service,  context),
+                enc_controller_(enc_controller){
 								LOG(INFO)<<" Scan_connection : start timer";
 								//Start timer check timeout per connection.
 								start_socket_timer(); 
@@ -184,7 +194,7 @@ namespace internet
 
 					  scan_file_type * scan_file_;
 
-						 
+						internet::security::encryption_controller<internet::security::aes_cbc>  & enc_controller_;
     };
 
 }

@@ -1,8 +1,11 @@
 #define  CPU_THREAD_SIZE 1
 #include "internet/scan_server/scan_server.hpp"
 #include "internet/scan_server/scan_connection.hpp"
+
 //Load system with class register.
 #include "internet/security/load_security.hpp"
+//#include "internet/security/encryption.hpp"
+//#include "internet/security/aes_controller.hpp"
 
 //CLASS_REGISTER_IMPLEMENT_REGISTRY(aes_controller,
 //        internet::security::encryption_controller<internet::security::aes_cbc>);
@@ -11,6 +14,9 @@ namespace internet
 {
 
     namespace asio = boost::asio;
+
+    template<typename MessageType, typename EncryptType> class aes_controller;
+    template<typename EncryptType> class encryption_controller;
 
 
     class scan_server::impl
@@ -44,14 +50,15 @@ namespace internet
                 LOG(INFO)<<"Server : Initial context success.";
 
                 LOG(INFO)<<"Server : Load scanning engine...";
+
                 //deploy scanning engine, load database to SHM.
                 if(!deploy_scan_engine())
                     LOG(INFO)<<"Server : deploy scan engine compeleted.";
 
-								//load cryto and network security engine.
-								if(!load_system_engine())
-										LOG(INFO)<<"Server : Load system fail, Not completed steps to load component.";
-								
+                //load cryto and network security engine.
+                if(!load_system_engine())
+                    LOG(INFO)<<"Server : Load system fail, Not completed steps to load component.";
+
 
                 start_accept();
                 start_thread_accept(CPU_THREAD_SIZE);
@@ -81,7 +88,13 @@ namespace internet
                 LOG(INFO)<<"Server : New start_accept()";
 
                 scan_connection::pointer  new_connection =
-                        internet::scan_connection::create(io_service_, scan_file, context_);
+                        internet::scan_connection::create(io_service_,
+                                scan_file,
+                                context_,
+                                internet::security::get_encryption()->get_encryption());
+								//std::string ip;
+								//std::string uuid;
+								//internet::security::get_encryption()->initial_key(ip, uuid);						
 
                 acceptor.async_accept(new_connection->get_socket(),
                         boost::bind(&scan_server::impl::handle_accept,
@@ -122,6 +135,8 @@ namespace internet
                     LOG(INFO)<<"System cannot initial encryption engine";
                     return false;
                 }
+
+                ///*enc_controller_ = internet::security::get_encryption()->get_encryption();
 
                 //Database
 
@@ -226,6 +241,8 @@ namespace internet
             std::vector<parser::meta_sigparse *>   *msig_parse_vec;
 
             policy::scan_internet_controller<struct MAPPED_FILE_PE> *scan_file;
+
+            internet::security::encryption_controller<internet::security::aes_cbc> *enc_controller_;
 
             //handle thread
             //mutable boost::recursive_mutex res_mux;

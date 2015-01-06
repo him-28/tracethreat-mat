@@ -41,9 +41,7 @@
 #include <boost/thread/locks.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/shared_mutex.hpp>
-//#include "internet/utils/load_system.hpp"
 
-#include "internet/security/encryption.hpp"
 
 namespace internet
 {

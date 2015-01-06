@@ -2,6 +2,8 @@
 
 #include "internet/scan_server/scan_connection.hpp"
 
+//#include "internet/security/load_security.hpp"
+
 namespace internet
 {
 
@@ -308,12 +310,21 @@ namespace internet
             std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
             std::vector<const char *>       file_type_vec;
 
+						std::string ip_addr;
+						std::string uuid;
+
             switch(request_ptr->type()) {
 
             case message_scan::RequestScan::REGISTER :
 
                 LOG(INFO)<<"------------------- REGISTER TYPE---------------";
                 //Write data register success and send symmetric key exchanged to client.
+                ip_addr = msgs_socket.lowest_layer().remote_endpoint().address().to_string();
+
+                uuid = request_ptr->uuid();
+
+							  //internet::security::get_encryption()->initial_key(ip_addr, uuid);	
+
                 write_response(request_ptr, prepare_response_register(request_ptr));
 
                 LOG(INFO)<<"Fall back to Symmetric encryption key";
