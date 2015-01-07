@@ -16,8 +16,9 @@ namespace internet
         {
 
             public:
-                //encryption(){ }
+                // encryption(){ }
                 //virtual bool initial_engine() = 0;
+								virtual bool initial_engine() = 0;
 
                 virtual internet::security::aes_cbc *initial_key(std::string ip, std::string uuid) = 0;
 
@@ -27,8 +28,8 @@ namespace internet
 
                 virtual bool decryption_msgs(const char *msg, int msg_length)=  0;
 
-                template<typename EncryptType = internet::security::aes_cbc>
-                internet::security::encryption_controller<internet::security::aes_cbc>& get_encryption();
+                virtual internet::security::encryption_controller<internet::security::aes_cbc> *  	
+								get_encryption() = 0;
 
                 virtual ~encryption() { }
         };

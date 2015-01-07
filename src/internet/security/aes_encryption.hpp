@@ -16,28 +16,13 @@ namespace internet
 
             public :
 
-                aes_encryption() {
+                aes_encryption() :
+                 aes_(new aes_controller<message_scan::ResponseScan, aes_cbc>()) {
                     LOG(INFO)<<"Security AES initial support security module.";
                 }
 
-                /*
-                bool filter_key(const char *ip, const char *uuid);
-
-                bool encryption_msgs(const char *msg, int msg_length);
-
-                bool decryption_msgs(const char *msg, int msg_length);
-
-                aes_cbc *initial_key(std::string ip, std::string uuid);
-
-                bool initial_engine();
-                */
-								/*
-                aes_cbc& get_crypto()const {
-                    return enc_type;
-                }
-								*/
-                template<typename EncryptType = aes_cbc>
-                encryption_controller<aes_cbc>& get_encryption() {
+                internet::security::encryption_controller<internet::security::aes_cbc> *  
+                get_encryption() {
                     return aes_;
                 }
 
@@ -70,7 +55,8 @@ namespace internet
 
             private:
                 //encryption_controller<aes_cbc> * aes_;//encryption_contr;
-                boost::shared_ptr<aes_controller<message_scan::ResponseScan, aes_cbc> >  aes_;
+                //boost::shared_ptr<aes_controller<message_scan::ResponseScan, aes_cbc> >  aes_;
+                aes_controller<message_scan::ResponseScan, aes_cbc> * aes_;
                 aes_cbc *enc_type;
 
         };

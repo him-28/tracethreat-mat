@@ -54,11 +54,13 @@
 
 #include "utils/logger/clutil_logger.hpp"
 
+#include "internet/security/aes_controller.hpp"
+
 namespace internet
 {
     namespace asio = boost::asio;
 
-	  namespace h_util = hnmav_util; 
+    namespace h_util = hnmav_util;
 
     class scan_connection	 : public boost::enable_shared_from_this<scan_connection>
     {
@@ -68,43 +70,49 @@ namespace internet
             typedef boost::shared_ptr<message_scan::RequestScan>  MsgsRequestPointer;
             typedef boost::shared_ptr<message_scan::ResponseScan> MsgsResponsePointer;
 
-						typedef policy::scan_internet_controller<struct MAPPED_FILE_PE>  scan_file_type;
+            typedef policy::scan_internet_controller<struct MAPPED_FILE_PE>  scan_file_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
-		
-						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
+            typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
 
-						typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
+            typedef std::vector<threatinfo_type *>  threatinfo_vec_type;
 
-						//typedef boost::shared_ptr<asio::io_service> & io_service_type;
-	
-						typedef asio::io_service & io_service_type;
+            typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
 
-            static pointer create(io_service_type io_service, 
-																  scan_file_type * scan_file,
-																	asio::ssl::context & context) {
-							  
-                return scan_connection::pointer(new scan_connection(io_service, scan_file, context));
+            typedef internet::security::encryption_controller<internet::security::aes_cbc> encryption_type;
+
+            //typedef boost::shared_ptr<asio::io_service> & io_service_type;
+
+            typedef asio::io_service& io_service_type;
+
+            static pointer create(io_service_type io_service,
+                    scan_file_type *scan_file,
+                    asio::ssl::context& context,
+                    encryption_type *enc_controller) {
+
+                return scan_connection::pointer(new scan_connection(io_service,
+                        scan_file,
+                        context,
+                        enc_controller));
 
             }
 
-            //asio::ip::tcp::socket& 
-						ssl_socket::lowest_layer_type & get_socket();
+            //asio::ip::tcp::socket&
+            ssl_socket::lowest_layer_type& get_socket();
 
             void start();
 
-						~scan_connection(){		
-							
-						}
+            ~scan_connection() {
+
+            }
 
         private:
-						//Set default is true. First step for SSL connection and fallback to snappy+3DES	
-						bool sslEnable;
+            //Set default is true. First step for SSL connection and fallback to snappy+3DES
+            bool sslEnable;
 
-						asio::ssl::stream<asio::ip::tcp::socket> msgs_socket;
+            asio::ssl::stream<asio::ip::tcp::socket> msgs_socket;
             //asio::ip::tcp::socket msgs_socket;
-		
-						//asio::ssl::context context_;
+
+            //asio::ssl::context context_;
 
             std::vector<uint8_t> msgs_read_buffer;
 
@@ -113,43 +121,44 @@ namespace internet
             std::map<std::string, file_detail_scan> fd_scan_map;
 
             scan_connection(io_service_type io_service,  //asio::io_service&
-														scan_file_type * scan_file,
-														asio::ssl::context & context) :
+                    scan_file_type *scan_file,
+                    asio::ssl::context& context,
+                    encryption_type *enc_controller) :
                 msgs_packed_request_scan(boost::shared_ptr<message_scan::RequestScan>(
                         new message_scan::RequestScan())),
-								scan_file_(scan_file),
-								timer_(io_service, boost::posix_time::seconds(TCP_SOCKET_TIMEOUT)),
-                msgs_socket(io_service,  context)
-                {
-								LOG(INFO)<<" Scan_connection : start timer";
-								//Start timer check timeout per connection.
-								start_socket_timer(); 
+                scan_file_(scan_file),
+                timer_(io_service, boost::posix_time::seconds(TCP_SOCKET_TIMEOUT)),
+                msgs_socket(io_service,  context),
+                enc_controller_(enc_controller) {
+                LOG(INFO)<<" Scan_connection : start timer";
+                //Start timer check timeout per connection.
+                start_socket_timer();
             }
 
-						//Frist response to client.
-					  typename scan_connection::MsgsResponsePointer 
-						prepare_response(MsgsRequestPointer req);
+            //Frist response to client.
+            typename scan_connection::MsgsResponsePointer
+            prepare_response(MsgsRequestPointer req);
 
-						//Register step. 
+            //Register step.
             typename scan_connection::MsgsResponsePointer
             prepare_response_register(MsgsRequestPointer);
 
-						//Scanning steps
-           typename scan_connection::MsgsResponsePointer
+            //Scanning steps
+            typename scan_connection::MsgsResponsePointer
             prepare_response_scan(MsgsRequestPointer  msg_request);
 
-						typename scan_connection::MsgsResponsePointer
-						prepare_response_close(MsgsRequestPointer msg_request);
+            typename scan_connection::MsgsResponsePointer
+            prepare_response_close(MsgsRequestPointer msg_request);
 
-						//Handle scan engine.
-				    bool handle_scan_process(MsgsRequestPointer request_ptr);
+            //Handle scan engine.
+            bool handle_scan_process(MsgsRequestPointer request_ptr);
 
-						//Handle 
-						bool handle_close_process(MsgsRequestPointer request_ptr);
+            //Handle
+            bool handle_close_process(MsgsRequestPointer request_ptr);
 
             //Response
             void write_response(MsgsRequestPointer  request_ptr, MsgsResponsePointer  response_ptr);
- 
+
             void start_read_header();
 
             void start_read_body(unsigned msgs_length);
@@ -158,33 +167,57 @@ namespace internet
 
             void handle_read_body(const boost::system::error_code& error);
 
-						//utils handler socket timeout connection 
-						//:"Boost asio::deadline_timer is resetting before timeout " http://goo.gl/ACSd19
-						bool refresh_socket_timer();
-		
-						//socket close
-						bool socket_timeout(const boost::system::error_code & error);
-						
-						//socket timeout initial 
-						void start_socket_timer();
-	
-						boost::asio::deadline_timer  timer_;
+            //utils handler socket timeout connection
+            //:"Boost asio::deadline_timer is resetting before timeout " http://goo.gl/ACSd19
+            bool refresh_socket_timer();
 
-						void start_ssl_handshake();
+            //socket close
+            bool socket_timeout(const boost::system::error_code& error);
 
-						void handle_handshake(const boost::system::error_code& error);
+            //socket timeout initial
+            void start_socket_timer();
 
-						//Message request from server. 
+            boost::asio::deadline_timer  timer_;
+
+            void start_ssl_handshake();
+
+            void handle_handshake(const boost::system::error_code& error);
+
+            //SSL & AES fallback mode
+
+            //Write response secure
+            //Internet exchanged key.
+            void write_response_sec(internet::security::aes_cbc   *aes,
+                    MsgsRequestPointer  request_ptr,
+                    MsgsResponsePointer  response_ptr);
+
+            //Register step sec
+            typename scan_connection::MsgsResponsePointer
+            prepare_response_register_sec(MsgsRequestPointer msgs_request,
+                    internet::security::aes_cbc *aes);
+            //Send event to handle_read_header_sec
+            void start_read_header_sec();
+						//Send event to  headle_read_body_sec
+            void start_read_body_sec(unsigned msgs_length);
+						//Send event to start_read_body_sec
+            void handle_read_header_sec(const boost::system::error_code& error, std::size_t bytes);
+
+            void handle_read_body_sec(const boost::system::error_code& error);
+
+            //Message request from server.
             MsgsRequestPointer request_ptr;
 
-						//Signature database path.
-						std::string file_sig_path_;
+            //Signature database path.
+            std::string file_sig_path_;
 
-						parser::sig_parser * sig_parse;
+            parser::sig_parser *sig_parse;
 
-					  scan_file_type * scan_file_;
+            scan_file_type *scan_file_;
 
-						 
+            encryption_type *enc_controller_;
+
+            internet::security::aes_cbc *aes;
+
     };
 
 }
