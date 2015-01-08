@@ -74,40 +74,40 @@ namespace internet
         EncryptType *aes_controller<MessageType, EncryptType>::
         initial_key(std::string ip, std::string uuid)
         {
-            wait_sync();
+            //wait_sync();
 
-						  boost::lock_guard<mutex_t> lock_(enc_mutex);
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             typename aes_controller<MessageType, EncryptType>::
             skip_list_accessor_type skip_list_accessor(skip_list_ptr);
             //{
-                //std::unique_ptr<aes_cbc> aes_ptr = folly::make_unique<aes_cbc>(ip, uuid);
-                aes_ptr = new aes_cbc(ip,uuid);
-                LOG(INFO)<<"Initial AES key for client IP : "<< aes_ptr->ip;
-                LOG(INFO)<<"Initial UUID                  : "<< aes_ptr->uuid;
-                //Key set.
-                memset(aes_ptr->key, 0, KEY_SIZE);
+            //std::unique_ptr<aes_cbc> aes_ptr = folly::make_unique<aes_cbc>(ip, uuid);
+            aes_ptr = new aes_cbc(ip,uuid);
+            LOG(INFO)<<"Initial AES key for client IP : "<< aes_ptr->ip;
+            LOG(INFO)<<"Initial UUID                  : "<< aes_ptr->uuid;
+            //Key set.
+            memset(aes_ptr->key, 0, KEY_SIZE);
 
-                if(!RAND_bytes(aes_ptr->key, KEY_SIZE)) {
-                    LOG(INFO)<<"RAND cannot random KEY";
-                }
+            if(!RAND_bytes(aes_ptr->key, KEY_SIZE)) {
+                LOG(INFO)<<"RAND cannot random KEY";
+            }
 
-                //IV set
-                memset(aes_ptr->iv, 0, AES_BLOCK_SIZE);
+            //IV set
+            memset(aes_ptr->iv, 0, AES_BLOCK_SIZE);
 
-                if(!RAND_bytes(aes_ptr->iv, KEY_SIZE)) {
-                    LOG(INFO)<<"RAND cannot random IV";
-                }
+            if(!RAND_bytes(aes_ptr->iv, KEY_SIZE)) {
+                LOG(INFO)<<"RAND cannot random IV";
+            }
 
-                //memcpy(aes_ptr->iv, aes_ptr->iv, AES_BLOCK_SIZE);
+            //memcpy(aes_ptr->iv, aes_ptr->iv, AES_BLOCK_SIZE);
 
-                aes_ptr->key_length = KEY_SIZE;
+            aes_ptr->key_length = KEY_SIZE;
 
-                skip_list_accessor.insert(std::unique_ptr<aes_cbc>(aes_ptr));
+            skip_list_accessor.insert(std::unique_ptr<aes_cbc>(aes_ptr));
 
-                //sync();
+            //sync();
 
-                return aes_ptr;
+            return aes_ptr;
 
             //}
         }
@@ -115,47 +115,93 @@ namespace internet
         template<typename MessageType, typename EncryptType>
         bool aes_controller<MessageType, EncryptType>::find_key(std::string ip, std::string uuid)
         {
-						boost::lock_guard<mutex_t> lock_(enc_mutex);
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             typename aes_controller<MessageType, EncryptType>::
             skip_list_accessor_type skip_list_accessor(skip_list_ptr);
 
             std::unique_ptr<aes_cbc> aes = folly::make_unique<aes_cbc>(ip, uuid);
 
-            if(skip_list_accessor.find(aes) == skip_list_accessor.end()) {
-                aes_controller<MessageType, EncryptType>::sync();
+            if(skip_list_accessor.find(aes) != skip_list_accessor.end()) {
                 return true;
             }
 
-            //sync();
             return false;
         }
 
         template<typename MessageType, typename EncryptType>
-        bool aes_controller<MessageType, EncryptType>::filter_key(const char *ip, const char *uuid)
+        bool aes_controller<MessageType, EncryptType>::find_key(const char *ip, const char *uuid)
         {
-						boost::lock_guard<mutex_t> lock_(enc_mutex);
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
 
-            wait_sync();
             typename aes_controller<MessageType, EncryptType>::
             skip_list_accessor_type skip_list_accessor(skip_list_ptr);
 
             std::unique_ptr<aes_cbc> aes = folly::make_unique<aes_cbc>(ip, uuid);
 
-            if(skip_list_accessor.find(aes) == skip_list_accessor.end()) {
-                aes_controller<MessageType, EncryptType>::sync();
+            if(skip_list_accessor.find(aes) != skip_list_accessor.end()) {
                 return true;
             }
 
-            //sync();
-            return false;
+            return false;//skip_list_accessor.contains(aes);//false;
         }
+
+        template<typename MessageType, typename EncryptType>
+        EncryptType *aes_controller<MessageType, EncryptType>::
+        filter_key(const char *ip, const char *uuid)
+        {
+
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
+
+            typename aes_controller<MessageType, EncryptType>::
+            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
+
+            std::unique_ptr<aes_cbc> aes = folly::make_unique<aes_cbc>(ip, uuid);
+            skip_list_type::iterator iter_skip_list = skip_list_accessor.find(aes);
+						/* : For case find with instance skip_list
+            if(iter_skip_list != skip_list_accessor.end()) {
+
+                if(*iter_skip_list == nullptr)
+                    return NULL;
+
+                aes_cbc *aes = iter_skip_list->get();
+								LOG(INFO)<<"Search result : " << aes->ip;
+ 
+               if(aes->ip == ip) {
+
+										LOG(INFO)<<"----------------------------------------------";
+                    LOG(INFO)<<"Found IP : " << aes->ip;
+                    LOG(INFO)<<"Search From IP : " << ip <<", UUID : " << uuid;
+										LOG(INFO)<<"----------------------------------------------";
+
+                    return aes;
+                }
+
+            }
+						*/
+					  //Support skip_list_accessor , Create: TBB parallel-for	
+						for(iter_skip_list = skip_list_accessor.begin(); 
+                iter_skip_list != skip_list_accessor.end();
+                ++iter_skip_list){
+
+						    aes_cbc *aes = iter_skip_list->get();
+								if(aes->ip == ip){
+										LOG(INFO)<<"Search result : " << aes->ip<<", From IP : "<< ip <<", UUID : "<<uuid;
+										return aes;
+ 								}
+
+						}
+
+            return NULL;
+
+        }//filter_key
+
 
         template<typename MessageType, typename EncryptType>
         bool aes_controller<MessageType, EncryptType>::
         encryption_msgs(const char *msg, int msg_length, EncryptType *aes)
         {
-						boost::lock_guard<mutex_t> lock_(enc_mutex);
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
 
 
             int bytes_written_length = 0;
@@ -185,7 +231,6 @@ namespace internet
             aes->enc_length += bytes_written_length;
 
             //LOG(INFO)<<"Input length : " << aes->input_length <<", Encrypt length : "<< aes->enc_length;
-            //sync();
 
             return true;
         }
@@ -195,7 +240,7 @@ namespace internet
         bool aes_controller<MessageType, EncryptType>::
         decryption_msgs(const char *msg, int msg_length, EncryptType *aes)
         {
-						boost::lock_guard<mutex_t> lock_(enc_mutex);
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             int bytes_written_length = 0;
 
@@ -233,7 +278,7 @@ namespace internet
         bool aes_controller<MessageType, EncryptType>::
         encryption_msgs(std::string msg, aes_cbc *aes)
         {
-						boost::lock_guard<mutex_t> lock_(enc_mutex);
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             int bytes_written_length = 0;
 
@@ -272,7 +317,7 @@ namespace internet
         bool aes_controller<MessageType, EncryptType>::
         decryption_msgs(std::string msg, aes_cbc *aes)
         {
-						boost::lock_guard<mutex_t> lock_(enc_mutex);
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             int bytes_written_length = 0;
 
@@ -298,7 +343,6 @@ namespace internet
 
             aes->dec_length += bytes_written_length;
 
-            //sync();
 
             return true;
 
@@ -333,40 +377,40 @@ namespace internet
         aes_controller<MessageType, EncryptType>::
         ~aes_controller()
         {
-				
+
             boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             //wait_sync();
-				
+
             ENGINE_finish(engine_rdrand);
             ENGINE_free(engine_rdrand);
             ENGINE_cleanup();
-				
-/*
-            typename aes_controller<MessageType, EncryptType>::
-            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
 
-						const std::unique_ptr<aes_cbc> * head = skip_list_accessor.first();
+            /*
+                        typename aes_controller<MessageType, EncryptType>::
+                        skip_list_accessor_type skip_list_accessor(skip_list_ptr);
 
-						head = 0;
-*/
-/*
-						typename skip_list_type::iterator iter;
+            						const std::unique_ptr<aes_cbc> * head = skip_list_accessor.first();
 
-						for(iter = skip_list_accessor.begin(); iter != skip_list_accessor.end(); ++iter){
-								    skip_list_accessor.remove(*iter);
-					  }
+            						head = 0;
+            */
+            /*
+            						typename skip_list_type::iterator iter;
 
-*/						
+            						for(iter = skip_list_accessor.begin(); iter != skip_list_accessor.end(); ++iter){
+            								    skip_list_accessor.remove(*iter);
+            					  }
 
-//						if(skip_list_accessor.size() != 0)  skip_list_ptr.reset();
-/*
-						LOG(INFO)<<"List size : " << skip_list_accessor.size();
+            */
 
-						//skip_list_ptr = NULL;
-						//skip_list_ptr.reset();
-					  std::shared_ptr<skip_list_type>().swap(skip_list_ptr);	
-*/
+            //						if(skip_list_accessor.size() != 0)  skip_list_ptr.reset();
+            /*
+            						LOG(INFO)<<"List size : " << skip_list_accessor.size();
+
+            						//skip_list_ptr = NULL;
+            						//skip_list_ptr.reset();
+            					  std::shared_ptr<skip_list_type>().swap(skip_list_ptr);
+            */
             //delete aes_ptr;
         }//~
 

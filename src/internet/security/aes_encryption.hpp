@@ -21,11 +21,6 @@ namespace internet
                     LOG(INFO)<<"Security AES initial support security module.";
                 }
 
-                internet::security::encryption_controller<internet::security::aes_cbc> *  
-                get_encryption() {
-                    return aes_;
-                }
-
                 ~aes_encryption() { }
 
 
@@ -38,8 +33,8 @@ namespace internet
                     return aes_->initial_key(ip, uuid);
                 }
 
-                bool filter_key(const char *ip, const char *uuid) {
-                    return aes_->filter_key(ip, uuid);
+                bool find_key(const char *ip, const char *uuid) {
+                    return aes_->find_key(ip, uuid);
                 }
 
                 bool encryption_msgs(const char *msg, int msg_length) {
@@ -52,6 +47,16 @@ namespace internet
 
                     return aes_->decryption_msgs(msg, msg_length, enc_type);
                 }//decryption
+
+                internet::security::encryption_controller<internet::security::aes_cbc> *  
+                get_encryption() {
+                    return aes_;
+                }
+
+                internet::security::aes_cbc *
+								filter_key(const char * ip, const char * uuid){
+										return aes_->filter_key(ip, uuid);
+								}
 
             private:
                 //encryption_controller<aes_cbc> * aes_;//encryption_contr;

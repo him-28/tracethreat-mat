@@ -62,8 +62,6 @@ message RequestScan{
 			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-			optional bytes key          =6;
-		  optional bytes iv           =7;
 		}
 
 		repeated RequestGetBinaryValue request_get_binary_value = 7;
@@ -74,9 +72,6 @@ message RequestScan{
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-			optional bytes key          =6;
-		  optional bytes iv           =7;
-
 		}
 
 		repeated RequestSetBinaryValue  request_set_binary_value = 8;

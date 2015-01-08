@@ -22,7 +22,7 @@ namespace internet
 
                 virtual internet::security::aes_cbc *initial_key(std::string ip, std::string uuid) = 0;
 
-                virtual bool filter_key(const char *ip, const char *uuid) = 0;
+                virtual bool find_key(const char *ip, const char *uuid) = 0;
 
                 virtual bool encryption_msgs(const char *msg, int msg_length) = 0;
 
@@ -30,6 +30,9 @@ namespace internet
 
                 virtual internet::security::encryption_controller<internet::security::aes_cbc> *  	
 								get_encryption() = 0;
+
+					      virtual internet::security::aes_cbc *
+							  filter_key(const char *ip, const char * uuid) = 0;
 
                 virtual ~encryption() { }
         };

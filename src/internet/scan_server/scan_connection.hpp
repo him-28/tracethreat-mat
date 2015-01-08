@@ -187,21 +187,24 @@ namespace internet
 
             //Write response secure
             //Internet exchanged key.
-            void write_response_sec(internet::security::aes_cbc   *aes,
-                    MsgsRequestPointer  request_ptr,
+            void write_response_sec(MsgsRequestPointer  request_ptr,
                     MsgsResponsePointer  response_ptr);
 
             //Register step sec
             typename scan_connection::MsgsResponsePointer
             prepare_response_register_sec(MsgsRequestPointer msgs_request,
                     internet::security::aes_cbc *aes);
+
             //Send event to handle_read_header_sec
             void start_read_header_sec();
+
 						//Send event to  headle_read_body_sec
             void start_read_body_sec(unsigned msgs_length);
+
 						//Send event to start_read_body_sec
             void handle_read_header_sec(const boost::system::error_code& error, std::size_t bytes);
 
+            //Send event to write_response_sec 
             void handle_read_body_sec(const boost::system::error_code& error);
 
             //Message request from server.

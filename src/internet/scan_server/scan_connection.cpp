@@ -308,17 +308,16 @@ namespace internet
             LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
             LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
 
-            std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
-            std::vector<const char *>       file_type_vec;
-
+						std::string uuid;
+						std::string ip_addr;
 
             switch(request_ptr->type()) {
 
             case message_scan::RequestScan::REGISTER :
 
                 //Encryption
-                std::string uuid = request_ptr->uuid();
-                std::string ip_addr =
+                uuid = request_ptr->uuid();
+                ip_addr =
                         msgs_socket.lowest_layer().remote_endpoint().address().to_string();
 
                 aes  = enc_controller_->initial_key(ip_addr, uuid);
@@ -336,40 +335,11 @@ namespace internet
 
                 break;
 
-            case message_scan::RequestScan::SCAN :
-
-                LOG(INFO)<<"---------------------SCAN TYPE--------------------";
-
-                if(!handle_scan_process(request_ptr)) {
-                    LOG(INFO)<<" Cannot scanning message from client.";
-                }
-
-                LOG(INFO)<<"------------------END SCAN TYPE-------------------";
-
-                write_response(request_ptr, prepare_response_scan(request_ptr));
-
-                break;
-
-            case message_scan::RequestScan::CLOSE_CONNECTION :
-                //Close socket in thread.
-                LOG(INFO)<<"-------------------- CLOSE Connection --------------";
-
-                if(!handle_close_process(request_ptr)) {
-                    LOG(INFO)<<" Cannot close message internal process problem";
-                }
-
-                write_response(request_ptr, prepare_response_close(request_ptr));
-
-                if(msgs_socket.lowest_layer().is_open()) {
-                    msgs_socket.lowest_layer().close();
-                    LOG(INFO)<<"-------------------- CLOSE Connection From Server compeleted -------------";
-                }
-
-                break;
-
             default :
+								LOG(INFO)<<"------------------ No client type support ---------------";
                 break;
-            }
+
+            }//end switch.
 
         } else {
             LOG(INFO)<<" Server : Cannot unpack message from client ";
@@ -512,13 +482,10 @@ namespace internet
 
             LOG(INFO)<<"------------------Read Body-----------------------------";
 
+						//decrypt message.
+
             LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
             LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
-
-            std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
-            std::vector<const char *>       file_type_vec;
-
-						//decrypt message.
 
 
             switch(request_ptr->type()) {
@@ -533,7 +500,7 @@ namespace internet
 
                 LOG(INFO)<<"------------------END SCAN TYPE-------------------";
 
-                write_response(request_ptr, prepare_response_scan(request_ptr));
+                write_response_sec(request_ptr, prepare_response_scan(request_ptr));
 
                 break;
 
@@ -545,7 +512,7 @@ namespace internet
                     LOG(INFO)<<" Cannot close message internal process problem";
                 }
 
-                write_response(request_ptr, prepare_response_close(request_ptr));
+                write_response_sec(request_ptr, prepare_response_close(request_ptr));
 
                 if(msgs_socket.lowest_layer().is_open()) {
                     msgs_socket.lowest_layer().close();
@@ -555,14 +522,47 @@ namespace internet
                 break;
 
             default :
+								LOG(INFO)<<"---------------- No type of client support -------------";
                 break;
-            }
+            }// switch 
 
         } else {
             LOG(INFO)<<" Server : Cannot unpack message from client ";
         }//if-else unpack
     }//scan_connection::handle_read_body_sec
 
+    void scan_connection::
+		write_response_sec(MsgsRequestPointer  request_ptr, MsgsResponsePointer response_ptr)
+    {
+        LOG(INFO)<<"------------------------Write Response--------------------------";
+
+        try {
+
+            LOG(INFO)<<"Server :  write_response_sec, Client request msgs type : "<<request_ptr->type();
+
+            std::vector<uint8_t> write_buffer;
+            packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
+            resp_msg.pack(write_buffer);
+
+            msgs_socket.async_write_some(
+                    asio::buffer(write_buffer),
+                    boost::bind(&scan_connection::start_read_header_sec,
+                            shared_from_this()));
+
+            //step for  write to client in NON-SSL mode.
+
+            LOG(INFO)<<"Server : write_response_sec, write response to client completed 1st.";
+            //refresh timer.
+            refresh_socket_timer();
+
+        } catch(boost::system::system_error& error) {
+
+            LOG(INFO)<<"server : write_response_sec, error : "<<error.code();
+
+        }
+
+        LOG(INFO)<<"-------------------------------------------------------------";
+    }//write_response_sec
 
 
 }//network
