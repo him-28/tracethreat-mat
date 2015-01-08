@@ -18,6 +18,7 @@ compression_controller.hpp\
 ip_controller.hpp \
 uuid_controller.hpp \
 load_security.hpp \
+encryption_field.hpp \
 ../msg/packedmessage_scan.hpp \
 ../msg/scan_server_client/message_scan.pb.h \
 ../logger/logging.hpp \
@@ -31,6 +32,7 @@ encryption_service.cpp \
 aes_controller.cpp \
 ip_controller.cpp \
 uuid_controller.cpp \
+encryption_field.cpp \
 ../msg/packedmessage_scan.cpp \
 ../msg/scan_server_client/message_scan.pb.cc \
 ../logger/logging.cpp \

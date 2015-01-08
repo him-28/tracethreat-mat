@@ -24,7 +24,7 @@ namespace internet
         public:
             typedef boost::shared_ptr<utils::meta_sig>  msig_ptr;
 
-            //typedef boost::shared_ptr<asio::io_service> & io_service_type;
+						typedef internet::security::encryption_controller<internet::security::aes_cbc> encryption_type;
 
             typedef asio::io_service& io_service_type;
 
@@ -88,13 +88,10 @@ namespace internet
                 LOG(INFO)<<"Server : New start_accept()";
 
                 scan_connection::pointer  new_connection =
-                        internet::scan_connection::create(io_service_,
-                                scan_file,
-                                context_,
-                                internet::security::get_encryption()->get_encryption());
-								//std::string ip;
-								//std::string uuid;
-								//internet::security::get_encryption()->initial_key(ip, uuid);						
+                        internet::scan_connection::create(io_service_, 
+															scan_file, 
+															context_,
+                              enc_controller_);
 
                 acceptor.async_accept(new_connection->get_socket(),
                         boost::bind(&scan_server::impl::handle_accept,
@@ -136,13 +133,16 @@ namespace internet
                     return false;
                 }
 
-                ///*enc_controller_ = internet::security::get_encryption()->get_encryption();
-
+								enc_controller_ = internet::security::get_encryption()->get_encryption();
+								if(enc_controller_ == NULL){
+									LOG(INFO)<<"Encryption controller cannot intial";
+								}
+										
                 //Database
 
 
                 //Scan engine.
-
+								return true;
             }
 
             //Deploy scanning system and load object before call scan_file member function.
@@ -242,7 +242,7 @@ namespace internet
 
             policy::scan_internet_controller<struct MAPPED_FILE_PE> *scan_file;
 
-            internet::security::encryption_controller<internet::security::aes_cbc> *enc_controller_;
+						encryption_type * enc_controller_; 
 
             //handle thread
             //mutable boost::recursive_mutex res_mux;

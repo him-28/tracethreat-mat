@@ -2,10 +2,11 @@
 
 #include "internet/scan_server/scan_connection.hpp"
 
-//#include "internet/security/load_security.hpp"
+#include "internet/security/aes_controller.hpp"
 
 namespace internet
 {
+    struct aes_cbc;
 
     using parser::clamav_sig;
     using parser::hdb_sig;
@@ -307,8 +308,8 @@ namespace internet
             LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
             LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
 
-            std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
-            std::vector<const char *>       file_type_vec;
+						std::string uuid;
+						std::string ip_addr;
 
 						std::string ip_addr;
 						std::string uuid;
@@ -317,15 +318,16 @@ namespace internet
 
             case message_scan::RequestScan::REGISTER :
 
+                //Encryption
+                uuid = request_ptr->uuid();
+                ip_addr =
+                        msgs_socket.lowest_layer().remote_endpoint().address().to_string();
+
+                aes  = enc_controller_->initial_key(ip_addr, uuid);
+
                 LOG(INFO)<<"------------------- REGISTER TYPE---------------";
                 //Write data register success and send symmetric key exchanged to client.
-                ip_addr = msgs_socket.lowest_layer().remote_endpoint().address().to_string();
-
-                uuid = request_ptr->uuid();
-
-							  //internet::security::get_encryption()->initial_key(ip_addr, uuid);	
-
-                write_response(request_ptr, prepare_response_register(request_ptr));
+                write_response(request_ptr, prepare_response_register_sec(request_ptr, aes));
 
                 LOG(INFO)<<"Fall back to Symmetric encryption key";
                 //Write 3DES message to client.That key exchanged success.
@@ -336,40 +338,11 @@ namespace internet
 
                 break;
 
-            case message_scan::RequestScan::SCAN :
-
-                LOG(INFO)<<"---------------------SCAN TYPE--------------------";
-
-                if(!handle_scan_process(request_ptr)) {
-                    LOG(INFO)<<" Cannot scanning message from client.";
-                }
-
-                LOG(INFO)<<"------------------END SCAN TYPE-------------------";
-
-                write_response(request_ptr, prepare_response_scan(request_ptr));
-
-                break;
-
-            case message_scan::RequestScan::CLOSE_CONNECTION :
-                //Close socket in thread.
-                LOG(INFO)<<"-------------------- CLOSE Connection --------------";
-
-                if(!handle_close_process(request_ptr)) {
-                    LOG(INFO)<<" Cannot close message internal process problem";
-                }
-
-                write_response(request_ptr, prepare_response_close(request_ptr));
-
-                if(msgs_socket.lowest_layer().is_open()) {
-                    msgs_socket.lowest_layer().close();
-                    LOG(INFO)<<"-------------------- CLOSE Connection From Server compeleted -------------";
-                }
-
-                break;
-
             default :
+								LOG(INFO)<<"------------------ No client type support ---------------";
                 break;
-            }
+
+            }//end switch.
 
         } else {
             LOG(INFO)<<" Server : Cannot unpack message from client ";
@@ -420,7 +393,6 @@ namespace internet
         LOG(INFO)<<"Server : SSL Handle handshake";
 
         if(!error) {
-            //start_read_header();
             //Resize size for contains Header of packet.
             msgs_read_buffer.resize(HEADER_SIZE);
             msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
@@ -430,9 +402,170 @@ namespace internet
             //Reset timer after read data completed.
             refresh_socket_timer();
 
-        }else{
-						LOG(INFO)<<" Server : error  : " <<  error.message();
-				}
+        } else {
+            LOG(INFO)<<" Server : error  : " <<  error.message();
+        }
     }
 
-}
+		//___________________________________Step SSL & AES fallback
+    typename scan_connection::MsgsResponsePointer scan_connection::
+    prepare_response_register_sec(MsgsRequestPointer  msgs_request,
+            internet::security::aes_cbc   *aes)
+    {
+
+        //[-]Verify UUID(UUID Controller)
+        //[-]Sucess to verfity not repeatedly UUID in scanning system.
+        //[x]Add Security Module handle received/close socket from client.
+        MsgsResponsePointer  register_response(new message_scan::ResponseScan);
+        register_response->set_uuid(msgs_request->uuid());
+        register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
+        register_response->set_timestamp(std::string("0:0:0:0"));
+        register_response->set_key((const char *)aes->key);
+        register_response->set_iv((const char *)aes->iv);
+        register_response->set_key_length(aes->key_length);
+        LOG(INFO)<<"Server : prepare_response_register success";
+
+        return register_response;
+    }//prepare_response_register_sec
+
+    //Read header is 4 bytes. End of bytes is size of body
+    void scan_connection::start_read_header_sec()
+    {
+
+        LOG(INFO)<<"Server : start_read_header_sec.";
+
+        //Resize size for contains Header of packet.
+        msgs_read_buffer.resize(HEADER_SIZE);
+        msgs_socket.async_read_some(asio::buffer(msgs_read_buffer),
+                boost::bind(&scan_connection::handle_read_header_sec, shared_from_this(),
+                        _1, _2));
+
+        //Reset timer after read data completed.
+        refresh_socket_timer();
+    }//start_read_header_sec
+
+		//call read body after header calculated.
+    void scan_connection::start_read_body_sec(unsigned msgs_length)
+    {
+        LOG(INFO)<<"Server : start_read_body_sec";
+        msgs_read_buffer.resize(HEADER_SIZE + msgs_length);
+        asio::mutable_buffers_1 buffer =
+                asio::buffer(&msgs_read_buffer[HEADER_SIZE], msgs_length);
+        asio::async_read(msgs_socket, buffer,
+                boost::bind(&scan_connection::handle_read_body_sec, shared_from_this(),
+                        asio::placeholders::error));
+        //Refresh socket
+        refresh_socket_timer();
+    }//start_read_body_sec
+
+    void scan_connection::handle_read_header_sec(
+            const boost::system::error_code& error,
+            std::size_t bytes)
+    {
+        LOG(INFO)<<"Server : handle_read_header_sec , Start read header and unpack ";
+
+        try {
+            LOG(INFO)<<"Server Hex header :" << show_hex(msgs_read_buffer);
+            unsigned msgs_length =
+                    msgs_packed_request_scan.decode_header(msgs_read_buffer);
+            LOG(INFO)<<" Header message length : " << msgs_length;
+            start_read_body(msgs_length);
+        } catch(boost::system::system_error e) {
+            LOG(INFO)<<"handle_read_header, error : " << e.code();
+        }
+    }//handle_read_header_sec
+
+    void scan_connection::handle_read_body_sec(const boost::system::error_code& error)
+    {
+        LOG(INFO)<<"Server : handle_read_body  ";
+
+        //Read body before send to handle_request
+        if(msgs_packed_request_scan.unpack(msgs_read_buffer)) {
+            request_ptr = msgs_packed_request_scan.get_msg();
+
+            LOG(INFO)<<"------------------Read Body-----------------------------";
+
+						//decrypt message.
+
+            LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
+            LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
+
+
+            switch(request_ptr->type()) {
+
+            case message_scan::RequestScan::SCAN :
+
+                LOG(INFO)<<"---------------------SCAN TYPE--------------------";
+
+                if(!handle_scan_process(request_ptr)) {
+                    LOG(INFO)<<" Cannot scanning message from client.";
+                }
+
+                LOG(INFO)<<"------------------END SCAN TYPE-------------------";
+
+                write_response_sec(request_ptr, prepare_response_scan(request_ptr));
+
+                break;
+
+            case message_scan::RequestScan::CLOSE_CONNECTION :
+                //Close socket in thread.
+                LOG(INFO)<<"-------------------- CLOSE Connection --------------";
+
+                if(!handle_close_process(request_ptr)) {
+                    LOG(INFO)<<" Cannot close message internal process problem";
+                }
+
+                write_response_sec(request_ptr, prepare_response_close(request_ptr));
+
+                if(msgs_socket.lowest_layer().is_open()) {
+                    msgs_socket.lowest_layer().close();
+                    LOG(INFO)<<"-------------------- CLOSE Connection From Server compeleted -------------";
+                }
+
+                break;
+
+            default :
+								LOG(INFO)<<"---------------- No type of client support -------------";
+                break;
+            }// switch 
+
+        } else {
+            LOG(INFO)<<" Server : Cannot unpack message from client ";
+        }//if-else unpack
+    }//scan_connection::handle_read_body_sec
+
+    void scan_connection::
+		write_response_sec(MsgsRequestPointer  request_ptr, MsgsResponsePointer response_ptr)
+    {
+        LOG(INFO)<<"------------------------Write Response--------------------------";
+
+        try {
+
+            LOG(INFO)<<"Server :  write_response_sec, Client request msgs type : "<<request_ptr->type();
+
+            std::vector<uint8_t> write_buffer;
+            packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
+            resp_msg.pack(write_buffer);
+
+            msgs_socket.async_write_some(
+                    asio::buffer(write_buffer),
+                    boost::bind(&scan_connection::start_read_header_sec,
+                            shared_from_this()));
+
+            //step for  write to client in NON-SSL mode.
+
+            LOG(INFO)<<"Server : write_response_sec, write response to client completed 1st.";
+            //refresh timer.
+            refresh_socket_timer();
+
+        } catch(boost::system::system_error& error) {
+
+            LOG(INFO)<<"server : write_response_sec, error : "<<error.code();
+
+        }
+
+        LOG(INFO)<<"-------------------------------------------------------------";
+    }//write_response_sec
+
+
+}//network

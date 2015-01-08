@@ -120,12 +120,18 @@ namespace internet
 
                 if(!aes_y) return false;
 
+
                 //IP compared
                 int ip_comp = aes_x->ip == aes_y->ip;
+
+
                 //UUID compared
                 int uuid_comp = aes_x->uuid == aes_y->uuid;
 
-                if(ip_comp && uuid_comp) return true;
+
+                if(ip_comp && uuid_comp){  
+                	return true;
+								}
 
                 return false;
             }
@@ -139,7 +145,9 @@ namespace internet
             public:
 								encryption_controller(){ }
 
-                virtual bool filter_key(const char *ip, const char *uuid) = 0;
+                virtual bool find_key(const char *ip, const char *uuid) = 0;
+
+                virtual EncryptType * filter_key(const char *ip, const char *uuid) = 0;
 
                 virtual bool encryption_msgs(const char *msg, int msg_length, EncryptType   *enc_type) =  0;
 
@@ -182,7 +190,9 @@ namespace internet
 
                 bool decryption_msgs(const char *msg, int msg_length, EncryptType *aes);
 
-                bool filter_key(const char *ip, const char *uuid);
+                bool find_key(const char *ip, const char *uuid);
+
+                EncryptType * filter_key(const char *ip, const char *uuid);
 
                 EncryptType& get_crypto()const {
                     return *aes_ptr;
