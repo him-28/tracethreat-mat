@@ -1,7 +1,7 @@
 #ifndef INTERNET_SECURITY_HPP
 #define INTERNET_SECURITY_HPP
 
-//#include "internet/security/encryption.hpp"
+#include "internet/security/encryption.hpp"
 
 namespace internet
 {

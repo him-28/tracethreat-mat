@@ -50,11 +50,11 @@ message RequestScan{
 		}
 
 		required RequestType  type     	= 1; //Request types between server and client.
-		required bytes  	   uuid 		 	= 2; // Machine UUID send from client.
-		required bytes      timestamp 	= 3;
-		optional bytes      key         = 4;
-    optional bytes      iv          = 5;
-    optional uint64     key_length  = 6;
+		required bytes  	   uuid 		 	= 2; //Machine UUID send from client.
+		required bytes      timestamp 	= 3; //Timestamp is external system (International Time)
+		optional bytes      key         = 4; // AES key support fall back step from SSL
+    optional bytes      iv          = 5; // Init vector support fall back step from SSL
+		required bytes      ip          = 6; // IP Address from client. 
 
 		message RequestGetBinaryValue{
 			optional bytes binary     	= 1;   // Binary file.
@@ -114,10 +114,9 @@ message ResponseScan{
 		required ResponseType  type      = 1;
 		required bytes  	   	 uuid 		 = 2; // Machine UUID send from client.
 		required bytes         timestamp = 3;
-		optional bytes      key         = 4;
-    optional bytes      iv          = 5;
-    optional uint64     key_length  = 6;
-
+		optional bytes         key       = 4;
+    optional bytes         iv        = 5;
+		required bytes         ip        = 6; // IP Address from client.
 
 
 		message ResponseGetBinaryValue{

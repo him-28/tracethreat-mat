@@ -311,9 +311,6 @@ namespace internet
 						std::string uuid;
 						std::string ip_addr;
 
-						std::string ip_addr;
-						std::string uuid;
-
             switch(request_ptr->type()) {
 
             case message_scan::RequestScan::REGISTER :
@@ -422,7 +419,7 @@ namespace internet
         register_response->set_timestamp(std::string("0:0:0:0"));
         register_response->set_key((const char *)aes->key);
         register_response->set_iv((const char *)aes->iv);
-        register_response->set_key_length(aes->key_length);
+        //register_response->set_key_length(aes->key_length);
         LOG(INFO)<<"Server : prepare_response_register success";
 
         return register_response;

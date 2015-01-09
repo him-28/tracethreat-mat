@@ -15,7 +15,7 @@ namespace internet
 
 							public:
 
-                typedef encryption_controller<MessageType> encrypt_type;
+                typedef encryption_controller<EncryptType> encrypt_type;
 
                 typedef boost::shared_ptr<MessageType> MsgsPointer;
 
@@ -32,7 +32,7 @@ namespace internet
 
             public:
 
-                typedef encryption_controller<MessageType> encrypt_type;
+                typedef encryption_controller<EncryptType> encrypt_type;
 
                 typedef boost::shared_ptr<MessageType> MsgsPointer;
 
