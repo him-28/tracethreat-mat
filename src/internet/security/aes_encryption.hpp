@@ -45,12 +45,12 @@ namespace internet
 
                     return aes_->decryption_msgs(msg, msg_length, enc_type);
                 }//decryption
-
+								/*
                 internet::security::encryption_controller<internet::security::aes_cbc> *  
                 get_encryption() {
                     return aes_;
                 }
-
+								*/
                 internet::security::aes_cbc *
 								filter_key(const char * ip, const char * uuid){
 										return aes_->filter_key(ip, uuid);
