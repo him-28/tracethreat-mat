@@ -8,12 +8,11 @@ lib_LIBRARIES = libscan_server.a
 #@install header to system
 libscan_server_adir = $(includedir)/internet/scan_server
 
-#Header
+#Header , ../utils/load_system.hpp \
 libscan_server_a_HEADERS = scan_server.hpp \
 scan_connection.hpp \
 ../msg/packedmessage_scan.hpp \
 ../msg/scan_server_client/message_scan.pb.h \
-../utils/load_system.hpp \
 ../logger/logging.hpp \
 ../logger/stringprintf.hpp
 
