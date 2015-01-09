@@ -58,6 +58,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/internet/security/ip_controller.hpp \
  $(top_builddir)/src/internet/security/aes_controller.hpp \
  $(top_builddir)/src/internet/security/encryption.hpp \
+ $(top_builddir)/src/internet/security/encryption_field.hpp \
  $(top_builddir)/src/internet/security/aes_encryption.hpp \
  $(top_builddir)/src/internet/scan_client/scan_client.hpp \
  $(top_builddir)/src/internet/scan_client/scan_dir.hpp \
@@ -115,6 +116,7 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/internet/security/uuid_controller.cpp \
   $(top_builddir)/src/internet/security/ip_controller.cpp \
   $(top_builddir)/src/internet/security/aes_controller.cpp \
+  $(top_builddir)/src/internet/security/encryption_field.cpp \
   $(top_builddir)/src/internet/scan_client/scan_client.cpp \
   $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.cpp \
   $(top_builddir)/src/internet/scan_client/basic_scan_dir.cpp \

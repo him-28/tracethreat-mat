@@ -1,17 +1,10 @@
 #ifndef INTERNET_SECURITY_HPP
 #define INTERNET_SECURITY_HPP
 
-//#include "internet/utils/load_system_register.hpp"
 #include "internet/security/encryption.hpp"
-#include "internet/security/aes_encryption.hpp"
 
 namespace internet
 {
-
-//    namespace utils
-//    {
-		 // 	using namespace internet::security;
-
         namespace security
         {
 
@@ -37,10 +30,7 @@ namespace internet
                 return encrypt;
             }//create_encryption
 
-
         }//load_system
-
-//    }//utils
 
 }//internet
 

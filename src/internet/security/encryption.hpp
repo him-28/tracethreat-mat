@@ -16,7 +16,7 @@ namespace internet
         {
 
             public:
-                // encryption(){ }
+                //encryption(){ }
                 //virtual bool initial_engine() = 0;
 								virtual bool initial_engine() = 0;
 
