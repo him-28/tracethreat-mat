@@ -182,7 +182,7 @@ namespace internet
     {
 
         LOG(INFO)<<"Server : Register internal message size : " <<
-                request_ptr->request_set_binary_value_size();
+                request_ptr->set_binary_value_size();
 
         utils::filetype_code file_type;
 
@@ -195,11 +195,11 @@ namespace internet
 
 
         for(int count_msg = 0;
-                count_msg < request_ptr->request_set_binary_value_size();
+                count_msg < request_ptr->set_binary_value_size();
                 count_msg++) {
 
-            const message_scan::RequestScan::RequestSetBinaryValue& msg_scan =
-                    request_ptr->request_set_binary_value(count_msg);
+            const message_scan::RequestScan::SetBinaryValue& msg_scan =
+                    request_ptr->set_binary_value(count_msg);
 
 
             switch(msg_scan.file_type()) {

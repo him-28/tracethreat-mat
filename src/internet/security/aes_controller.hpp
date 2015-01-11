@@ -42,6 +42,7 @@
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
+#include "utils/base/system_code.hpp"
 
 namespace internet
 {
@@ -55,10 +56,11 @@ namespace internet
         class encryption_type;
         struct aes_cbc;
 
+				enum crypto_type{ INSERT, FIND};
 
         struct aes_cbc {
-            char const *ip;
-            char const *uuid;
+            char *ip;
+            char *uuid;
 
             unsigned char *msg;
 
@@ -81,21 +83,73 @@ namespace internet
             int key_length;
 
 
-            aes_cbc(std::string& _ip, std::string& _uuid) : ip(_ip.c_str()),
-                uuid(_uuid.c_str()),
+            aes_cbc(std::string& _ip, std::string& _uuid):
                 input_length(0),
                 output_length(0),
                 enc_length(0),
                 dec_length(0),
-                key_length(0) { }
+                key_length(0) {
+                ip = new char[_ip.size()+1];
+                std::copy(_ip.begin(), _ip.end(), ip);
+                ip[_ip.size()] = '\0';
 
-            aes_cbc(const char   *_ip, const char *_uuid) : ip(_ip),
-                uuid(_uuid),
+                uuid = new char[_uuid.size()+1];
+                std::copy(_uuid.begin(), _uuid.end(), uuid);
+                uuid[_uuid.size()] = '\0';
+
+                LOG(INFO)<<" Struct IP : "<< ip <<", UUID : "<< uuid;
+
+            }
+
+            aes_cbc(const char   *_ip, const char *_uuid) :
                 input_length(0),
                 output_length(0),
                 enc_length(0),
                 dec_length(0),
-                key_length(0) { }
+                key_length(0) {
+
+
+                const std::size_t size_len_ip = strlen(_ip);
+                ip = new char[size_len_ip+1];
+                strncpy(ip, _ip, size_len_ip);
+                ip[size_len_ip] = '\0';
+
+                const std::size_t size_len_uuid = strlen(_uuid);
+                uuid = new char[size_len_uuid+1];
+                strncpy(uuid, _uuid, size_len_uuid);
+                ip[size_len_uuid] = '\0';
+
+                LOG(INFO)<<" Struct IP : "<< ip <<", UUID : "<< uuid;
+
+            }
+
+
+            aes_cbc(std::string& _ip,
+                    std::string& _uuid,
+                    unsigned char *_key,
+                    unsigned char *_iv):
+                input_length(0),
+                output_length(0),
+                enc_length(0),
+                dec_length(0),
+                key_length(0) {
+
+                ip = new char[_ip.size()+1];
+                std::copy(_ip.begin(), _ip.end(), ip);
+                ip[_ip.size()] = '\0';
+
+                uuid = new char[_uuid.size()+1];
+                std::copy(_uuid.begin(), _uuid.end(), uuid);
+                uuid[_uuid.size()] = '\0';
+
+                memcpy(key, _key, KEY_SIZE+1);
+
+                memcpy(iv, _iv, AES_BLOCK_SIZE+1);
+
+                LOG(INFO)<<" Struct IP : "<< ip <<", UUID : "<< uuid;
+
+            }
+
 
 
             aes_cbc& operator=(const aes_cbc& aes_) {
@@ -129,9 +183,9 @@ namespace internet
                 int uuid_comp = aes_x->uuid == aes_y->uuid;
 
 
-                if(ip_comp && uuid_comp){  
-                	return true;
-								}
+                if(ip_comp && uuid_comp) {
+                    return true;
+                }
 
                 return false;
             }
@@ -143,11 +197,11 @@ namespace internet
         {
 
             public:
-								encryption_controller(){ }
+                encryption_controller() { }
 
                 virtual bool find_key(const char *ip, const char *uuid) = 0;
 
-                virtual EncryptType * filter_key(const char *ip, const char *uuid) = 0;
+                virtual EncryptType *filter_key(const char *ip, const char *uuid) = 0;
 
                 virtual bool encryption_msgs(const char *msg, int msg_length, EncryptType   *enc_type) =  0;
 
@@ -157,7 +211,11 @@ namespace internet
 
                 virtual EncryptType *initial_key(std::string ip, std::string uuid) = 0;
 
-                ~encryption_controller(){ }
+								virtual EncryptType * process_crypto(std::string ip, 
+                                                     std::string uuid, 
+                                                     utils::crypto_mode  crypto) = 0;
+
+                ~encryption_controller() { }
         };
 
 
@@ -176,7 +234,7 @@ namespace internet
 
                 typedef std::vector<uint8_t> msgenc_vec_type;
 
-               aes_controller() : skip_list_ptr(skip_list_type::createInstance()) { }
+                aes_controller() : skip_list_ptr(skip_list_type::createInstance()) { }
 
                 bool ping_service();
 
@@ -192,22 +250,24 @@ namespace internet
 
                 bool find_key(const char *ip, const char *uuid);
 
-                EncryptType * filter_key(const char *ip, const char *uuid);
+                EncryptType *filter_key(const char *ip, const char *uuid);
 
                 EncryptType& get_crypto()const {
                     return *aes_ptr;
                 }
 
+								EncryptType * process_crypto(std::string ip, std::string uuid, utils::crypto_mode  crypto);
+
                 /* using for production. Support std::string from protocal-buffer */
                 bool encryption_msgs(std::string msg, aes_cbc *aes);
 
                 bool decryption_msgs(std::string msg, aes_cbc *aes);
-									
-								void wait_sync();
-	
-								void sync();
 
-								~aes_controller();
+                void wait_sync();
+
+                void sync();
+
+                ~aes_controller();
 
                 std::unique_ptr<aes_cbc>& get_aes_msgs() const;
 
@@ -227,12 +287,15 @@ namespace internet
                 EVP_CIPHER_CTX ctx_dec;
 
                 //lock mutex
-								bool sync_send;
+                bool sync_send;
 
                 typedef boost::mutex mutex_t;
-								mutable mutex_t enc_mutex;
+                mutable mutex_t enc_mutex;
                 boost::condition_variable cond_;
 
+            		//typename aes_controller<MessageType, EncryptType>::
+            		//skip_list_accessor_type skip_list_accessor(skip_list_ptr);
+            		//skip_list_type::Accessor skip_list_accessor(skip_list_ptr);
 
         };
 

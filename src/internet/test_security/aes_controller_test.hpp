@@ -84,15 +84,6 @@ void thread_initial_key(internet::security::encryption_controller<internet::secu
     //LOG(INFO)<<"Start key IP : " << start_key;
 
     for(int count_key = start_key; count_key < MAX_COUNT; count_key++) {
-        //while(true){
-        //    if(count_key == MAX_COUNT) count_key = 0;
-        //std::string ip_suffing = std::to_string(count_key);
-        //ip_prefix[count_key] = ip_start.append(ip_suffing);
-
-        //std::string uuid_suffing  = std::to_string(count_key);
-        //uuid_prefix[count_key] = uuid_start.append(uuid_suffing);
-
-				//LOG(INFO)<<" Search IP : " << ip_prefix_[count_key] <<", UUID : "<< uuid_prefix_[count_key];
 
         if(!enc_controller.find_key(ip_prefix_[count_key].c_str(), uuid_prefix_[count_key].c_str())) {
           if(count_key == 1){
@@ -118,7 +109,7 @@ void thread_initial_key(internet::security::encryption_controller<internet::secu
     }//for
 }
 
-
+/*
 TEST(aescontroller, aes_encryption_thread)
 {
 
@@ -151,7 +142,7 @@ TEST(aescontroller, aes_encryption_thread)
     t3.join();
 
 }
-
+*/
 
 
 TEST(aescontroller, encryptionstring)
@@ -207,13 +198,17 @@ TEST(aescontroller, encryptionstring)
 
     std::string ip_false("192.168.1.2");
     std::string uuid_false("0:0:0:0");
-    bool res_filter_false = enc_controller->find_key(ip_false.c_str(), uuid_false.c_str());
-    LOG(INFO)<<" Filter key is true : " << res_filter_false;
 
-    internet::security::aes_cbc * aes = enc_controller->filter_key(ip.c_str(), uuid.c_str());
-		if(aes != NULL){
-				LOG(INFO)<<" filter found IP : " << aes->ip;
-		}
+    EXPECT_TRUE(enc_controller->process_crypto(ip_false.c_str(), uuid_false.c_str(), 
+                 utils::find_key_crypto_mode) == NULL);
+
+    EXPECT_TRUE(enc_controller->process_crypto(ip.c_str(), uuid.c_str(), 
+                 utils::find_key_crypto_mode) != NULL);
+
+
+
+
+
 }
 
 

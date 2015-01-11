@@ -22,6 +22,7 @@ class EncryptionLoadEngine : public ::testing::Test{
                 }
 
 								enc_controller_ = internet::security::get_encryption()->get_encryption();
+								internet::security::get_encryption()->initial_engine();
 								if(enc_controller_ == NULL){
 									LOG(INFO)<<"Encryption controller cannot intial";
 								}
@@ -44,16 +45,36 @@ TEST_F(EncryptionLoadEngine, EncryptionField){
 
 		boost::shared_ptr<message_scan::ResponseScan> msg_response(new message_scan::ResponseScan);
 
-		msg_response->set_uuid(std::string());
-    //msg_response->set_ip(std::string());
-		//msg_response->set_binary(std::string());
-    msg_response->set_timestamp(std::string());
+		msg_response->set_uuid(std::string("323:422:253:983"));
+    msg_response->set_ip(std::string("192.168.1.1"));
 
+		//get from socket
+		msg_response->set_conn_uuid(std::string("323:422:253:983"));
+    msg_response->set_conn_ip(std::string("192.168.1.1"));
+	
+		//msg_response->set_binary(std::string());
+    msg_response->set_timestamp(std::string("0:0:0:0"));
+
+	  message_scan::ResponseScan_SetBinaryValue* binary_value = msg_response->add_set_binary_value();
+    binary_value->set_binary(std::string("a4e50xfd5f1e0f0x")); 	
+		
 		sec_field->encryption(msg_response, enc_controller_);
      
 		LOG(INFO)<<"UUID : "<<msg_response->uuid();
-		//LOG(INFO)<<"IP   : "<<msg_response->ip();
-    //LOG(INFO)<<"BINARY : "<<msg_response->binary();
+		LOG(INFO)<<"IP   : "<<msg_response->ip();
     LOG(INFO)<<"TIMESTAMP : " <<msg_response->timestamp();
+
+		sec_field->decryption(msg_response, enc_controller_);
+	
+		LOG(INFO)<<"UUID : "<<msg_response->uuid();
+		LOG(INFO)<<"IP   : "<<msg_response->ip();
+    LOG(INFO)<<"TIMESTAMP : " <<msg_response->timestamp();
+
+		for(int count_msg = 0; count_msg < msg_response->set_binary_value_size(); count_msg++){
+							message_scan::ResponseScan::SetBinaryValue *msg_resp_binary = 
+               (message_scan::ResponseScan::SetBinaryValue *)
+               msg_response->mutable_set_binary_value(count_msg);
+							 LOG(INFO)<<" Binary : "<< msg_resp_binary->binary();
+		} 
 
 }

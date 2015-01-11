@@ -34,6 +34,10 @@
 #define KERNEL_NOT_LOAD           		50  /* OpenCL cannot load  .cl extension file */
 #define BUFFER_NOT_LOAD								51  /* KernelArg cannot load buffer */
 
+//Crypto model
+#define INSERT_KEY_CRYPTO             60
+#define FIND_KEY_CRYPTO               61
+
 // File Type
 #define FILETYPE_PE               		100 /* File type PE */
 #define FILETYPE_ELF              		101 /* File type ELF */
@@ -95,6 +99,10 @@ namespace utils
         multiple_ocl_tbb_mode = MULTIPLE_OCL_TBB_MODE
     } scanning_mode;
 
+	  typedef enum CRYPTO_MODE{
+				insert_key_crypto_mode = INSERT_KEY_CRYPTO,
+				find_key_crypto_mode   = FIND_KEY_CRYPTO
+		}crypto_mode;
 
 }
 

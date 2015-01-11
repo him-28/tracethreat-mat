@@ -69,6 +69,93 @@ namespace internet
 
         }
 
+
+        template<typename MessageType, typename EncryptType>
+        EncryptType *aes_controller<MessageType, EncryptType>::
+        process_crypto(std::string ip, std::string uuid, utils::crypto_mode crypto)
+        {
+
+            boost::lock_guard<mutex_t> lock_(enc_mutex);
+
+            typename aes_controller<MessageType, EncryptType>::
+            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
+            skip_list_type::iterator iter_skip_list;
+
+            std::unique_ptr<aes_cbc> aes_ = folly::make_unique<aes_cbc>(ip, uuid);
+
+            switch(crypto) {
+
+            case utils::insert_key_crypto_mode :
+
+                LOG(INFO)<<"Initial AES key for client IP : "<< aes_->ip;
+                LOG(INFO)<<"Initial UUID                  : "<< aes_->uuid;
+
+
+                //Key set.
+                memset(aes_->key, 0, KEY_SIZE);
+
+                if(!RAND_bytes(aes_->key, KEY_SIZE)) {
+                    LOG(INFO)<<"RAND cannot random KEY";
+                }
+
+                //IV set
+                memset(aes_->iv, 0, AES_BLOCK_SIZE);
+
+                if(!RAND_bytes(aes_->iv, KEY_SIZE)) {
+                    LOG(INFO)<<"RAND cannot random IV";
+                }
+
+                aes_->key_length = KEY_SIZE;
+
+                skip_list_accessor.insert(std::unique_ptr<internet::security::aes_cbc>(
+                        new internet::security::aes_cbc(ip, uuid, aes_->key, aes_->iv)
+                        ));
+
+                return aes_.get();
+
+                break;
+
+            case utils::find_key_crypto_mode :
+
+
+					      LOG(INFO)<<"Find AES key for client IP : "<< aes_->ip;
+                LOG(INFO)<<"Find UUID                  : "<< aes_->uuid;
+
+
+                iter_skip_list = skip_list_accessor.find(aes_);
+
+                //Support skip_list_accessor , Create: TBB parallel-for
+                for(iter_skip_list = skip_list_accessor.begin();
+                        iter_skip_list != skip_list_accessor.end();
+                        ++iter_skip_list) {
+
+                    aes_cbc *aes = iter_skip_list->get();
+
+                    if(aes->ip == NULL || aes->uuid == NULL) continue;
+
+                    if(aes->ip == ip && aes->uuid == uuid) {
+                        LOG(INFO)<<"Search result equal : "
+                                << aes->ip<<", From IP : "
+                                << ip <<", UUID : "<<uuid;
+                        return aes;
+                    }
+
+                }
+
+                break;
+
+            default:
+
+                LOG(INFO)<<"Not found crypto_mode.";
+
+                break;
+            };
+
+
+            return NULL;
+
+        }//process_crypto.
+
         //template<typename MessageType>
         template<typename MessageType, typename EncryptType>
         EncryptType *aes_controller<MessageType, EncryptType>::
@@ -80,36 +167,36 @@ namespace internet
 
             typename aes_controller<MessageType, EncryptType>::
             skip_list_accessor_type skip_list_accessor(skip_list_ptr);
-            //{
-            //std::unique_ptr<aes_cbc> aes_ptr = folly::make_unique<aes_cbc>(ip, uuid);
-            aes_ptr = new aes_cbc(ip,uuid);
-            LOG(INFO)<<"Initial AES key for client IP : "<< aes_ptr->ip;
-            LOG(INFO)<<"Initial UUID                  : "<< aes_ptr->uuid;
-            //Key set.
-            memset(aes_ptr->key, 0, KEY_SIZE);
 
-            if(!RAND_bytes(aes_ptr->key, KEY_SIZE)) {
+            std::unique_ptr<aes_cbc> aes_ = folly::make_unique<aes_cbc>(ip, uuid);
+
+            LOG(INFO)<<"Initial AES key for client IP : "<< aes_->ip;
+            LOG(INFO)<<"Initial UUID                  : "<< aes_->uuid;
+
+            //Key set.
+            memset(aes_->key, 0, KEY_SIZE);
+
+            if(!RAND_bytes(aes_->key, KEY_SIZE)) {
                 LOG(INFO)<<"RAND cannot random KEY";
             }
 
             //IV set
-            memset(aes_ptr->iv, 0, AES_BLOCK_SIZE);
+            memset(aes_->iv, 0, AES_BLOCK_SIZE);
 
-            if(!RAND_bytes(aes_ptr->iv, KEY_SIZE)) {
+            if(!RAND_bytes(aes_->iv, KEY_SIZE)) {
                 LOG(INFO)<<"RAND cannot random IV";
             }
 
-            //memcpy(aes_ptr->iv, aes_ptr->iv, AES_BLOCK_SIZE);
+            aes_->key_length = KEY_SIZE;
 
-            aes_ptr->key_length = KEY_SIZE;
+            //LOG(INFO)<<"Skip list size before insert : " << skip_list_accessor.size();
 
-            skip_list_accessor.insert(std::unique_ptr<aes_cbc>(aes_ptr));
+            skip_list_accessor.insert(std::unique_ptr<internet::security::aes_cbc>(
+                    new internet::security::aes_cbc(ip, uuid, aes_->key, aes_->iv)
+                    ));
 
-            //sync();
 
-            return aes_ptr;
-
-            //}
+            return aes_.get();
         }
 
         template<typename MessageType, typename EncryptType>
@@ -135,15 +222,17 @@ namespace internet
             boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             typename aes_controller<MessageType, EncryptType>::
-            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
+            skip_list_accessor_type skip_list_accessor_find(skip_list_ptr);
 
             std::unique_ptr<aes_cbc> aes = folly::make_unique<aes_cbc>(ip, uuid);
-
+            /*
             if(skip_list_accessor.find(aes) != skip_list_accessor.end()) {
-                return true;
+            return true;
             }
+            */
+            //LOG(INFO)<<"Find key at IP : "<< ip <<", UUID : "<< uuid;
 
-            return false;//skip_list_accessor.contains(aes);//false;
+            return skip_list_accessor_find.contains(aes);//false;
         }
 
         template<typename MessageType, typename EncryptType>
@@ -158,39 +247,45 @@ namespace internet
 
             std::unique_ptr<aes_cbc> aes = folly::make_unique<aes_cbc>(ip, uuid);
             skip_list_type::iterator iter_skip_list = skip_list_accessor.find(aes);
-						/* : For case find with instance skip_list
+            /* : For case find with instance skip_list
             if(iter_skip_list != skip_list_accessor.end()) {
 
-                if(*iter_skip_list == nullptr)
-                    return NULL;
+            if(*iter_skip_list == nullptr)
+            return NULL;
+
+            aes_cbc *aes = iter_skip_list->get();
+            		LOG(INFO)<<"Search result : " << aes->ip;
+
+            if(aes->ip == ip) {
+
+            				LOG(INFO)<<"----------------------------------------------";
+            LOG(INFO)<<"Found IP : " << aes->ip;
+            LOG(INFO)<<"Search From IP : " << ip <<", UUID : " << uuid;
+            				LOG(INFO)<<"----------------------------------------------";
+
+            return aes;
+            }
+
+            }
+            */
+
+            //LOG(INFO)<<"Skip list size  : " << skip_list_accessor.size();
+
+            //Support skip_list_accessor , Create: TBB parallel-for
+            for(iter_skip_list = skip_list_accessor.begin();
+                    iter_skip_list != skip_list_accessor.end();
+                    ++iter_skip_list) {
 
                 aes_cbc *aes = iter_skip_list->get();
-								LOG(INFO)<<"Search result : " << aes->ip;
- 
-               if(aes->ip == ip) {
 
-										LOG(INFO)<<"----------------------------------------------";
-                    LOG(INFO)<<"Found IP : " << aes->ip;
-                    LOG(INFO)<<"Search From IP : " << ip <<", UUID : " << uuid;
-										LOG(INFO)<<"----------------------------------------------";
+                //LOG(INFO)<<"Search result : " << aes->ip<<", From IP : "<< ip <<", UUID : "<<uuid;
 
+                if(aes->ip == ip) {
+                    LOG(INFO)<<"Search result equal : " << aes->ip<<", From IP : "<< ip <<", UUID : "<<uuid;
                     return aes;
                 }
 
             }
-						*/
-					  //Support skip_list_accessor , Create: TBB parallel-for	
-						for(iter_skip_list = skip_list_accessor.begin(); 
-                iter_skip_list != skip_list_accessor.end();
-                ++iter_skip_list){
-
-						    aes_cbc *aes = iter_skip_list->get();
-								if(aes->ip == ip){
-										LOG(INFO)<<"Search result : " << aes->ip<<", From IP : "<< ip <<", UUID : "<<uuid;
-										return aes;
- 								}
-
-						}
 
             return NULL;
 
@@ -266,7 +361,6 @@ namespace internet
 
             aes->dec_length += bytes_written_length;
 
-            //sync();
 
             return true;
 
@@ -380,38 +474,10 @@ namespace internet
 
             boost::lock_guard<mutex_t> lock_(enc_mutex);
 
-            //wait_sync();
-
             ENGINE_finish(engine_rdrand);
             ENGINE_free(engine_rdrand);
             ENGINE_cleanup();
 
-            /*
-                        typename aes_controller<MessageType, EncryptType>::
-                        skip_list_accessor_type skip_list_accessor(skip_list_ptr);
-
-            						const std::unique_ptr<aes_cbc> * head = skip_list_accessor.first();
-
-            						head = 0;
-            */
-            /*
-            						typename skip_list_type::iterator iter;
-
-            						for(iter = skip_list_accessor.begin(); iter != skip_list_accessor.end(); ++iter){
-            								    skip_list_accessor.remove(*iter);
-            					  }
-
-            */
-
-            //						if(skip_list_accessor.size() != 0)  skip_list_ptr.reset();
-            /*
-            						LOG(INFO)<<"List size : " << skip_list_accessor.size();
-
-            						//skip_list_ptr = NULL;
-            						//skip_list_ptr.reset();
-            					  std::shared_ptr<skip_list_type>().swap(skip_list_ptr);
-            */
-            //delete aes_ptr;
         }//~
 
         template class aes_controller<message_scan::RequestScan, struct aes_cbc>;

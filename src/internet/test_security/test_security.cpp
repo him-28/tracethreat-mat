@@ -31,7 +31,7 @@ GTEST_API_ int main(int argc, char  **argv)
 //#include "internet/test_security/security_connection_test.hpp"
 
 //AES controller
-//#include "internet/test_security/aes_controller_test.hpp"
+#include "internet/test_security/aes_controller_test.hpp"
 
 //Field encrypted
-#include "internet/test_security/encryption_field_test.hpp"
+//#include "internet/test_security/encryption_field_test.hpp"
