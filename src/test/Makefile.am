@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -g -I$(top_srcdir)/src -I/src/threadsyncocl -std=c++0x @AM_CXXFLAGS@
+AM_CXXFLAGS = -g -I$(top_srcdir)/src -I/src/threadsyncocl -std=c++11 @AM_CXXFLAGS@
 
 TEST = test_suite
 
@@ -11,10 +11,10 @@ test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsync
  -lthreadsyncocl -lgtest -lgtest_main -ltbb_debug -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \
  -lutils -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/exception \
  -lexception -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/data_structure \
- -ldstr -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/wrapper \
- -lwrapper  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/filetypes \
+ -ldstr  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/filetypes \
  -lfiletypes -L/home/chatsiri/workspacecpp/boost-truck/stage/lib \
- -lboost_system -lboost_program_options -lboost_thread -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan \
+ -lboost_system -lboost_program_options -lboost_thread \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan \
  -lscan -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/memory \
  -lmemory -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl \
  -locl -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadconcurrency \

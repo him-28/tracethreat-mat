@@ -17,8 +17,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 
 /*						Titles														      Authors										Date
- *  Copyright 2014, MTSec Inc.                                                  07/02/2014
+ *  Copyright 2014, Chatsiri Rattana.                                           07/02/2014
  *  -Base register class for init opencl type.        R.Chatsiri                07/02/2014
+ *  -Base register call scanning PE, ELF and Process types
+ *                                                    R.Chatsiri                12/09/2014
  */
 
 #ifndef FILE_MEM_REGISTER__HPP

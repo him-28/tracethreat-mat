@@ -16,3 +16,9 @@
 [submodule "src/gensign"]
 	path = src/gensign
 	url = git@github.com:treadstoneproject/gensign.git
+[submodule "src/internet/scan_client"]
+	path = src/internet/scan_client
+	url = git@github.com:treadstoneproject/scan_client.git
+[submodule "src/internet/scan_gateway"]
+	path = src/internet/scan_gateway
+	url = git@github.com:treadstoneproject/scan_gateway.git

@@ -9,17 +9,27 @@ namespace controller
         _monitor(monitor),
         _count(count),
         _timeout(timeout),
+				threatinfo(new tbbpostscan_pe_task::threatinfo_type),
         _done(false)
     {
 
 
     }
 
-    bool tbbpostscan_pe_task::
-    set_file(tbb::concurrent_vector<char> *_binary_hex_input)
-    {
+    //    set_file(tbb::concurrent_vector<char> *_binary_hex_input)
 
+    bool tbbpostscan_pe_task::
+    set_file(std::vector<char> *_binary_hex_input)
+    {
+				std::cout<<"Fix : binary hex : ";
         binary_hex_input_ = _binary_hex_input;
+				std::vector<char>::iterator iter_hex;
+				for(iter_hex = _binary_hex_input->begin();
+            iter_hex != _binary_hex_input->end();
+            ++iter_hex){
+            std::cout<<*iter_hex;
+				}
+			  std::cout<<std::endl;
         return true;
     }
 
@@ -40,12 +50,18 @@ namespace controller
     };
 
     bool tbbpostscan_pe_task::
-    set_callback(res_callback_type *res_callback)
+    set_callback(result_callback_type *res_callback)
     {
         call_back_ = res_callback;
         return true;
 
     }
+
+		tbbpostscan_pe_task::rcb_container_type & 
+		tbbpostscan_pe_task::
+		get_callback(){
+				return call_back_->get_result();
+		}
 
     bool tbbpostscan_pe_task::
     set_sig_engine(actire_sig_engine_type *_actire_engine)
@@ -72,38 +88,43 @@ namespace controller
 
     }
 
+		tbbpostscan_pe_task::threatinfo_type * 
+		tbbpostscan_pe_task::
+		get_threatinfo_ptr(){
+				return threatinfo;
+		}
+
+		tbbpostscan_pe_task::threatinfo_vec_type & 
+		tbbpostscan_pe_task::
+		get_threatinfo(){
+				return threatinfo_vec; 
+		}
+
     void tbbpostscan_pe_task::
     run()
     {
-            goto_ = &actire_engine_->get_goto_fn();
-            failure_ = &actire_engine_->get_failure_fn();
-            output_ = &actire_engine_->get_output_fn();
+        goto_ = &actire_engine_->get_goto_fn();
+        failure_ = &actire_engine_->get_failure_fn();
+        output_ = &actire_engine_->get_output_fn();
+	
 
-
-            bool res = iactire_concur_->search_parallel(*goto_,
-                    *failure_,
-                    *output_,
-                    *call_back_,
-                    start_point,
-                    end_point,
-                    file_name,
-                    binary_hex_input_);
-
+				threatinfo = new message_tracethreat::InfectedFileInfo(); 
+			
 
         _startTime = util_thread::current_time();
 
         {
-		 
-           synchronized s(_sleep);
+
+            synchronized s(_sleep);
 
             try {
                 _sleep.wait(_timeout);
             } catch(exceptions::timed_out_exception& e) {
-                std::cout<<" Thread exceptions::timed_out_exception& " <<std::endl;
+
             } catch(...) {
                 assert(0);
             }
-					
+
         }
 
         _endTime =  util_thread::current_time();
@@ -112,8 +133,18 @@ namespace controller
 
         {
             synchronized s(_monitor);
+  
+						//return value to queue system.
+        		threatinfo = iactire_concur_->search_parallel(*goto_,
+                *failure_,
+                *output_,
+                *call_back_,
+                start_point,
+                end_point,
+                file_name,
+                binary_hex_input_);
 
-            std::cout << "Thread-PE-" << _count << " completed " << std::endl;
+						std::cout<<"!Result file Name : " << threatinfo->file_name() <<std::endl;
 
             _count--;
 
@@ -125,8 +156,5 @@ namespace controller
 
 
     }
-
-
-    //template class tbbpostscan_pe_task<struct MAPPED_FILE_PE, struct utils::meta_sig>;
 
 }

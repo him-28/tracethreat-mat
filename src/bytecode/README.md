@@ -1,1 +1,0 @@
-- Polimorphic virus scan by llvm byte code.
