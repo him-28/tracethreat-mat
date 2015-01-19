@@ -20,8 +20,7 @@ namespace internet
                     msgs_size * 256 +
                     (static_cast<unsigned>(buffer[count_header]) & 0xFF);
 
-            LOG(INFO)<<"Buffer data : " <<
-                    (static_cast<unsigned>(buffer[count_header]) & 0xFF);
+            LOG(INFO)<<"Buffer data : " <<(static_cast<unsigned>(buffer[count_header]) & 0xFF);
         }
 
         return msgs_size;

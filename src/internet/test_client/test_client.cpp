@@ -12,8 +12,11 @@
 //#include "internet/testinternet/scan_server_connection_test.hpp"
 
 //internet client connection
-#include "internet/test_client/scan_client_connection_test.hpp"
+//#include "internet/test_client/scan_client_connection_test.hpp"
 
+
+//security
+#include "internet/test_client/scan_client_encryption_connection_test.hpp"
 
 TEST(InitialInternetTestSuite, Initial)
 {

@@ -12,23 +12,31 @@ namespace internet
         bool scan_field<MessageType, EncryptType>::encryption(MsgsPointer msg,
                 encrypt_type *enc_controller)
         {
-            //LOG(INFO)<<"Message encrypted : IP : "<< msg->ip()<<", UUID : " << msg->uuid();
+						LOG(INFO)<<"Message encrypted...";
+            LOG(INFO)<<"Message encrypted : IP : "<< msg->ip()<<", UUID : " << msg->uuid();
+						LOG(INFO)<<"Message encrypted : CONN IP   : " << msg->conn_ip();
+						LOG(INFO)<<"Message encrypted : CONN UUID : " << msg->conn_uuid();
+ 
             //encryption steps.
+            internet::security::aes_cbc  aes_external = aes_cbc(msg->conn_ip().c_str(),
+                    msg->conn_uuid().c_str());
+
             internet::security::aes_cbc *aes =
-                    enc_controller->process_crypto(msg->conn_ip(),
-                            msg->conn_uuid(),
+                    enc_controller->process_crypto( aes_external,
                             utils::crypto_mode::find_key_crypto_mode);
 
-            //LOG(INFO)<<"Result find IP : " << aes->ip<<", UUID : "<< aes->uuid;
-
             if(aes == NULL) {
-                //internet::security::aes_cbc *
-                aes = enc_controller->process_crypto(msg->ip(), msg->uuid(),
+
+                internet::security::aes_cbc  aes_internal = aes_cbc(msg->ip().c_str(),
+                        msg->uuid().c_str());
+
+                internet::security::aes_cbc *
+                aes = enc_controller->process_crypto(aes_internal,
                         utils::crypto_mode::insert_key_crypto_mode);
 
                 LOG(INFO)<<"Not found initial key in system. Initial key...";
-                //LOG(INFO)<<" Initial key : "<< aes->key;
-                //LOG(INFO)<<" IV          : "<< aes->iv;
+                LOG(INFO)<<" Initial key : "<< aes->key;
+                LOG(INFO)<<" IV          : "<< aes->iv;
             }
 
             //Set field
@@ -57,8 +65,6 @@ namespace internet
             }
 
 
-            LOG(INFO)<<"Binary size : " << msg->set_binary_value_size();
-
             //binary in loop of repeated
             for(int count_msg = 0;
                     count_msg <  msg->set_binary_value_size();
@@ -74,13 +80,14 @@ namespace internet
                     if(msg_resp_binary->binary().empty())
                         continue;
 
-                    LOG(INFO)<<"BINARY : "<< msg_resp_binary->binary();
                     //Encryption binary
                     const char *binary[msg_resp_binary->binary().size()];
                     enc_controller->encryption_msgs(msg_resp_binary->binary().c_str(),
                             msg_resp_binary->binary().size(), aes);
                     msg_resp_binary->set_binary((const char *)aes->enc_msg);
                     aes->enc_msg = 0;
+
+                    LOG(INFO)<<"BINARY : "<< msg_resp_binary->binary();
 
                 } else if(typeid(message_scan::RequestScan::SetBinaryValue) ==
                         typeid(*msg->mutable_set_binary_value(count_msg))) {
@@ -92,7 +99,6 @@ namespace internet
                     if(msg_req_binary->binary().empty())
                         continue;
 
-                    LOG(INFO)<<"BINARY : "<< msg_req_binary->binary();
 
                     //Encryption binary
                     const char *binary[msg_req_binary->binary().size()];
@@ -100,6 +106,8 @@ namespace internet
                             msg_req_binary->binary().size(), aes);
                     msg_req_binary->set_binary((const char *)aes->enc_msg);
                     aes->enc_msg = 0;
+
+                    LOG(INFO)<<"BINARY : "<< msg_req_binary->binary();
 
                 } else {
                     LOG(INFO)<<"Not type support template.";
@@ -116,13 +124,17 @@ namespace internet
         bool scan_field<MessageType, EncryptType>::decryption(MsgsPointer msg,
                 encrypt_type *enc_controller)
         {
+						LOG(INFO)<<"Decryption message start...";
             //[-] read encryption size.
             //[-] create dec_msg from malloc(aes->enc_length);
             //[-] message decrypted.
+            internet::security::aes_cbc  aes_external = aes_cbc(msg->conn_ip().c_str(),
+                    msg->conn_uuid().c_str());
+
             internet::security::aes_cbc *aes =
-                    enc_controller->process_crypto(msg->conn_ip(),
-                            msg->conn_uuid(),
-                            utils::crypto_mode::find_key_crypto_mode );
+                    enc_controller->process_crypto( aes_external,
+                            utils::crypto_mode::find_key_crypto_mode);
+
 
             if(aes != NULL) {
 
@@ -163,6 +175,8 @@ namespace internet
                 enc_controller->decryption_msgs(msg->timestamp().c_str(), msg->timestamp().size() , aes);
                 msg->set_timestamp((const char *)aes->dec_msg);
 
+								LOG(INFO)<<"Binary container size decrypted : "<< msg->set_binary_value_size();
+
                 //binary in loop of repeated
                 for(int count_msg = 0;
                         count_msg <  msg->set_binary_value_size();
@@ -178,7 +192,9 @@ namespace internet
                         if(msg_resp_binary->binary().empty())
                             continue;
 
-                        //LOG(INFO)<<"BINARY : "<< msg_resp_binary->binary();
+                        LOG(INFO)<<"BINARY : "<< msg_resp_binary->binary()
+                                 <<", Size : "<< msg_resp_binary->binary().size();
+
                         aes->enc_length = msg_resp_binary->binary().size();
 
                         aes->enc_msg  =
@@ -192,7 +208,7 @@ namespace internet
                                 msg_resp_binary->binary().size() , aes);
                         msg_resp_binary->set_binary((const char *)aes->dec_msg);
 
-                        //LOG(INFO)<<"DECRYPTION RESPONSE BINARY : " << msg_resp_binary->binary();
+                        LOG(INFO)<<"Message response decrypted : " << msg_resp_binary->binary();
 
                     } else if(typeid(message_scan::RequestScan::SetBinaryValue) ==
                             typeid(*msg->mutable_set_binary_value(count_msg))) {
@@ -204,8 +220,8 @@ namespace internet
                         if(msg_req_binary->binary().empty())
                             continue;
 
-                        //LOG(INFO)<<"BINARY : "<< msg_req_binary->binary();
-
+                        LOG(INFO)<<"BINARY : "<< msg_req_binary->binary()
+                                 <<", Size : "<< msg_req_binary->binary().size();
                         //Binary decryption
 
                         aes->enc_msg  =
@@ -219,7 +235,7 @@ namespace internet
                                 msg_req_binary->binary().size() , aes);
                         msg_req_binary->set_binary((const char *)aes->dec_msg);
 
-                        //LOG(INFO)<<"DECRYPTION REQUEST BINARY : " << msg_req_binary->binary();
+                        LOG(INFO)<<"Message request decrypted : " << msg_req_binary->binary();
 
                     } else {
                         LOG(INFO)<<"Not type support template.";

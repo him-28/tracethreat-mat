@@ -28,9 +28,7 @@ namespace internet
 
                 virtual bool decryption_msgs(const char *msg, int msg_length)=  0;
 
-                virtual internet::security::aes_cbc *process_crypto(std::string ip,
-                        std::string uuid,
-                        utils::crypto_mode  crypto) = 0;
+                virtual internet::security::aes_cbc *process_crypto(internet::security::aes_cbc& aes,                        	utils::crypto_mode  crypto) = 0;
 
                 virtual internet::security::encryption_controller<internet::security::aes_cbc> *
                 get_encryption() = 0;

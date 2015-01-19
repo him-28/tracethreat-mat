@@ -56,10 +56,8 @@ namespace internet
 										return aes_->filter_key(ip, uuid);
 								}
 
-								internet::security::aes_cbc * process_crypto(std::string ip, 
-                                                     std::string uuid, 
-                                                     utils::crypto_mode  crypto){
-										return aes_->process_crypto(ip, uuid, crypto);
+								internet::security::aes_cbc * process_crypto(aes_cbc & aes,                                                     utils::crypto_mode  crypto){
+										return aes_->process_crypto(aes, crypto);
 								}
 
             private:

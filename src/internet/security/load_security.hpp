@@ -20,7 +20,7 @@ namespace internet
             encryption *create_encryption()
             {
                 encryption *encrypt = NULL;
-
+								LOG(INFO)<<" Initial AES, Encryption module.";
                 //Set flag encryption controller in "encryption_controller"
                 encrypt = CREATE_ENCRYPTION("aes_encryption");
 

@@ -35,8 +35,9 @@
 #define BUFFER_NOT_LOAD								51  /* KernelArg cannot load buffer */
 
 //Crypto model
-#define INSERT_KEY_CRYPTO             60
-#define FIND_KEY_CRYPTO               61
+#define INSERT_KEY_CRYPTO             60 /* Insert new key & iv to concurrent list */
+#define FIND_KEY_CRYPTO               61 /* Find key & iv from IP&UUID after insert to courrenct list */
+#define REGISTER_KEY_CRYPTO           62 /* Register key from server. insert to concurent list. */
 
 // File Type
 #define FILETYPE_PE               		100 /* File type PE */
@@ -101,7 +102,8 @@ namespace utils
 
 	  typedef enum CRYPTO_MODE{
 				insert_key_crypto_mode = INSERT_KEY_CRYPTO,
-				find_key_crypto_mode   = FIND_KEY_CRYPTO
+				find_key_crypto_mode   = FIND_KEY_CRYPTO,
+        register_key_crypto_mode = REGISTER_KEY_CRYPTO
 		}crypto_mode;
 
 }

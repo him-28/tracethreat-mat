@@ -19,7 +19,7 @@
 //#include "test/utils_base_timer_queue.hpp"
 
 //Stable test ac_tire and ocl class
-//#include "test/scan_pe_file_acp_test.hpp"
+#include "test/scan_pe_file_acp_test.hpp"
 
 
 //#2 -stable
@@ -42,15 +42,15 @@
 //#include "test/bloomfilter_concurrency_test.hpp"
 
 
-/*
-#include "test/clutil_platform_test.hpp"
 
-#include "test/system_exception_test.hpp"
+//#include "test/clutil_platform_test.hpp"
 
-#include "test/file_handler_test.hpp"
+//#include "test/system_exception_test.hpp"
+
+//#include "test/file_handler_test.hpp"
 
 
-#include "test/file_calculate_test.hpp"
+//#include "test/file_calculate_test.hpp"
 
 
 // Offset, Uncomment with test without
@@ -60,10 +60,10 @@
 //#include "test/pe_file_controller_test.hpp"  // PE
 
 
-*/
+
 
 //Test folly queue memory
-#include "test/queue_shm_controller_test.hpp"
+//#include "test/queue_shm_controller_test.hpp"
 
 //#include "test/wrapper_rules_tests.hpp"
 

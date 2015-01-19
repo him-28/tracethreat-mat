@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "utils/base/common.hpp"
 
 #include "internet/scan_server/scan_connection.hpp"
@@ -103,9 +105,12 @@ namespace internet
     {
         MsgsResponsePointer  scan_response(new message_scan::ResponseScan);
         scan_response->set_uuid(msg_request->uuid());
+        scan_response->set_ip(msg_request->ip());
         scan_response->set_type(message_scan::ResponseScan::SCAN_SUCCESS);
         scan_response->set_timestamp(std::string("0:0:0:0"));
-        //scan_response->set_file_name(msg_request->file_name());
+				//security reason
+        scan_response->set_conn_ip(msg_request->ip());
+				scan_response->set_conn_uuid(msg_request->uuid());
         LOG(INFO)<<"Server : prepare_response_scan success";
         return scan_response;
 
@@ -145,7 +150,7 @@ namespace internet
 
             msgs_socket.async_write_some(
                     asio::buffer(write_buffer),
-                    boost::bind(&scan_connection::start_read_header,
+                    boost::bind(&scan_connection::start_read_header_sec, //after register send to sec
                             shared_from_this()));
 
             //step for  write to client in NON-SSL mode.
@@ -192,7 +197,7 @@ namespace internet
 
         std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
         std::vector<const char *>       file_type_vec;
-
+        uint8_t * binary_temp; 
 
         for(int count_msg = 0;
                 count_msg < request_ptr->set_binary_value_size();
@@ -207,6 +212,7 @@ namespace internet
 
             case message_scan::RequestScan::PE :
 
+								LOG(INFO)<<"Scan Request PE type...";
 
                 mapped_file_vec.push_back(new MAPPED_FILE_PE);
 
@@ -216,8 +222,13 @@ namespace internet
                 s_mapped_fpe->msg_type = utils::external_msg;
                 //set File name
                 s_mapped_fpe->file_name = msg_scan.file_name();
+
                 //set Data
-                s_mapped_fpe->data =  (uint8_t *)(msg_scan.binary().c_str());
+                //s_mapped_fpe->data
+                // memcpy(s_mapped_fpe->data, msg_scan.binary().c_str(), msg_scan.binary().size());
+                s_mapped_fpe->data = new uint8_t[msg_scan.binary().size()+1];
+                memcpy(s_mapped_fpe->data, (uint8_t*)msg_scan.binary().c_str(), msg_scan.binary().size());
+                //s_mapped_fpe->data[msg_scan.binary().size()] = '\0';
                 //set size of data
                 s_mapped_fpe->size = msg_scan.binary().size();
 
@@ -238,6 +249,7 @@ namespace internet
                         msg_scan.file_name();
                 LOG(INFO)<<"Binary data    : "<< msg_scan.binary();
                 LOG(INFO)<<"File  type     : "<< msg_scan.file_type();
+								LOG(INFO)<<"Binary data compare : " << s_mapped_fpe->data;
 
                 break;
 
@@ -299,6 +311,8 @@ namespace internet
     {
         LOG(INFO)<<"Server : handle_read_body  ";
 
+
+         
         //Read body before send to handle_request
         if(msgs_packed_request_scan.unpack(msgs_read_buffer)) {
             request_ptr = msgs_packed_request_scan.get_msg();
@@ -308,19 +322,37 @@ namespace internet
             LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
             LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
 
-						std::string uuid;
 						std::string ip_addr;
+						std::string uuid;
+
+            internet::security::aes_cbc * aes; 
+						internet::security::aes_cbc * aes_external;
 
             switch(request_ptr->type()) {
 
             case message_scan::RequestScan::REGISTER :
 
-                //Encryption
-                uuid = request_ptr->uuid();
-                ip_addr =
+								 ip_addr =
                         msgs_socket.lowest_layer().remote_endpoint().address().to_string();
 
-                aes  = enc_controller_->initial_key(ip_addr, uuid);
+
+							  uuid = request_ptr->uuid();
+
+		            aes_external = 
+									new internet::security::aes_cbc(ip_addr.c_str(), uuid.c_str());
+                //Encryption
+                  
+								LOG(INFO)<<"Initial key & iv support server-sec, UUID : "<< uuid <<", IP : "<<ip_addr;
+
+								//internet::security::aes_cbc * aes;
+                aes = enc_controller_->process_crypto(*aes_external, utils::insert_key_crypto_mode);
+
+                LOG(INFO)<<"Key : " << aes->key;
+                LOG(INFO)<<"IV  : " << aes->iv;
+
+								request_ptr->set_key((const char*)aes->key);
+
+								request_ptr->set_iv((const char*)aes->iv);
 
                 LOG(INFO)<<"------------------- REGISTER TYPE---------------";
                 //Write data register success and send symmetric key exchanged to client.
@@ -414,12 +446,18 @@ namespace internet
         //[-]Sucess to verfity not repeatedly UUID in scanning system.
         //[x]Add Security Module handle received/close socket from client.
         MsgsResponsePointer  register_response(new message_scan::ResponseScan);
+
         register_response->set_uuid(msgs_request->uuid());
         register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
-        register_response->set_timestamp(std::string("0:0:0:0"));
-        register_response->set_key((const char *)aes->key);
-        register_response->set_iv((const char *)aes->iv);
-        //register_response->set_key_length(aes->key_length);
+        register_response->set_timestamp(std::string("0:0:0:0"));	
+
+        register_response->set_key(msgs_request->key());
+        register_response->set_iv(msgs_request->iv());
+
+				register_response->set_ip(msgs_request->ip());
+				register_response->set_conn_ip(msgs_request->conn_ip());
+				register_response->set_conn_uuid(msgs_request->conn_uuid());
+
         LOG(INFO)<<"Server : prepare_response_register success";
 
         return register_response;
@@ -466,7 +504,7 @@ namespace internet
             unsigned msgs_length =
                     msgs_packed_request_scan.decode_header(msgs_read_buffer);
             LOG(INFO)<<" Header message length : " << msgs_length;
-            start_read_body(msgs_length);
+            start_read_body_sec(msgs_length);
         } catch(boost::system::system_error e) {
             LOG(INFO)<<"handle_read_header, error : " << e.code();
         }
@@ -483,6 +521,7 @@ namespace internet
             LOG(INFO)<<"------------------Read Body-----------------------------";
 
 						//decrypt message.
+						secure_field_req->decryption(request_ptr, enc_controller_);
 
             LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
             LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
@@ -540,16 +579,19 @@ namespace internet
 
             LOG(INFO)<<"Server :  write_response_sec, Client request msgs type : "<<request_ptr->type();
 
+						LOG(INFO)<<"Server :  write_response_sec, Message Encrypted before send to network";
+
+						secure_field_resp->encryption(response_ptr, enc_controller_);
+
             std::vector<uint8_t> write_buffer;
             packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);
+
             resp_msg.pack(write_buffer);
 
             msgs_socket.async_write_some(
                     asio::buffer(write_buffer),
                     boost::bind(&scan_connection::start_read_header_sec,
                             shared_from_this()));
-
-            //step for  write to client in NON-SSL mode.
 
             LOG(INFO)<<"Server : write_response_sec, write response to client completed 1st.";
             //refresh timer.

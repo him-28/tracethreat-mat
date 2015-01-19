@@ -37,7 +37,6 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
-//#include <memory>
 #include <vector>
 
 #include "scan/scan_file_controller.hpp"
@@ -47,7 +46,6 @@
 #include "internet/logger/logging.hpp"
 
 #include "internet/msg/scan_server_client/message_scan.pb.h"
-//#include "internet/scan_server/packedmessage_scan.hpp"
 #include "internet/msg/packedmessage_scan.hpp"
 
 #include "gensign/clamavsig.hpp"
@@ -55,6 +53,7 @@
 #include "utils/logger/clutil_logger.hpp"
 
 #include "internet/security/aes_controller.hpp"
+#include "internet/security/encryption_field.hpp"
 
 namespace internet
 {
@@ -77,10 +76,24 @@ namespace internet
             typedef std::vector<threatinfo_type *>  threatinfo_vec_type;
 
             typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
+			
+						typedef internet::security::aes_cbc  aes_type;
 
             typedef internet::security::encryption_controller<internet::security::aes_cbc> encryption_type;
 
-            //typedef boost::shared_ptr<asio::io_service> & io_service_type;
+						//Response message encrypted field
+ 		        typedef internet::security::secure_field<message_scan::ResponseScan, internet::security::aes_cbc>
+                    secure_field_resp_type;
+
+						typedef internet::security::scan_field<message_scan::ResponseScan, internet::security::aes_cbc>
+                    scan_field_resp_type;
+
+						//Request message encrypted field.
+ 		        typedef internet::security::secure_field<message_scan::RequestScan, internet::security::aes_cbc>
+                    secure_field_req_type;
+
+						typedef internet::security::scan_field<message_scan::RequestScan, internet::security::aes_cbc>
+                    scan_field_req_type;
 
             typedef asio::io_service& io_service_type;
 
@@ -120,7 +133,7 @@ namespace internet
 
             std::map<std::string, file_detail_scan> fd_scan_map;
 
-            scan_connection(io_service_type io_service,  //asio::io_service&
+            scan_connection(io_service_type io_service,
                     scan_file_type *scan_file,
                     asio::ssl::context& context,
                     encryption_type *enc_controller) :
@@ -129,6 +142,10 @@ namespace internet
                 scan_file_(scan_file),
                 timer_(io_service, boost::posix_time::seconds(TCP_SOCKET_TIMEOUT)),
                 msgs_socket(io_service,  context),
+						    secure_field_resp(new  internet::security::scan_field<message_scan::ResponseScan, 
+																			internet::security::aes_cbc>()),	
+						    secure_field_req(new  internet::security::scan_field<message_scan::RequestScan, 
+																			internet::security::aes_cbc>()),		
                 enc_controller_(enc_controller) {
                 LOG(INFO)<<" Scan_connection : start timer";
                 //Start timer check timeout per connection.
@@ -219,7 +236,9 @@ namespace internet
 
             encryption_type *enc_controller_;
 
-            internet::security::aes_cbc *aes;
+						secure_field_resp_type * secure_field_resp;
+
+						secure_field_req_type * secure_field_req;
 
     };
 

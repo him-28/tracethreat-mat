@@ -19,8 +19,6 @@
  *                                                        R.Chatsiri
  *
  */
-#include <stdio.h>
-#include <inttypes.h>
 
 #include "internet/security/aes_controller.hpp"
 
@@ -74,33 +72,25 @@ namespace internet
 
         template<typename MessageType, typename EncryptType>
         EncryptType *aes_controller<MessageType, EncryptType>::
-        process_crypto(aes_cbc& _aes, utils::crypto_mode crypto)
+        process_crypto(aes_cbc & _aes, utils::crypto_mode crypto)
         {
-
-						LOG(INFO)<<"Process crypto start ...";
-						LOG(INFO)<<"AES IP : " << _aes.ip;
-						LOG(INFO)<<"AES UUID : "<< _aes.uuid;
 
             boost::lock_guard<mutex_t> lock_(enc_mutex);
 
-            aes_cbc *aes_ = new aes_cbc(_aes.ip, _aes.uuid, _aes.key, _aes.iv);
+            typename aes_controller<MessageType, EncryptType>::
+            skip_list_accessor_type skip_list_accessor(skip_list_ptr);
+            skip_list_type::iterator iter_skip_list;
 
-            std::stringstream ip_external_stream;
-            ip_external_stream << aes_->ip;
+            std::unique_ptr<aes_cbc> aes_ = folly::make_unique<aes_cbc>(_aes.ip,_aes.uuid);
 
-            std::stringstream uuid_external_stream;
-            uuid_external_stream << aes_->uuid;
-
-            uint64_t uuid_ref = *((uint64_t*)std::string(aes_->uuid).c_str());
-
+			  	  std::stringstream ip_external_stream;
 
             switch(crypto) {
 
             case utils::insert_key_crypto_mode :
-						
-					      LOG(INFO)<<"Initial AES key for client IP : "<< aes_->ip;
-                LOG(INFO)<<"UUID      : "<< aes_->uuid;
-                LOG(INFO)<<"UUID REF  : "<< uuid_ref;
+
+                LOG(INFO)<<"Initial AES key for client IP : "<< aes_->ip;
+                LOG(INFO)<<"Initial UUID                  : "<< aes_->uuid;
 
 
                 //Key set.
@@ -113,60 +103,73 @@ namespace internet
                 //IV set
                 memset(aes_->iv, 0, AES_BLOCK_SIZE);
 
-                if(!RAND_bytes(aes_->iv, AES_BLOCK_SIZE)) {
+                if(!RAND_bytes(aes_->iv, KEY_SIZE)) {
                     LOG(INFO)<<"RAND cannot random IV";
                 }
 
                 aes_->key_length = KEY_SIZE;
-                  
-                //ip_external_stream >> uuid_ref;
 
-                aha_aes->insert(std::make_pair(
-                        uuid_ref, new internet::security::aes_cbc(
-                                ip_external_stream.str(),
-                                uuid_external_stream.str(), aes_->key, aes_->iv))
-                              );
+						                ip_external_stream << _aes.ip;
+ 
+                skip_list_accessor.insert(std::unique_ptr<internet::security::aes_cbc>(
+                        new internet::security::aes_cbc(ip_external_stream.str(),
+                                                        std::string(_aes.uuid), aes_->key, aes_->iv)
+                        ));
 
-                return new aes_cbc(ip_external_stream.str(),
-                        uuid_external_stream.str(),
-                        aes_->key,
-                        aes_->iv);
+                return aes_.get();
 
                 break;
 
             case utils::find_key_crypto_mode :
 
-							  //uuid_external_stream >> uuid_ref;
 
-     
-								aes_ = aha_aes->find(uuid_ref)->second;
+                LOG(INFO)<<"Find AES key for client IP : "<< aes_->ip;
+                LOG(INFO)<<"Find UUID                  : "<< aes_->uuid;
 
-		            LOG(INFO)<<"Find AES key for client IP : "<< aes_->ip;
-                LOG(INFO)<<"Find UUID : "<< aes_->uuid;
-					      LOG(INFO)<<"Find UUID : "<< uuid_ref;
-								LOG(INFO)<<"Find key : "<< aes_->key;
-                LOG(INFO)<<"Find IV : " << aes_->iv;
-					
 
-                return aes_;
+                iter_skip_list = skip_list_accessor.find(aes_);
+
+                //Support skip_list_accessor , Create: TBB parallel-for
+                for(iter_skip_list = skip_list_accessor.begin();
+                        iter_skip_list != skip_list_accessor.end();
+                        ++iter_skip_list) {
+
+                    aes_cbc *aes = iter_skip_list->get();
+
+                    if(aes->ip == NULL || aes->uuid == NULL) continue;
+
+									  LOG(INFO)<<"----------------------------------------------";
+                    LOG(INFO)<<"Search : IP " << aes->ip;
+                    LOG(INFO)<<"  UUID :    " << aes->uuid;
+                    LOG(INFO)<<", From IP : "<< _aes.ip; 
+                    LOG(INFO)<<", UUID : "<<_aes.uuid;
+                    LOG(INFO)<<", Key  : "<<aes->key;
+                    LOG(INFO)<<", IV   : "<<aes->iv;
+										LOG(INFO)<<"----------------------------------------------";
+
+
+                    if(aes->ip == _aes.ip && aes->uuid == _aes.uuid) {
+
+									  LOG(INFO)<<"----------------------------------------------";
+                    LOG(INFO)<<"Search result equal : " << aes->ip;
+                    LOG(INFO)<<", From IP : "<< _aes.ip; 
+                    LOG(INFO)<<", UUID : "<<_aes.uuid;
+                    LOG(INFO)<<", Key  : "<<aes->key;
+                    LOG(INFO)<<", IV   : "<<aes->iv;
+										LOG(INFO)<<"----------------------------------------------";
+
+                        return aes;
+                    }
+
+                }
 
                 break;
 
-            case utils::register_key_crypto_mode:
-								
-                //uuid_external_stream >> uuid_ref;
-
-					      LOG(INFO)<<"Register AES key for client IP : "<< aes_->ip;
-                LOG(INFO)<<"UUID      : "<< aes_->uuid;
-                LOG(INFO)<<"UUID Ref  : "<< uuid_ref;
-                LOG(INFO)<<"Key  register  : "<< aes_->key;
-                LOG(INFO)<<"IV  register   : "<< aes_->iv;
-
-                aha_aes->insert(std::make_pair(
-                        uuid_ref, new internet::security::aes_cbc(
-                                ip_external_stream.str(),
-                                uuid_external_stream.str(), aes_->key, aes_->iv))
-                              );
+					  case utils::register_key_crypto_mode:
+                 //register key in client after message received Key&IV from server.                
+                 skip_list_accessor.insert(std::unique_ptr<internet::security::aes_cbc>(
+                        new internet::security::aes_cbc(_aes.ip, _aes.uuid, _aes.key, _aes.iv)
+                        ));
 
                 return &_aes;
 
@@ -209,7 +212,7 @@ namespace internet
             //IV set
             memset(aes_->iv, 0, AES_BLOCK_SIZE);
 
-            if(!RAND_bytes(aes_->iv, AES_BLOCK_SIZE)) {
+            if(!RAND_bytes(aes_->iv, KEY_SIZE)) {
                 LOG(INFO)<<"RAND cannot random IV";
             }
 
@@ -309,10 +312,10 @@ namespace internet
                 if(aes->ip == ip) {
 
                     LOG(INFO)<<"Search result equal : " << aes->ip
-                            <<", From IP : "<< ip
-                            <<", UUID : "<<uuid
-                            <<", Key  : "<<aes->key
-                            <<", IV   : "<<aes->iv;
+                       <<", From IP : "<< ip 
+                       <<", UUID : "<<uuid
+                       <<", Key  : "<<aes->key
+                       <<", IV   : "<<aes->iv;
 
                     return  aes;
                 }
@@ -367,18 +370,11 @@ namespace internet
         bool aes_controller<MessageType, EncryptType>::
         decryption_msgs(const char *msg, int msg_length, EncryptType *aes)
         {
-						LOG(INFO)<<"Message decrypted start...";
-
             boost::lock_guard<mutex_t> lock_(enc_mutex);
 
             int bytes_written_length = 0;
 
-            LOG(INFO)<<"AES, AES->MSG length :  "<< aes->enc_length;
-            LOG(INFO)<<"AES, MSG length      :  "<< msg_length;
-						LOG(INFO)<<"AES, Key             :  "<< aes->key;
-						LOG(INFO)<<"AES, IV              :  "<< aes->iv;
-
-            aes->dec_msg = (unsigned char *)malloc(msg_length);//(aes->enc_length);
+            aes->dec_msg = (unsigned char *)malloc(aes->enc_length);
 
             EVP_CIPHER_CTX_init(&ctx_dec);
 
@@ -388,8 +384,7 @@ namespace internet
                     aes->dec_msg,
                     &bytes_written_length,
                     aes->enc_msg,
-                    msg_length);
-            //aes->enc_length);
+                    aes->enc_length);
 
             aes->dec_length += bytes_written_length;
 
@@ -451,10 +446,7 @@ namespace internet
         bool aes_controller<MessageType, EncryptType>::
         decryption_msgs(std::string msg, aes_cbc *aes)
         {
-
             boost::lock_guard<mutex_t> lock_(enc_mutex);
-
-            LOG(INFO)<<"AES, DES-MSG Message size :  "<< aes->enc_length;
 
             int bytes_written_length = 0;
 

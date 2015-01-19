@@ -4,6 +4,8 @@
 #define KEY_SIZE 16
 #define KEY_ENCRYPTION_SIZE 128
 #define MAX_PADDING_LEN 16
+
+#define MAX_MAP_AES_SIZE 1024
 /*
 * Copyright 2014 Chatsiri Rattana.
 *
@@ -30,6 +32,7 @@
 #include <openssl/rand.h>
 
 #include <folly/ConcurrentSkipList.h>
+#include <folly/AtomicHashMap.h>
 
 #include <vector>
 #include <iostream>
@@ -56,7 +59,7 @@ namespace internet
         class encryption_type;
         struct aes_cbc;
 
-				enum crypto_type{ INSERT, FIND};
+				//enum crypto_type{ INSERT, FIND};
 
         struct aes_cbc {
             char *ip;
@@ -117,15 +120,15 @@ namespace internet
                 const std::size_t size_len_uuid = strlen(_uuid);
                 uuid = new char[size_len_uuid+1];
                 strncpy(uuid, _uuid, size_len_uuid);
-                ip[size_len_uuid] = '\0';
+                uuid[size_len_uuid] = '\0';
 
                 LOG(INFO)<<" Struct IP : "<< ip <<", UUID : "<< uuid;
 
             }
 
 
-            aes_cbc(std::string& _ip,
-                    std::string& _uuid,
+            aes_cbc(std::string _ip,
+                    std::string _uuid,
                     unsigned char *_key,
                     unsigned char *_iv):
                 input_length(0),
@@ -142,12 +145,18 @@ namespace internet
                 std::copy(_uuid.begin(), _uuid.end(), uuid);
                 uuid[_uuid.size()] = '\0';
 
-                memcpy(key, _key, KEY_SIZE+1);
+                //memcpy(key, _key, KEY_SIZE+1);
+								std::copy(_key, _key+KEY_SIZE+1, key);
+								key[KEY_SIZE] = '\0'; 
+                
+                std::copy(_iv, _iv + AES_BLOCK_SIZE+1, iv);
+                iv[AES_BLOCK_SIZE] = '\0';
 
-                memcpy(iv, _iv, AES_BLOCK_SIZE+1);
+                //memcpy(iv, _iv, AES_BLOCK_SIZE+1);
 
                 LOG(INFO)<<" Struct IP : "<< ip <<", UUID : "<< uuid;
-
+								LOG(INFO)<<"Key : " << key;
+                LOG(INFO)<<"IV  : " << iv;
             }
 
 
@@ -211,9 +220,7 @@ namespace internet
 
                 virtual EncryptType *initial_key(std::string ip, std::string uuid) = 0;
 
-								virtual EncryptType * process_crypto(std::string ip, 
-                                                     std::string uuid, 
-                                                     utils::crypto_mode  crypto) = 0;
+								virtual EncryptType * process_crypto(aes_cbc & _aes, utils::crypto_mode  crypto) = 0;
 
                 ~encryption_controller() { }
         };
@@ -227,6 +234,7 @@ namespace internet
             public:
 
                 //typedef aes_cbc encrypt_type;
+								typedef folly::AtomicHashMap<uint64_t, internet::security::aes_cbc*>  aha_aes_type;
 
                 typedef folly::ConcurrentSkipList<std::unique_ptr<aes_cbc>, UniquePtrComp> skip_list_type;
 
@@ -234,7 +242,8 @@ namespace internet
 
                 typedef std::vector<uint8_t> msgenc_vec_type;
 
-                aes_controller() : skip_list_ptr(skip_list_type::createInstance()) { }
+                aes_controller() : aha_aes(new aha_aes_type(MAX_MAP_AES_SIZE)){ }
+               //  : skip_list_ptr(skip_list_type::createInstance()) { }
 
                 bool ping_service();
 
@@ -256,7 +265,7 @@ namespace internet
                     return *aes_ptr;
                 }
 
-								EncryptType * process_crypto(std::string ip, std::string uuid, utils::crypto_mode  crypto);
+								EncryptType * process_crypto(aes_cbc & _aes, utils::crypto_mode  crypto);
 
                 /* using for production. Support std::string from protocal-buffer */
                 bool encryption_msgs(std::string msg, aes_cbc *aes);
@@ -279,6 +288,8 @@ namespace internet
                 EncryptType *aes_ptr;
                 //std::shared_ptr<skip_list_type> skip_list_ptr = skip_list_type::createInstance();
                 std::shared_ptr<skip_list_type> skip_list_ptr;
+
+								std::shared_ptr<aha_aes_type>  aha_aes;
 
                 //skip_list_accessor_type skip_list_accessor;
                 AES_KEY dec_key;

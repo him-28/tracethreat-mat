@@ -21,8 +21,15 @@ namespace controller
     bool tbbpostscan_pe_task::
     set_file(std::vector<char> *_binary_hex_input)
     {
-
+				std::cout<<"Fix : binary hex : ";
         binary_hex_input_ = _binary_hex_input;
+				std::vector<char>::iterator iter_hex;
+				for(iter_hex = _binary_hex_input->begin();
+            iter_hex != _binary_hex_input->end();
+            ++iter_hex){
+            std::cout<<*iter_hex;
+				}
+			  std::cout<<std::endl;
         return true;
     }
 

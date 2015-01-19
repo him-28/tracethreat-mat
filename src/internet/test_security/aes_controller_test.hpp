@@ -152,6 +152,7 @@ TEST(aescontroller, encryptionstring)
 
     std::string ip("127.0.0.1");
     std::string uuid("172:2343:22336:233");
+	
     internet::security::encryption_controller<internet::security::aes_cbc>   *enc_controller = new
     internet::security::aes_controller<message_scan::ResponseScan, internet::security::aes_cbc>();
 
@@ -199,10 +200,16 @@ TEST(aescontroller, encryptionstring)
     std::string ip_false("192.168.1.2");
     std::string uuid_false("0:0:0:0");
 
-    EXPECT_TRUE(enc_controller->process_crypto(ip_false.c_str(), uuid_false.c_str(), 
+		internet::security::aes_cbc aes_false = 
+     internet::security::aes_cbc(ip_false, uuid_false);
+
+    EXPECT_TRUE(enc_controller->process_crypto(aes_false, 
                  utils::find_key_crypto_mode) == NULL);
 
-    EXPECT_TRUE(enc_controller->process_crypto(ip.c_str(), uuid.c_str(), 
+   internet::security::aes_cbc  aes_true = 
+   	 internet::security::aes_cbc(ip.c_str(), uuid.c_str());
+
+    EXPECT_TRUE(enc_controller->process_crypto(aes_true, 
                  utils::find_key_crypto_mode) != NULL);
 
 
