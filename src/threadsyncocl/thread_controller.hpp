@@ -31,7 +31,8 @@
 #include <boost/make_shared.hpp>
 
 // internal
-#include "threadsyncocl/buffer_sync.hpp"
+#include "taskconcurrency/buffer_sync.hpp"
+
 #include "threadsyncocl/semaphore_controller.hpp"
 #include "threadsyncocl/thread_barrier_controller.hpp"
 

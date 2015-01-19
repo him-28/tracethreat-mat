@@ -22,7 +22,8 @@
  */
 
 #include "pthread.h"
-#include "threadsyncocl/buffer_sync.hpp"
+
+#include "taskconcurrency/buffer_sync.hpp"
 
 //
 #include "utils/logger/clutil_logger.hpp"
