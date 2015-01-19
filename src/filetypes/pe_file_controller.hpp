@@ -31,7 +31,7 @@
 #include "memory/signature_shm_base.hpp"
 #include "memory/signature_shm_controller.hpp"
 
-#include "threadconcurrency/tbbpostscan_pe_controller.hpp"
+#include "taskconcurrency/tbbpostscan_pe_controller.hpp"
 
 #include "msg/message_tracethreat.pb.h"
 

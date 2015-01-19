@@ -1,6 +1,6 @@
 #include "filetypes/pe_file_controller.hpp"
 #include "boost/lexical_cast.hpp"
-#include "threadconcurrency/cliprescan_pe_controller.hpp"
+#include "taskconcurrency/cliprescan_pe_controller.hpp"
 
 using namespace controller;
 
