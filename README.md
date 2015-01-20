@@ -5,11 +5,11 @@ HNMAV-OCL Malware Analysis Tools.
 
 -[x] Scanning with TBB(Multithread and Parallelization tasks) and OpenCL.
 
--[] File Structure Support file type scanning type : PE, EXE, ELF and processes.
+-[x] File Structure Support file type scanning type : PE, EXE, ELF and processes.(Supports PE)
 
--[] Compiler server DB signatures support ClamAV  and Yara-project signature.
+-[x] Compiler server DB signatures support ClamAV  and Yara-project signature.
 
--[] Ansynchronous message communication between server and client.
+-[x] Ansynchronous message communication between server and client.
 
 
 Table of content
@@ -48,3 +48,10 @@ Table of content
 * EXE next version supported in future.
 * ELF next version supported in future.
 * Process supported in future.
+
+<a name="hmanv-internet">Internet Server/Client</a>
+* Internet Server/Client implement with ASIO boost library.
+* Communication with Protocal Buffer(Protobuf).
+
+
+[Update: 01:40 PM, 20/01/2015]
