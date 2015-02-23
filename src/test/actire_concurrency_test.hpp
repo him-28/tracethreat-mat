@@ -13,6 +13,7 @@
 #include "utils/base/system_code.hpp"
 
 //#include "utils/base/common.hpp"
+#include "utils/base/common.hpp"
 
 #include "utils/convert.hpp"
 
@@ -27,6 +28,10 @@ using tbbscan::failure_function;
 
 class ACTireConcurrency : public ::testing::Test
 {
+		public :
+    typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+
+    typedef	std::vector<threatinfo_type *>  rcb_container_type;
 
     protected:
 
@@ -38,11 +43,24 @@ class ACTireConcurrency : public ::testing::Test
             std::string sig2 = "09cd21b44ce1aea";
 
             file_name_binary_hex = "trojan_test.exe";
-            char *binary_hex="ab4c5d23434e08d3d211d890042004230801b231e1e7c4d5a50000200000004000f00ffff0000b80000000000000040001a000000ab4353453453b123e3288b";
+            char *binary_hex  = "ab4c5d23434e08d3d211d890042004230801b231e1e7c4d5a50000200000004000f00ffff0000b80000000000000040001a000000ab4353453453b123e3288b";
+					  std::string binary_hex_str(binary_hex);
 
-						memcpy(&binary_hex_input[*binary_hex_input.grow_by(strlen(binary_hex))], 
-								binary_hex, 
-								strlen(binary_hex)+1);
+						binary_hex_input.resize(binary_hex_str.size());
+			
+						std::transform(binary_hex_str.begin(), binary_hex_str.end(),
+                           binary_hex_input.begin(),
+                           [](char c){
+                              return c;
+													 });
+				
+						/*
+            memcpy(&binary_hex_input[*binary_hex_input.grow_by(strlen(binary_hex))],
+                    binary_hex,
+                    strlen(binary_hex)+1);
+					  */
+
+						binary_hex_input.resize(strlen(binary_hex));
 
             nstr_vec.push_back(new struct utils::meta_sig);
             n_str = nstr_vec[0];
@@ -59,7 +77,7 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig_type  = utils::pe_file;
             n_str->sig_size  = strlen(n_str->sig);
             sig_key_vec.push_back(std::string(n_str->sig));
-						
+
             nstr_vec.push_back(new struct utils::meta_sig);
             n_str = nstr_vec[2];
             n_str->sig  = "4d5a50000200000004000f00ffff0000b80000000000000040001a000000";
@@ -67,7 +85,7 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig_type  = utils::pe_file;
             n_str->sig_size  = strlen(n_str->sig);
             sig_key_vec.push_back(std::string(n_str->sig));
-							
+
             nstr_vec.push_back(new struct utils::meta_sig);
             n_str = nstr_vec[3];
             n_str->sig  = "2353ab1e119d32c67a23ab3d";
@@ -75,14 +93,15 @@ class ACTireConcurrency : public ::testing::Test
             n_str->sig_type  = utils::pe_file;
             n_str->sig_size  = strlen(n_str->sig);
             sig_key_vec.push_back(std::string(n_str->sig));
-						
+
         }
 
         std::string file_name_binary_hex;
 
         std::vector<std::string> sig_key_vec;
         //binary input from file (Test only)
-        tbb::concurrent_vector<char> binary_hex_input;
+        //tbb::concurrent_vector<char> binary_hex_input;
+        std::vector<char> binary_hex_input;
 
         std::vector<std::string> keywords;
 
@@ -100,9 +119,6 @@ class ACTireConcurrency : public ::testing::Test
 TEST_F(ACTireConcurrency, goto_function)
 {
 
-
-
-
     goto_function<char, tbbscan::tbb_allocator> goto_fn;
     goto_fn.create_goto(&nstr_vec, output_fn);
 
@@ -110,9 +126,9 @@ TEST_F(ACTireConcurrency, goto_function)
     failure_function<char, tbbscan::tbb_allocator> failure_fn(goto_fn);
     failure_fn.create_failure(goto_fn, output_fn);
 
-		
+
     tbbscan::actire_pe_engine<char, tbbscan::tbb_allocator> pe_parallel_search;
-    tbbscan::result_callback<std::vector<std::string> > result(sig_key_vec);
+    tbbscan::result_callback<rcb_container_type, threatinfo_type > result;
     pe_parallel_search.search_parallel(goto_fn,
             failure_fn,
             output_fn,
@@ -121,7 +137,7 @@ TEST_F(ACTireConcurrency, goto_function)
             binary_hex_input.size(),
             file_name_binary_hex.c_str(),
             &binary_hex_input);
-		
+
 
     std::string sigtype_code = utils::filetype_code_map(utils::pe_file);
     tbbscan::actire_engine_factory<char, tbbscan::tbb_allocator>::register_actire_type(sigtype_code,
@@ -132,22 +148,24 @@ TEST_F(ACTireConcurrency, goto_function)
 
 TEST_F(ACTireConcurrency, actire_engine_concurrency)
 {
-		
+
     //create engine support type per signature.
     tbbscan::actire_sig_engine<char, tbbscan::tbb_allocator>  sig_engine;
     EXPECT_TRUE(sig_engine.create_engine(nstr_vec, utils::pe_file));
-	  //Create pe scan file engine.	
+    //Create pe scan file engine.
     tbbscan::actire_pe_engine<char, tbbscan::tbb_allocator> pe_parallel;
-		//Call back support find index found virus.
-    tbbscan::result_callback<std::vector<std::string> > result(sig_key_vec);
+    //Call back support find index found virus.
+    //tbbscan::result_callback<std::vector<std::string> > result;
+    tbbscan::result_callback<rcb_container_type, threatinfo_type > result;
+
     //Search engine of pe opreate with binary stream match signature of virus.
     pe_parallel.search_parallel(sig_engine.get_goto_fn(),
             sig_engine.get_failure_fn(),
             sig_engine.get_output_fn(),
             result,
-						0,
-						binary_hex_input.size(),
-						file_name_binary_hex.c_str(),
+            0,
+            binary_hex_input.size(),
+            file_name_binary_hex.c_str(),
             &binary_hex_input);
-		
+
 }

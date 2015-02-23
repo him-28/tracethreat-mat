@@ -4,8 +4,12 @@ TEST = test_suite
 
 check_PROGRAMS = test_suite
 
-test_suite_SOURCES = semaphore_controller_test.cpp \
+#test_suite_SOURCES = semaphore_controller_test.cpp \
+#environment_test.hpp
+
+test_suite_SOURCES = test_suite.cpp \
 environment_test.hpp
+
 
 test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsyncocl \
  -lthreadsyncocl -lgtest -lgtest_main -ltbb_debug -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \

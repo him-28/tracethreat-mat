@@ -9,7 +9,7 @@
 #include "memory/signature_shm_base.hpp"
 #include "memory/signature_shm_controller.hpp"
 
-#include "threadconcurrency/tbbpostscan_pe_controller.hpp"
+#include "taskconcurrency/tbbpostscan_pe_controller.hpp"
 #include "tbb/concurrent_vector.h"
 #include "utils/base/system_code.hpp"
 
@@ -70,7 +70,8 @@ class ScanACTireParallel : public ::testing::Test
 
             meta_sig_vec.push_back(new struct utils::meta_sig);
             msig = meta_sig_vec[1];
-            msig->sig  = "4d5a50000200000004000f00ffff0000b80000000000000040001a000000";
+            //msig->sig  = "4d5a50000200000004000f00ffff0000b80000000000000040001a000000";
+            msig->sig = "7ec00000011f3ec0000006e0000dc0fa5bc79052b0000ebe27a000076e8000000b6b9110087878300d1953a0d4203f1af0000f3000000679fb9b6175725000040a";
             msig->virname   = "trojan-zbot-1563";
             msig->sig_type  = utils::pe_file;
             msig->sig_size  = strlen(msig->sig);
