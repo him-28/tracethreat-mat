@@ -49,12 +49,6 @@ message RequestScan{
 			RESULT = 8;
 		}
 
-		enum FileStatus{
-				FILE_INFECTED = 1;
-        FILE_SUSPECTED = 2;
-        FILE_CLEAN = 3;
-		}
-
 		required RequestType  type     	= 1; //Request types between server and client.
 		required bytes  	   uuid 		 	= 2; //Machine UUID send from client.
 		required bytes      timestamp 	= 3; //Timestamp is external system (International Time)
@@ -71,7 +65,6 @@ message RequestScan{
 			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-			optional FileStatus  file_status = 6;
 		}
 
       repeated GetBinaryValue get_binary_value = 9;
@@ -83,7 +76,6 @@ message RequestScan{
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-      optional FileStatus  file_status  = 6;// File status
 		}
 
       repeated SetBinaryValue  set_binary_value = 10;
@@ -122,12 +114,6 @@ message ResponseScan{
 
 		}
 
-		enum FileStatus{
-				FILE_INFECTED = 1;
-        FILE_SUSPECTED = 2;
-        FILE_CLEAN = 3;
-		}
-
 		required ResponseType  type      = 1;
 		required bytes  	   	 uuid 		 = 2; // Machine UUID send from client.
 		required bytes         timestamp = 3;
@@ -144,7 +130,6 @@ message ResponseScan{
 			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-      optional FileStatus  file_status  = 6;
 		}
 
     repeated GetBinaryValue get_binary_value = 9;
@@ -155,7 +140,6 @@ message ResponseScan{
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-      optional FileStatus  file_status  = 6;
 		}
 
     repeated SetBinaryValue  set_binary_value = 10;

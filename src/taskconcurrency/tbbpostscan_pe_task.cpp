@@ -21,7 +21,7 @@ namespace controller
     bool tbbpostscan_pe_task::
     set_file(std::vector<char> *_binary_hex_input)
     {
-				std::cout<<"Fix : binary hex : ";
+				//std::cout<<"Fix : binary hex : ";
         binary_hex_input_ = _binary_hex_input;
 				std::vector<char>::iterator iter_hex;
 				for(iter_hex = _binary_hex_input->begin();
@@ -144,12 +144,12 @@ namespace controller
                 file_name,
                 binary_hex_input_);
 
-						std::cout<<"!Result file Name : " << threatinfo->file_name() <<std::endl;
-
+						//std::cout<<"!Result file Name : " << threatinfo->file_name() <<std::endl;
+						
             _count--;
 
             if (_count == 0) {
-                std::cout<<" Thread notify...: "<<std::endl;
+                //std::cout<<" Thread notify...: "<<std::endl;
                 _monitor.notify();
             }
         }

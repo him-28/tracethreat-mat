@@ -109,6 +109,26 @@ inline bool RequestScan_RequestType_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<RequestScan_RequestType>(
     RequestScan_RequestType_descriptor(), name, value);
 }
+enum RequestScan_FileStatus {
+  RequestScan_FileStatus_FILE_INFECTED = 1,
+  RequestScan_FileStatus_FILE_SUSPECTED = 2,
+  RequestScan_FileStatus_FILE_CLEAN = 3
+};
+bool RequestScan_FileStatus_IsValid(int value);
+const RequestScan_FileStatus RequestScan_FileStatus_FileStatus_MIN = RequestScan_FileStatus_FILE_INFECTED;
+const RequestScan_FileStatus RequestScan_FileStatus_FileStatus_MAX = RequestScan_FileStatus_FILE_CLEAN;
+const int RequestScan_FileStatus_FileStatus_ARRAYSIZE = RequestScan_FileStatus_FileStatus_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* RequestScan_FileStatus_descriptor();
+inline const ::std::string& RequestScan_FileStatus_Name(RequestScan_FileStatus value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    RequestScan_FileStatus_descriptor(), value);
+}
+inline bool RequestScan_FileStatus_Parse(
+    const ::std::string& name, RequestScan_FileStatus* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<RequestScan_FileStatus>(
+    RequestScan_FileStatus_descriptor(), name, value);
+}
 enum ResponseScan_EncodeType {
   ResponseScan_EncodeType_MD5 = 1,
   ResponseScan_EncodeType_MD5_HEADER = 2,
@@ -176,6 +196,26 @@ inline bool ResponseScan_ResponseType_Parse(
     const ::std::string& name, ResponseScan_ResponseType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<ResponseScan_ResponseType>(
     ResponseScan_ResponseType_descriptor(), name, value);
+}
+enum ResponseScan_FileStatus {
+  ResponseScan_FileStatus_FILE_INFECTED = 1,
+  ResponseScan_FileStatus_FILE_SUSPECTED = 2,
+  ResponseScan_FileStatus_FILE_CLEAN = 3
+};
+bool ResponseScan_FileStatus_IsValid(int value);
+const ResponseScan_FileStatus ResponseScan_FileStatus_FileStatus_MIN = ResponseScan_FileStatus_FILE_INFECTED;
+const ResponseScan_FileStatus ResponseScan_FileStatus_FileStatus_MAX = ResponseScan_FileStatus_FILE_CLEAN;
+const int ResponseScan_FileStatus_FileStatus_ARRAYSIZE = ResponseScan_FileStatus_FileStatus_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ResponseScan_FileStatus_descriptor();
+inline const ::std::string& ResponseScan_FileStatus_Name(ResponseScan_FileStatus value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ResponseScan_FileStatus_descriptor(), value);
+}
+inline bool ResponseScan_FileStatus_Parse(
+    const ::std::string& name, ResponseScan_FileStatus* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ResponseScan_FileStatus>(
+    ResponseScan_FileStatus_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -278,6 +318,13 @@ class RequestScan_GetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::RequestScan_FileType file_type() const;
   inline void set_file_type(::message_scan::RequestScan_FileType value);
 
+  // optional .message_scan.RequestScan.FileStatus file_status = 6;
+  inline bool has_file_status() const;
+  inline void clear_file_status();
+  static const int kFileStatusFieldNumber = 6;
+  inline ::message_scan::RequestScan_FileStatus file_status() const;
+  inline void set_file_status(::message_scan::RequestScan_FileStatus value);
+
   // @@protoc_insertion_point(class_scope:message_scan.RequestScan.GetBinaryValue)
  private:
   inline void set_has_binary();
@@ -290,6 +337,8 @@ class RequestScan_GetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_scan_type();
   inline void set_has_file_type();
   inline void clear_has_file_type();
+  inline void set_has_file_status();
+  inline void clear_has_file_status();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -298,9 +347,10 @@ class RequestScan_GetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  int file_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -410,6 +460,13 @@ class RequestScan_SetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::RequestScan_FileType file_type() const;
   inline void set_file_type(::message_scan::RequestScan_FileType value);
 
+  // optional .message_scan.RequestScan.FileStatus file_status = 6;
+  inline bool has_file_status() const;
+  inline void clear_file_status();
+  static const int kFileStatusFieldNumber = 6;
+  inline ::message_scan::RequestScan_FileStatus file_status() const;
+  inline void set_file_status(::message_scan::RequestScan_FileStatus value);
+
   // @@protoc_insertion_point(class_scope:message_scan.RequestScan.SetBinaryValue)
  private:
   inline void set_has_binary();
@@ -422,6 +479,8 @@ class RequestScan_SetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_scan_type();
   inline void set_has_file_type();
   inline void clear_has_file_type();
+  inline void set_has_file_status();
+  inline void clear_has_file_status();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -430,9 +489,10 @@ class RequestScan_SetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  int file_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -579,6 +639,31 @@ class RequestScan : public ::google::protobuf::Message {
   static inline bool RequestType_Parse(const ::std::string& name,
       RequestType* value) {
     return RequestScan_RequestType_Parse(name, value);
+  }
+
+  typedef RequestScan_FileStatus FileStatus;
+  static const FileStatus FILE_INFECTED = RequestScan_FileStatus_FILE_INFECTED;
+  static const FileStatus FILE_SUSPECTED = RequestScan_FileStatus_FILE_SUSPECTED;
+  static const FileStatus FILE_CLEAN = RequestScan_FileStatus_FILE_CLEAN;
+  static inline bool FileStatus_IsValid(int value) {
+    return RequestScan_FileStatus_IsValid(value);
+  }
+  static const FileStatus FileStatus_MIN =
+    RequestScan_FileStatus_FileStatus_MIN;
+  static const FileStatus FileStatus_MAX =
+    RequestScan_FileStatus_FileStatus_MAX;
+  static const int FileStatus_ARRAYSIZE =
+    RequestScan_FileStatus_FileStatus_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  FileStatus_descriptor() {
+    return RequestScan_FileStatus_descriptor();
+  }
+  static inline const ::std::string& FileStatus_Name(FileStatus value) {
+    return RequestScan_FileStatus_Name(value);
+  }
+  static inline bool FileStatus_Parse(const ::std::string& name,
+      FileStatus* value) {
+    return RequestScan_FileStatus_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
@@ -841,6 +926,13 @@ class ResponseScan_GetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::ResponseScan_FileType file_type() const;
   inline void set_file_type(::message_scan::ResponseScan_FileType value);
 
+  // optional .message_scan.ResponseScan.FileStatus file_status = 6;
+  inline bool has_file_status() const;
+  inline void clear_file_status();
+  static const int kFileStatusFieldNumber = 6;
+  inline ::message_scan::ResponseScan_FileStatus file_status() const;
+  inline void set_file_status(::message_scan::ResponseScan_FileStatus value);
+
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan.GetBinaryValue)
  private:
   inline void set_has_binary();
@@ -853,6 +945,8 @@ class ResponseScan_GetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_scan_type();
   inline void set_has_file_type();
   inline void clear_has_file_type();
+  inline void set_has_file_status();
+  inline void clear_has_file_status();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -861,9 +955,10 @@ class ResponseScan_GetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  int file_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -973,6 +1068,13 @@ class ResponseScan_SetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::ResponseScan_FileType file_type() const;
   inline void set_file_type(::message_scan::ResponseScan_FileType value);
 
+  // optional .message_scan.ResponseScan.FileStatus file_status = 6;
+  inline bool has_file_status() const;
+  inline void clear_file_status();
+  static const int kFileStatusFieldNumber = 6;
+  inline ::message_scan::ResponseScan_FileStatus file_status() const;
+  inline void set_file_status(::message_scan::ResponseScan_FileStatus value);
+
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan.SetBinaryValue)
  private:
   inline void set_has_binary();
@@ -985,6 +1087,8 @@ class ResponseScan_SetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_scan_type();
   inline void set_has_file_type();
   inline void clear_has_file_type();
+  inline void set_has_file_status();
+  inline void clear_has_file_status();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -993,9 +1097,10 @@ class ResponseScan_SetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  int file_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -1142,6 +1247,31 @@ class ResponseScan : public ::google::protobuf::Message {
   static inline bool ResponseType_Parse(const ::std::string& name,
       ResponseType* value) {
     return ResponseScan_ResponseType_Parse(name, value);
+  }
+
+  typedef ResponseScan_FileStatus FileStatus;
+  static const FileStatus FILE_INFECTED = ResponseScan_FileStatus_FILE_INFECTED;
+  static const FileStatus FILE_SUSPECTED = ResponseScan_FileStatus_FILE_SUSPECTED;
+  static const FileStatus FILE_CLEAN = ResponseScan_FileStatus_FILE_CLEAN;
+  static inline bool FileStatus_IsValid(int value) {
+    return ResponseScan_FileStatus_IsValid(value);
+  }
+  static const FileStatus FileStatus_MIN =
+    ResponseScan_FileStatus_FileStatus_MIN;
+  static const FileStatus FileStatus_MAX =
+    ResponseScan_FileStatus_FileStatus_MAX;
+  static const int FileStatus_ARRAYSIZE =
+    ResponseScan_FileStatus_FileStatus_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  FileStatus_descriptor() {
+    return ResponseScan_FileStatus_descriptor();
+  }
+  static inline const ::std::string& FileStatus_Name(FileStatus value) {
+    return ResponseScan_FileStatus_Name(value);
+  }
+  static inline bool FileStatus_Parse(const ::std::string& name,
+      FileStatus* value) {
+    return ResponseScan_FileStatus_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
@@ -1518,6 +1648,29 @@ inline void RequestScan_GetBinaryValue::set_file_type(::message_scan::RequestSca
   file_type_ = value;
 }
 
+// optional .message_scan.RequestScan.FileStatus file_status = 6;
+inline bool RequestScan_GetBinaryValue::has_file_status() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void RequestScan_GetBinaryValue::set_has_file_status() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void RequestScan_GetBinaryValue::clear_has_file_status() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void RequestScan_GetBinaryValue::clear_file_status() {
+  file_status_ = 1;
+  clear_has_file_status();
+}
+inline ::message_scan::RequestScan_FileStatus RequestScan_GetBinaryValue::file_status() const {
+  return static_cast< ::message_scan::RequestScan_FileStatus >(file_status_);
+}
+inline void RequestScan_GetBinaryValue::set_file_status(::message_scan::RequestScan_FileStatus value) {
+  assert(::message_scan::RequestScan_FileStatus_IsValid(value));
+  set_has_file_status();
+  file_status_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // RequestScan_SetBinaryValue
@@ -1728,6 +1881,29 @@ inline void RequestScan_SetBinaryValue::set_file_type(::message_scan::RequestSca
   assert(::message_scan::RequestScan_FileType_IsValid(value));
   set_has_file_type();
   file_type_ = value;
+}
+
+// optional .message_scan.RequestScan.FileStatus file_status = 6;
+inline bool RequestScan_SetBinaryValue::has_file_status() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void RequestScan_SetBinaryValue::set_has_file_status() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void RequestScan_SetBinaryValue::clear_has_file_status() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void RequestScan_SetBinaryValue::clear_file_status() {
+  file_status_ = 1;
+  clear_has_file_status();
+}
+inline ::message_scan::RequestScan_FileStatus RequestScan_SetBinaryValue::file_status() const {
+  return static_cast< ::message_scan::RequestScan_FileStatus >(file_status_);
+}
+inline void RequestScan_SetBinaryValue::set_file_status(::message_scan::RequestScan_FileStatus value) {
+  assert(::message_scan::RequestScan_FileStatus_IsValid(value));
+  set_has_file_status();
+  file_status_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -2509,6 +2685,29 @@ inline void ResponseScan_GetBinaryValue::set_file_type(::message_scan::ResponseS
   file_type_ = value;
 }
 
+// optional .message_scan.ResponseScan.FileStatus file_status = 6;
+inline bool ResponseScan_GetBinaryValue::has_file_status() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ResponseScan_GetBinaryValue::set_has_file_status() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ResponseScan_GetBinaryValue::clear_has_file_status() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ResponseScan_GetBinaryValue::clear_file_status() {
+  file_status_ = 1;
+  clear_has_file_status();
+}
+inline ::message_scan::ResponseScan_FileStatus ResponseScan_GetBinaryValue::file_status() const {
+  return static_cast< ::message_scan::ResponseScan_FileStatus >(file_status_);
+}
+inline void ResponseScan_GetBinaryValue::set_file_status(::message_scan::ResponseScan_FileStatus value) {
+  assert(::message_scan::ResponseScan_FileStatus_IsValid(value));
+  set_has_file_status();
+  file_status_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // ResponseScan_SetBinaryValue
@@ -2719,6 +2918,29 @@ inline void ResponseScan_SetBinaryValue::set_file_type(::message_scan::ResponseS
   assert(::message_scan::ResponseScan_FileType_IsValid(value));
   set_has_file_type();
   file_type_ = value;
+}
+
+// optional .message_scan.ResponseScan.FileStatus file_status = 6;
+inline bool ResponseScan_SetBinaryValue::has_file_status() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ResponseScan_SetBinaryValue::set_has_file_status() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ResponseScan_SetBinaryValue::clear_has_file_status() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ResponseScan_SetBinaryValue::clear_file_status() {
+  file_status_ = 1;
+  clear_has_file_status();
+}
+inline ::message_scan::ResponseScan_FileStatus ResponseScan_SetBinaryValue::file_status() const {
+  return static_cast< ::message_scan::ResponseScan_FileStatus >(file_status_);
+}
+inline void ResponseScan_SetBinaryValue::set_file_status(::message_scan::ResponseScan_FileStatus value) {
+  assert(::message_scan::ResponseScan_FileStatus_IsValid(value));
+  set_has_file_status();
+  file_status_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -3310,6 +3532,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::RequestScan_Requ
   return ::message_scan::RequestScan_RequestType_descriptor();
 }
 template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::RequestScan_FileStatus>() {
+  return ::message_scan::RequestScan_FileStatus_descriptor();
+}
+template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::ResponseScan_EncodeType>() {
   return ::message_scan::ResponseScan_EncodeType_descriptor();
 }
@@ -3320,6 +3546,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::ResponseScan_Fil
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::ResponseScan_ResponseType>() {
   return ::message_scan::ResponseScan_ResponseType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::message_scan::ResponseScan_FileStatus>() {
+  return ::message_scan::ResponseScan_FileStatus_descriptor();
 }
 
 }  // namespace google
