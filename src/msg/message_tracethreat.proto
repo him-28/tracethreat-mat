@@ -16,9 +16,12 @@
 
 /*  Titles			                                          Authors	         Date
  * -Tracethreat internal message                           R.Chatsiri       25/10/2014
+ * -Request and Response                                   R.Chatsiri       13/02/2015
  */
 
-package message_tracethreat;
+package scan_threat;
+
+option cc_generic_services = true;
 
 message InfectedFileInfo{
 
@@ -43,33 +46,102 @@ message InfectedFileInfo{
 		NEGATIVE =  2;
 	}
 
-	enum PackType {
-		PACK_ONE = 1;
-		PACK_ALL = 2;
-	}
 
-	required PackType pack_type = 1; //if PackType::PACK_ALL use InfectedFileInfoValue
-
-	optional bytes uuid = 2;	
-  optional bytes machine_name = 3;
-	optional bytes ip = 4;
+	optional bytes uuid = 1;	
+  optional bytes machine_name = 2;
+	optional bytes ip = 3;
  
 
-	optional EncodeType encode_sig_type = 5;
-	optional bytes file_name = 6;
-	optional bytes file_type = 7;
-	optional StatusResult status_result = 8;
-  optional bytes virus_name = 9;
-
-	message InfectedFileInfoValue{
-		required EncodeType encode_sign_type = 1;
-		required FileType   file_type        = 2;
-		required StatusResult status_result  = 3;
-		required bytes file_name             = 4;
-		required bytes binary                = 5;
-		required bytes virus_name            = 6;
-	}
-
-	repeated InfectedFileInfoValue infected_file_info_value = 10;
+	optional EncodeType encode_sig_type = 4;
+	optional bytes file_name = 5;
+	optional bytes file_type = 6;
+	optional StatusResult status_result = 7;
+  optional bytes virus_name = 8;
+  optional bytes binary  = 9;
 
 }
+
+
+message InfectedFileInfoRequest{
+
+	  enum EncodeType{
+			MD5        = 1;
+			MD5_HEADER = 2;
+			MD5_BODY   = 3;
+		  SHA_1      = 4;
+			SHA_256    = 5;
+			SSDEEP     = 6;
+		}
+
+		enum FileType{
+				PE 			= 1;
+				ELF 		= 2;
+				PROCESS = 3;
+		}
+
+	
+	enum StatusResult{
+		POSITIVE =  1;
+		NEGATIVE =  2;
+	}
+
+
+	optional bytes uuid = 1;	
+  optional bytes machine_name = 2;
+	optional bytes ip = 3;
+ 
+
+	optional EncodeType encode_sig_type = 4;
+	optional bytes file_name = 5;
+	optional bytes file_type = 6;
+	optional StatusResult status_result = 7;
+  optional bytes virus_name = 8;
+  optional bytes binary  = 9;
+}
+
+
+
+message InfectedFileInfoResponse{
+
+	  enum EncodeType{
+			MD5        = 1;
+			MD5_HEADER = 2;
+			MD5_BODY   = 3;
+		  SHA_1      = 4;
+			SHA_256    = 5;
+			SSDEEP     = 6;
+		}
+
+		enum FileType{
+				PE 			= 1;
+				ELF 		= 2;
+				PROCESS = 3;
+		}
+
+	
+	enum StatusResult{
+		POSITIVE =  1;
+		NEGATIVE =  2;
+	}
+
+
+	optional bytes uuid = 1;	
+  optional bytes machine_name = 2;
+	optional bytes ip = 3;
+ 
+
+	optional EncodeType encode_sig_type = 4;
+	optional bytes file_name = 5;
+	optional bytes file_type = 6;
+	optional StatusResult status_result = 7;
+  optional bytes virus_name = 8;
+  optional bytes binary  = 9;
+
+}
+
+service InfectedFileInfoService{
+
+	rpc InfectedFileInfo (InfectedFileInfoRequest) returns (InfectedFileInfoResponse);
+	
+}
+

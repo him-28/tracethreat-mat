@@ -25,7 +25,7 @@ namespace internet
                 encrypt = CREATE_ENCRYPTION("aes_encryption");
 
                 if(encrypt == NULL) {
-                    LOG(INFO)<<" Cannot create mapper : encryption_controller";
+                    LOG(INFO)<<"Mapper cannot create : encryption_controller";
                 }
 
                 return encrypt;

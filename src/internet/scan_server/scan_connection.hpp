@@ -71,7 +71,7 @@ namespace internet
 
             typedef policy::scan_internet_controller<struct MAPPED_FILE_PE>  scan_file_type;
 
-            typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+            typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
             typedef std::vector<threatinfo_type *>  threatinfo_vec_type;
 

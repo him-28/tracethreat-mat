@@ -106,7 +106,7 @@ namespace filetypes
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             iactire_engine_scanner_type;
 
-            typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+            typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
 						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 

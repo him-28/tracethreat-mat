@@ -41,5 +41,5 @@ namespace memory
     }
 
 
-    template class queue_shm_controller<message_tracethreat::InfectedFileInfo>;
+    template class queue_shm_controller<scan_threat::InfectedFileInfo>;
 }

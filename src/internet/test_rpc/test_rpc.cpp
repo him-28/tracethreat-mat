@@ -6,9 +6,9 @@
 #include "internet/logger/stringprintf.hpp"
 
 
-TEST(InitialSecurityTestSuite, Initial)
+TEST(InitialInternetTestSuite, Initial)
 {
-	 LOG(INFO)<<" Test Security Module.";
+	 LOG(INFO)<<" Test RPC-Message service.";
 }
 
 
@@ -27,11 +27,5 @@ GTEST_API_ int main(int argc, char  **argv)
     return RUN_ALL_TESTS();
 }
 
-//internet connection
-//#include "internet/test_security/security_connection_test.hpp"
-
-//AES controller
-//#include "internet/test_security/aes_controller_test.hpp"
-
-//Field encrypted
-#include "internet/test_security/encryption_field_test.hpp"
+//Send message
+#include "internet/test_rpc/sendmsg_rpc_client_test.hpp"

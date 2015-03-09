@@ -108,7 +108,7 @@ namespace controller
         output_ = &actire_engine_->get_output_fn();
 	
 
-				threatinfo = new message_tracethreat::InfectedFileInfo(); 
+				threatinfo = new scan_threat::InfectedFileInfo(); 
 			
 
         _startTime = util_thread::current_time();

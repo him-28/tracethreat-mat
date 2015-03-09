@@ -52,7 +52,7 @@ namespace policy
     {
 
         public:
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+						typedef scan_threat::InfectedFileInfo  threatinfo_type;
 					
 						typedef std::vector<threatinfo_type*> threatinfo_vec_type;
 
@@ -79,7 +79,7 @@ namespace policy
 
             typedef  tbbscan::iactire_engine<char, tbbscan::tbb_allocator> iactire_concur_engine_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+						typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
 						typedef std::vector<threatinfo_type*> threatinfo_vec_type;
 

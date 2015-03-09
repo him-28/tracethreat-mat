@@ -45,7 +45,7 @@ namespace controller
             typedef tbbpostscan_pe_task tbbpostscan_pe_task_type;
 
 
-            typedef message_tracethreat::InfectedFileInfo threatinfo_type;
+            typedef scan_threat::InfectedFileInfo threatinfo_type;
 
             typedef std::vector<threatinfo_type *> threatinfo_vec_type;
 

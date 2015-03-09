@@ -33,10 +33,10 @@ namespace utils
 
     namespace connector
     {
-        typedef boost::shared_ptr<message_tracethreat::InfectedFileInfo> msg_threat_info_ptr;
+        typedef boost::shared_ptr<scan_threat::InfectedFileInfoRequest> msg_threat_info_ptr;
 
         template<typename MessageThreatInfoPointer =
-        boost::shared_ptr<message_tracethreat::InfectedFileInfo> >
+        boost::shared_ptr<scan_threat::InfectedFileInfoRequest> >
         class threat_info_db : public mongo_connector<MessageThreatInfoPointer,mongo::DBClientConnection>
         {
             public:

@@ -33,7 +33,7 @@ namespace controller
             typedef tbb::concurrent_unordered_map<std::size_t, std::set<struct utils::meta_sig *> >
                     output_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+						typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
 					  typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 

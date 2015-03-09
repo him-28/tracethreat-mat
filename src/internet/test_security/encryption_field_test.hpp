@@ -12,7 +12,7 @@ class EncryptionLoadEngine : public ::testing::Test{
 
 		virtual void SetUp(){
 				                //Crypto and Network Security
-                LOG(INFO)<<"Server : Load security module.";
+                LOG(INFO)<<"Server : Load security engine.";
                 internet::security::get_encryption().reset(
                         internet::security::create_encryption());
 

@@ -76,7 +76,7 @@ namespace policy
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             iactire_engine_scanner_type;
 
-						typedef message_tracethreat::InfectedFileInfo threatinfo_type;
+						typedef scan_threat::InfectedFileInfo threatinfo_type;
 
 						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
             /**
@@ -269,7 +269,7 @@ namespace policy
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             iactire_engine_scanner_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+						typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
 						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 	
@@ -355,7 +355,7 @@ namespace policy
             typedef controller::BufferSync< struct controller::data_ocl_process<MAPPED_FILE>, MAPPED_FILE>
                     buffer_sync;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+						typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
 						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 
