@@ -3,11 +3,12 @@
 
 #include <boost/unordered_map.hpp>
 
-
 #include "utils/logger/clutil_logger.hpp"
 
 #include "utils/base/common.hpp"
 #include "memory/signature_shm_base.hpp"
+
+#include "../../msg/message_tracethreat.pb.h"
 
 namespace utils
 {
@@ -50,7 +51,7 @@ namespace utils
         template<typename MessageResult, typename FileStructure>
         class result_pe_infected
         {
-                typedef boost::unordered_map<char, MesssageResult*> sigtype_map;
+                typedef boost::unordered_map<char, MessageResult*> sigtype_map;
             public:
                 bool add_infected_result(MessageResult *msig);
                 bool list_index_found(MessageResult *sig_, FileStructure   *file_str_);

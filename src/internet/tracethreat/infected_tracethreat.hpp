@@ -17,7 +17,7 @@ namespace internet
 
                 typedef scan_threat::InfectedFileInfoRequest MessageRequestType;
                 typedef scan_threat::InfectedFileInfoResponse MessageResponseType;
-								typedef infected_controller//<MessageRequestType, MessageResponseType>  
+								typedef infected_controller 
 									infected_controller_type;
 
                 infected_tracethreat(): 
@@ -43,10 +43,15 @@ namespace internet
 								void loop(){
 								   infected_controller_->loop();
 								}
-                
+  
+								void break_loop(){
+									 LOG(INFO)<<"Controller break loop";
+								   infected_controller_->break_loop();
+								}
+              
                 void received(MessageResponseType&   msgs) {
-                     //rpc_controller_->received(msgs);
-                 }
+                 
+                }
                 
             private:
 

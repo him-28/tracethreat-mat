@@ -27,7 +27,8 @@ file_offset_handler.hpp \
 convert.hpp \
 md5_hash.hpp \
 uuid_generator.hpp \
-hash.hpp
+hash.hpp \
+timestamp.hpp
 
 # library
 libutils_a_SOURCES = $(libutils_a_HEADERS) file_calculate.cpp \
@@ -42,4 +43,5 @@ connector/threat_info_db.cpp \
 file_offset_handler.cpp \
 md5_hash.cpp \
 uuid_generator.cpp \
-hash.cpp
+hash.cpp \
+timestamp.cpp

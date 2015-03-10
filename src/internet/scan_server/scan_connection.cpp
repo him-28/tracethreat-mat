@@ -8,7 +8,7 @@
 
 #include "internet/security/aes_controller.hpp"
 
-//#include "internet/tracethreat/infected_controller.hpp"
+#include "internet/tracethreat/infected_controller.hpp"
 
 namespace internet
 {
@@ -95,7 +95,7 @@ namespace internet
         MsgsResponsePointer close_response(new message_scan::ResponseScan);
         close_response->set_uuid(msg_request->uuid());
         close_response->set_type(message_scan::ResponseScan::CLOSE_CONNECTION);
-        close_response->set_timestamp(std::string("0:0:0:0"));
+        close_response->set_timestamp(timestamp_->get_system_time());
         //Set close socket at here.
         LOG(INFO)<"Server : prepare_reponse_close success";
         return close_response;
@@ -111,7 +111,7 @@ namespace internet
         scan_response->set_uuid(msg_request->uuid());
         scan_response->set_ip(msg_request->ip());
         scan_response->set_type(message_scan::ResponseScan::SCAN_SUCCESS);
-        scan_response->set_timestamp(std::string("0:0:0:0"));
+        scan_response->set_timestamp(timestamp_->get_system_time());
         //security reason
         scan_response->set_conn_ip(msg_request->ip());
         scan_response->set_conn_uuid(msg_request->uuid());
@@ -132,7 +132,7 @@ namespace internet
         MsgsResponsePointer  register_response(new message_scan::ResponseScan);
         register_response->set_uuid(msgs_request->uuid());
         register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
-        register_response->set_timestamp(std::string("0:0:0:0"));
+        register_response->set_timestamp(timestamp_->get_system_time());
 
         LOG(INFO)<<"Server : prepare_response_register success";
 
@@ -305,17 +305,24 @@ namespace internet
                 message_scan::RequestScan::SetBinaryValue * msg_scan_result =
                         request_ptr->mutable_set_binary_value(count_result);
 
-								//LOG(INFO)<<"File name : " << msg_scan_result->file_name();
-
                 if(threat_info->file_name().compare(msg_scan_result->file_name()) == FOUND_INFECTED) {
 
                     LOG(INFO)<<"Server scan file name : " << threat_info->file_name() <<", Success! ";
                     LOG(INFO)<<"File name from client : " << msg_scan_result->file_name();
-                    msg_scan_result->set_file_status(message_scan::RequestScan::FILE_INFECTED); 
+                    msg_scan_result->set_file_status(message_scan::RequestScan::FILE_INFECTED);
+
+                    //Send infected file detail to Tracethreat system.
+                    MessageRequestType  msgReq;
+									  msgReq.set_file_name(threat_info->file_name());
+										MessageResponseType * msgResp = new MessageResponseType; 
+                    tracethreat_controller_->send(&msgReq, msgResp);
+										tracethreat_controller_->loop(); 
+	 
+    								tracethreat_controller_->break_loop();
+									
                 }else{
                     msg_scan_result->set_file_status(message_scan::RequestScan::FILE_CLEAN);
 								}
-								
             }//for
 
         }//for
@@ -476,7 +483,7 @@ namespace internet
 
         register_response->set_uuid(msgs_request->uuid());
         register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
-        register_response->set_timestamp(std::string("0:0:0:0"));
+        register_response->set_timestamp(timestamp_->get_system_time());
 
         register_response->set_key(msgs_request->key());
         register_response->set_iv(msgs_request->iv());

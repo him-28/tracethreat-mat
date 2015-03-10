@@ -47,6 +47,7 @@
 
 #include "internet/msg/scan_server_client/message_scan.pb.h"
 #include "internet/msg/packedmessage_scan.hpp"
+#include "../../msg/message_tracethreat.pb.h"
 
 #include "gensign/clamavsig.hpp"
 
@@ -54,6 +55,10 @@
 
 #include "internet/security/aes_controller.hpp"
 #include "internet/security/encryption_field.hpp"
+
+#include "internet/tracethreat/infected_controller.hpp"
+
+#include "../../utils/timestamp.hpp"
 
 namespace internet
 {
@@ -97,15 +102,26 @@ namespace internet
 
             typedef asio::io_service& io_service_type;
 
+						typedef scan_threat::InfectedFileInfoRequest MessageRequestType;
+	
+						typedef scan_threat::InfectedFileInfoResponse MessageResponseType;
+						
+						typedef internet::tracethreat::tracethreat_controller tracethreat_controller_type;
+
+						typedef utils::timestamp  timestamp_type;
+
             static pointer create(io_service_type io_service,
                     scan_file_type *scan_file,
                     asio::ssl::context& context,
-                    encryption_type *enc_controller) {
+                    encryption_type *enc_controller,
+                    tracethreat_controller_type  * tracethreat_controller) {
 
+								//Pointer of scan_connection ctor.
                 return scan_connection::pointer(new scan_connection(io_service,
                         scan_file,
                         context,
-                        enc_controller));
+                        enc_controller,
+                        tracethreat_controller));
 
             }
 
@@ -136,7 +152,8 @@ namespace internet
             scan_connection(io_service_type io_service,
                     scan_file_type *scan_file,
                     asio::ssl::context& context,
-                    encryption_type *enc_controller) :
+                    encryption_type *enc_controller,
+                    tracethreat_controller_type * tracethreat_controller) :
                 msgs_packed_request_scan(boost::shared_ptr<message_scan::RequestScan>(
                         new message_scan::RequestScan())),
                 scan_file_(scan_file),
@@ -146,11 +163,16 @@ namespace internet
 																			internet::security::aes_cbc>()),	
 						    secure_field_req(new  internet::security::scan_field<message_scan::RequestScan, 
 																			internet::security::aes_cbc>()),		
-                enc_controller_(enc_controller) {
+                enc_controller_(enc_controller),
+                tracethreat_controller_(tracethreat_controller),
+                timestamp_(new utils::timestamp()) {
                 LOG(INFO)<<" Scan_connection : start timer";
                 //Start timer check timeout per connection.
                 start_socket_timer();
-            }
+
+								//internal timestamp 
+								timestamp_->initial_timezone();
+            }//scan_connetion
 
             //Frist response to client.
             typename scan_connection::MsgsResponsePointer
@@ -239,6 +261,10 @@ namespace internet
 						secure_field_resp_type * secure_field_resp;
 
 						secure_field_req_type * secure_field_req;
+
+            tracethreat_controller_type * tracethreat_controller_;
+
+            timestamp_type * timestamp_;						
 
     };
 

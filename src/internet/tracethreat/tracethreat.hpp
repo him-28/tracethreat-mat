@@ -27,8 +27,9 @@ namespace internet
 
 								virtual void received(MessageResponseType&   msgs) = 0;
 
-
                 virtual void loop() = 0;
+
+                virtual void break_loop() = 0;
 
                 virtual internet::tracethreat::
                 tracethreat_controller *

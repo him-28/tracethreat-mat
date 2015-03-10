@@ -45,8 +45,8 @@ namespace utils
                     mongo::BSONObjBuilder().append("encode_sign_type", threat_info.encode_sig_type())
                     .append("file_type", 			threat_info.file_type())
                     .append("status_result", 	threat_info.status_result())
-                    .append("file_name", 			threat_info.file_name())
-                    .append("binary",    			threat_info.binary()).obj();
+                    .append("file_name", 			threat_info.file_name());
+                    //.append("binary",    			threat_info.binary()).obj();
 
             this->conn.insert(this->db_name, threat_info_bson);
             return true;

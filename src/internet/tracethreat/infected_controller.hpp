@@ -64,12 +64,8 @@ namespace internet
 
                 virtual void loop() = 0;
 
-                //virtual void received(MessageResponseType * msgs) = 0;
-								/*
-                virtual internet::tracethreat::
-                tracethreat_controller<MessageRequestType, MessageResponseType> *
-                get_tracethreat() = 0;
-								*/
+								virtual void break_loop() = 0;
+
                 ~tracethreat_controller() { }
 
         };
@@ -89,6 +85,8 @@ namespace internet
                 bool send(MessageRequestType * msgReq, MessageResponseType * msgResp);
 
                 void loop();
+
+								void break_loop();
 
                 //void received(MessageResponseType * msgs);
 

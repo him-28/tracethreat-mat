@@ -66,7 +66,11 @@ namespace internet
 				void infected_controller::loop(){
                    loop_->loop();
 				}
-                                   
+ 
+				void infected_controller::break_loop(){
+                   loop_->break_loop();
+				}
+                                    
 
         /*template<typename MessageRequestType, typename MessageResponseType>
         void infected_controller:://<MessageRequestType, MessageResponseType>::

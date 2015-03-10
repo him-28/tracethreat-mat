@@ -4,11 +4,6 @@
 
 //Load system with class register.
 #include "internet/security/load_security.hpp"
-//#include "internet/security/encryption.hpp"
-//#include "internet/security/aes_controller.hpp"
-
-//CLASS_REGISTER_IMPLEMENT_REGISTRY(aes_controller,
-//        internet::security::encryption_controller<internet::security::aes_cbc>);
 
 #include "internet/tracethreat/load_tracethreat.hpp"
 
@@ -33,7 +28,7 @@ namespace internet
 
             typedef scan_threat::InfectedFileInfoResponse MessageResponseType;
 
-            typedef internet::tracethreat::tracethreat_controller//<MessageRequestType, MessageResponseType>
+            typedef internet::tracethreat::tracethreat_controller
             tracethreat_controller_type;
 
             typedef asio::io_service& io_service_type;
@@ -63,11 +58,11 @@ namespace internet
 
                 //deploy scanning engine, load database to SHM.
                 if(!deploy_scan_engine())
-                    LOG(INFO)<<"Server : deploy scan engine compeleted.";
+                    LOG(INFO)<<"Server : Scan engine deploy fail.";
 
                 //load cryto and network security engine.
-                if(!load_system_engine())
-                    LOG(INFO)<<"Server : Load system fail, Not completed steps to load component.";
+                if(!deploy_system_engine())
+                    LOG(INFO)<<"Server :  System engine deploy fail, Not completed steps to load component.";
 
 
                 start_accept();
@@ -79,7 +74,6 @@ namespace internet
             }
 
             void listen_thread() {
-                //boost::recursive_mutex::scoped_lock lock(res_mux);
                 io_service_.run();
             }
 
@@ -101,7 +95,8 @@ namespace internet
                         internet::scan_connection::create(io_service_,
                                 scan_file,
                                 context_,
-                                enc_controller_);
+                                enc_controller_,  //encryption controller
+                                tracethreat_controller_); //Tracethreat-RPC controller
 
                 acceptor.async_accept(new_connection->get_socket(),
                         boost::bind(&scan_server::impl::handle_accept,
@@ -130,12 +125,12 @@ namespace internet
             }
 
             //Default load another system.
-            bool load_system_engine() {
+            bool deploy_system_engine() {
                 //Logging-monitoring system.
 
 
                 //Crypto and Network Security
-                LOG(INFO)<<"Server : Load security engine.";
+                LOG(INFO)<<"Server : Security engine deploy...";
                 internet::security::get_encryption().reset(
                         internet::security::create_encryption());
 
@@ -148,29 +143,37 @@ namespace internet
 
                 if(enc_controller_ == NULL) {
                     LOG(INFO)<<"Encryption controller cannot initial";
+										return false;
                 }
 
                 //RPC-Client. Send result log to Tracethreat-RPC-Service.
-                LOG(INFO)<<"Server : Load RPC-Client engine.";
+                LOG(INFO)<<"Server : Tracethreat-RPC engine deploy....";
                 internet::tracethreat::get_tracethreat().reset(
                         internet::tracethreat::create_tracethreat());
 
                 if(internet::tracethreat::get_tracethreat().get() == NULL) {
                     LOG(INFO)<<"System cannot initial rpc-service engine";
+                    return false;
                 }
 
                 tracethreat_controller_ = internet::tracethreat::get_tracethreat()->get_tracethreat();
 
                 if(tracethreat_controller_ == NULL) {
                     LOG(INFO)<<"Tracethreat controller cannot initial";
-                }
+										return false;
+                }else{
+
+                LOG(INFO)<<"IP Fix. Please changed before send to production";
+                tracethreat_controller_->initial_engine("127.0.0.1", 8089);
+                 
+								}
 
                 //Database
 
 
                 //Scan engine.
                 return true;
-            }//load_system_engine.
+            }//deploy_system_engine.
 
             //Deploy scanning system and load object before call scan_file member function.
             bool deploy_scan_engine() {

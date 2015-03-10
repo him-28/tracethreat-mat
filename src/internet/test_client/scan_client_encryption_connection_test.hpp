@@ -55,6 +55,8 @@ TEST_F(ScanClientEncryptionLoadEngine, connection_register_crypto)
 
     utils::file_scan_request *fs2;
 
+		utils::file_scan_request *fs3;
+
     fs1 = new utils::file_scan_request;
     fs1->binary = std::string("f33867592e3ecf226eb7b32fcdf8a53123433333223444a32e232323ae54a");
     fs1->file_name = std::string("/home/testlab/zbot-test2.exe");
@@ -70,6 +72,16 @@ TEST_F(ScanClientEncryptionLoadEngine, connection_register_crypto)
     fs2->scan_type = message_scan::RequestScan::MD5;
     fs2->file_type = message_scan::RequestScan::PE;
     fs_request_vec.push_back(fs2);
+
+    fs3 = new utils::file_scan_request;
+    fs3->binary = std::string("f33867592e3ecf226eb7b32fcdf8a53123433333223444a32e232323ae54a");
+    fs3->file_name = std::string("/home/testlab/zbot-test3.exe");
+    fs3->file_size = 50000;
+    fs3->scan_type = message_scan::RequestScan::MD5;
+    fs3->file_type = message_scan::RequestScan::PE;
+    fs_request_vec.push_back(fs3);
+
+
 
     std::string url_addr("127.0.0.1");
     std::string port("4050");

@@ -9,10 +9,10 @@ class TraceThreatClientEngine : public ::testing::Test{
   typedef scan_threat::InfectedFileInfoRequest MessageRequestType;
   typedef scan_threat::InfectedFileInfoResponse MessageResponseType;
 
-	typedef internet::tracethreat::infected_controller//<MessageRequestType, MessageResponseType> 
+	typedef internet::tracethreat::infected_controller 
 		infected_controller_type;
  
-  typedef internet::tracethreat::tracethreat_controller//<MessageRequestType, MessageResponseType>
+  typedef internet::tracethreat::tracethreat_controller
     tracethreat_controller_type;
 
 	virtual void SetUp(){
@@ -51,4 +51,5 @@ TEST_F(TraceThreatClientEngine, InitialSendMessage){
 	tracethreat_controller_->initial_engine("127.0.0.1", 8089);
   tracethreat_controller_->send(&msgReq, msgResp);
 	tracethreat_controller_->loop();
+  tracethreat_controller_->break_loop();
 }
