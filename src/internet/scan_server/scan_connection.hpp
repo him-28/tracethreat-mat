@@ -64,7 +64,6 @@ namespace internet
 {
     namespace asio = boost::asio;
 
-    namespace h_util = hnmav_util;
 
     class scan_connection	 : public boost::enable_shared_from_this<scan_connection>
     {

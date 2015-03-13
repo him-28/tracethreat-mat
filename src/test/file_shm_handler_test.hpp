@@ -79,13 +79,14 @@ TEST_F(InitFileSHMHandler, insert_multiple_file)
 {
 
 
-    file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  fileoffset_h;
+    file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>  * fileoffset_h = 
+         new file_offset_handler<struct common_filetype, struct MAPPED_FILE_PE>();
 
-    EXPECT_TRUE(fileoffset_h.mapped_file(file_type_vec, mapped_file_vec, fileoffset_h, file_sig));
+    EXPECT_TRUE(fileoffset_h->mapped_file(file_type_vec, mapped_file_vec, *fileoffset_h, file_sig));
 
     uint64_t sum_file_size = 0;
     boost::shared_ptr<std::vector<MAPPED_FILE_PE *> >  mappedf_vec_ptr = 
-				fileoffset_h.get_mappedf_vec_ptr();
+				fileoffset_h->get_mappedf_vec_ptr();
 
 		std::vector<MAPPED_FILE_PE *> * mapped_file_pe_vec = mappedf_vec_ptr.get();
 
@@ -107,11 +108,11 @@ TEST_F(InitFileSHMHandler, insert_multiple_file)
     }
 
 		uuid_generator uuid_gen;
-    file_shm_handler<MAPPED_FILE_PE>  f_shm_handler;
-		f_shm_handler.set_shm_name(uuid_gen.generate());	
-    f_shm_handler.initial_shm(sum_file_size);
-    f_shm_handler.initial_file_shm(mapped_file_pe_vec);
-    f_shm_handler.delete_file_shm();
+    file_shm_handler<MAPPED_FILE_PE>  * f_shm_handler = new file_shm_handler<MAPPED_FILE_PE>();
+		f_shm_handler->set_shm_name(uuid_gen.generate());	
+    f_shm_handler->initial_shm(sum_file_size);
+    f_shm_handler->initial_file_shm(mapped_file_pe_vec);
+    f_shm_handler->delete_file_shm();
     //f_shm_handler.list_detail_shm(file_name_md5);
     //EXPECT_TRUE(fileoffset_h.unmapped_file(mapped_file_vec));
 

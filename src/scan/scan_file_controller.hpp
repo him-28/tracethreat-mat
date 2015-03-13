@@ -45,7 +45,6 @@ namespace policy
     using namespace utils;
 
     namespace fpolicy = policy;
-    namespace h_util = hnmav_util;
 
     template<typename MAPPED_FILE>
     class scan_internet_controller
@@ -129,8 +128,8 @@ namespace policy
             fpolicy::pe_policy_is<fpolicy::pe_file_policy<MAPPED_FILE_PE>, MAPPED_FILE_PE>
             > sf_policy;
 
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
 
     }; // scan_internet_controller
@@ -195,8 +194,8 @@ namespace policy
             fpolicy::pe_policy_is<fpolicy::pe_file_policy<MAPPED_FILE_ELF>, MAPPED_FILE_ELF>
             > sf_policy;
 
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
 
     }; // scan_internet_controller

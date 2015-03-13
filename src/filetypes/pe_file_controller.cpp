@@ -33,7 +33,7 @@ namespace filetypes
     {
         //PE_FILE_CONTROLLER call AC-DFS algorithms.
         logger->write_info("Start pe_file_controller<MAPPED_FILE>::scan actire-parallel tbb",
-                hnmav_util::format_type::type_header);
+                utils::format_type::type_header);
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
 

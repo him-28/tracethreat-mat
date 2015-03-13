@@ -1,5 +1,5 @@
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 R.Chatsiri, Inc.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 #include "logger/clutil_logger.hpp"
 
-namespace  hnmav_util
+namespace  utils
 {
 
     template<typename CONT, typename CONT1>
@@ -42,41 +42,43 @@ namespace  hnmav_util
 
         if(logging_instance == NULL) {
             std::cout<<" Logging not get instance , It's create new instance " <<std::endl;
-            logging_instance = new shared_ptr<clutil_logging<CONT, CONT1> >(new clutil_logging<CONT, CONT1>());
+            logging_instance = new shared_ptr<clutil_logging<CONT, CONT1> >(
+                    new clutil_logging<CONT, CONT1>() 
+            );
         }
 
         return  *logging_instance;
 
     }
+
     template<typename CONT, typename CONT1>
     clutil_logging<CONT, CONT1>::clutil_logging()
     {
         //backend
     }
 
+
     template<typename CONT, typename CONT1>
     clutil_logging<CONT, CONT1>::~clutil_logging()
     {
-        for(std::vector<shared_ptr<sinks::synchronous_sink<
-                sinks::text_multifile_backend> >
-                >::iterator iter = sinks_vec.begin();
-                iter != sinks_vec.end();
-                ++iter) {
-            shared_ptr<sinks::synchronous_sink< sinks::text_multifile_backend> > syn_sinks_ptr = *iter;
-            syn_sinks_ptr.reset();
-        }
+
     }
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(CONT  const& write_info)
     {
-        BOOST_LOG(write_log::get())<< write_info;
+        //BOOST_LOG(write_log::get())<< write_info;
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
+				src::severity_logger<> lg = global_lg::get();
+        BOOST_LOG_SEV(lg, severity_level::normal) << write_info;
+
+
     }
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(CONT  const& write_detail, CONT const& write_info)
     {
-        BOOST_LOG(write_log::get())<< write_detail << " : " << write_info;
+        //BOOST_LOG(write_log::get())<< write_detail << " : " << write_info;
     }
 
 
@@ -87,10 +89,6 @@ namespace  hnmav_util
 
         std::vector<std::string> *list_info = format_info.get_str_format();
 
-        for(std::vector<std::string>::iterator iter_log = list_info->begin();
-                iter_log !=  list_info->end() ;
-                ++iter_log)
-            BOOST_LOG(write_log::get())<< *iter_log;
     }
 
 
@@ -104,130 +102,117 @@ namespace  hnmav_util
 
         std::vector<std::string> *list_header = format_log_header.get_str_format();
 
-        for(std::vector<std::string>::iterator iter_log = list_header->begin();
-                iter_log !=  list_header->end() ;
-                ++iter_log)
-            BOOST_LOG(write_log::get())<< *iter_log;
-
         // Info
         format_logger<std::string,int>  format_log_detail(write_detail, type);
 
         std::vector<std::string> *list_detail = format_log_detail.get_str_format();
 
-        for(std::vector<std::string>::iterator iter_log = list_detail->begin();
-                iter_log !=  list_detail->end() ;
-                ++iter_log)
-            BOOST_LOG(write_log::get())<< *iter_log;
     }
 
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(char const& write_info)
     {
-        BOOST_LOG(write_log::get()) << write_info;
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
+				src::severity_logger<> lgx = global_lg::get();
+        BOOST_LOG_SEV(lgx, severity_level::normal) << write_info;
     }
 
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info_test(CONT  const& write_detail, CONT const& write_info)
     {
-        BOOST_LOG(write_log::get())<< "[TEST]: " << write_detail << " : " << write_info;
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
+				src::severity_logger<> lg = global_lg::get();
+        BOOST_LOG_SEV(lg, severity_level::normal) << "[TEST]: " << write_detail << " : " << write_info;
     }
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info_test(CONT const& write_info)
     {
-        BOOST_LOG(write_log::get()) << "[TEST]: " << write_info;
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
+				src::severity_logger<> lg = global_lg::get();
+        BOOST_LOG_SEV(lg, severity_level::normal) << "[TEST]: " << write_info;
     }
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_warning(CONT const& write_warning)
     {
-        BOOST_LOG(write_log::get())<< write_warning;
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_wraning");
+ 				src::severity_logger<> lg = global_lg::get();
+        BOOST_LOG_SEV(lg, severity_level::warning) << write_warning;
     }
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_error(CONT const& write_error)
     {
-        BOOST_LOG(write_log::get())<< write_error;
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_error");
+				src::severity_logger<> lg = global_lg::get();
+        BOOST_LOG_SEV(lg, severity_level::error) << write_error;
     }
 
     template<typename CONT, typename CONT1>
-    void clutil_logging<CONT, CONT1>::formatter_normal()
+    void clutil_logging<CONT, CONT1>::init_backend(severity_level sev_level)
     {
-        file_sink_ptr sinks_ptr = sinks_vec.back();
 
-        sinks_ptr->locked_backend()->set_formatter(
-                fmt::format("%1%:- [%2%] :- %3% ")
-                % fmt::attr< unsigned int >("Line #")
-                % fmt::date_time< boost::posix_time::ptime >("TimeStamp")
-                % fmt::message()
+        sinks_tos_backend = boost::make_shared<sinks::text_multifile_backend>();
+
+
+        sinks_tos_backend->set_file_name_composer
+        (
+                sinks::file::as_file_name_composer(expr::stream 
+                        << logger_file_path.back()
+                        << expr::attr< std::string >("SeverityID")
+                        << ".log")
         );
 
-    }
-    template<typename CONT, typename CONT1>
-    void clutil_logging<CONT, CONT1>::formatter_error()
-    {
-        file_sink_ptr sinks_ptr = sinks_vec.back();
+        boost::shared_ptr<sink_type> sink_(new sink_type(sinks_tos_backend));
 
-        sinks_ptr->locked_backend()->set_formatter(
-                fmt::format("%1%:- [%2%] Error :- %3% ")
-                % fmt::attr< unsigned int >("Line #")
-                % fmt::date_time< boost::posix_time::ptime >("TimeStamp")
-                % fmt::message()
+        sink_->set_formatter(
+                expr::stream
+                << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
+                << ", " << expr::attr< unsigned int >("RecordID")
+                << ", " <<expr::smessage
+
         );
 
-    }
+        switch(sev_level) {
 
+        case severity_level::normal :
+            sink_->set_filter(expr::attr<int>("Severity") == severity_level::normal);
+            break;
 
-    template<typename CONT, typename CONT1>
-    void clutil_logging<CONT, CONT1>::init_backend()
-    {
-        std::cout<<" Init logging backend()..." <<std::endl;
-        /*
-        				std::ifstream file_settings(logger_settings_path.c_str());
-        				if(!file_settings)
-        				{
-        					std::cout<< "cannot open file = " << logger_settings_path<<", using default configure" <<std::endl;
+        case severity_level::warning :
+            sink_->set_filter(expr::attr<int>("Severity") == severity_level::warning);
 
-        				}
-        				else
-        				{
-        					logging::init_from_stream(file_settings);
-        				}
-        */
-        file_sink_ptr sinks_ptr  = shared_ptr<sinks::synchronous_sink
-                < sinks::text_multifile_backend> >(new file_sink);
+            break;
 
-        for(std::vector<std::string>::iterator  iter = logger_file_path.begin();
-                iter != logger_file_path.end();
-                ++iter) {
-            sinks_ptr->locked_backend()->set_file_name_composer(
-                    fmt::stream<< *iter << ".log");
-            std::cout<<" logger path = " << *iter <<std::endl;
+        case severity_level::error :
+            sink_->set_filter(expr::attr<int>("Severity") == severity_level::error);
+
+            break;
+
+        default:
+            std::cout<<"Severity Log not supported.";
+            break;
         }
 
-        sinks_vec.push_back(sinks_ptr);
+        logging::core::get()->add_sink(sink_);
 
+
+        logging::core::get()->add_global_attribute("TimeStamp", attrs::local_clock());
+        logging::core::get()->add_global_attribute("RecordID", attrs::counter< unsigned int >());
 
     }
 
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::init_frontend()
     {
-        std::cout<<" Init logging frontend()..." <<std::endl;
-        core_ptr core = logging::core::get();
-        core->get()->add_sink(sinks_vec.back());
-
-        // Add some attributes too
-        shared_ptr< logging::attribute > attr(new attrs::local_clock);
-        core->get()->add_global_attribute("TimeStamp", attr);
-        attr.reset(new attrs::counter< unsigned int >);
-        core->get()->add_global_attribute("Line #", attr);
 
 
-        frontend_core_vec.push_back(core);
+
     }
+
 
     template class clutil_logging<std::string, int>;
 

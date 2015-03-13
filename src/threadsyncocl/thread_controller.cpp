@@ -30,9 +30,9 @@ namespace controller
         : runnable_(boost::shared_ptr<runnable>()), detached_(detached)
     {
         //logger
-        //logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        //logger_ptr = &utils::clutil_logging<std::string, int>:: get_instance();
         //logger = logger_ptr->get();
-        //logger->write_info("Thread, Thread init/ not start ", h_util::format_type::type_header);
+        //logger->write_info("Thread, Thread init/ not start ", utils::format_type::type_header);
     }
 
 
@@ -163,7 +163,7 @@ namespace controller
         //Mutex buffer locks mutex,
 
         logger->write_info("Comm_thread_buffer::run(), Before to critical section.",
-                h_util::format_type::type_center);
+                utils::format_type::type_center);
 
         uint64_t found_size = 0;
         uint8_t  summary_status = 0;
@@ -259,7 +259,7 @@ namespace controller
             if(summary_status == map_tid.size()) {
 
                 logger->write_info("Comm_thread_buffer::run(), Task end, completed jobs",
-                        h_util::format_type::type_center);
+                        utils::format_type::type_center);
                 //this->thread_cancel();
                 break;
             }

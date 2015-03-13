@@ -15,9 +15,9 @@ namespace utils
 
     namespace connector
     {
-				namespace h_util = hnmav_util;
+				//namespace utils = hnmav_util;
         //struct meta_sig, class file structure.
-        template<typename MessageResult, typename FileStructure>
+        template<typename MessageResult>
         class result_infected
         {
 
@@ -42,26 +42,26 @@ namespace utils
                 impl *m_impl;
 
                 //logger
-                boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-                h_util::clutil_logging<std::string, int>    *logger;
+                boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+                utils::clutil_logging<std::string, int>    *logger;
 
 
         };
 
-        template<typename MessageResult, typename FileStructure>
+        template<typename MessageResult>
         class result_pe_infected
         {
                 typedef boost::unordered_map<char, MessageResult*> sigtype_map;
             public:
                 bool add_infected_result(MessageResult *msig);
-                bool list_index_found(MessageResult *sig_, FileStructure   *file_str_);
+                bool list_index_found(MessageResult *sig_);
 
             private:
                 sigtype_map sig_map;
 
                 //logger
-                boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-                h_util::clutil_logging<std::string, int>    *logger;
+                boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+                utils::clutil_logging<std::string, int>    *logger;
 
         };
 

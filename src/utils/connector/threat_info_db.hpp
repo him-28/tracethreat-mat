@@ -50,8 +50,8 @@ namespace utils
                 const char *url;
                 const char *port;
 
-                boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-                h_util::clutil_logging<std::string, int>    *logger;
+                boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+                utils::clutil_logging<std::string, int>    *logger;
 
         };
 

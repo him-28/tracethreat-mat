@@ -16,7 +16,7 @@
 namespace controller
 {
 
-    namespace exceptions = hnmav_exception::controller;
+    namespace exceptions = trace_exception::controller;
 	
     class tbbpostscan_pe_task : public Runnable
     {

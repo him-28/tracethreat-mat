@@ -1,5 +1,5 @@
-#ifndef  UTIL__FILE_HANDLER_HPP
-#define  UTIL__FILE_HANDLER_HPP
+#ifndef  UTILS_FILE_HANDLER_HPP
+#define  UTILS_FILE_HANDLER_HPP
 
 #include <iostream>
 #include <fstream>
@@ -19,7 +19,7 @@
 namespace utils
 {
 
-    namespace h_util = hnmav_util;
+    //namespace utils = hnmav_util;
 
     struct common_filetype {
         typedef FILE file_ptr;
@@ -102,8 +102,8 @@ namespace utils
             const char *file_path;
             std::vector<std::string> file_path_vec;
 
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

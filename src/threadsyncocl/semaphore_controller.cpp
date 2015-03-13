@@ -1,5 +1,5 @@
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 Chatsiri Rattana.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ namespace controller
     bool mutex_buffer<Mutex>::init()
     {
         // logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        logger_ptr = &utils::clutil_logging<std::string, int>:: get_instance();
         logger = logger_ptr->get();
 
 

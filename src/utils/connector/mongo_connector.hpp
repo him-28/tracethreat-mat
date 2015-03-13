@@ -32,7 +32,7 @@ namespace utils
     namespace connector
     {
         //using namespace mongo;
-				namespace h_util = hnmav_util;
+				//namespace utils = hnmav_util;
 
         template<typename MessageType, typename DBConnector = mongo::DBClientConnection>
         class mongo_connector : public iconnector<MessageType, DBConnector>
@@ -106,8 +106,8 @@ namespace utils
 
                 bool flag_connect;
 					
-								boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-							  h_util::clutil_logging<std::string, int>    *logger;
+								boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+							  utils::clutil_logging<std::string, int>    *logger;
         };
 
 

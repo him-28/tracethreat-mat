@@ -22,7 +22,6 @@
 namespace policy
 {
 
-    namespace h_util = hnmav_util;
     namespace ftypes = filetypes;
     //using namespace filetypes;
     using utils::file_scan_result;
@@ -225,8 +224,8 @@ namespace policy
             file_scan_policy<MAPPED_FILE> *f_col_policy;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
         protected :
             std::vector<char> *node_symbol_vec;
@@ -320,8 +319,8 @@ namespace policy
 
         private:
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
             typedef file_policy_selector<FilePolicySetter>  policy;
 						
@@ -444,8 +443,8 @@ namespace policy
 
 						threatinfo_vec_type threatinfo_vec;
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

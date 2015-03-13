@@ -12,8 +12,6 @@
 namespace controller
 {
 
-		namespace h_util = hnmav_util;
-
     template<typename MAPPED_FILE>
     class cliprescan_pe_controller
     {
@@ -42,8 +40,8 @@ namespace controller
 
 
 						//logger
-            //boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            //h_util::clutil_logging<std::string, int>    *logger;
+            //boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            //utils::clutil_logging<std::string, int>    *logger;
 
     };
 

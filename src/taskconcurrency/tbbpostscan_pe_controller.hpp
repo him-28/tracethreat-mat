@@ -20,7 +20,6 @@ namespace controller
 {
 
     namespace shm_memory = memory;
-    namespace h_util = hnmav_util;
 
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
     class tbbpostscan_pe_controller
@@ -100,8 +99,8 @@ namespace controller
             tbbscan::result_callback<std::vector<threatinfo_type *>, threatinfo_type> res_callback;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
     };
 
 }

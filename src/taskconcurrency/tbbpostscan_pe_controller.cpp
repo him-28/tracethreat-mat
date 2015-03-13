@@ -31,7 +31,7 @@ namespace controller
     {
 
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, Start Load data to task",
-                hnmav_util::format_type::type_center);
+                utils::format_type::type_center);
 
         //[x] Get all data from mapped_file_vec for invoke file_name in order hash data.
         //[x]  Insert binary from File-SHM to write_binary_hex is contains all binary hex file.
@@ -148,7 +148,7 @@ namespace controller
         }//for
 
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, End Load data to task",
-                hnmav_util::format_type::type_center);
+                utils::format_type::type_center);
         return true;
     }
 
@@ -173,7 +173,7 @@ namespace controller
     task_start()
     {
         logger->write_info("tbbpostscan_pe_controller::task_start, Start Task",
-                hnmav_util::format_type::type_center);
+                utils::format_type::type_center);
 
         logger->write_info("tbbpostscan_pe_controller::task_start, Task size",
                 boost::lexical_cast<std::string>(tasks_tbbscan_pe.size()));

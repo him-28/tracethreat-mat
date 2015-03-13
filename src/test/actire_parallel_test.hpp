@@ -13,7 +13,7 @@ class InitDataAcTireParallel : public ::testing::Test
 {
 		public:
 
-    typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+    typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
     typedef	std::vector<threatinfo_type *>  rcb_container_type;
 

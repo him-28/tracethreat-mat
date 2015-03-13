@@ -9,7 +9,7 @@
 #include "ocl/utils/clutil_commandqueue.hpp"
 
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     void commandqueue::set_buffer_elements(std::size_t& buffer_elements_)

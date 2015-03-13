@@ -73,9 +73,8 @@ namespace filetypes
 {
 
 
-    namespace h_util = hnmav_util;
     namespace dstr   = data_structure;
-    namespace kernel_ocl = hnmav_kernel;
+    namespace kernel_ocl = kernel;
 
     using memory::signature_shm;
     using utils::uuid_generator;
@@ -213,8 +212,8 @@ namespace filetypes
             typename pe_file_controller<MAPPED_FILE>::load_ocl_system_type load_ocl_system;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
     };
 
 }

@@ -12,7 +12,7 @@ namespace controller
     //thread_manager
     using boost::shared_ptr;
     using boost::dynamic_pointer_cast;
-		namespace exceptions = hnmav_exception::controller;
+		namespace exceptions = trace_exception::controller;
     /**
      * thread_manager class
      *

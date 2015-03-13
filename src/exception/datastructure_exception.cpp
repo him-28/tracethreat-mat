@@ -1,6 +1,6 @@
 
 #include "exception/datastructure_exception.hpp"
-namespace hnmav_exception
+namespace trace_exception
 {
     namespace container
     {

@@ -23,7 +23,7 @@
 
 
 //#2 -stable
-//#include "test/file_policy_test.hpp"         // PE fist file policy class
+#include "test/file_policy_test.hpp"
 
 //#1
 //#include "test/thread_sync_test.hpp"
@@ -33,7 +33,7 @@
 
 // Ac_tire_test & actire_concurrency_test for thread building block concurrency.
 //#include "test/ac_tire_test.hpp"
-#include "test/actire_parallel_test.hpp"
+//#include "test/actire_parallel_test.hpp"
 //#include "test/actire_concurrency_test.hpp"
 
 // AC Engine TBB

@@ -13,7 +13,7 @@
 //
 namespace controller
 {
-    namespace exceptions = hnmav_exception::controller;
+    namespace exceptions = trace_exception::controller;
 
     class cliprescan_pe_task : public Runnable
     {
