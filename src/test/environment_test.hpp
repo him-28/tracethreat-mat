@@ -28,9 +28,6 @@ class SystemTestingEnvironment : public testing::Environment
             logger->add_logger(logger_main_file);
             logger->add_settings(logger_settings);
             logger->init_backend(utils::severity_level::normal);
-            //logger->formatter_normal();
-            //logger->init_frontend();
-						std::cout<<"Start Environment test..." <<std::endl;
 
             logger->write_info("Init System logger start : SystemTestingEnvironment");
 

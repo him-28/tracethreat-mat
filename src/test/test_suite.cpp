@@ -23,7 +23,7 @@
 
 
 //#2 -stable
-#include "test/file_policy_test.hpp"
+//#include "test/file_policy_test.hpp"
 
 //#1
 //#include "test/thread_sync_test.hpp"
@@ -67,7 +67,7 @@
 
 //#include "test/wrapper_rules_tests.hpp"
 
-//#include "test/md5_hash_test.hpp"
+#include "test/md5_hash_test.hpp"
 
 GTEST_API_ int main(int argc, char **argv)
 {

@@ -66,64 +66,15 @@ TEST_F(FilePolicyTest, pe_file_policy)
 
         MAPPED_FILE_PE *mf_pe = *iter_mapped_file;
         unsigned char *data = mf_pe->data;
-        EXPECT_GT(mf_pe->size,0);
-
-        /*logger->write_info_test("Loop sync : mf_pe->size",
-        		boost::lexical_cast<std::string>(mf_pe->size));
-        logger->write_info_test("Loop sync : mf_pe->filename",
-        		boost::lexical_cast<std::string>(mf_pe->file_name));
-				*/
+        EXPECT_GT(mf_pe->size,0);				
 
         sum_file_size += mf_pe->size;
         ASSERT_TRUE(*data != NULL);
-				std::cout<<" Summary_file : " << sum_file_size <<std::endl;
-				std::cout<<" File name : " << sum_file_size <<std::endl;
     }
 
 
     //Assert
 
-    //pe_file_policy<struct MAPPED_FILE_PE>  pef_policy;// =  new pe_file_policy<struct MAPPED_FILE_PE>();
-    //4d5a9000030000000400";
-    const char str1[] = "e1fba0e00b409cd21b8014ccd215468";
-    std::vector<char>  nsymbol;
-    nsymbol.insert(nsymbol.end(), str1, str1 + strlen(str1));
-    printf("nsymbol size : %d \n", nsymbol.size());
-
-    std::vector<size_t> nstate;
-		for(int count_state = 0; count_state < 30; count_state++)
-		{
-				nstate.push_back(count_state);
-		}
-    //nstate.push_back(1); // test state only
-    printf("nstate size : %d \n", nstate.size());
-
-    file_scan_policy<struct MAPPED_FILE_PE> *pef_policy = new pe_file_policy<struct MAPPED_FILE_PE>();
-    //get signature base.
-    pef_policy->scan_ocl_controller(&nsymbol, &nstate);
-
-    pef_policy->set_opencl_file_path(opencl_file_path);
-
-    //get mapped file.
-    pef_policy->set_mapped_file(mapped_file_vec_ptr);
-
-    scan_file_policy<
-    MAPPED_FILE_PE,
-    pe_policy_is<pe_file_policy<MAPPED_FILE_PE>, MAPPED_FILE_PE>
-    > sf_policy;
-
-    sf_policy.scan_pe(pef_policy);
-
-    /*
-    EXPECT_TRUE(fileoffset_h.unmapped_file(*mapped_file_vec_ptr));
-    */
 
 };
-/*
-GTEST_API_ int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    testing::AddGlobalTestEnvironment( new SystemTestingEnvironment(argc, argv));
-    return RUN_ALL_TESTS();
-}
-*/
+

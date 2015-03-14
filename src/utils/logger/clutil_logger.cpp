@@ -43,7 +43,7 @@ namespace  utils
         if(logging_instance == NULL) {
             std::cout<<" Logging not get instance , It's create new instance " <<std::endl;
             logging_instance = new shared_ptr<clutil_logging<CONT, CONT1> >(
-                    new clutil_logging<CONT, CONT1>() 
+                    new clutil_logging<CONT, CONT1>()
             );
         }
 
@@ -67,9 +67,8 @@ namespace  utils
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(CONT  const& write_info)
     {
-        //BOOST_LOG(write_log::get())<< write_info;
         BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
-				src::severity_logger<> lg = global_lg::get();
+        src::severity_logger<> lg = global_lg::get();
         BOOST_LOG_SEV(lg, severity_level::normal) << write_info;
 
 
@@ -78,7 +77,9 @@ namespace  utils
     template<typename CONT, typename CONT1>
     void clutil_logging<CONT, CONT1>::write_info(CONT  const& write_detail, CONT const& write_info)
     {
-        //BOOST_LOG(write_log::get())<< write_detail << " : " << write_info;
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
+        src::severity_logger<> lg = global_lg::get();
+        BOOST_LOG_SEV(lg, severity_level::normal) << write_detail << " : " << write_info;
     }
 
 
@@ -88,6 +89,10 @@ namespace  utils
         format_logger<std::string,int>  format_info(write_info, type);
 
         std::vector<std::string> *list_info = format_info.get_str_format();
+
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
+        src::severity_logger<> lg = global_lg::get();
+        BOOST_LOG_SEV(lg, severity_level::normal) <<  &list_info[0];
 
     }
 
@@ -102,10 +107,18 @@ namespace  utils
 
         std::vector<std::string> *list_header = format_log_header.get_str_format();
 
+        BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
+
+				src::severity_logger<> lg = global_lg::get();
+
+        BOOST_LOG_SEV(lg, severity_level::normal) << &list_header[0];
+
         // Info
         format_logger<std::string,int>  format_log_detail(write_detail, type);
 
         std::vector<std::string> *list_detail = format_log_detail.get_str_format();
+
+        BOOST_LOG_SEV(lg, severity_level::normal) << &list_detail[0];
 
     }
 
@@ -114,8 +127,8 @@ namespace  utils
     void clutil_logging<CONT, CONT1>::write_info(char const& write_info)
     {
         BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
-				src::severity_logger<> lgx = global_lg::get();
-        BOOST_LOG_SEV(lgx, severity_level::normal) << write_info;
+        src::severity_logger<> lg = global_lg::get();
+        BOOST_LOG_SEV(lg, severity_level::normal) << write_info;
     }
 
 
@@ -123,7 +136,7 @@ namespace  utils
     void clutil_logging<CONT, CONT1>::write_info_test(CONT  const& write_detail, CONT const& write_info)
     {
         BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
-				src::severity_logger<> lg = global_lg::get();
+        src::severity_logger<> lg = global_lg::get();
         BOOST_LOG_SEV(lg, severity_level::normal) << "[TEST]: " << write_detail << " : " << write_info;
     }
 
@@ -131,7 +144,7 @@ namespace  utils
     void clutil_logging<CONT, CONT1>::write_info_test(CONT const& write_info)
     {
         BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_normal");
-				src::severity_logger<> lg = global_lg::get();
+        src::severity_logger<> lg = global_lg::get();
         BOOST_LOG_SEV(lg, severity_level::normal) << "[TEST]: " << write_info;
     }
 
@@ -139,7 +152,7 @@ namespace  utils
     void clutil_logging<CONT, CONT1>::write_warning(CONT const& write_warning)
     {
         BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_wraning");
- 				src::severity_logger<> lg = global_lg::get();
+        src::severity_logger<> lg = global_lg::get();
         BOOST_LOG_SEV(lg, severity_level::warning) << write_warning;
     }
 
@@ -147,7 +160,7 @@ namespace  utils
     void clutil_logging<CONT, CONT1>::write_error(CONT const& write_error)
     {
         BOOST_LOG_SCOPED_THREAD_TAG("SeverityID", "tracethreattools_error");
-				src::severity_logger<> lg = global_lg::get();
+        src::severity_logger<> lg = global_lg::get();
         BOOST_LOG_SEV(lg, severity_level::error) << write_error;
     }
 
@@ -160,7 +173,7 @@ namespace  utils
 
         sinks_tos_backend->set_file_name_composer
         (
-                sinks::file::as_file_name_composer(expr::stream 
+                sinks::file::as_file_name_composer(expr::stream
                         << logger_file_path.back()
                         << expr::attr< std::string >("SeverityID")
                         << ".log")
