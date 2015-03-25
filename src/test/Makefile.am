@@ -12,16 +12,17 @@ environment_test.hpp
 
 
 test_suite_LDADD = -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadsyncocl \
- -lthreadsyncocl -lgtest -lgtest_main -ltbb_debug -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils \
- -lutils -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/exception \
- -lexception -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/data_structure \
- -ldstr  -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/filetypes \
- -lfiletypes -L/home/chatsiri/workspacecpp/boost-truck/stage/lib \
- -lboost_system -lboost_program_options -lboost_thread \
- -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan \
- -lscan -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/memory \
- -lmemory -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl \
- -locl -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadconcurrency \
- -lthreadconcurrency -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/clibasewrapper \
- -lclibasewrapper -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/tbbscan \
- -ltbbscan $(AM_LDFLAGS)
+ -lthreadsyncocl -lgtest -lgtest_main -ltbb_debug  \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/utils -lutils \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/exception -lexception \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/data_structure -ldstr \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/filetypes -lfiletypes \
+ -L/home/chatsiri/sda1/workspacecpp/boost_1_57_0/stage/lib \
+ -lboost_filesystem-mt -lboost_system-mt -lboost_program_options-mt -lboost_regex-mt \
+ -lboost_thread-mt -lboost_log-mt -lboost_exception-mt\
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/scan -lscan \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/memory -lmemory \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/ocl -locl \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/threadconcurrency -lthreadconcurrency \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/clibasewrapper  -lclibasewrapper \
+ -L/home/chatsiri/workspacecpp/pthread_sync_ocl/src/tbbscan -ltbbscan $(AM_LDFLAGS)

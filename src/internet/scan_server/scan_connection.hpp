@@ -2,7 +2,7 @@
 #define INTERNET_SCAN_CONNECTION_HPP
 
 //Default timeout support client. We plan use configure from database configure of server service.
-#define TCP_SOCKET_TIMEOUT   600000000000000000
+#define TCP_SOCKET_TIMEOUT   60
 
 //#define NON_ENCRYPTION_ENULL eNULL
 

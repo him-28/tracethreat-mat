@@ -25,11 +25,12 @@ namespace filetypes
     * @return Message of Infected File detail in msg/ directory
     */
     template<typename MAPPED_FILE>
-    typename pe_file_controller<MAPPED_FILE>::threatinfo_vec_type &
+    typename pe_file_controller<MAPPED_FILE>::threatinfo_vec_type&
     pe_file_controller<MAPPED_FILE>::scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
-            signature_shm_type  *sig_shm,
-            signature_engine_type *sig_engine,
-            iactire_engine_scanner_type   *iactire_engine_scanner)
+            threatinfo_vec_type         *threatinfo_vec,
+            signature_shm_type          *sig_shm,
+            signature_engine_type       *sig_engine,
+            iactire_engine_scanner_type *iactire_engine_scanner)
     {
         //PE_FILE_CONTROLLER call AC-DFS algorithms.
         logger->write_info("Start pe_file_controller<MAPPED_FILE>::scan actire-parallel tbb",
@@ -45,6 +46,13 @@ namespace filetypes
                 ++iter_mapped_files) {
             MAPPED_FILE   *mf_pe = *iter_mapped_files;
             summary_file_size += mf_pe->size;
+
+            logger->write_info("pe_file_controller<MAPPED_FILE>::scan, File Name : ",
+                    std::string(mf_pe->file_name));
+
+            logger->write_info("pe_file_controller<MAPPED_FILE>::scan, UUID : ",
+                    std::string(threatinfo_vec->at(iter_mapped_files - mapped_file_pe->begin())->uuid()));
+
         }//end-for loop
 
         f_shm_handler.set_shm_name(uuid_gen.generate());
@@ -61,7 +69,8 @@ namespace filetypes
         tbbpostscan_pe_col.init_syntbb_workload(f_shm_handler.get_map_str_shm(),
                 sig_shm,
                 f_shm_handler.get_map_file_size(),
-                mapped_file_pe);
+                mapped_file_pe,
+                threatinfo_vec);
 
         tbbpostscan_pe_col.task_start();
 

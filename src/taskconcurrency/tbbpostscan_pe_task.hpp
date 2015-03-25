@@ -63,7 +63,9 @@ namespace controller
 
 						threatinfo_type * get_threatinfo_ptr();
 
-						threatinfo_vec_type & get_threatinfo();
+						threatinfo_vec_type & get_threatinfo_vec();
+
+						bool set_threatinfo_vec(threatinfo_vec_type * _threatinfo_vec);
 
             void run();
 					 
@@ -102,6 +104,8 @@ namespace controller
 						threatinfo_type *    threatinfo;			
 	
 						threatinfo_vec_type  threatinfo_vec;	
+				
+						threatinfo_vec_type * threatinfo_vec_;
     };
 
 }

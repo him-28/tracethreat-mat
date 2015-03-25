@@ -54,9 +54,10 @@ namespace controller
             //Signature use map signature file. (Support SIG-SHM: Plan-00004 )
             bool init_syntbb_workload(
                     typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
-                    signature_shm_type   *sig_shm,
-                    std::map<const uint64_t , size_t> *map_file_size,
-                    std::vector<MAPPED_FILE *>         *mapped_file_vec);
+                    signature_shm_type                  *sig_shm,
+                    std::map<const uint64_t , size_t>   *map_file_size,
+                    std::vector<MAPPED_FILE *>          *mapped_file_vec,
+                    threatinfo_vec_type                 *threatinfo_vec);
 
             //add signature engine.
             bool add_sig_engine(actire_sig_engine_type *_actire_engine);
@@ -69,8 +70,8 @@ namespace controller
 
             threatinfo_vec_type& get_threatinfo() {
 
-							//	logger->write_info("Result threat infomation size " << 
-							//			boost::lexical_cast<std::string>(res_callback.get_result().size()));
+                //	logger->write_info("Result threat infomation size " <<
+                //			boost::lexical_cast<std::string>(res_callback.get_result().size()));
 
                 //treatinfo_vec.swap(res_callback.get_result());
                 return res_callback.get_result();

@@ -149,8 +149,9 @@ namespace filetypes
             //utils::scan_file_code
             threatinfo_vec_type &
             scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
-                    signature_shm_type  *sig_shm,
-                    signature_engine_type *sig_engine,
+								    threatinfo_vec_type     *threatinfo_vec,
+                    signature_shm_type      *sig_shm,
+                    signature_engine_type   *sig_engine,
                     iactire_engine_scanner_type   *iactire_engine_scanner);
 
 

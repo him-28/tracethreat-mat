@@ -325,6 +325,42 @@ class RequestScan_GetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::RequestScan_FileStatus file_status() const;
   inline void set_file_status(::message_scan::RequestScan_FileStatus value);
 
+  // optional bytes uuid = 7;
+  inline bool has_uuid() const;
+  inline void clear_uuid();
+  static const int kUuidFieldNumber = 7;
+  inline const ::std::string& uuid() const;
+  inline void set_uuid(const ::std::string& value);
+  inline void set_uuid(const char* value);
+  inline void set_uuid(const void* value, size_t size);
+  inline ::std::string* mutable_uuid();
+  inline ::std::string* release_uuid();
+  inline void set_allocated_uuid(::std::string* uuid);
+
+  // optional bytes ip = 8;
+  inline bool has_ip() const;
+  inline void clear_ip();
+  static const int kIpFieldNumber = 8;
+  inline const ::std::string& ip() const;
+  inline void set_ip(const ::std::string& value);
+  inline void set_ip(const char* value);
+  inline void set_ip(const void* value, size_t size);
+  inline ::std::string* mutable_ip();
+  inline ::std::string* release_ip();
+  inline void set_allocated_ip(::std::string* ip);
+
+  // optional bytes machine_name = 9;
+  inline bool has_machine_name() const;
+  inline void clear_machine_name();
+  static const int kMachineNameFieldNumber = 9;
+  inline const ::std::string& machine_name() const;
+  inline void set_machine_name(const ::std::string& value);
+  inline void set_machine_name(const char* value);
+  inline void set_machine_name(const void* value, size_t size);
+  inline ::std::string* mutable_machine_name();
+  inline ::std::string* release_machine_name();
+  inline void set_allocated_machine_name(::std::string* machine_name);
+
   // @@protoc_insertion_point(class_scope:message_scan.RequestScan.GetBinaryValue)
  private:
   inline void set_has_binary();
@@ -339,6 +375,12 @@ class RequestScan_GetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_file_type();
   inline void set_has_file_status();
   inline void clear_has_file_status();
+  inline void set_has_uuid();
+  inline void clear_has_uuid();
+  inline void set_has_ip();
+  inline void clear_has_ip();
+  inline void set_has_machine_name();
+  inline void clear_has_machine_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -347,10 +389,13 @@ class RequestScan_GetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  ::std::string* uuid_;
+  ::std::string* ip_;
+  ::std::string* machine_name_;
   int file_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -467,6 +512,42 @@ class RequestScan_SetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::RequestScan_FileStatus file_status() const;
   inline void set_file_status(::message_scan::RequestScan_FileStatus value);
 
+  // optional bytes uuid = 7;
+  inline bool has_uuid() const;
+  inline void clear_uuid();
+  static const int kUuidFieldNumber = 7;
+  inline const ::std::string& uuid() const;
+  inline void set_uuid(const ::std::string& value);
+  inline void set_uuid(const char* value);
+  inline void set_uuid(const void* value, size_t size);
+  inline ::std::string* mutable_uuid();
+  inline ::std::string* release_uuid();
+  inline void set_allocated_uuid(::std::string* uuid);
+
+  // optional bytes ip = 8;
+  inline bool has_ip() const;
+  inline void clear_ip();
+  static const int kIpFieldNumber = 8;
+  inline const ::std::string& ip() const;
+  inline void set_ip(const ::std::string& value);
+  inline void set_ip(const char* value);
+  inline void set_ip(const void* value, size_t size);
+  inline ::std::string* mutable_ip();
+  inline ::std::string* release_ip();
+  inline void set_allocated_ip(::std::string* ip);
+
+  // optional bytes machine_name = 9;
+  inline bool has_machine_name() const;
+  inline void clear_machine_name();
+  static const int kMachineNameFieldNumber = 9;
+  inline const ::std::string& machine_name() const;
+  inline void set_machine_name(const ::std::string& value);
+  inline void set_machine_name(const char* value);
+  inline void set_machine_name(const void* value, size_t size);
+  inline ::std::string* mutable_machine_name();
+  inline ::std::string* release_machine_name();
+  inline void set_allocated_machine_name(::std::string* machine_name);
+
   // @@protoc_insertion_point(class_scope:message_scan.RequestScan.SetBinaryValue)
  private:
   inline void set_has_binary();
@@ -481,6 +562,12 @@ class RequestScan_SetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_file_type();
   inline void set_has_file_status();
   inline void clear_has_file_status();
+  inline void set_has_uuid();
+  inline void clear_has_uuid();
+  inline void set_has_ip();
+  inline void clear_has_ip();
+  inline void set_has_machine_name();
+  inline void clear_has_machine_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -489,10 +576,13 @@ class RequestScan_SetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  ::std::string* uuid_;
+  ::std::string* ip_;
+  ::std::string* machine_name_;
   int file_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -933,6 +1023,42 @@ class ResponseScan_GetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::ResponseScan_FileStatus file_status() const;
   inline void set_file_status(::message_scan::ResponseScan_FileStatus value);
 
+  // optional bytes uuid = 7;
+  inline bool has_uuid() const;
+  inline void clear_uuid();
+  static const int kUuidFieldNumber = 7;
+  inline const ::std::string& uuid() const;
+  inline void set_uuid(const ::std::string& value);
+  inline void set_uuid(const char* value);
+  inline void set_uuid(const void* value, size_t size);
+  inline ::std::string* mutable_uuid();
+  inline ::std::string* release_uuid();
+  inline void set_allocated_uuid(::std::string* uuid);
+
+  // optional bytes ip = 8;
+  inline bool has_ip() const;
+  inline void clear_ip();
+  static const int kIpFieldNumber = 8;
+  inline const ::std::string& ip() const;
+  inline void set_ip(const ::std::string& value);
+  inline void set_ip(const char* value);
+  inline void set_ip(const void* value, size_t size);
+  inline ::std::string* mutable_ip();
+  inline ::std::string* release_ip();
+  inline void set_allocated_ip(::std::string* ip);
+
+  // optional bytes machine_name = 9;
+  inline bool has_machine_name() const;
+  inline void clear_machine_name();
+  static const int kMachineNameFieldNumber = 9;
+  inline const ::std::string& machine_name() const;
+  inline void set_machine_name(const ::std::string& value);
+  inline void set_machine_name(const char* value);
+  inline void set_machine_name(const void* value, size_t size);
+  inline ::std::string* mutable_machine_name();
+  inline ::std::string* release_machine_name();
+  inline void set_allocated_machine_name(::std::string* machine_name);
+
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan.GetBinaryValue)
  private:
   inline void set_has_binary();
@@ -947,6 +1073,12 @@ class ResponseScan_GetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_file_type();
   inline void set_has_file_status();
   inline void clear_has_file_status();
+  inline void set_has_uuid();
+  inline void clear_has_uuid();
+  inline void set_has_ip();
+  inline void clear_has_ip();
+  inline void set_has_machine_name();
+  inline void clear_has_machine_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -955,10 +1087,13 @@ class ResponseScan_GetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  ::std::string* uuid_;
+  ::std::string* ip_;
+  ::std::string* machine_name_;
   int file_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -1075,6 +1210,42 @@ class ResponseScan_SetBinaryValue : public ::google::protobuf::Message {
   inline ::message_scan::ResponseScan_FileStatus file_status() const;
   inline void set_file_status(::message_scan::ResponseScan_FileStatus value);
 
+  // optional bytes uuid = 7;
+  inline bool has_uuid() const;
+  inline void clear_uuid();
+  static const int kUuidFieldNumber = 7;
+  inline const ::std::string& uuid() const;
+  inline void set_uuid(const ::std::string& value);
+  inline void set_uuid(const char* value);
+  inline void set_uuid(const void* value, size_t size);
+  inline ::std::string* mutable_uuid();
+  inline ::std::string* release_uuid();
+  inline void set_allocated_uuid(::std::string* uuid);
+
+  // optional bytes ip = 8;
+  inline bool has_ip() const;
+  inline void clear_ip();
+  static const int kIpFieldNumber = 8;
+  inline const ::std::string& ip() const;
+  inline void set_ip(const ::std::string& value);
+  inline void set_ip(const char* value);
+  inline void set_ip(const void* value, size_t size);
+  inline ::std::string* mutable_ip();
+  inline ::std::string* release_ip();
+  inline void set_allocated_ip(::std::string* ip);
+
+  // optional bytes machine_name = 9;
+  inline bool has_machine_name() const;
+  inline void clear_machine_name();
+  static const int kMachineNameFieldNumber = 9;
+  inline const ::std::string& machine_name() const;
+  inline void set_machine_name(const ::std::string& value);
+  inline void set_machine_name(const char* value);
+  inline void set_machine_name(const void* value, size_t size);
+  inline ::std::string* mutable_machine_name();
+  inline ::std::string* release_machine_name();
+  inline void set_allocated_machine_name(::std::string* machine_name);
+
   // @@protoc_insertion_point(class_scope:message_scan.ResponseScan.SetBinaryValue)
  private:
   inline void set_has_binary();
@@ -1089,6 +1260,12 @@ class ResponseScan_SetBinaryValue : public ::google::protobuf::Message {
   inline void clear_has_file_type();
   inline void set_has_file_status();
   inline void clear_has_file_status();
+  inline void set_has_uuid();
+  inline void clear_has_uuid();
+  inline void set_has_ip();
+  inline void clear_has_ip();
+  inline void set_has_machine_name();
+  inline void clear_has_machine_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1097,10 +1274,13 @@ class ResponseScan_SetBinaryValue : public ::google::protobuf::Message {
   ::google::protobuf::uint64 file_size_;
   int scan_type_;
   int file_type_;
+  ::std::string* uuid_;
+  ::std::string* ip_;
+  ::std::string* machine_name_;
   int file_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_message_5fscan_2eproto();
   friend void protobuf_AssignDesc_message_5fscan_2eproto();
@@ -1671,6 +1851,216 @@ inline void RequestScan_GetBinaryValue::set_file_status(::message_scan::RequestS
   file_status_ = value;
 }
 
+// optional bytes uuid = 7;
+inline bool RequestScan_GetBinaryValue::has_uuid() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void RequestScan_GetBinaryValue::set_has_uuid() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void RequestScan_GetBinaryValue::clear_has_uuid() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void RequestScan_GetBinaryValue::clear_uuid() {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    uuid_->clear();
+  }
+  clear_has_uuid();
+}
+inline const ::std::string& RequestScan_GetBinaryValue::uuid() const {
+  return *uuid_;
+}
+inline void RequestScan_GetBinaryValue::set_uuid(const ::std::string& value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void RequestScan_GetBinaryValue::set_uuid(const char* value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void RequestScan_GetBinaryValue::set_uuid(const void* value, size_t size) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_GetBinaryValue::mutable_uuid() {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  return uuid_;
+}
+inline ::std::string* RequestScan_GetBinaryValue::release_uuid() {
+  clear_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = uuid_;
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_GetBinaryValue::set_allocated_uuid(::std::string* uuid) {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    delete uuid_;
+  }
+  if (uuid) {
+    set_has_uuid();
+    uuid_ = uuid;
+  } else {
+    clear_has_uuid();
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes ip = 8;
+inline bool RequestScan_GetBinaryValue::has_ip() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void RequestScan_GetBinaryValue::set_has_ip() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void RequestScan_GetBinaryValue::clear_has_ip() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void RequestScan_GetBinaryValue::clear_ip() {
+  if (ip_ != &::google::protobuf::internal::kEmptyString) {
+    ip_->clear();
+  }
+  clear_has_ip();
+}
+inline const ::std::string& RequestScan_GetBinaryValue::ip() const {
+  return *ip_;
+}
+inline void RequestScan_GetBinaryValue::set_ip(const ::std::string& value) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(value);
+}
+inline void RequestScan_GetBinaryValue::set_ip(const char* value) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(value);
+}
+inline void RequestScan_GetBinaryValue::set_ip(const void* value, size_t size) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_GetBinaryValue::mutable_ip() {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  return ip_;
+}
+inline ::std::string* RequestScan_GetBinaryValue::release_ip() {
+  clear_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = ip_;
+    ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_GetBinaryValue::set_allocated_ip(::std::string* ip) {
+  if (ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete ip_;
+  }
+  if (ip) {
+    set_has_ip();
+    ip_ = ip;
+  } else {
+    clear_has_ip();
+    ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes machine_name = 9;
+inline bool RequestScan_GetBinaryValue::has_machine_name() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void RequestScan_GetBinaryValue::set_has_machine_name() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void RequestScan_GetBinaryValue::clear_has_machine_name() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void RequestScan_GetBinaryValue::clear_machine_name() {
+  if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
+    machine_name_->clear();
+  }
+  clear_has_machine_name();
+}
+inline const ::std::string& RequestScan_GetBinaryValue::machine_name() const {
+  return *machine_name_;
+}
+inline void RequestScan_GetBinaryValue::set_machine_name(const ::std::string& value) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(value);
+}
+inline void RequestScan_GetBinaryValue::set_machine_name(const char* value) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(value);
+}
+inline void RequestScan_GetBinaryValue::set_machine_name(const void* value, size_t size) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_GetBinaryValue::mutable_machine_name() {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  return machine_name_;
+}
+inline ::std::string* RequestScan_GetBinaryValue::release_machine_name() {
+  clear_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = machine_name_;
+    machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_GetBinaryValue::set_allocated_machine_name(::std::string* machine_name) {
+  if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete machine_name_;
+  }
+  if (machine_name) {
+    set_has_machine_name();
+    machine_name_ = machine_name;
+  } else {
+    clear_has_machine_name();
+    machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // RequestScan_SetBinaryValue
@@ -1904,6 +2294,216 @@ inline void RequestScan_SetBinaryValue::set_file_status(::message_scan::RequestS
   assert(::message_scan::RequestScan_FileStatus_IsValid(value));
   set_has_file_status();
   file_status_ = value;
+}
+
+// optional bytes uuid = 7;
+inline bool RequestScan_SetBinaryValue::has_uuid() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void RequestScan_SetBinaryValue::set_has_uuid() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void RequestScan_SetBinaryValue::clear_has_uuid() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void RequestScan_SetBinaryValue::clear_uuid() {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    uuid_->clear();
+  }
+  clear_has_uuid();
+}
+inline const ::std::string& RequestScan_SetBinaryValue::uuid() const {
+  return *uuid_;
+}
+inline void RequestScan_SetBinaryValue::set_uuid(const ::std::string& value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void RequestScan_SetBinaryValue::set_uuid(const char* value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void RequestScan_SetBinaryValue::set_uuid(const void* value, size_t size) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_SetBinaryValue::mutable_uuid() {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  return uuid_;
+}
+inline ::std::string* RequestScan_SetBinaryValue::release_uuid() {
+  clear_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = uuid_;
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_SetBinaryValue::set_allocated_uuid(::std::string* uuid) {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    delete uuid_;
+  }
+  if (uuid) {
+    set_has_uuid();
+    uuid_ = uuid;
+  } else {
+    clear_has_uuid();
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes ip = 8;
+inline bool RequestScan_SetBinaryValue::has_ip() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void RequestScan_SetBinaryValue::set_has_ip() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void RequestScan_SetBinaryValue::clear_has_ip() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void RequestScan_SetBinaryValue::clear_ip() {
+  if (ip_ != &::google::protobuf::internal::kEmptyString) {
+    ip_->clear();
+  }
+  clear_has_ip();
+}
+inline const ::std::string& RequestScan_SetBinaryValue::ip() const {
+  return *ip_;
+}
+inline void RequestScan_SetBinaryValue::set_ip(const ::std::string& value) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(value);
+}
+inline void RequestScan_SetBinaryValue::set_ip(const char* value) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(value);
+}
+inline void RequestScan_SetBinaryValue::set_ip(const void* value, size_t size) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_SetBinaryValue::mutable_ip() {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  return ip_;
+}
+inline ::std::string* RequestScan_SetBinaryValue::release_ip() {
+  clear_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = ip_;
+    ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_SetBinaryValue::set_allocated_ip(::std::string* ip) {
+  if (ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete ip_;
+  }
+  if (ip) {
+    set_has_ip();
+    ip_ = ip;
+  } else {
+    clear_has_ip();
+    ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes machine_name = 9;
+inline bool RequestScan_SetBinaryValue::has_machine_name() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void RequestScan_SetBinaryValue::set_has_machine_name() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void RequestScan_SetBinaryValue::clear_has_machine_name() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void RequestScan_SetBinaryValue::clear_machine_name() {
+  if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
+    machine_name_->clear();
+  }
+  clear_has_machine_name();
+}
+inline const ::std::string& RequestScan_SetBinaryValue::machine_name() const {
+  return *machine_name_;
+}
+inline void RequestScan_SetBinaryValue::set_machine_name(const ::std::string& value) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(value);
+}
+inline void RequestScan_SetBinaryValue::set_machine_name(const char* value) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(value);
+}
+inline void RequestScan_SetBinaryValue::set_machine_name(const void* value, size_t size) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RequestScan_SetBinaryValue::mutable_machine_name() {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  return machine_name_;
+}
+inline ::std::string* RequestScan_SetBinaryValue::release_machine_name() {
+  clear_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = machine_name_;
+    machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RequestScan_SetBinaryValue::set_allocated_machine_name(::std::string* machine_name) {
+  if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete machine_name_;
+  }
+  if (machine_name) {
+    set_has_machine_name();
+    machine_name_ = machine_name;
+  } else {
+    clear_has_machine_name();
+    machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------
@@ -2708,6 +3308,216 @@ inline void ResponseScan_GetBinaryValue::set_file_status(::message_scan::Respons
   file_status_ = value;
 }
 
+// optional bytes uuid = 7;
+inline bool ResponseScan_GetBinaryValue::has_uuid() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ResponseScan_GetBinaryValue::set_has_uuid() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ResponseScan_GetBinaryValue::clear_has_uuid() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ResponseScan_GetBinaryValue::clear_uuid() {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    uuid_->clear();
+  }
+  clear_has_uuid();
+}
+inline const ::std::string& ResponseScan_GetBinaryValue::uuid() const {
+  return *uuid_;
+}
+inline void ResponseScan_GetBinaryValue::set_uuid(const ::std::string& value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void ResponseScan_GetBinaryValue::set_uuid(const char* value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void ResponseScan_GetBinaryValue::set_uuid(const void* value, size_t size) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_GetBinaryValue::mutable_uuid() {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  return uuid_;
+}
+inline ::std::string* ResponseScan_GetBinaryValue::release_uuid() {
+  clear_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = uuid_;
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_GetBinaryValue::set_allocated_uuid(::std::string* uuid) {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    delete uuid_;
+  }
+  if (uuid) {
+    set_has_uuid();
+    uuid_ = uuid;
+  } else {
+    clear_has_uuid();
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes ip = 8;
+inline bool ResponseScan_GetBinaryValue::has_ip() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void ResponseScan_GetBinaryValue::set_has_ip() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void ResponseScan_GetBinaryValue::clear_has_ip() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void ResponseScan_GetBinaryValue::clear_ip() {
+  if (ip_ != &::google::protobuf::internal::kEmptyString) {
+    ip_->clear();
+  }
+  clear_has_ip();
+}
+inline const ::std::string& ResponseScan_GetBinaryValue::ip() const {
+  return *ip_;
+}
+inline void ResponseScan_GetBinaryValue::set_ip(const ::std::string& value) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(value);
+}
+inline void ResponseScan_GetBinaryValue::set_ip(const char* value) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(value);
+}
+inline void ResponseScan_GetBinaryValue::set_ip(const void* value, size_t size) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_GetBinaryValue::mutable_ip() {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  return ip_;
+}
+inline ::std::string* ResponseScan_GetBinaryValue::release_ip() {
+  clear_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = ip_;
+    ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_GetBinaryValue::set_allocated_ip(::std::string* ip) {
+  if (ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete ip_;
+  }
+  if (ip) {
+    set_has_ip();
+    ip_ = ip;
+  } else {
+    clear_has_ip();
+    ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes machine_name = 9;
+inline bool ResponseScan_GetBinaryValue::has_machine_name() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void ResponseScan_GetBinaryValue::set_has_machine_name() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void ResponseScan_GetBinaryValue::clear_has_machine_name() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void ResponseScan_GetBinaryValue::clear_machine_name() {
+  if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
+    machine_name_->clear();
+  }
+  clear_has_machine_name();
+}
+inline const ::std::string& ResponseScan_GetBinaryValue::machine_name() const {
+  return *machine_name_;
+}
+inline void ResponseScan_GetBinaryValue::set_machine_name(const ::std::string& value) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(value);
+}
+inline void ResponseScan_GetBinaryValue::set_machine_name(const char* value) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(value);
+}
+inline void ResponseScan_GetBinaryValue::set_machine_name(const void* value, size_t size) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_GetBinaryValue::mutable_machine_name() {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  return machine_name_;
+}
+inline ::std::string* ResponseScan_GetBinaryValue::release_machine_name() {
+  clear_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = machine_name_;
+    machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_GetBinaryValue::set_allocated_machine_name(::std::string* machine_name) {
+  if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete machine_name_;
+  }
+  if (machine_name) {
+    set_has_machine_name();
+    machine_name_ = machine_name;
+  } else {
+    clear_has_machine_name();
+    machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // ResponseScan_SetBinaryValue
@@ -2941,6 +3751,216 @@ inline void ResponseScan_SetBinaryValue::set_file_status(::message_scan::Respons
   assert(::message_scan::ResponseScan_FileStatus_IsValid(value));
   set_has_file_status();
   file_status_ = value;
+}
+
+// optional bytes uuid = 7;
+inline bool ResponseScan_SetBinaryValue::has_uuid() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ResponseScan_SetBinaryValue::set_has_uuid() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ResponseScan_SetBinaryValue::clear_has_uuid() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ResponseScan_SetBinaryValue::clear_uuid() {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    uuid_->clear();
+  }
+  clear_has_uuid();
+}
+inline const ::std::string& ResponseScan_SetBinaryValue::uuid() const {
+  return *uuid_;
+}
+inline void ResponseScan_SetBinaryValue::set_uuid(const ::std::string& value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void ResponseScan_SetBinaryValue::set_uuid(const char* value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void ResponseScan_SetBinaryValue::set_uuid(const void* value, size_t size) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_SetBinaryValue::mutable_uuid() {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  return uuid_;
+}
+inline ::std::string* ResponseScan_SetBinaryValue::release_uuid() {
+  clear_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = uuid_;
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_SetBinaryValue::set_allocated_uuid(::std::string* uuid) {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    delete uuid_;
+  }
+  if (uuid) {
+    set_has_uuid();
+    uuid_ = uuid;
+  } else {
+    clear_has_uuid();
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes ip = 8;
+inline bool ResponseScan_SetBinaryValue::has_ip() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void ResponseScan_SetBinaryValue::set_has_ip() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void ResponseScan_SetBinaryValue::clear_has_ip() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void ResponseScan_SetBinaryValue::clear_ip() {
+  if (ip_ != &::google::protobuf::internal::kEmptyString) {
+    ip_->clear();
+  }
+  clear_has_ip();
+}
+inline const ::std::string& ResponseScan_SetBinaryValue::ip() const {
+  return *ip_;
+}
+inline void ResponseScan_SetBinaryValue::set_ip(const ::std::string& value) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(value);
+}
+inline void ResponseScan_SetBinaryValue::set_ip(const char* value) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(value);
+}
+inline void ResponseScan_SetBinaryValue::set_ip(const void* value, size_t size) {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  ip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_SetBinaryValue::mutable_ip() {
+  set_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    ip_ = new ::std::string;
+  }
+  return ip_;
+}
+inline ::std::string* ResponseScan_SetBinaryValue::release_ip() {
+  clear_has_ip();
+  if (ip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = ip_;
+    ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_SetBinaryValue::set_allocated_ip(::std::string* ip) {
+  if (ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete ip_;
+  }
+  if (ip) {
+    set_has_ip();
+    ip_ = ip;
+  } else {
+    clear_has_ip();
+    ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes machine_name = 9;
+inline bool ResponseScan_SetBinaryValue::has_machine_name() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void ResponseScan_SetBinaryValue::set_has_machine_name() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void ResponseScan_SetBinaryValue::clear_has_machine_name() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void ResponseScan_SetBinaryValue::clear_machine_name() {
+  if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
+    machine_name_->clear();
+  }
+  clear_has_machine_name();
+}
+inline const ::std::string& ResponseScan_SetBinaryValue::machine_name() const {
+  return *machine_name_;
+}
+inline void ResponseScan_SetBinaryValue::set_machine_name(const ::std::string& value) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(value);
+}
+inline void ResponseScan_SetBinaryValue::set_machine_name(const char* value) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(value);
+}
+inline void ResponseScan_SetBinaryValue::set_machine_name(const void* value, size_t size) {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  machine_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ResponseScan_SetBinaryValue::mutable_machine_name() {
+  set_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    machine_name_ = new ::std::string;
+  }
+  return machine_name_;
+}
+inline ::std::string* ResponseScan_SetBinaryValue::release_machine_name() {
+  clear_has_machine_name();
+  if (machine_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = machine_name_;
+    machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ResponseScan_SetBinaryValue::set_allocated_machine_name(::std::string* machine_name) {
+  if (machine_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete machine_name_;
+  }
+  if (machine_name) {
+    set_has_machine_name();
+    machine_name_ = machine_name;
+  } else {
+    clear_has_machine_name();
+    machine_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

@@ -201,6 +201,11 @@ namespace internet
 
         std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
         std::vector<const char *>       file_type_vec;
+        threatinfo_vec_type             threatinfo_input_vec;
+        threatinfo_type *threatinfo;
+
+        //resize
+        //threatinfo_input_vec.resize(request_ptr->set_binary_value_size());
         uint8_t *binary_temp;
 
         for(int count_msg = 0;
@@ -210,6 +215,8 @@ namespace internet
             const message_scan::RequestScan::SetBinaryValue& msg_scan =
                     request_ptr->set_binary_value(count_msg);
 
+            threatinfo_input_vec.push_back(new threatinfo_type());
+            threatinfo  = threatinfo_input_vec[count_msg];
 
             switch(msg_scan.file_type()) {
 
@@ -220,12 +227,22 @@ namespace internet
 
                 mapped_file_vec.push_back(new MAPPED_FILE_PE);
 
+                //Pull message to FILE_MAPPED message define in directory filetype/pe.h.
+                //Declear detail of file such as file_name, file_size, type of file, virus, IP of file
+                //Machine Name and binary file.
                 //get last elements after push back new object.
                 s_mapped_fpe = mapped_file_vec.back();
                 //set external signature
                 s_mapped_fpe->msg_type = utils::external_msg;
                 //set File name
                 s_mapped_fpe->file_name = msg_scan.file_name();
+                //set uuid
+                //s_mapped_fpe->uuid      = msg_scan.uuid();
+                threatinfo->set_uuid(msg_scan.uuid());
+
+								threatinfo->set_status_result(scan_threat::InfectedFileInfo::NEGATIVE);
+	
+								threatinfo->set_machine_name(msg_scan.machine_name());
 
                 //set Data
                 //s_mapped_fpe->data
@@ -254,6 +271,7 @@ namespace internet
                 LOG(INFO)<<"Binary data    : "<< msg_scan.binary();
                 LOG(INFO)<<"File  type     : "<< msg_scan.file_type();
                 LOG(INFO)<<"Binary data compare : " << s_mapped_fpe->data;
+                LOG(INFO)<<"File UUID      : "<< msg_scan.uuid();
 
                 break;
 
@@ -278,7 +296,7 @@ namespace internet
 
 
         //Scanning virus.
-        scan_file_->set_file(&mapped_file_vec, &file_type_vec);
+        scan_file_->set_file(&mapped_file_vec, &threatinfo_input_vec, &file_type_vec);
 
         // Find Engine for file type.
         if(scan_file_->find_engine(utils::pe_file)) {
@@ -289,40 +307,73 @@ namespace internet
         threatinfo_vec_type threatinfo_vec = scan_file_->scan_file();
 
         threatinfo_vec_type::iterator iter_threatinfo_vec;
-			
+
         for(iter_threatinfo_vec = threatinfo_vec.begin();
                 iter_threatinfo_vec != threatinfo_vec.end();
                 ++iter_threatinfo_vec) {
+
             threatinfo_type *threat_info = *iter_threatinfo_vec;
-						
+
+            threatinfo_type *threat_result =
+                    threatinfo_input_vec[iter_threatinfo_vec - threatinfo_vec.begin()];
+
             if(threat_info->file_name().size() == 0) continue;
 
             //Loop insert result to message
             for(int count_result = 0;
                     count_result < request_ptr->set_binary_value_size();
                     count_result++) {
-								
-                message_scan::RequestScan::SetBinaryValue * msg_scan_result =
+
+                message_scan::RequestScan::SetBinaryValue *msg_scan_result =
                         request_ptr->mutable_set_binary_value(count_result);
 
                 if(threat_info->file_name().compare(msg_scan_result->file_name()) == FOUND_INFECTED) {
 
                     LOG(INFO)<<"Server scan file name : " << threat_info->file_name() <<", Success! ";
                     LOG(INFO)<<"File name from client : " << msg_scan_result->file_name();
+
                     msg_scan_result->set_file_status(message_scan::RequestScan::FILE_INFECTED);
 
                     //Send infected file detail to Tracethreat system.
                     MessageRequestType  msgReq;
-									  msgReq.set_file_name(threat_info->file_name());
-										MessageResponseType * msgResp = new MessageResponseType; 
+
+                    msgReq.set_file_name(threat_info->file_name());
+                    msgReq.set_virus_name(threat_info->virus_name());
+
+                    msgReq.set_uuid(msg_scan_result->uuid());
+                    msgReq.set_ip(msg_scan_result->ip());
+
+                    //Wait convert function
+                    //msgReq.set_encode_sig_type(threat_info->scan_type);
+                    //msgReq.set_file_type(threat_info->file_type());
+                    
+                    msgReq.set_machine_name(threat_result->machine_name());
+
+                    switch(threat_result->status_result()) {
+
+                    case scan_threat::InfectedFileInfo::POSITIVE:
+                        msgReq.set_status_result(scan_threat::InfectedFileInfoRequest::POSITIVE);
+                        break;
+
+                    case scan_threat::InfectedFileInfo::NEGATIVE:
+                        msgReq.set_status_result(scan_threat::InfectedFileInfoRequest::NEGATIVE);
+                        break;
+
+                    default:
+                        LOG(INFO)<<"Status result not define in system";
+                        break;
+                    }
+
+
+                    MessageResponseType *msgResp = new MessageResponseType;
                     tracethreat_controller_->send(&msgReq, msgResp);
-										tracethreat_controller_->loop(); 
-	 
-    								tracethreat_controller_->break_loop();
-									
-                }else{
+                    tracethreat_controller_->loop();
+
+                    tracethreat_controller_->break_loop();
+
+                } else {
                     msg_scan_result->set_file_status(message_scan::RequestScan::FILE_CLEAN);
-								}
+                }
             }//for
 
         }//for

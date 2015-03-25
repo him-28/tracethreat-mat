@@ -72,6 +72,9 @@ message RequestScan{
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
 			optional FileStatus  file_status = 6;
+			optional bytes       uuid        = 7;
+			optional bytes       ip          = 8;
+			optional bytes       machine_name = 9;
 		}
 
       repeated GetBinaryValue get_binary_value = 9;
@@ -84,6 +87,9 @@ message RequestScan{
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
       optional FileStatus  file_status  = 6;// File status
+			optional bytes       uuid        = 7;
+      optional bytes       ip          = 8;
+      optional bytes       machine_name = 9;
 		}
 
       repeated SetBinaryValue  set_binary_value = 10;
@@ -145,6 +151,9 @@ message ResponseScan{
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
       optional FileStatus  file_status  = 6;
+			optional bytes       uuid        = 7;
+      optional bytes       ip          = 8;
+      optional bytes       machine_name = 9;
 		}
 
     repeated GetBinaryValue get_binary_value = 9;
@@ -156,6 +165,9 @@ message ResponseScan{
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
       optional FileStatus  file_status  = 6;
+			optional bytes       uuid        = 7;
+      optional bytes       ip          = 8;
+      optional bytes       machine_name = 9;
 		}
 
     repeated SetBinaryValue  set_binary_value = 10;

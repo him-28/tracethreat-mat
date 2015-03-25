@@ -25,9 +25,10 @@ namespace controller
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
     bool tbbpostscan_pe_controller<BufferSync, MAPPED_FILE, SignatureTypeMemory>::init_syntbb_workload(
             typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
-            signature_shm_type *sig_shm,
+            signature_shm_type                *sig_shm,
             std::map<const uint64_t , size_t> *map_file_size,
-            std::vector<MAPPED_FILE *> *mapped_file_vec)
+            std::vector<MAPPED_FILE *>        *mapped_file_vec,
+						threatinfo_vec_type               *threatinfo_vec)
     {
 
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, Start Load data to task",
@@ -123,7 +124,7 @@ namespace controller
             tbbscan_pe_task->set_callback(&res_callback);
             tbbscan_pe_task->set_sig_engine(actire_engine_);
             tbbscan_pe_task->set_search_engine(iactire_concur_);
-
+						tbbscan_pe_task->set_threatinfo_vec(threatinfo_vec);
             //insert to tasks per thread.
             tasks_tbbscan_pe.insert(boost::shared_ptr<tbbpostscan_pe_task_type>(tbbscan_pe_task));
 

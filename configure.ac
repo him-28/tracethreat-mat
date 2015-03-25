@@ -29,7 +29,7 @@ AC_CHECK_HEADERS([iostream])
 #m4_pattern_allow([AC_PROG_LIBTOOL])
 #AC_PROG_LIBTOOL
 
-LIBS="-lgtest -lglog -lboost_thread -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem -lboost_timer -lOpenCL -lrt -lclamav -lprotobuf -ldl -lfolly -lmongoclient -lrocksdb  -lcrypto -ltracethreat_client-0.0.1 $LIBS"
+LIBS="-lmongoclient -lgtest -lglog -lOpenCL -lrt -lclamav -lprotobuf -ldl -lfolly -lrocksdb  -lcrypto -ltracethreat_client-0.0.1 -lboost_filesystem-mt -lboost_thread-mt -lpthread -lboost_system-mt -lboost_log-mt -lboost_exception-mt -lboost_program_options-mt -lboost_timer-mt $LIBS"
 
 AC_TYPE_SIZE_T
 ##################################

@@ -67,7 +67,7 @@
 
 //#include "test/wrapper_rules_tests.hpp"
 
-#include "test/md5_hash_test.hpp"
+//#include "test/md5_hash_test.hpp"
 
 GTEST_API_ int main(int argc, char **argv)
 {

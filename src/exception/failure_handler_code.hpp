@@ -66,13 +66,13 @@ namespace error
             void error_code(ErrorCode& error)const;
             ErrorController& error_detect()const;
 
-            const char *name()const;
+            const char *name()const BOOST_NOEXCEPT;
 
             std::string message(int ev)const;
 
             std::string message_detail(int ev)const;
 
-            boost::system::error_condition default_error_condition(int ev) const;
+            boost::system::error_condition default_error_condition(int ev) const BOOST_NOEXCEPT;
 
             const char *what() const throw();
             //	~exception() throw(){ }

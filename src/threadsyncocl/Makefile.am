@@ -48,6 +48,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/filestructure/logger/logging.hpp \
  $(top_builddir)/src/filestructure/logger/stringprintf.hpp \
  $(top_builddir)/src/gensign/clamavsig.hpp \
+ $(top_builddir)/src/utils/connector/result_infected.hpp \
  $(top_builddir)/src/internet/client_fresh/updated_sign.hpp \
  $(top_builddir)/src/internet/scan_server/scan_server.hpp \
  $(top_builddir)/src/internet/scan_server/scan_connection.hpp \
@@ -106,6 +107,7 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/filestructure/logger/logging.cpp \
   $(top_builddir)/src/filestructure/logger/stringprintf.cpp \
   $(top_builddir)/src/gensign/clamavsig.cpp \
+  $(top_builddir)/src/utils/connector/result_infected.cpp \
   $(top_builddir)/src/internet/client_fresh/updated_sign.cpp \
   $(top_builddir)/src/internet/scan_server/scan_server.cpp \
   $(top_builddir)/src/internet/scan_server/scan_connection.cpp \

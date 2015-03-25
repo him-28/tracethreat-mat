@@ -11,6 +11,7 @@
 #include <vector>
 #include <typeinfo>
 #include <cstdio>
+#include <iostream>
 
 #include <boost/unordered_map.hpp>
 #include <boost/assign/list_of.hpp>

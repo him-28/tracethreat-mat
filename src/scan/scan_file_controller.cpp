@@ -108,12 +108,14 @@ namespace policy
     template<typename MAPPED_FILE>
     bool scan_pe_internet_controller<MAPPED_FILE>::set_file(
             std::vector<MAPPED_FILE *>   *mapped_file_vec,
-            std::vector<const char *>     *file_type_vec)
+            threatinfo_vec_type          *threatinfo_vec,
+            std::vector<const char *>    *file_type_vec)
     {
         //send to scan_pe policy based class.
         pef_policy = new fpolicy::pe_file_policy<struct MAPPED_FILE_PE>();
         pef_policy->set_mapped_file(mapped_file_vec);
         pef_policy->set_file_type(file_type_vec);
+				pef_policy->set_threatinfo_vec(threatinfo_vec);
     }
 
     template<typename MAPPED_FILE>

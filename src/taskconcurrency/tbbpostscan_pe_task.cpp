@@ -96,8 +96,15 @@ namespace controller
 
 		tbbpostscan_pe_task::threatinfo_vec_type & 
 		tbbpostscan_pe_task::
-		get_threatinfo(){
+		get_threatinfo_vec(){
 				return threatinfo_vec; 
+		}
+
+		bool tbbpostscan_pe_task::
+	  set_threatinfo_vec(threatinfo_vec_type * _threatinfo_vec){
+				
+				threatinfo_vec_ = _threatinfo_vec;
+			
 		}
 
     void tbbpostscan_pe_task::
@@ -142,7 +149,9 @@ namespace controller
                 start_point,
                 end_point,
                 file_name,
-                binary_hex_input_);
+                binary_hex_input_,
+								threatinfo_vec_
+               );
 
 						//std::cout<<"!Result file Name : " << threatinfo->file_name() <<std::endl;
 						
