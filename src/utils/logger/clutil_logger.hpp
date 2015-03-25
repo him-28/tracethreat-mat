@@ -1,8 +1,9 @@
-#ifndef HNMAV_UTIL_CLUTIL_LOGGER_HPP
-#define HNMAV_UTIL_CLUTIL_LOGGER_HPP
+#ifndef UTILS_CLUTIL_LOGGER_HPP
+#define UTILS_CLUTIL_LOGGER_HPP
+#define BOOST_LOG_DYN_LINK
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 R.Chatsiri, Inc.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,44 +24,49 @@
  *-Add shared ptr for handling log	( unthreadsafe )             Chtasiri.rat     04/10/2012
  */
 
+//STL
+#include <ostream>
+#include <string>
+
 //BOOST
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 //log common
 #include <boost/log/common.hpp>
-#include <boost/log/formatters.hpp>
-#include <boost/log/filters.hpp>
 #include <boost/log/attributes/timer.hpp>
+#include <boost/log/trivial.hpp>
 //log util
-#include <boost/log/utility/init/to_file.hpp>
-#include <boost/log/utility/init/to_console.hpp>
-#include <boost/log/utility/init/common_attributes.hpp>
-#include <boost/log/utility/init/from_stream.hpp>
-//log sinks
+#include <boost/log/sinks.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/sources/logger.hpp>
 #include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/attributes.hpp>
 #include <boost/log/sinks/text_multifile_backend.hpp>
-#include <boost/log/sinks/syslog_backend.hpp>
+
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+
 //thread,time
+#include <boost/log/support/date_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread.hpp>
-//STL
-#include <iostream>
-#include <string>
-#include <sstream>
 //INTERNAL
 #include "format_logger.hpp"
 
-namespace  hnmav_util
+namespace  utils
 {
     namespace logging = boost::log;
-    namespace fmt			= boost::log::formatters;
-    namespace flt 		= boost::log::filters;
+    //namespace fmt			= boost::log::formatters;
+    //namespace flt 		= boost::log::filters;
     namespace sinks		= boost::log::sinks;
     namespace attrs		= boost::log::attributes;
     namespace src			= boost::log::sources;
     namespace keywords = boost::log::keywords;
+    namespace expr = boost::log::expressions;
     using namespace boost;
 
     enum severity_level {
@@ -70,17 +76,24 @@ namespace  hnmav_util
     };
 
 
-    BOOST_LOG_DECLARE_GLOBAL_LOGGER(write_log,src::logger_mt)
+		BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(global_lg, src::severity_logger<>)
+    //BOOST_LOG_DECLARE_GLOBAL_LOGGER(write_log,src::logger_mt)
 
     template<typename CONT = std::string,  typename CONT1 =  int  >
     class clutil_logging
     {
         public:
-            void init_backend();
+
+            typedef sinks::synchronous_sink< sinks::text_multifile_backend > sink_type;
+
+            void init_backend(severity_level serv);
             void init_frontend();
 
-            void formatter_normal();
+            //void formatter_normal();
             void formatter_error();
+
+            //void log_level(logging::trivial::severity & trivail_level);
+            //bool only_warnings(const logging::attribute_value_set &set);
 
             void write_info(CONT const& write_info);
             void write_info(CONT const& write_info, format_type::type type);
@@ -112,14 +125,13 @@ namespace  hnmav_util
 
             static shared_ptr<clutil_logging<CONT, CONT1> >   *logging_instance;
 
-            clutil_logging();
+            clutil_logging();// : lg(global_lg::get()){ }
+
             clutil_logging& operator=(const clutil_logging& logging);
             clutil_logging(const clutil_logging& logging);
 
             // back end
-            typedef sinks::synchronous_sink< sinks::text_multifile_backend >  file_sink;
-            typedef shared_ptr<sinks::synchronous_sink< sinks::text_multifile_backend> >  file_sink_ptr;
-            std::vector<shared_ptr<sinks::synchronous_sink< sinks::text_multifile_backend> > >  sinks_vec;
+            boost::shared_ptr<sinks::text_multifile_backend> sinks_tos_backend;
 
             // front end
             typedef shared_ptr<logging::core>   core_ptr;
@@ -127,6 +139,8 @@ namespace  hnmav_util
 
             std::vector<std::string> logger_file_path;
             std::string logger_settings_path;
+
+            //src::severity_logger<> & lg;
 
     };
 

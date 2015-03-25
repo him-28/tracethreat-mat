@@ -2,7 +2,7 @@
 #define CONTROLLER__THREAD_CONTROLLER_HPP
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 Chatsiri Rattana.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -57,11 +57,8 @@ namespace controller
 
 
 
-    namespace h_util = hnmav_util;
-    //using namespace filetypes;
-
     namespace dstr   = data_structure;
-    namespace kernel_ocl = hnmav_kernel;
+    namespace kernel_ocl = kernel;
 		using  memory::signature_shm;
 
     class thread_controller
@@ -130,8 +127,8 @@ namespace controller
             pthread_attr_t thread_buffer_attr;
             id_t  thread_buffer_id;
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 
@@ -171,8 +168,8 @@ namespace controller
             struct data_ocl_process<MAPPED_FILE> *d_ocl_processes;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 
@@ -225,8 +222,8 @@ namespace controller
             typename slot_ocl_thread<BufferSync, MAPPED_FILE>::
             load_ocl_system_type *load_ocl_system_;
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

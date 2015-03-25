@@ -142,7 +142,7 @@ TEST(aescontroller, aes_encryption_thread)
     t3.join();
 
 }
-*/
+/* */
 
 
 TEST(aescontroller, encryptionstring)
@@ -212,11 +212,8 @@ TEST(aescontroller, encryptionstring)
     EXPECT_TRUE(enc_controller->process_crypto(aes_true, 
                  utils::find_key_crypto_mode) != NULL);
 
-
-
-
-
 }
+/* */
 
 
 

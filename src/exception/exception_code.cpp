@@ -1,7 +1,7 @@
 #include "exception/exception_code.hpp"
 
 
-namespace hnmav_exception
+namespace trace_exception
 {
   
  		class gen_error_code;

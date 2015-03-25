@@ -30,7 +30,7 @@ namespace controller
 		bool barrier_buffer<BarrierThread>::barrier_init()
 		{ 
 
- 			logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+ 			logger_ptr = &utils::clutil_logging<std::string, int>:: get_instance();
 			logger = logger_ptr->get();
 			 int error = pthread_barrier_init(&p_barrier, NULL, thread_num_);	
 			 if(!error){

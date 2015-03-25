@@ -25,13 +25,14 @@ namespace controller
     template<typename BufferSync, typename MAPPED_FILE, typename SignatureTypeMemory>
     bool tbbpostscan_pe_controller<BufferSync, MAPPED_FILE, SignatureTypeMemory>::init_syntbb_workload(
             typename shm_memory::file_shm_handler<MAPPED_FILE>::map_str_shm& mapstr_shm,
-            signature_shm_type *sig_shm,
+            signature_shm_type                *sig_shm,
             std::map<const uint64_t , size_t> *map_file_size,
-            std::vector<MAPPED_FILE *> *mapped_file_vec)
+            std::vector<MAPPED_FILE *>        *mapped_file_vec,
+						threatinfo_vec_type               *threatinfo_vec)
     {
 
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, Start Load data to task",
-                hnmav_util::format_type::type_center);
+                utils::format_type::type_center);
 
         //[x] Get all data from mapped_file_vec for invoke file_name in order hash data.
         //[x]  Insert binary from File-SHM to write_binary_hex is contains all binary hex file.
@@ -123,7 +124,7 @@ namespace controller
             tbbscan_pe_task->set_callback(&res_callback);
             tbbscan_pe_task->set_sig_engine(actire_engine_);
             tbbscan_pe_task->set_search_engine(iactire_concur_);
-
+						tbbscan_pe_task->set_threatinfo_vec(threatinfo_vec);
             //insert to tasks per thread.
             tasks_tbbscan_pe.insert(boost::shared_ptr<tbbpostscan_pe_task_type>(tbbscan_pe_task));
 
@@ -148,7 +149,7 @@ namespace controller
         }//for
 
         logger->write_info("tbbpostscan_pe_controller::init_syntbb_workload, End Load data to task",
-                hnmav_util::format_type::type_center);
+                utils::format_type::type_center);
         return true;
     }
 
@@ -173,7 +174,7 @@ namespace controller
     task_start()
     {
         logger->write_info("tbbpostscan_pe_controller::task_start, Start Task",
-                hnmav_util::format_type::type_center);
+                utils::format_type::type_center);
 
         logger->write_info("tbbpostscan_pe_controller::task_start, Task size",
                 boost::lexical_cast<std::string>(tasks_tbbscan_pe.size()));

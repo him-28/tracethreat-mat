@@ -23,8 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  *                                                    R.Chatsiri                12/09/2014
  */
 
-#ifndef FILE_MEM_REGISTER__HPP
-#define FILE_MEM_REGISTER__HPP
+#ifndef CLASS_REGISTER__HPP
+#define CLASS_REGISTER__HPP
 
 #include <map>
 #include <string>
@@ -129,4 +129,4 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 #define CLASS_REGISTER_CREATE_OBJECT(register_name, entry_name_as_string) \
   GetRegistry_##register_name().CreateObject(entry_name_as_string)
 
-#endif  //FILE_MEM_REGISTER__HPP
+#endif  //CLASS_REGISTER__HPP

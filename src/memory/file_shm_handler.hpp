@@ -54,7 +54,6 @@ namespace memory
 {
 
     namespace boostinp = boost::interprocess;
-    namespace h_util = hnmav_util;
 
     template<typename MAPPED_FILE>
     class file_shm_handler
@@ -164,8 +163,8 @@ namespace memory
 						std::string shm_name;
 
 						//logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
            
         protected:

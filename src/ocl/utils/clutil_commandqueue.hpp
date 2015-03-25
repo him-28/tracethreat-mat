@@ -1,5 +1,5 @@
-#ifndef  HNMAV_KERNEL_CLUTIL_COMMANDQUEUE_HPP
-#define  HNMAV_KERNEL_CLUTIL_COMMANDQUEUE_HPP
+#ifndef  KERNEL_CLUTIL_COMMANDQUEUE_HPP
+#define  KERNEL_CLUTIL_COMMANDQUEUE_HPP
 
 /*                       Titles                                          Authors           		Date
  *-Support command queue (Interface send/receive with vector<shared_ptr<platdevices_info> >
@@ -31,11 +31,11 @@
 #include "clutil_infodevice.hpp"
 #include "utils/base/timer_queue.hpp"
 
-namespace hnmav_kernel
+namespace kernel
 {
     using namespace boost;
-    using namespace hnmav_util;
-    using namespace hnmav_exception;
+    using namespace utils;
+    using namespace trace_exception;
     using utils::timer_queue;
 
     class commandqueue : public base_clutil

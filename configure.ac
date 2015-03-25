@@ -29,7 +29,7 @@ AC_CHECK_HEADERS([iostream])
 #m4_pattern_allow([AC_PROG_LIBTOOL])
 #AC_PROG_LIBTOOL
 
-LIBS="-lgtest -lglog -lboost_thread -lpthread -lboost_system -lboost_program_options -lboost_log -lboost_filesystem -lboost_timer -lOpenCL -lrt -lclamav -lprotobuf -ldl -lfolly -lmongoclient -lrocksdb  -lcrypto $LIBS"
+LIBS="-lmongoclient -lgtest -lglog -lOpenCL -lrt -lclamav -lprotobuf -ldl -lfolly -lrocksdb  -lcrypto -ltracethreat_client-0.0.1 -lboost_filesystem-mt -lboost_thread-mt -lpthread -lboost_system-mt -lboost_log-mt -lboost_exception-mt -lboost_program_options-mt -lboost_timer-mt $LIBS"
 
 AC_TYPE_SIZE_T
 ##################################
@@ -72,9 +72,11 @@ AC_CONFIG_FILES([src/internet/scan_server/Makefile])
 AC_CONFIG_FILES([src/internet/scan_client/Makefile])
 AC_CONFIG_FILES([src/internet/security/Makefile])
 AC_CONFIG_FILES([src/internet/msg/Makefile])
+AC_CONFIG_FILES([src/internet/tracethreat/Makefile])
 AC_CONFIG_FILES([src/internet/test_server/Makefile])
 AC_CONFIG_FILES([src/internet/test_client/Makefile])
 AC_CONFIG_FILES([src/internet/test_security/Makefile])
+AC_CONFIG_FILES([src/internet/test_rpc/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 #output file
 AC_OUTPUT

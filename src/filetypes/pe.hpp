@@ -241,28 +241,35 @@ struct MAPPED_FILE_PE {
     size_t            size;
     // Data in file.
     uint8_t 					*data;
-
-    std::string file_name;
+		// File name (Full path)
+    std::string 			file_name;
     //If scan found infected file.
-    std::string file_sig;
-
+    std::string 			file_sig;
     //Support TBB Scanning (Layout of PE file)
     //Position of data. start position of  file.
     uint64_t          start_point;
     //Position of data. end position of file.
     uint64_t					end_point;
-
     //Pre scanning check layout incorrect or not.
-    bool             pass_pre_scanning;
+    bool             	pass_pre_scanning;
     //Post scanning check binary hex has infected or not.
-    bool             pass_post_scanning;
+    bool             	pass_post_scanning;
     //Summary status
-    uint8_t          status;
+    uint8_t          	status;
     //MD5 of file.
-    uint64_t         file_map_md5;
+    uint64_t         	file_map_md5;
 		//Internal or External Message
-		//uint8_t          msg_type;
-		uint8_t         msg_type;
+		uint8_t         	msg_type;
+
+		//Message Type
+		std::string uuid;
+		std::string machine_name;
+    std::string ip;
+    std::string encode_sig_type;
+    std::string file_type;
+    std::string status_result;
+    std::string virus_name;
+
 };
 
 struct MAMORY_BLOCK_PE {

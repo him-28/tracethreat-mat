@@ -51,23 +51,46 @@ TEST_F(ScanClientEncryptionLoadEngine, connection_register_crypto)
 {
 
     std::vector<utils::file_scan_request *> fs_request_vec;
-    utils::file_scan_request *fs;
+    utils::file_scan_request *fs1;
 
-    fs = new utils::file_scan_request;
-    fs->binary = std::string("f33867592e3ecf226eb7b32fcdf8a53123433333223444a32e232323ae54a");
-    fs->file_name = std::string("/home/testlab/zbot-test2.exe");
-    fs->file_size = 50000;
-    fs->scan_type = message_scan::RequestScan::MD5;
-    fs->file_type = message_scan::RequestScan::PE;
-    fs_request_vec.push_back(fs);
+    utils::file_scan_request *fs2;
 
-    fs = new utils::file_scan_request;
-    fs->binary = std::string("e5c49a143be892323217b183e13a8789bc328e");
-    fs->file_name = std::string("/home/testlab/zbot-test4.exe");
-    fs->file_size = 50000;
-    fs->scan_type = message_scan::RequestScan::MD5;
-    fs->file_type = message_scan::RequestScan::PE;
-    fs_request_vec.push_back(fs);
+		utils::file_scan_request *fs3;
+
+    fs1 = new utils::file_scan_request;
+    fs1->binary = std::string("f33867592e3ecf226eb7b32fcdf8a53123433333223444a32e232323ae54a");
+    fs1->file_name = std::string("/home/testlab/zbot-test2.exe");
+		fs1->uuid      = std::string("0:0:0:1");
+		fs1->machine_name = std::string("test-machine-01");
+		fs1->ip        = std::string("127.0.0.1");
+    fs1->file_size = 50000;
+    fs1->scan_type = message_scan::RequestScan::MD5;
+    fs1->file_type = message_scan::RequestScan::PE;
+    fs_request_vec.push_back(fs1);
+
+    fs2 = new utils::file_scan_request;
+    fs2->binary = std::string("e1aef4e5c49a143be892323217b183e13a8789bc328e");
+		fs2->uuid      = std::string("0:0:0:2");
+		fs2->machine_name = std::string("test-machine-02");
+		fs2->ip        = std::string("127.0.0.2");
+    fs2->file_name = std::string("/home/testlab/zbot-test4.exe");
+    fs2->file_size = 50000;
+    fs2->scan_type = message_scan::RequestScan::MD5;
+    fs2->file_type = message_scan::RequestScan::PE;
+    fs_request_vec.push_back(fs2);
+
+    fs3 = new utils::file_scan_request;
+    fs3->binary = std::string("f33867592e3ecf226eb7b32fcdf8a53123433333223444a32e232323ae54a");
+		fs3->uuid      = std::string("0:0:0:3");
+		fs3->machine_name = std::string("test-machine-03");
+		fs3->ip        = std::string("127.0.0.3");
+    fs3->file_name = std::string("/home/testlab/zbot-test3.exe");
+    fs3->file_size = 50000;
+    fs3->scan_type = message_scan::RequestScan::MD5;
+    fs3->file_type = message_scan::RequestScan::PE;
+    fs_request_vec.push_back(fs3);
+
+
 
     std::string url_addr("127.0.0.1");
     std::string port("4050");

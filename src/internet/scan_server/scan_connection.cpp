@@ -1,3 +1,5 @@
+#define FOUND_INFECTED 0
+
 #include <sstream>
 
 #include "utils/base/common.hpp"
@@ -5,6 +7,8 @@
 #include "internet/scan_server/scan_connection.hpp"
 
 #include "internet/security/aes_controller.hpp"
+
+#include "internet/tracethreat/infected_controller.hpp"
 
 namespace internet
 {
@@ -91,7 +95,7 @@ namespace internet
         MsgsResponsePointer close_response(new message_scan::ResponseScan);
         close_response->set_uuid(msg_request->uuid());
         close_response->set_type(message_scan::ResponseScan::CLOSE_CONNECTION);
-        close_response->set_timestamp(std::string("0:0:0:0"));
+        close_response->set_timestamp(timestamp_->get_system_time());
         //Set close socket at here.
         LOG(INFO)<"Server : prepare_reponse_close success";
         return close_response;
@@ -107,10 +111,10 @@ namespace internet
         scan_response->set_uuid(msg_request->uuid());
         scan_response->set_ip(msg_request->ip());
         scan_response->set_type(message_scan::ResponseScan::SCAN_SUCCESS);
-        scan_response->set_timestamp(std::string("0:0:0:0"));
-				//security reason
+        scan_response->set_timestamp(timestamp_->get_system_time());
+        //security reason
         scan_response->set_conn_ip(msg_request->ip());
-				scan_response->set_conn_uuid(msg_request->uuid());
+        scan_response->set_conn_uuid(msg_request->uuid());
         LOG(INFO)<<"Server : prepare_response_scan success";
         return scan_response;
 
@@ -128,7 +132,7 @@ namespace internet
         MsgsResponsePointer  register_response(new message_scan::ResponseScan);
         register_response->set_uuid(msgs_request->uuid());
         register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
-        register_response->set_timestamp(std::string("0:0:0:0"));
+        register_response->set_timestamp(timestamp_->get_system_time());
 
         LOG(INFO)<<"Server : prepare_response_register success";
 
@@ -197,7 +201,12 @@ namespace internet
 
         std::vector<MAPPED_FILE_PE *>   mapped_file_vec;
         std::vector<const char *>       file_type_vec;
-        uint8_t * binary_temp; 
+        threatinfo_vec_type             threatinfo_input_vec;
+        threatinfo_type *threatinfo;
+
+        //resize
+        //threatinfo_input_vec.resize(request_ptr->set_binary_value_size());
+        uint8_t *binary_temp;
 
         for(int count_msg = 0;
                 count_msg < request_ptr->set_binary_value_size();
@@ -206,28 +215,40 @@ namespace internet
             const message_scan::RequestScan::SetBinaryValue& msg_scan =
                     request_ptr->set_binary_value(count_msg);
 
+            threatinfo_input_vec.push_back(new threatinfo_type());
+            threatinfo  = threatinfo_input_vec[count_msg];
 
             switch(msg_scan.file_type()) {
 
 
             case message_scan::RequestScan::PE :
 
-								LOG(INFO)<<"Scan Request PE type...";
+                LOG(INFO)<<"Scan Request PE type...";
 
                 mapped_file_vec.push_back(new MAPPED_FILE_PE);
 
+                //Pull message to FILE_MAPPED message define in directory filetype/pe.h.
+                //Declear detail of file such as file_name, file_size, type of file, virus, IP of file
+                //Machine Name and binary file.
                 //get last elements after push back new object.
                 s_mapped_fpe = mapped_file_vec.back();
                 //set external signature
                 s_mapped_fpe->msg_type = utils::external_msg;
                 //set File name
                 s_mapped_fpe->file_name = msg_scan.file_name();
+                //set uuid
+                //s_mapped_fpe->uuid      = msg_scan.uuid();
+                threatinfo->set_uuid(msg_scan.uuid());
+
+								threatinfo->set_status_result(scan_threat::InfectedFileInfo::NEGATIVE);
+	
+								threatinfo->set_machine_name(msg_scan.machine_name());
 
                 //set Data
                 //s_mapped_fpe->data
                 // memcpy(s_mapped_fpe->data, msg_scan.binary().c_str(), msg_scan.binary().size());
                 s_mapped_fpe->data = new uint8_t[msg_scan.binary().size()+1];
-                memcpy(s_mapped_fpe->data, (uint8_t*)msg_scan.binary().c_str(), msg_scan.binary().size());
+                memcpy(s_mapped_fpe->data, (uint8_t *)msg_scan.binary().c_str(), msg_scan.binary().size());
                 //s_mapped_fpe->data[msg_scan.binary().size()] = '\0';
                 //set size of data
                 s_mapped_fpe->size = msg_scan.binary().size();
@@ -249,7 +270,8 @@ namespace internet
                         msg_scan.file_name();
                 LOG(INFO)<<"Binary data    : "<< msg_scan.binary();
                 LOG(INFO)<<"File  type     : "<< msg_scan.file_type();
-								LOG(INFO)<<"Binary data compare : " << s_mapped_fpe->data;
+                LOG(INFO)<<"Binary data compare : " << s_mapped_fpe->data;
+                LOG(INFO)<<"File UUID      : "<< msg_scan.uuid();
 
                 break;
 
@@ -274,7 +296,7 @@ namespace internet
 
 
         //Scanning virus.
-        scan_file_->set_file(&mapped_file_vec, &file_type_vec);
+        scan_file_->set_file(&mapped_file_vec, &threatinfo_input_vec, &file_type_vec);
 
         // Find Engine for file type.
         if(scan_file_->find_engine(utils::pe_file)) {
@@ -289,9 +311,72 @@ namespace internet
         for(iter_threatinfo_vec = threatinfo_vec.begin();
                 iter_threatinfo_vec != threatinfo_vec.end();
                 ++iter_threatinfo_vec) {
+
             threatinfo_type *threat_info = *iter_threatinfo_vec;
-            LOG(INFO)<<"Server scan file name : " << threat_info->file_name() <<", Success! ";
-        }
+
+            threatinfo_type *threat_result =
+                    threatinfo_input_vec[iter_threatinfo_vec - threatinfo_vec.begin()];
+
+            if(threat_info->file_name().size() == 0) continue;
+
+            //Loop insert result to message
+            for(int count_result = 0;
+                    count_result < request_ptr->set_binary_value_size();
+                    count_result++) {
+
+                message_scan::RequestScan::SetBinaryValue *msg_scan_result =
+                        request_ptr->mutable_set_binary_value(count_result);
+
+                if(threat_info->file_name().compare(msg_scan_result->file_name()) == FOUND_INFECTED) {
+
+                    LOG(INFO)<<"Server scan file name : " << threat_info->file_name() <<", Success! ";
+                    LOG(INFO)<<"File name from client : " << msg_scan_result->file_name();
+
+                    msg_scan_result->set_file_status(message_scan::RequestScan::FILE_INFECTED);
+
+                    //Send infected file detail to Tracethreat system.
+                    MessageRequestType  msgReq;
+
+                    msgReq.set_file_name(threat_info->file_name());
+                    msgReq.set_virus_name(threat_info->virus_name());
+
+                    msgReq.set_uuid(msg_scan_result->uuid());
+                    msgReq.set_ip(msg_scan_result->ip());
+
+                    //Wait convert function
+                    //msgReq.set_encode_sig_type(threat_info->scan_type);
+                    //msgReq.set_file_type(threat_info->file_type());
+                    
+                    msgReq.set_machine_name(threat_result->machine_name());
+
+                    switch(threat_result->status_result()) {
+
+                    case scan_threat::InfectedFileInfo::POSITIVE:
+                        msgReq.set_status_result(scan_threat::InfectedFileInfoRequest::POSITIVE);
+                        break;
+
+                    case scan_threat::InfectedFileInfo::NEGATIVE:
+                        msgReq.set_status_result(scan_threat::InfectedFileInfoRequest::NEGATIVE);
+                        break;
+
+                    default:
+                        LOG(INFO)<<"Status result not define in system";
+                        break;
+                    }
+
+
+                    MessageResponseType *msgResp = new MessageResponseType;
+                    tracethreat_controller_->send(&msgReq, msgResp);
+                    tracethreat_controller_->loop();
+
+                    tracethreat_controller_->break_loop();
+
+                } else {
+                    msg_scan_result->set_file_status(message_scan::RequestScan::FILE_CLEAN);
+                }
+            }//for
+
+        }//for
 
         return true;
     }
@@ -312,7 +397,7 @@ namespace internet
         LOG(INFO)<<"Server : handle_read_body  ";
 
 
-         
+
         //Read body before send to handle_request
         if(msgs_packed_request_scan.unpack(msgs_read_buffer)) {
             request_ptr = msgs_packed_request_scan.get_msg();
@@ -322,37 +407,37 @@ namespace internet
             LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
             LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
 
-						std::string ip_addr;
-						std::string uuid;
+            std::string ip_addr;
+            std::string uuid;
 
-            internet::security::aes_cbc * aes; 
-						internet::security::aes_cbc * aes_external;
+            internet::security::aes_cbc *aes;
+            internet::security::aes_cbc *aes_external;
 
             switch(request_ptr->type()) {
 
             case message_scan::RequestScan::REGISTER :
 
-								 ip_addr =
+                ip_addr =
                         msgs_socket.lowest_layer().remote_endpoint().address().to_string();
 
 
-							  uuid = request_ptr->uuid();
+                uuid = request_ptr->uuid();
 
-		            aes_external = 
-									new internet::security::aes_cbc(ip_addr.c_str(), uuid.c_str());
+                aes_external =
+                        new internet::security::aes_cbc(ip_addr.c_str(), uuid.c_str());
                 //Encryption
-                  
-								LOG(INFO)<<"Initial key & iv support server-sec, UUID : "<< uuid <<", IP : "<<ip_addr;
 
-								//internet::security::aes_cbc * aes;
+                LOG(INFO)<<"Initial key & iv support server-sec, UUID : "<< uuid <<", IP : "<<ip_addr;
+
+                //internet::security::aes_cbc * aes;
                 aes = enc_controller_->process_crypto(*aes_external, utils::insert_key_crypto_mode);
 
                 LOG(INFO)<<"Key : " << aes->key;
                 LOG(INFO)<<"IV  : " << aes->iv;
 
-								request_ptr->set_key((const char*)aes->key);
+                request_ptr->set_key((const char *)aes->key);
 
-								request_ptr->set_iv((const char*)aes->iv);
+                request_ptr->set_iv((const char *)aes->iv);
 
                 LOG(INFO)<<"------------------- REGISTER TYPE---------------";
                 //Write data register success and send symmetric key exchanged to client.
@@ -368,7 +453,7 @@ namespace internet
                 break;
 
             default :
-								LOG(INFO)<<"------------------ No client type support ---------------";
+                LOG(INFO)<<"------------------ No client type support ---------------";
                 break;
 
             }//end switch.
@@ -436,7 +521,7 @@ namespace internet
         }
     }
 
-		//___________________________________Step SSL & AES fallback
+    //___________________________________Step SSL & AES fallback
     typename scan_connection::MsgsResponsePointer scan_connection::
     prepare_response_register_sec(MsgsRequestPointer  msgs_request,
             internet::security::aes_cbc   *aes)
@@ -449,14 +534,14 @@ namespace internet
 
         register_response->set_uuid(msgs_request->uuid());
         register_response->set_type(message_scan::ResponseScan::REGISTER_SUCCESS);
-        register_response->set_timestamp(std::string("0:0:0:0"));	
+        register_response->set_timestamp(timestamp_->get_system_time());
 
         register_response->set_key(msgs_request->key());
         register_response->set_iv(msgs_request->iv());
 
-				register_response->set_ip(msgs_request->ip());
-				register_response->set_conn_ip(msgs_request->conn_ip());
-				register_response->set_conn_uuid(msgs_request->conn_uuid());
+        register_response->set_ip(msgs_request->ip());
+        register_response->set_conn_ip(msgs_request->conn_ip());
+        register_response->set_conn_uuid(msgs_request->conn_uuid());
 
         LOG(INFO)<<"Server : prepare_response_register success";
 
@@ -479,7 +564,7 @@ namespace internet
         refresh_socket_timer();
     }//start_read_header_sec
 
-		//call read body after header calculated.
+    //call read body after header calculated.
     void scan_connection::start_read_body_sec(unsigned msgs_length)
     {
         LOG(INFO)<<"Server : start_read_body_sec";
@@ -520,8 +605,8 @@ namespace internet
 
             LOG(INFO)<<"------------------Read Body-----------------------------";
 
-						//decrypt message.
-						secure_field_req->decryption(request_ptr, enc_controller_);
+            //decrypt message.
+            secure_field_req->decryption(request_ptr, enc_controller_);
 
             LOG(INFO)<<"Server : Register type, UUID request from client : " << request_ptr->uuid();
             LOG(INFO)<<"Server : Message process type : " << request_ptr->type();
@@ -561,9 +646,9 @@ namespace internet
                 break;
 
             default :
-								LOG(INFO)<<"---------------- No type of client support -------------";
+                LOG(INFO)<<"---------------- No type of client support -------------";
                 break;
-            }// switch 
+            }// switch
 
         } else {
             LOG(INFO)<<" Server : Cannot unpack message from client ";
@@ -571,7 +656,7 @@ namespace internet
     }//scan_connection::handle_read_body_sec
 
     void scan_connection::
-		write_response_sec(MsgsRequestPointer  request_ptr, MsgsResponsePointer response_ptr)
+    write_response_sec(MsgsRequestPointer  request_ptr, MsgsResponsePointer response_ptr)
     {
         LOG(INFO)<<"------------------------Write Response--------------------------";
 
@@ -579,9 +664,9 @@ namespace internet
 
             LOG(INFO)<<"Server :  write_response_sec, Client request msgs type : "<<request_ptr->type();
 
-						LOG(INFO)<<"Server :  write_response_sec, Message Encrypted before send to network";
+            LOG(INFO)<<"Server :  write_response_sec, Message Encrypted before send to network";
 
-						secure_field_resp->encryption(response_ptr, enc_controller_);
+            secure_field_resp->encryption(response_ptr, enc_controller_);
 
             std::vector<uint8_t> write_buffer;
             packedmessage_scan<message_scan::ResponseScan> resp_msg(response_ptr);

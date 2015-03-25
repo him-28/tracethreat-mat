@@ -25,11 +25,11 @@
 // internal
 #include <exception/system_exception.hpp>
 
-namespace hnmav_util
+namespace utils
 {
 
     namespace po = boost::program_options;
-    namespace exp_system = hnmav_exception::system;
+    namespace exp_system = trace_exception::system;
 
     using namespace boost;
 

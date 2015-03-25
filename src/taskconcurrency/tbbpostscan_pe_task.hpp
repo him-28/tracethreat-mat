@@ -16,7 +16,7 @@
 namespace controller
 {
 
-    namespace exceptions = hnmav_exception::controller;
+    namespace exceptions = trace_exception::controller;
 	
     class tbbpostscan_pe_task : public Runnable
     {
@@ -33,7 +33,7 @@ namespace controller
             typedef tbb::concurrent_unordered_map<std::size_t, std::set<struct utils::meta_sig *> >
                     output_type;
 
-						typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+						typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
 					  typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 
@@ -63,7 +63,9 @@ namespace controller
 
 						threatinfo_type * get_threatinfo_ptr();
 
-						threatinfo_vec_type & get_threatinfo();
+						threatinfo_vec_type & get_threatinfo_vec();
+
+						bool set_threatinfo_vec(threatinfo_vec_type * _threatinfo_vec);
 
             void run();
 					 
@@ -102,6 +104,8 @@ namespace controller
 						threatinfo_type *    threatinfo;			
 	
 						threatinfo_vec_type  threatinfo_vec;	
+				
+						threatinfo_vec_type * threatinfo_vec_;
     };
 
 }

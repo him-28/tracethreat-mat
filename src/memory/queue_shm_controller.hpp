@@ -73,7 +73,7 @@ namespace memory
 		};
 		*/
 
-    template<typename MessageType = message_tracethreat::InfectedFileInfo>
+    template<typename MessageType = scan_threat::InfectedFileInfo>
     class queue_shm_controller
     {
 

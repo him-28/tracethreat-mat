@@ -43,10 +43,6 @@ namespace utils
         const char *virname;  // virus name
         const char *file_name;  // result file name
 
-			  //std::string sig;   // signature full.
-        //std::string virname;  // virus name
-        //std::string file_name;  // result file name
-
 
         //support OCL
         uint8_t  sig_type; // MD5, SHA-1, SHA-256
@@ -60,15 +56,29 @@ namespace utils
         uint64_t       index_start;
         std::size_t    state;
 
-				//meta_sig(){ }
+        //meta_sig(){ }
+
+        //Message Type
+        std::string uuid;
+        std::string machine_name;
+        std::string ip;
+        std::string encode_sig_type;
+        std::string file_type;
+        std::string status_result;
+
 
         meta_sig():
             sig_type(0),
             offset(0),
-            state(0) { sig = ""; virname = ""; sig_detail=""; file_name=""; }
-	
-				meta_sig(int sig_size, int virname_sig) : sig(new char(sig_size)),
-				virname(new char(virname_sig)){ }
+            state(0) {
+            sig = "";
+            virname = "";
+            sig_detail="";
+            file_name="";
+        }
+
+        meta_sig(int sig_size, int virname_sig) : sig(new char(sig_size)),
+            virname(new char(virname_sig)) { }
 
     };
 
@@ -136,11 +146,18 @@ namespace utils
         std::string file_name;
         uint64_t    file_size;
 
+				std::string uuid;
+				std::string machine_name;
+				std::string ip;
+
         message_scan::RequestScan::EncodeType scan_type;
 
         message_scan::RequestScan::FileType file_type;
 
         file_scan_request():
+						uuid(""),
+						machine_name(""),
+            ip(""),
             binary(""),
             file_name(""),
             file_size(0),

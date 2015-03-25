@@ -42,9 +42,9 @@ namespace memory
     file_shm_handler<MAPPED_FILE>::file_shm_handler()
     {
 
-        logger_ptr = &h_util::clutil_logging<std::string, int>:: get_instance();
+        logger_ptr = &utils::clutil_logging<std::string, int>:: get_instance();
         logger = logger_ptr->get();
-
+				std::cout<<"File SHM handler initial log"<<std::endl;
 
     }
 

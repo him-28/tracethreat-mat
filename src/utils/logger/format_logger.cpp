@@ -1,6 +1,6 @@
 #include "logger/format_logger.hpp"
 
-namespace hnmav_util
+namespace utils
 {
     template<typename TypeData, typename CONST>
     void format_logger<TypeData, CONST>::common_adjust(TypeData& _str, TypeData& format_str)

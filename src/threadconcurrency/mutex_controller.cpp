@@ -17,6 +17,9 @@
 /*  Titles			                                                     Authors	          Date
  * - Semaphore define																						Chatsiri.rat      01/10/2013
  */
+
+#include <signal.h>
+
 #include "threadconcurrency/mutex_controller.hpp"
 
 #include "threadconcurrency/util_thread.hpp"

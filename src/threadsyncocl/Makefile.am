@@ -1,5 +1,5 @@
 # debug, optimized
-AM_CXXFLAGS   = -I$(top_srcdir)/src -I/home/chatsiri/sda1/workspacecpp/clamav-devel-hnmav -std=c++11  @AM_CXXFLAGS@
+AM_CXXFLAGS   = -I$(top_srcdir)/src -I/home/chatsiri/sda1/workspacecpp/clamav-devel-hnmav -I/home/chatsiri/sda1/workspacecpp/treadstoneproject/tracethreat_client/src -std=c++11  @AM_CXXFLAGS@
 
 # Make src file 
 # libarries for control threads
@@ -12,10 +12,6 @@ libthreadsyncocl_adir = $(includedir)/threadsyncocl
 libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/utils/file_calculate.hpp \
  $(top_builddir)/src/utils/base/timer_queue.hpp \
- $(top_builddir)/src/utils/connector/result_infected.hpp \
- $(top_builddir)/src/utils/connector/iconnector.hpp \
- $(top_builddir)/src/utils/connector/mongo_connector.hpp \
- $(top_builddir)/src/utils/connector/threat_info_db.hpp \
  $(top_builddir)/src/utils/hash.hpp \
  $(top_builddir)/src/exception/datastructure_exception.hpp \
  $(top_builddir)/src/exception/failure_handler_code.hpp \
@@ -52,6 +48,7 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/filestructure/logger/logging.hpp \
  $(top_builddir)/src/filestructure/logger/stringprintf.hpp \
  $(top_builddir)/src/gensign/clamavsig.hpp \
+ $(top_builddir)/src/utils/connector/result_infected.hpp \
  $(top_builddir)/src/internet/client_fresh/updated_sign.hpp \
  $(top_builddir)/src/internet/scan_server/scan_server.hpp \
  $(top_builddir)/src/internet/scan_server/scan_connection.hpp \
@@ -61,6 +58,9 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/internet/security/encryption.hpp \
  $(top_builddir)/src/internet/security/encryption_field.hpp \
  $(top_builddir)/src/internet/security/aes_encryption.hpp \
+ $(top_builddir)/src/internet/tracethreat/infected_tracethreat.hpp \
+ $(top_builddir)/src/internet/tracethreat/infected_controller.hpp \
+ $(top_builddir)/src/internet/tracethreat/treacethreat.hpp \
  $(top_builddir)/src/internet/scan_client/scan_client.hpp \
  $(top_builddir)/src/internet/scan_client/scan_dir.hpp \
  $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.hpp \
@@ -71,15 +71,10 @@ libthreadsyncocl_a_HEADERS = thread_sync.hpp thread_controller.hpp \
  $(top_builddir)/src/msg/message_tracethreat.pb.h
 
 
-
 # library
 libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp thread_controller.cpp semaphore_controller.cpp thread_barrier_controller.cpp \
 	$(top_builddir)/src/utils/file_calculate.cpp  \
   $(top_builddir)/src/utils/base/timer_queue.cpp \
-  $(top_builddir)/src/utils/connector/result_infected.cpp \
-	$(top_builddir)/src/utils/connector/result_infected.cpp \
-	$(top_builddir)/src/utils/connector/mongo_connector.cpp \
-	$(top_builddir)/src/utils/connector/threat_info_db.cpp \
   $(top_builddir)/src/utils/hash.cpp \
  	$(top_builddir)/src/exception/failure_handler_code.cpp \
   $(top_builddir)/src/exception/datastructure_exception.cpp \
@@ -112,6 +107,7 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/filestructure/logger/logging.cpp \
   $(top_builddir)/src/filestructure/logger/stringprintf.cpp \
   $(top_builddir)/src/gensign/clamavsig.cpp \
+  $(top_builddir)/src/utils/connector/result_infected.cpp \
   $(top_builddir)/src/internet/client_fresh/updated_sign.cpp \
   $(top_builddir)/src/internet/scan_server/scan_server.cpp \
   $(top_builddir)/src/internet/scan_server/scan_connection.cpp \
@@ -119,6 +115,7 @@ libthreadsyncocl_a_SOURCES = $(libthreadsyncocl_a_HEADERS) thread_sync.cpp threa
   $(top_builddir)/src/internet/security/ip_controller.cpp \
   $(top_builddir)/src/internet/security/aes_controller.cpp \
   $(top_builddir)/src/internet/security/encryption_field.cpp \
+  $(top_builddir)/src/internet/tracethreat/infected_controller.cpp \
   $(top_builddir)/src/internet/scan_client/scan_client.cpp \
   $(top_builddir)/src/internet/scan_client/basic_scan_dir_service.cpp \
   $(top_builddir)/src/internet/scan_client/basic_scan_dir.cpp \
@@ -157,4 +154,5 @@ $(top_builddir)/src/internet/client_fresh/libclientfresh.a \
 $(top_builddir)/src/internet/scan_server/libscan_server.a \
 $(top_builddir)/src/internet/scan_client/libscan_client.a \
 $(top_builddir)/src/internet/security/libsecurity.a \
+$(top_builddir)/src/internet/tracethreat/libtracethreat.a \
 $(top_builddir)/src/internet/msg/libmsg.a $(AM_LDFLAGS)$(AM_LDFLAGS)

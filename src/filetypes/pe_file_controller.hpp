@@ -73,9 +73,8 @@ namespace filetypes
 {
 
 
-    namespace h_util = hnmav_util;
     namespace dstr   = data_structure;
-    namespace kernel_ocl = hnmav_kernel;
+    namespace kernel_ocl = kernel;
 
     using memory::signature_shm;
     using utils::uuid_generator;
@@ -106,7 +105,7 @@ namespace filetypes
             typedef tbbscan::iactire_engine<char, tbbscan::tbb_allocator>
             iactire_engine_scanner_type;
 
-            typedef message_tracethreat::InfectedFileInfo  threatinfo_type;
+            typedef scan_threat::InfectedFileInfo  threatinfo_type;
 
 						typedef std::vector<threatinfo_type*>  threatinfo_vec_type;
 
@@ -150,8 +149,9 @@ namespace filetypes
             //utils::scan_file_code
             threatinfo_vec_type &
             scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
-                    signature_shm_type  *sig_shm,
-                    signature_engine_type *sig_engine,
+								    threatinfo_vec_type     *threatinfo_vec,
+                    signature_shm_type      *sig_shm,
+                    signature_engine_type   *sig_engine,
                     iactire_engine_scanner_type   *iactire_engine_scanner);
 
 
@@ -213,8 +213,8 @@ namespace filetypes
             typename pe_file_controller<MAPPED_FILE>::load_ocl_system_type load_ocl_system;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
     };
 
 }

@@ -1,5 +1,5 @@
-#ifndef UTIL__FILE_CALCULATE_HPP
-#define UTIL__FILE_CALCULATE_HPP
+#ifndef UTILS__FILE_CALCULATE_HPP
+#define UTILS__FILE_CALCULATE_HPP
 
 /*                       Titles                                          Authors                        Date
  * - Calculate file types send to Oclbuffer                              R.Chatsiri

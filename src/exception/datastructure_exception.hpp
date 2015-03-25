@@ -1,7 +1,23 @@
-#ifndef HNMAV_EXCEPTION_DATASTRUCTURE_EXCEPTION_HPP
-#define HNMAV_EXCEPTION_DATASTRUCTURE_EXCEPTION_HPP
+#ifndef TRACE_EXCEPTION_DATASTRUCTURE_EXCEPTION_HPP
+#define TRACE_EXCEPTION_DATASTRUCTURE_EXCEPTION_HPP
 
-/*                       Titles                                          Authors                        Date
+/*
+* Copyright 2014 Chatsiri Rattana.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles			                                          Authors	         Date
  *- Add vector exception type																						 Chatsiri.rat                   14/01/2013
  *- Add First Algorihms tire defines error code.                         Chatsiri.rat                   11/02/2013
  *- Algorithm message_at_error_size is error size of algorithms.         Chatsiri.rat                   12/02/2013.
@@ -25,7 +41,7 @@
 #include <map>
 
 
-namespace hnmav_exception
+namespace trace_exception
 {
     using namespace boost;
 
@@ -105,4 +121,4 @@ namespace hnmav_exception
 }
 
 
-#endif /* HNMAV_EXCEPTION_DATASTRUCTURE_EXCEPTION_HPP */
+#endif /* TRACE_EXCEPTION_DATASTRUCTURE_EXCEPTION_HPP */

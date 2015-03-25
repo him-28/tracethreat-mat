@@ -21,7 +21,6 @@
 
 namespace controller
 {
-    namespace h_util     = hnmav_util;
     namespace shm_memory = memory;
 
     //Declare forward which caller class.
@@ -120,8 +119,8 @@ namespace controller
             std::vector<char> *binary_hex_ptr;
             std::vector<char> *symbol_hex_ptr;
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

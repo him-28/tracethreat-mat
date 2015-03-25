@@ -1,5 +1,5 @@
-#ifndef HNMAV_UTIL_CLUTIL_FORMAT_LOGGER_HPP
-#define HNMAV_UTIL_CLUTIL_FORMAT_LOGGER_HPP
+#ifndef UTILS_CLUTIL_FORMAT_LOGGER_HPP
+#define UTILS_CLUTIL_FORMAT_LOGGER_HPP
 
 /*                       Titles                                          Authors                        Date
  * -Add boost formatt util                                               Chatsiri.rat                   23/11/2012
@@ -20,7 +20,7 @@
 #include <sstream>
 #include <string>
 
-namespace hnmav_util
+namespace utils
 {
 
     // CENTER [   XXX   ]

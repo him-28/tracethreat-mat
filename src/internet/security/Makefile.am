@@ -11,7 +11,6 @@ libsecurity_adir = $(includedir)/internet/scan_server
 #Header
 libsecurity_a_HEADERS =  network_controller.hpp \
 encryption.hpp \
-encryption_service.hpp \
 aes_controller.hpp \
 aes_encryption.hpp \
 compression_controller.hpp\
@@ -28,7 +27,6 @@ encryption_field.hpp \
 
 # library
 libsecurity_a_SOURCES = $(libsecurity_a_HEADERS) network_controller.cpp \
-encryption_service.cpp \
 aes_controller.cpp \
 ip_controller.cpp \
 uuid_controller.cpp \
