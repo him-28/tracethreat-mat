@@ -42,7 +42,9 @@ namespace internet
             scan_server(io_service_type io_service,
                     std::string ip_addr,
                     unsigned port,
-                    const char *file_path);
+                    const char *file_path,
+                    std::string tracethreat_ip,
+                    int tracethrat_port);
 
             ~scan_server();
 
