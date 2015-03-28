@@ -1,0 +1,41 @@
+#ifndef INTERNET_LOAD_SYSTEM_REGISTER_HPP
+#define INTERNET_LOAD_SYSTEM_REGISTER_HPP
+
+
+//Main class register real object. Macro CLASS_REGISTER_OBJECT_CREATOR and CLASS_REGISTER_CREATE_OBJECT
+//supports class registor.
+//#include "utils/base/class_register.hpp"
+
+//#include "internet/security/aes_controller.hpp"
+
+//namespace internet
+//{
+
+//    namespace utils
+//    {
+
+//        namespace load_system
+//        {
+//						using namespace internet::security;
+						/*
+           //System load crypto controller
+            CLASS_REGISTER_DEFINE_REGISTER(aes_controller, encryption_controller);
+
+            //Define macro of CLASS_REGISTER_OBJECT_CREATOR, CLASS_REGISTER_CREATE_OBJECT
+            #define REGISTER_ENCRYPTION_CONTROLLER(crypto_mapper_name) \
+                      CLASS_REGISTER_OBJECT_CREATOR( \
+                      aes_controller, encryption_controller, ##crypto_mapper_name, crypto_mapper_name) \
+
+            #define CREATE_ENCRYPTION_CONTROLLER(crypto_mapper_name_as_string) \
+                      CLASS_REGISTER_CREATE_OBJECT(aes_controller, crypto_mapper_name_as_string);
+					 */
+//        }
+
+
+//    }
+
+
+//}
+
+
+#endif /* INTERNET_LOAD_SYSTEM_REGISTER_HPP */

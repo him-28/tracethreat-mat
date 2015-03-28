@@ -9,7 +9,7 @@
 
 namespace data_structure
 {
-    namespace h_util = hnmav_util;
+    //namespace utils = hnmav_util;
 
     template<typename SymbolT, typename StateT>
     class iparallel
@@ -49,9 +49,9 @@ namespace data_structure
                 state_shared_ptr_vec(boost::make_shared<state_vec>()) {
 
                 //logger
-                //logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
-                //logger = logger_ptr->get();
-                //logger->write_info_test("Init logger actire_parallel ...");
+                logger_ptr = &utils::clutil_logging<std::string, int>::get_instance();
+                logger = logger_ptr->get();
+                logger->write_info_test("Init logger actire_parallel ...");
 
 
             }
@@ -142,8 +142,8 @@ namespace data_structure
             std::vector<StateT> table_;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

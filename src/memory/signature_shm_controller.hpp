@@ -37,7 +37,6 @@
 
 namespace memory
 {
-    namespace h_util = hnmav_util;
 
     template<typename SignatureTypeMemory, typename SignatureInternal>
     class signature_shm_controller : public signature_shm<SignatureTypeMemory, SignatureInternal>
@@ -92,8 +91,8 @@ namespace memory
 
             std::vector<uint64_t> sigsize_def_vec;  // MD5, SHA-1, SHA-256
 
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 
@@ -139,8 +138,8 @@ namespace memory
             std::vector<SignatureTypeMemory *>  sig_vec;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

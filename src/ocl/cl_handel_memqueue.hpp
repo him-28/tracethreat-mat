@@ -2,11 +2,11 @@
  *-Class handeling memory function on system                             Chatsiri.rat                   03/12/2012
  *  -- Class implements with base_clutil
  */
-#ifndef HNMAV_KERNEL_HANDEL_CL_HANDEL_MEMQUEUE_HPP
-#define HNMAV_KERNEL_HANDEL_CL_HANDEL_MEMQUEUE_HPP
+#ifndef KERNEL_HANDEL_CL_HANDEL_MEMQUEUE_HPP
+#define KERNEL_HANDEL_CL_HANDEL_MEMQUEUE_HPP
 
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     namespace handel

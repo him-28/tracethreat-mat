@@ -60,6 +60,7 @@
 #  define SHUT_RDWR SD_BOTH
 #else //not _WIN32
 #  include <errno.h>
+/*
 #  define GET_SOCKET_ERROR errno
 #  define EINTR       EINTR
 #  define EINPROGRESS EINPROGRESS
@@ -77,20 +78,25 @@
 #  define O_NONBLOCK O_NONBLOCK
 #  define F_GETFL F_GETFL
 #  define F_SETFL F_SETFL
+*/
 #  define GETTIMEOFDAY gettimeofday
+/*
 #  define CLOSESOCKET close
 #  define GAI_STRERROR gai_strerror
 #  define SSIZET ssize_t
 #  define SNPRINTF snprintf
 #  define SLEEP_SEC sleep
 #  define SLEEP_USEC usleep
+*/
 #  define TIMESPEC timespec
+/*
 #  define CTIME_R ctime_r
 #  define POLL poll
 #  define POLLFD  pollfd
 #  define POLLIN  POLLIN
 #  define POLLOUT POLLOUT
 #  define SHUT_RDWR SHUT_RDWR
+*/
 #endif
 
 #endif // _TRANSPORT_PLATFORM_SOCKET_H_

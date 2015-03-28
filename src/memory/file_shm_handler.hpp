@@ -54,7 +54,6 @@ namespace memory
 {
 
     namespace boostinp = boost::interprocess;
-    namespace h_util = hnmav_util;
 
     template<typename MAPPED_FILE>
     class file_shm_handler
@@ -79,12 +78,15 @@ namespace memory
 
             //boost::interprocess::map.
             typedef uint64_t key_types; // MD5 is key
+
             // value string type
             typedef std::pair<const uint64_t, binary_string_shm>  value_types_str;
+
             // map string allocator
             typedef boostinp::allocator<value_types_str,
                     boostinp::managed_shared_memory::segment_manager> map_str_shm_allocator;
 
+						// map interprocess.
             typedef boostinp::map<key_types,
                     binary_string_shm,
                     std::less<key_types>,
@@ -161,8 +163,8 @@ namespace memory
 						std::string shm_name;
 
 						//logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
            
         protected:

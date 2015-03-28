@@ -1,50 +1,41 @@
-HNMAV-OCL Malware Analysis Tools.
-=================================
+Tracethreat Malware Analysis Tools Core Framework
+=================================================
 
--[x] Pthread struct utility synchronizes with OpenCL.
+Integrated Tools for analysis malware in real-time.
 
--[x] Scanning with TBB(Multithread and Parallelization tasks) and OpenCL.
+Core Features.
+==============
 
--[] File Structure Support file type scanning type : PE, EXE, ELF and processes.
+* Pthread struct utility synchronizes with OpenCL.
 
--[] Compiler server DB signatures support ClamAV  and Yara-project signature.
+* Scanning with TBB(Multithread and Parallelization tasks) and OpenCL.
 
--[] Ansynchronous message communication between server and client.
+* File Structure Support file type scanning type : PE
+
+* Compiler server DB signatures support ClamAV  and Yara-project signature.
+
+* Ansynchronous protocal-buffer communicates between server and client.
 
 
 Table of content
 ============
 
-* [bin] (#hnmav-bin)
+* [Tracethreat-MAT Core Framework] (#tracethreat-mat-core)
 
-* [filetypes](#hnmav-filetypes)
-
-* [internet](#hnmav-internet)
-
-* [memory](#hnmav-memory)
-
-* [utils](#hnmav-utils)
-
-* [data_structure](#hnmav-data_structure)
-
-* [exception](#hnmav-exception)
-
-* [ocl](#hnmav-ocl)
-
-* [test](#hnmav-test)
-
-* [threadsyncocl](#hnmav-threadsynocl)
-
-* [utils](#hnmav-utils)
+* [Tracethreat-MAT Server](#tracethreat-server)
 
 -------------------------------------------------------------------------- 
 
-<a name="hnmav-bin">Binary file execuated programs.</a>
+<a name="tracethreat-mat-core">TraceThreat-MAT Core Framework</a>
+* Fast scanning with TBB and OpenCL concept.
+* In memory scan infected file.
+* Support PE and ELF file type scanning both Linux and Windows client.
+* Shared memory send/received message to another module.
 
-* Hnmavocl programs run on system. 
+<a name="tracethreat-server">TraceThreat-MAT Sever</a>
+* Internet Server/Client implement with ASIO boost library.
+* Communication with Protocal Buffer(Protobuf).
+* Multiple handle user in real-time scanning.
+* Tracing message to analysis database.
 
-<a name="hmanv-filetypes">File types support scanning sytem such as PE, EXE and ELF </a>
-* PE first version support PE layout file scanning.
-* EXE next version supported in future.
-* ELF next version supported in future.
-* Process supported in future.
+[Update: 09:11 PM, 14/03/2015]

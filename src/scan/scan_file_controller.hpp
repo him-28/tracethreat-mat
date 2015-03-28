@@ -30,9 +30,11 @@
 #include "memory/signature_shm_base.hpp"
 #include "memory/signature_shm_controller.hpp"
 
-#include "threadconcurrency/tbbpostscan_pe_controller.hpp"
+#include "taskconcurrency/tbbpostscan_pe_controller.hpp"
 
 #include "scan/file_scan_policy.hpp"
+
+#include "msg/message_tracethreat.pb.h"
 
 //logger
 #include "utils/logger/clutil_logger.hpp"
@@ -43,13 +45,16 @@ namespace policy
     using namespace utils;
 
     namespace fpolicy = policy;
-    namespace h_util = hnmav_util;
 
     template<typename MAPPED_FILE>
     class scan_internet_controller
     {
 
         public:
+            typedef scan_threat::InfectedFileInfo  threatinfo_type;
+
+            typedef std::vector<threatinfo_type *> threatinfo_vec_type;
+
             virtual bool load_database(std::vector<struct utils::meta_sig *> *meta_sig_vec,
                     std::string shm_sig_name) = 0;
 
@@ -57,10 +62,11 @@ namespace policy
 
             virtual  bool find_engine(utils::filetype_code  file_type) = 0;
 
-            virtual  bool scan_file() = 0;
+            virtual  threatinfo_vec_type& scan_file() = 0;
 
             virtual  bool set_file(std::vector<MAPPED_FILE *>   *mapped_file_vec,
-                    std::vector<const char *>     *file_type_vec) = 0;
+                    threatinfo_vec_type                         *threatinfo_vec,
+                    std::vector<const char *>                   *file_type_vec) = 0;
 
     };
 
@@ -73,6 +79,9 @@ namespace policy
 
             typedef  tbbscan::iactire_engine<char, tbbscan::tbb_allocator> iactire_concur_engine_type;
 
+            typedef scan_threat::InfectedFileInfo  threatinfo_type;
+
+            typedef std::vector<threatinfo_type *> threatinfo_vec_type;
 
             virtual bool load_database(std::vector<struct utils::meta_sig *> *meta_sig_vec,
                     std::string shm_sig_name);
@@ -81,10 +90,11 @@ namespace policy
 
             virtual bool find_engine(utils::filetype_code  file_type);
 
-            virtual bool scan_file();
+            virtual threatinfo_vec_type& scan_file();
 
             virtual bool set_file(std::vector<MAPPED_FILE *>   *mapped_file_vec,
-                    std::vector<const char *>     *file_type_vec);
+                    threatinfo_vec_type          *threatinfo_vec,
+                    std::vector<const char *>    *file_type_vec);
 
             std::vector<utils::file_scan_result<MAPPED_FILE> *> get_scan_result();
 
@@ -110,6 +120,8 @@ namespace policy
 
             std::string sigtype_code;
 
+            threatinfo_vec_type threatinfo_vec;
+
             //Scan step
             fpolicy::file_scan_policy<struct MAPPED_FILE_PE> *pef_policy;
 
@@ -118,8 +130,8 @@ namespace policy
             fpolicy::pe_policy_is<fpolicy::pe_file_policy<MAPPED_FILE_PE>, MAPPED_FILE_PE>
             > sf_policy;
 
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
 
     }; // scan_internet_controller

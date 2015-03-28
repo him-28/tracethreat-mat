@@ -152,7 +152,7 @@ namespace controller
     ibuffer_sync<BufferSync>& thread_sync<BufferSync, MAPPED_FILE>::start_processes()
     {
 
-        logger->write_info("Start, thread_sync::::start_processes() ", h_util::format_type::type_center);
+        logger->write_info("Start, thread_sync::::start_processes() ", utils::format_type::type_center);
 
         //define Thread run / mutex at here
         typename std::vector<thread_ptr>::iterator iter_threads;
@@ -204,7 +204,7 @@ namespace controller
         }
 
 
-        logger->write_info("End, thread_sync::::start_processes() ", h_util::format_type::type_center);
+        logger->write_info("End, thread_sync::::start_processes() ", utils::format_type::type_center);
     }
 
     template<typename BufferSync, typename MAPPED_FILE>

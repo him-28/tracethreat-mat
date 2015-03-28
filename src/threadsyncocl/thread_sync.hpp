@@ -33,7 +33,8 @@
 #include <boost/tuple/tuple.hpp>
 
 // internal
-#include "threadsyncocl/buffer_sync.hpp"
+#include "taskconcurrency/buffer_sync.hpp"
+
 #include "threadsyncocl/semaphore_controller.hpp"
 #include "threadsyncocl/thread_barrier_controller.hpp"
 
@@ -69,12 +70,11 @@ namespace controller
     using namespace utils;
     using namespace filetypes;
 
-    namespace h_util = hnmav_util;
 
     namespace shm_memory = memory;
 
     namespace dstr   = data_structure;
-    namespace kernel_ocl = hnmav_kernel;
+    namespace kernel_ocl = kernel;
 
     template<typename BufferSync>
     class ibuffer_sync
@@ -124,8 +124,8 @@ namespace controller
             std::vector<pthread_t> p_tid_task_vec;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
 						
 

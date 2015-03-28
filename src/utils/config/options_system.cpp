@@ -1,6 +1,6 @@
 #include "utils/config/options_system.hpp"
 
-namespace hnmav_util
+namespace utils
 {
 
 options_system *options_system::options_system_instance = NULL;

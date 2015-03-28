@@ -29,15 +29,22 @@
 namespace internet
 {
 
+    namespace asio = boost::asio;
+
     class scan_server
     {
 
         public:
+            //typedef boost::shared_ptr<asio::io_service> &  io_service_type;
 
-            scan_server(boost::asio::io_service& io_service, 
-												std::string ip_addr, 
-												unsigned port,
-												const char * file_path);
+            typedef asio::io_service&  io_service_type;
+
+            scan_server(io_service_type io_service,
+                    std::string ip_addr,
+                    unsigned port,
+                    const char *file_path,
+                    std::string tracethreat_ip,
+                    int tracethrat_port);
 
             ~scan_server();
 

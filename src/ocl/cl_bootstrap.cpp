@@ -1,6 +1,6 @@
 #include "ocl/cl_bootstrap.hpp"
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     template<typename UtilPlatform,
@@ -33,7 +33,7 @@ namespace hnmav_kernel
     {
         //util::options_system& op_system = util::options_system::get_instance();
         //init logger
-        logger_ptr = &util::clutil_logging<std::string, int>::get_instance();
+        logger_ptr = &utils::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
 
         //logger->write_info("Load path opencl ", *opencl_file_path);

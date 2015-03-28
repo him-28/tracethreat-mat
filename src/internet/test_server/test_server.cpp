@@ -29,5 +29,5 @@ GTEST_API_ int main(int argc, char  **argv)
 
 //internet connection
 #include "internet/test_server/scan_server_connection_test.hpp"
-
-
+//UUID security
+//#include "internet/test_server/security_connection_test.hpp"

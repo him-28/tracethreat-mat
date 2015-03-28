@@ -17,8 +17,7 @@ namespace data_structure
 {
 
     using namespace boost;
-    namespace exp_container = hnmav_exception::container;
-    namespace util_h          = hnmav_util;
+    namespace exp_container = trace_exception::container;
 
     template<typename BufferType>
     class vector_buffer
@@ -36,8 +35,8 @@ namespace data_structure
             int counter_size;
 
             // logging
-            shared_ptr<util_h::clutil_logging<std::string, int> > *logger_ptr;
-            util_h::clutil_logging<std::string, int>   *logger;
+            shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>   *logger;
 
     };
 
@@ -48,7 +47,7 @@ namespace data_structure
     vector_buffer<BufferType>::vector_buffer() : size_(0), counter_size(0), buffer_data_(NULL)
     {
         //init logger
-        logger_ptr = &util_h::clutil_logging<std::string, int>::get_instance();
+        logger_ptr = &utils::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
         logger->write_info("Load vector buffer");
     }

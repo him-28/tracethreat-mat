@@ -1,5 +1,5 @@
-#ifndef HNMAV_KERNEL_CLUTIL_PLATFORM_HPP
-#define HNMAV_KERNEL_CLUTIL_PLATFORM_HPP
+#ifndef KERNEL_CLUTIL_PLATFORM_HPP
+#define KERNEL_CLUTIL_PLATFORM_HPP
 
 /*                       Titles                                          Authors              Date
  *-Initial utility infomation                                            Chatsiri.rat				  19/08/2012
@@ -42,22 +42,12 @@
 
 #define MAX_SOURCE_SIZE (0x100000)
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     using namespace boost;
-    using namespace hnmav_util;
-    using namespace hnmav_exception;
-		/*
-    void CL_CALLBACK contextCallback(
-            const char *errInfo,
-            const void *private_info,
-            size_t cb,
-            void *user_data)
-    {
-        std::cout << "Error occured during context use: " << errInfo << std::endl;
-    }
-		*/
+    using namespace utils;
+    using namespace trace_exception;
 
     /* initial Real class */
     class platform : public clutil

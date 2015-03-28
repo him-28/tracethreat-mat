@@ -19,23 +19,35 @@ namespace policy
 
 
     // scan_file_type member function have arguement supported multiple parameter.
+    /**
+    * @brief scan_file_type supports Thread building blog scanning.(TBBScan)
+    *
+    * @param file_type_vec File name is path scanning.
+    * @param mapped_file_pe  File detail such path and binary file.
+    * @param sig_shm  SHM-File not only PE.
+    * @param sig_engine  Signature engine for scanning.
+    * @param iactire_engine_scanner   AC-Tire engine of TBBScanning.
+    */
     template<typename MAPPED_FILE>
-    bool pe_file_policy<MAPPED_FILE>::
+    typename pe_file_policy<MAPPED_FILE>::threatinfo_vec_type&
+    pe_file_policy<MAPPED_FILE>::
     scan_file_type(std::vector<const char *> *file_type_vec,
             std::vector<MAPPED_FILE *> *mapped_file_pe,
-            sig_shm_type  *sig_shm_pe,
+            threatinfo_vec_type *threatinfo_vec,
+            sig_shm_type  *sig_shm,
             sig_engine_type *sig_engine,
             iactire_engine_scanner_type   *iactire_engine_scanner)
     {
         logger->write_info("Start pe_file_policy<MAPPED_FILE>::scan_file_type");
         //Check Internal or Exteranl scanning.
         bool internal_msg = false;
-        typename std::vector<MAPPED_FILE *>::iterator iter_files;
 
-				if(file_type_vec->empty()){
-					logger->write_info("Start pe_file_policy<MAPPED_FILE>::scan_file_type, file empty");
-					return false;
-				}
+        if(file_type_vec->empty()) {
+            logger->write_info("Start pe_file_policy<MAPPED_FILE>::scan_file_type, file empty");
+            return *threatinfo_vec;
+        }
+
+        typename std::vector<MAPPED_FILE *>::iterator iter_files;
 
         for(iter_files = mapped_file_pe->begin();
                 iter_files != mapped_file_pe->end();
@@ -65,23 +77,29 @@ namespace policy
         //[x]Add Sig-SHM.
         //[x]Add File-SHM * Declares on scan() member function of pe_file_controller.
         //[x]Add AC-Tire TBB Scanning.
-        pe_fconl.scan(mapped_file_pe, sig_shm_pe, sig_engine, iactire_engine_scanner);
+        threatinfo_vec = &pe_fconl.scan(mapped_file_pe,
+                threatinfo_vec,
+                sig_shm,
+                sig_engine,
+                iactire_engine_scanner);
 
-				//Unmapped file after scan completed.
-				if(internal_msg)
-					fileoffset_h.unmapped_file(*mapped_file_pe);
+        //Unmapped file after scan completed.
+        if(internal_msg)
+            fileoffset_h.unmapped_file(*mapped_file_pe);
 
-        return true;// scan completed
+        return *threatinfo_vec;
     }
 
 
     /**
-    * @brief scan_file_type supported vector contains multiple files scanning with OCL
+    * @brief Scan_file_type support OCL scanning.
     *
-    * @param mapped_file_pe_vec False, If cannot scanning completed.
+    * @param mapped_file_pe_vec  Vector contain detail of file such binary and file_name.
+    * @param sig_shm  SHM-Signature insert to OCL
     */
     template<typename MAPPED_FILE>
-    bool pe_file_policy<MAPPED_FILE>::
+    typename pe_file_policy<MAPPED_FILE>::threatinfo_vec_type&
+    pe_file_policy<MAPPED_FILE>::
     scan_file_type(std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
             memory::signature_shm<struct memory::meta_sig,
             struct memory::meta_sig_mem> * sig_shm)
@@ -151,12 +169,26 @@ namespace policy
     template<typename MAPPED_FILE>
     std::vector<const char *> *pe_file_policy<MAPPED_FILE>::get_file_type()
     {
-				logger->write_info("pe_file_policy<MAPPED_FILE>::get_file_type, file no. : ",
-               boost::lexical_cast<std::string>(file_type_vec.size()));
+        logger->write_info("pe_file_policy<MAPPED_FILE>::get_file_type, file no. : ",
+                boost::lexical_cast<std::string>(file_type_vec.size()));
 
         return &file_type_vec;
     }
 
+    template<typename MAPPED_FILE>
+    bool pe_file_policy<MAPPED_FILE>::set_threatinfo_vec(threatinfo_vec_type *threatinfo_vec)
+    {
+        threatinfo_vec_.insert(threatinfo_vec_.begin(),
+                threatinfo_vec->begin(),
+                threatinfo_vec->end());
+    }
+
+    template<typename MAPPED_FILE>
+    typename pe_file_policy<MAPPED_FILE>::threatinfo_vec_type & 
+		pe_file_policy<MAPPED_FILE>::get_threatinfo_vec()
+    {
+        return threatinfo_vec_;
+    }
 
 
     template<typename MAPPED_FILE>
@@ -173,8 +205,18 @@ namespace policy
 
     }
 
+    /**
+    * @brief Scan_flie_engine support TBBScan will invoke scan_file_type that TBBScan-engine.
+    *
+    * @param fcol_policy  File Policy classificaties file type.
+    * @param sig_shm  SHM-Signature
+    * @param sig_engine Signature Engine for scanning.
+    * @param iactire_engine_scanner  ACTire Engine scanning.
+    */
     template<typename MAPPED_FILE>
-    std::vector<struct utils::file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
+    //std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
+    typename file_scan_policy<MAPPED_FILE>::threatinfo_vec_type&
+    file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
             sig_shm_type   *sig_shm,
             sig_engine_type *sig_engine,
@@ -184,26 +226,29 @@ namespace policy
 
         std::vector<MAPPED_FILE *> *mapped_file_vec =  fcol_policy->get_mapped_file();
         std::vector<const char *>  *file_type_vec   =  fcol_policy->get_file_type();
+        threatinfo_vec_type        *threatinfo_vec =   &fcol_policy->get_threatinfo_vec();
 
-				logger->write_info("file_scan_policy<MAPPED_FILE>::scan_file_engine, mapped_file on : ",
-												boost::lexical_cast<std::string>(mapped_file_vec->size()));
+        logger->write_info("file_scan_policy<MAPPED_FILE>::scan_file_engine, mapped_file on : ",
+                boost::lexical_cast<std::string>(mapped_file_vec->size()));
 
-				logger->write_info("file_scan_policy<MAPPED_FILE>::scan_file_engine, file_type-vec on : ",
-												boost::lexical_cast<std::string>(file_type_vec->size()));
+        logger->write_info("file_scan_policy<MAPPED_FILE>::scan_file_engine, file_type-vec on : ",
+                boost::lexical_cast<std::string>(file_type_vec->size()));
 
+        logger->write_info("file_scan_policy<MAPPED_FILE>::scan_file_engine, threatinfo-vec on : ",
+                boost::lexical_cast<std::string>(threatinfo_vec->size()));
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_file;
         uint8_t result_file_count = 0;
         f_col_policy = fcol_policy;
         f_col_policy->get_result();
 
-        if(f_col_policy->scan_file_type(file_type_vec,
+        return f_col_policy->scan_file_type(file_type_vec,
                 mapped_file_vec,
+                threatinfo_vec,
                 sig_shm,
                 sig_engine,
-                iactire_engine_scanner)) {
+                iactire_engine_scanner);
 
-        }//if
 
         //TODO: Pluging for scanning.
         //f_col_policy->load_plugins_type(mapp_file, pl_result);
@@ -211,8 +256,17 @@ namespace policy
 
     }
 
+    /**
+    * @brief Scan_file_engine support OCL scanning base on GPU.
+    *
+    * @param fcol_policy  File policy classificaties file type.
+    * @param mapped_file_vec  Map contains all file detail such file-detail, binary of file.
+    * @param sig_shm SHM-Signature.
+    */
     template<typename MAPPED_FILE>
-    std::vector<struct utils::file_scan_result<MAPPED_FILE>* >& file_scan_policy<MAPPED_FILE>::
+    //std::vector<struct utils::file_scan_result<MAPPED_FILE>* >&
+    typename file_scan_policy<MAPPED_FILE>::threatinfo_vec_type&
+    file_scan_policy<MAPPED_FILE>::
     scan_file_engine(file_scan_policy<MAPPED_FILE> *fcol_policy,
             std::vector<MAPPED_FILE *> *mapped_file_vec,
             memory::signature_shm<struct memory::meta_sig,
@@ -225,9 +279,7 @@ namespace policy
         f_col_policy->get_result();
 
         //return scanning completed all files.
-        if(f_col_policy->scan_file_type(mapped_file_vec, sig_shm)) {
-
-        }// end if
+        return f_col_policy->scan_file_type(mapped_file_vec, sig_shm);
 
         //TODO: Pluging for scanning.
         //f_col_policy->load_plugins_type(mapp_file, pl_result);

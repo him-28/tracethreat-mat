@@ -41,13 +41,11 @@ std::ostream& Logger::Start(LogSeverity severity,
     time(&tm);
     char time_string[128];
 #ifdef _WIN32
-    ctime_s(time_string, 128, &tm); //support PE.
+    ctime_s(time_string, 128, &tm); //support PE-Win32.
 #elif  __linux__
     ctime_r(&tm, time_string);
 #endif
-    return GetStream(severity) << time_string
-            << " " << file << ":" << line
-            << " (" << function << ") " << std::flush;
+    return GetStream(severity) << time_string << " " << file << ":" << line << " (" << function << ") " << std::flush;
 }
 
 Logger::~Logger()

@@ -1,7 +1,7 @@
 #include "exception/system_exception.hpp"
 
 
-namespace hnmav_exception
+namespace trace_exception
 {
 
     namespace system

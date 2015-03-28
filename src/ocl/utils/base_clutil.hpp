@@ -1,5 +1,5 @@
-#ifndef HNMAV_KERNEL_CLUTIL_HPP
-#define HNMAV_KERNEL_CLUTIL_HPP
+#ifndef KERNEL_CLUTIL_HPP
+#define KERNEL_CLUTIL_HPP
 
 /*                       Titles                                          Authors              Date
  *-interface combine with  platdevices_info( contrain cl infomation )
@@ -24,7 +24,7 @@
 //- Data structure
 #include "data_structure/vector.hpp"
 
-namespace hnmav_kernel
+namespace kernel
 {
     using namespace boost;
     namespace dstructure  = data_structure;

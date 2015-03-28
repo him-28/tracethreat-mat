@@ -23,7 +23,7 @@
 // Algorithms internal codes.
 #define  AT_INVALID_SIZE -100
 
-namespace hnmav_exception
+namespace trace_exception
 {
     //using namespace boost;
  

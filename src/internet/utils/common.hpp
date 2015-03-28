@@ -1,7 +1,7 @@
 #ifndef INTERNET_SERVICE_COMMON_HPP
 #define INTERNET_SERVICE_COMMON_HPP
 
-#include "internet/scan_client/packedmessage_scan_client.hpp"
+#include "internet/msg/packedmessage_scan_client.hpp"
 
 namespace internet
 {

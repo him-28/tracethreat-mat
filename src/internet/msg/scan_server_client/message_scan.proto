@@ -40,40 +40,59 @@ message RequestScan{
 
 		enum RequestType{
 			REGISTER = 1;
-			REGISTER_SUCCESS = 2;
-			REGISTER_UNSUCCESS = 3;
-      SCAN = 4;
-			SCAN_SUCCESS = 5;
-			SCAN_UNSUCCESS = 6;
-			RESULT = 7;
-			CLOSE_CONNECTION = 8;
+      SCAN = 2;
+			CLOSE_CONNECTION = 3;
+			REGISTER_SUCCESS = 4;
+			REGISTER_UNSUCCESS = 5;
+			SCAN_SUCCESS = 6;
+			SCAN_UNSUCCESS = 7;
+			RESULT = 8;
 		}
 
-		required RequestType  type     	= 1;
-		required bytes  	   uuid 		 	= 2; // Machine UUID send from client.
-		required bytes      timestamp 	= 3;
-		//required bytes type = 3; // Request types between server and client.
-		message RequestGetBinaryValue{
+		enum FileStatus{
+				FILE_INFECTED = 1;
+        FILE_SUSPECTED = 2;
+        FILE_CLEAN = 3;
+		}
+
+		required RequestType  type     	= 1; //Request types between server and client.
+		required bytes  	   uuid 		 	= 2; //Machine UUID send from client.
+		required bytes      timestamp 	= 3; //Timestamp is external system (International Time)
+		optional bytes      key         = 4; // AES key support fall back step from SSL
+    optional bytes      iv          = 5; // Init vector support fall back step from SSL
+		required bytes      ip          = 6; // IP Address from client. 
+
+		required bytes      conn_ip     = 7; // IP connection between client/server
+    required bytes      conn_uuid   = 8; // UUID connection between client/server
+
+      message GetBinaryValue{
 			optional bytes binary     	= 1;   // Binary file.
 			optional bytes file_name  	= 2;   // File name.
 			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-
+			optional FileStatus  file_status = 6;
+			optional bytes       uuid        = 7;
+			optional bytes       ip          = 8;
+			optional bytes       machine_name = 9;
 		}
 
-		repeated RequestGetBinaryValue request_get_binary_value = 4;
+      repeated GetBinaryValue get_binary_value = 9;
 
-		message RequestSetBinaryValue{
+
+      message SetBinaryValue{
 			optional bytes binary      	= 1;   // Binary file.
 			optional bytes file_name   	= 2;   // File name.
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
-
+      optional FileStatus  file_status  = 6;// File status
+			optional bytes       uuid        = 7;
+      optional bytes       ip          = 8;
+      optional bytes       machine_name = 9;
 		}
 
-		repeated RequestSetBinaryValue  request_set_binary_value = 5;
+      repeated SetBinaryValue  set_binary_value = 10;
 
 }
 
@@ -97,41 +116,60 @@ message ResponseScan{
 		}
 
 		enum ResponseType{
+
 			REGISTER = 1;
-			REGISTER_SUCCESS = 2;
-			REGISTER_UNSUCCESS = 3;
-      SCAN = 4;
-			SCAN_SUCCESS = 5;
-			SCAN_UNSUCCESS = 6;
-			RESULT = 7;
-			CLOSE_CONNECTION = 8;
+      SCAN = 2;
+			CLOSE_CONNECTION = 3;
+			REGISTER_SUCCESS = 4;
+			REGISTER_UNSUCCESS = 5;
+			SCAN_SUCCESS = 6;
+			SCAN_UNSUCCESS = 7;
+			RESULT = 8;
+
+		}
+
+		enum FileStatus{
+				FILE_INFECTED = 1;
+        FILE_SUSPECTED = 2;
+        FILE_CLEAN = 3;
 		}
 
 		required ResponseType  type      = 1;
 		required bytes  	   	 uuid 		 = 2; // Machine UUID send from client.
 		required bytes         timestamp = 3;
+		optional bytes         key       = 4;
+    optional bytes         iv        = 5;
+		required bytes         ip        = 6; // IP Address from client.
 
+		required bytes      conn_ip     = 7;
+    required bytes      conn_uuid   = 8;
 
-		message ResponseGetBinaryValue{
+      message  GetBinaryValue{ 
 			optional bytes binary     	= 1;   // Binary file.
 			optional bytes file_name  	= 2;   // File name.
 			optional uint64 file_size  	= 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
+      optional FileStatus  file_status  = 6;
+			optional bytes       uuid        = 7;
+      optional bytes       ip          = 8;
+      optional bytes       machine_name = 9;
 		}
 
-		repeated ResponseGetBinaryValue response_get_binary_value = 4;
+    repeated GetBinaryValue get_binary_value = 9;
 
-		message ResponseSetBinaryValue{
-
+      message SetBinaryValue{ 
 			optional bytes binary      	= 1;   // Binary file.
 			optional bytes file_name   	= 2;   // File name.
 			optional uint64 file_size   = 3;
 			optional EncodeType  scan_type = 4; // Scan with decode type.
 			optional FileType    file_type = 5; // File type.
+      optional FileStatus  file_status  = 6;
+			optional bytes       uuid        = 7;
+      optional bytes       ip          = 8;
+      optional bytes       machine_name = 9;
 		}
 
-		repeated ResponseSetBinaryValue  reponse_set_binary_value = 5;
-
+    repeated SetBinaryValue  set_binary_value = 10;
 
 }

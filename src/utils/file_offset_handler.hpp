@@ -2,7 +2,7 @@
 #define UTILS_FILE_OFFSET_HANDLER__HPP
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 R.Chatsiri, Inc.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -43,9 +43,8 @@
 
 namespace utils
 {
-    namespace h_util = hnmav_util;
 
-    namespace file_system_excep = hnmav_exception::file_system;
+    namespace file_system_excep = trace_exception::file_system;
 
     template<typename  MAPPED_FILE = struct MAPPED_FILE_PE,
              typename MEMORY_BLOCK = struct MEMORY_BLOCK_PE>
@@ -146,8 +145,8 @@ namespace utils
             //MAPPED_FILE *mapped_file_ptr;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

@@ -1,5 +1,5 @@
-#ifndef  HNMAV_KERNEL_CL_BOOTSTRAP_HPP
-#define  HNMAV_KERNEL_CL_BOOTSTRAP_HPP
+#ifndef  KERNEL_CL_BOOTSTRAP_HPP
+#define  KERNEL_CL_BOOTSTRAP_HPP
 
 /*                       Titles                                          Authors                        Date
  *-Class load OpenCL                                                     Chatsiri.rat                   21/11/2012
@@ -7,7 +7,7 @@
  *-Test load injection data node !!!
  */
 
-//OpenCL utils
+//OpenCL utilss
 //#include "data_structure/tire.hpp"
 #include "ocl/utils/base_clutil.hpp"
 #include "ocl/utils/clutil_platform.hpp"
@@ -19,11 +19,10 @@
 //#include "data_structure/absalgorithms.hpp"
 #include "data_structure/structdef.hpp"
 // initial
-namespace hnmav_kernel
+namespace kernel
 {
 
     namespace dstr = data_structure;
-    namespace util = hnmav_util;
 
     template<typename UtilPlatform,
              typename TireDefine,
@@ -74,8 +73,8 @@ namespace hnmav_kernel
 
             std::string signature_name;
             // Handeling logger
-            shared_ptr<util::clutil_logging<std::string, int> > *logger_ptr;
-            util::clutil_logging<std::string, int>              *logger;
+            shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>              *logger;
 
             //TireDefine *node_tire_input;
             //TireDefine *node_tire_output;

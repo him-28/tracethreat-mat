@@ -1,6 +1,6 @@
 #include "ocl/utils/clutil_platform.hpp"
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     

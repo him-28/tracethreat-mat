@@ -3,20 +3,21 @@
 
 #include <boost/unordered_map.hpp>
 
-
 #include "utils/logger/clutil_logger.hpp"
 
 #include "utils/base/common.hpp"
 #include "memory/signature_shm_base.hpp"
+
+#include "../../msg/message_tracethreat.pb.h"
 
 namespace utils
 {
 
     namespace connector
     {
-				namespace h_util = hnmav_util;
+				//namespace utils = hnmav_util;
         //struct meta_sig, class file structure.
-        template<typename Signature, typename FileStructure>
+        template<typename MessageResult>
         class result_infected
         {
 
@@ -33,34 +34,34 @@ namespace utils
 
                 //Add signature type and structure meta_sig.
                 //support utils::xxx_type such utils::pe_file
-                bool add_infected_result(Signature *msig);
+                bool add_infected_result(MessageResult *msig);
 
-                Signature *sig;
+                MessageResult *sig;
 
                 class impl;
                 impl *m_impl;
 
                 //logger
-                boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-                h_util::clutil_logging<std::string, int>    *logger;
+                boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+                utils::clutil_logging<std::string, int>    *logger;
 
 
         };
 
-        template<typename Signature, typename FileStructure>
+        template<typename MessageResult>
         class result_pe_infected
         {
-                typedef boost::unordered_map<char, Signature *> sigtype_map;
+                typedef boost::unordered_map<char, MessageResult*> sigtype_map;
             public:
-                bool add_infected_result(Signature *msig);
-                bool list_index_found(Signature *sig_, FileStructure   *file_str_);
+                bool add_infected_result(MessageResult *msig);
+                bool list_index_found(MessageResult *sig_);
 
             private:
                 sigtype_map sig_map;
 
                 //logger
-                boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-                h_util::clutil_logging<std::string, int>    *logger;
+                boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+                utils::clutil_logging<std::string, int>    *logger;
 
         };
 
