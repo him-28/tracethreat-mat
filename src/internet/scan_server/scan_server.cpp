@@ -33,7 +33,12 @@ namespace internet
 
             typedef asio::io_service& io_service_type;
 
-            impl(io_service_type io_service, std::string ip_addr, unsigned port, const char *file_path):
+            impl(io_service_type io_service,
+                    std::string ip_addr,        //IP of server
+                    unsigned port,              //Port of server
+                    const char *file_path,      //Signature file path.
+                    std::string tracethreat_ip, //Tracethret connect to TTDB-server IP.
+                    int tracethreat_port):           //Tracethreat connect to TTDB-server port.
                 scan_monitor_connection(new asio::io_service::work(io_service)), // Handle Async Connection
                 acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::address::from_string(ip_addr), port)),
                 io_service_(io_service),
@@ -59,6 +64,9 @@ namespace internet
                 //deploy scanning engine, load database to SHM.
                 if(!deploy_scan_engine())
                     LOG(INFO)<<"Server : Scan engine deploy fail.";
+
+                set_tracethreat_ip(tracethreat_ip);
+                set_tracethreat_port(tracethreat_port);
 
                 //load cryto and network security engine.
                 if(!deploy_system_engine())
@@ -124,6 +132,14 @@ namespace internet
                 }
             }
 
+            void set_tracethreat_ip(std::string tracethreat_ip) {
+                this->tracethreat_ip = tracethreat_ip;
+            }
+
+            void set_tracethreat_port(int tracethreat_port) {
+                this->tracethreat_port = tracethreat_port;
+            }
+
             //Default load another system.
             bool deploy_system_engine() {
                 //Logging-monitoring system.
@@ -143,7 +159,7 @@ namespace internet
 
                 if(enc_controller_ == NULL) {
                     LOG(INFO)<<"Encryption controller cannot initial";
-										return false;
+                    return false;
                 }
 
                 //RPC-Client. Send result log to Tracethreat-RPC-Service.
@@ -160,13 +176,12 @@ namespace internet
 
                 if(tracethreat_controller_ == NULL) {
                     LOG(INFO)<<"Tracethreat controller cannot initial";
-										return false;
-                }else{
+                    return false;
+                } else {
 
-                LOG(INFO)<<"IP Fix. Please changed before send to production";
-                tracethreat_controller_->initial_engine("127.0.0.1", 8089);
-                 
-								}
+                    tracethreat_controller_->initial_engine(tracethreat_ip, tracethreat_port);
+
+                }
 
                 //Database
 
@@ -257,9 +272,13 @@ namespace internet
             //Context call ssl
             asio::ssl::context context_;
             //Service of socket.
-            io_service_type  io_service_; // & io_service_
+            io_service_type  io_service_;
             //File signature path
             std::string file_sig_path;
+
+            std::string tracethreat_ip;
+
+            int tracethreat_port;
 
             boost::thread_group scan_connection_thread;
             boost::scoped_ptr<asio::io_service::work> scan_monitor_connection;
@@ -274,7 +293,7 @@ namespace internet
 
             encryption_type *enc_controller_;
 
-						tracethreat_controller_type * tracethreat_controller_;
+            tracethreat_controller_type *tracethreat_controller_;
             //handle thread
             //mutable boost::recursive_mutex res_mux;
 
@@ -284,13 +303,18 @@ namespace internet
     scan_server::scan_server(io_service_type io_service,
             std::string ip_addr,
             unsigned port,
-            const char *file_path)
-        : impl_(new scan_server::impl(io_service, ip_addr, port, file_path))
+            const char *file_path,
+            std::string tracethreat_ip,
+            int tracethreat_port)
+        : impl_(new scan_server::impl(io_service,
+                ip_addr,
+                port,
+                file_path,
+                tracethreat_ip,
+                tracethreat_port))
     {
 
     }
-
-
 
     scan_server::~scan_server()
     {
