@@ -41,6 +41,7 @@ Core Features.
 * Tracing infected message to analysis on database.
 
 <a name="server-message-detail">Server message detail</a>
+
 * Communication message. 
 
 ```c++
