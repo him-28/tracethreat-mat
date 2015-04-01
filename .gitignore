@@ -19,6 +19,8 @@ build/
 bulid/*
 src/.deps/*
 src/.deps/
+src/**/.deps/
+src/**/.libs/
 autom4te.cache/*
 autom4te.cache/
 build-aux/*
@@ -50,7 +52,6 @@ stamp-h1
 log/*
 log/logger_main.log
 log/
-!*.Po
 src/rules/.deps/*
 src/rules/.deps/
 tmp/
