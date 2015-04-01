@@ -26,6 +26,7 @@ Core Features.
 * [Server message detail](#server-message-detail)
 
 * [Client message detail](#client-message-detail)
+
 -------------------------------------------------------------------------- 
 
 <a name="tracethreat-mat-core">TraceThreat-MAT Core Framework</a>
@@ -42,7 +43,7 @@ Core Features.
 
 <a name="server-message-detail">Server message detail</a>
 
-* Communication message 
+* Communication message. 
 
 ```c++
 
