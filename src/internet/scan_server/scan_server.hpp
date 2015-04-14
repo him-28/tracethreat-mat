@@ -35,8 +35,6 @@ namespace internet
     {
 
         public:
-            //typedef boost::shared_ptr<asio::io_service> &  io_service_type;
-
             typedef asio::io_service&  io_service_type;
 
             scan_server(io_service_type io_service,
