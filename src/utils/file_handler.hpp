@@ -5,7 +5,8 @@
 #include <fstream>
 
 #include "filetypes/binary.hpp"
-#include "filetypes/pe.hpp"
+//#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 #include <fcntl.h>
 #include <sys/types.h>

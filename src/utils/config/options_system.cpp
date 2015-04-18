@@ -3,9 +3,9 @@
 namespace utils
 {
 
-options_system *options_system::options_system_instance = NULL;
+    options_system *options_system::options_system_instance = NULL;
 
-void options_system::read_config(std::stringstream& config_type, std::vector<std::string>& configname_vec)
+    void options_system::read_config(std::stringstream& config_type, std::vector<std::string>& configname_vec)
     {
         std::copy(configname_vec.begin(),
                 configname_vec.end(),
@@ -60,6 +60,27 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
         boost::trim(dbpath);
         return dbpath;
     }
+
+
+		std::string options_system::get_certssl_path()const
+		{
+				std::string certpath = cert_path->str();
+				boost::trim(certpath);
+        return certpath;
+		}
+
+		std::string options_system::get_dh512_path()const{
+				std::string dh512 = dh512_path->str();
+				boost::trim(dh512);
+				return dh512;
+		}
+
+		std::string options_system::get_pwd()const{
+				std::string pwd = certpwd->str();
+				boost::trim(pwd);
+				return pwd;
+		}
+
     // logger main file path
     std::string options_system::get_logger_mainfile_path() const
     {
@@ -108,10 +129,10 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
 
     options_system&  options_system::get_instance()
     {
-				if(options_system_instance == NULL)
-				{
-					  options_system_instance = new options_system();
+        if(options_system_instance == NULL) {
+            options_system_instance = new options_system();
         }
+
         return *options_system_instance;
     }
 
@@ -149,7 +170,19 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
                     " logger main file")
             ("logger-settings,s",
                     po::value< std::vector<std::string> >()->composing(),
-                    " logger settings file");
+                    " logger settings file")
+						("cert-pem,e",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " ceritificate file of SSL")
+            ("dh512-pem,d",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " DH512-PEM of SSL")
+            ("cert-pwd,p",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Password of SSL");
+
+
+
 
         } catch(std::exception ex) {
             std::cout<< "Error : " << ex.what() <<std::endl;
@@ -178,10 +211,11 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
     int options_system::default_condition()
     {
         std::ifstream ifs(config_file->c_str());
-
+				
         if(!ifs) {
             std::cout<< "cannot open file name : " << *config_file <<std::endl;
         } else {
+			
             config_file_options  = new po::options_description();
             config_file_options->add(*configure);
 
@@ -189,13 +223,15 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
             notify(vm);
         }
 
+				
+
         if(vm.count("help")) {
             std::cout<< *visible <<std::endl;
             return 0;
         }
 
         if(vm.count("version")) {
-            std::cout<< "HanumanAV, version releases :  0.0.1 " <<std::endl;
+            std::cout<< "Tracethreat, version releases :  0.0.1 " <<std::endl;
         }
 
         if(vm.count("db-signature-path")) {
@@ -228,6 +264,27 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
             read_config(*logger_settingsfile_path,vec);
 
         }
+
+
+        //support security path
+        if(vm.count("cert-pem")) {
+            std::vector<std::string> vec =  vm["cert-pem"].as<std::vector<std::string> >();
+            cert_path = new std::stringstream;
+            read_config(*cert_path,vec);
+
+        }
+
+        if(vm.count("dh512-pem")) {
+            std::vector<std::string> vec =  vm["dh512-pem"].as<std::vector<std::string> >();
+            dh512_path = new std::stringstream;
+            read_config(*dh512_path,vec);
+        }//dh515-pem
+
+	      if(vm.count("cert-pwd")) {
+            std::vector<std::string> vec =  vm["cert-pwd"].as<std::vector<std::string> >();
+            certpwd = new std::stringstream;
+            read_config(*certpwd,vec);
+        }//cert-pwd
 
     }
 

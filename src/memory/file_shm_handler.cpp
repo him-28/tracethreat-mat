@@ -31,7 +31,7 @@
 #include "utils/convert.hpp"
 #include "utils/md5_hash.hpp"
 
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 #define EXTENED_SIZE_SHM  64 /*Issues: Plan-00004 : Investigate SHM-Sizes should equal filel sizes.*/
 

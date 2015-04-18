@@ -69,6 +69,10 @@
 
 //#include "test/md5_hash_test.hpp"
 
+//Test options 
+#include "test/options_system_test.hpp"
+
+
 GTEST_API_ int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);

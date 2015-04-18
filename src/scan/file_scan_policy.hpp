@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "filetypes/pe_file_controller.hpp"
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 #include "memory/signature_shm_base.hpp"
 #include "memory/signature_shm_controller.hpp"

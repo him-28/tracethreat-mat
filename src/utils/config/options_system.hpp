@@ -51,6 +51,13 @@ namespace utils
             std::string  get_logger_mainfile_path() const;
             std::string  get_logger_settingsfile_path() const;
             std::string&  get_config_file()const;
+
+						std::string get_certssl_path()const;
+
+						std::string get_dh512_path()const;
+
+						std::string get_pwd()const;
+
 						//std::string& get_dir_path()const;
 
         private:
@@ -61,11 +68,17 @@ namespace utils
 
             void  read_config(std::stringstream&   config_type, std::vector<std::string>&   config_name);
 
+						//system path
             std::stringstream  *scanfile_path;
             std::stringstream  *database_path;
             std::stringstream  *clfile_path;
             std::stringstream  *logger_mainfile_path;
             std::stringstream  *logger_settingsfile_path;
+						//security path
+						std::stringstream  *cert_path;
+						std::stringstream  *dh512_path;
+            std::stringstream  *certpwd;
+
 
             std::string *config_file;
 

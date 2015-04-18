@@ -27,7 +27,7 @@
 
 //
 #include "utils/logger/clutil_logger.hpp"
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 namespace controller
 {
