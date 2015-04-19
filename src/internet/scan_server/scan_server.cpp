@@ -1,4 +1,7 @@
 #define  CPU_THREAD_SIZE 1
+
+#include <string>
+
 #include "internet/scan_server/scan_server.hpp"
 #include "internet/scan_server/scan_connection.hpp"
 
@@ -33,16 +36,17 @@ namespace internet
 
             typedef asio::io_service& io_service_type;
 
-            impl(io_service_type io_service,
-                    std::string ip_addr,        //IP of server
-                    unsigned port,              //Port of server
-                    const char *file_path,      //Signature file path.
-                    std::string tracethreat_ip, //Tracethret connect to TTDB-server IP.
-                    int tracethreat_port):           //Tracethreat connect to TTDB-server port.
+
+            impl(io_service_type io_service, utils::options_system& op_system) :
                 scan_monitor_connection(new asio::io_service::work(io_service)), // Handle Async Connection
-                acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::address::from_string(ip_addr), port)),
+                acceptor(io_service,
+                        asio::ip::tcp::endpoint(
+                                asio::ip::address::from_string(op_system.get_ip_server()),
+                                std::stoul(op_system.get_port_server())
+                        )
+                        ),
                 io_service_(io_service),
-                file_sig_path(file_path),
+                file_sig_path(op_system.get_database_path()),
                 context_(boost::asio::ssl::context::sslv23) {
 
                 LOG(INFO)<<"Server : Scan server start...";
@@ -52,10 +56,13 @@ namespace internet
                 context_.set_options(asio::ssl::context::default_workarounds
                         | asio::ssl::context::no_sslv2
                         | asio::ssl::context::single_dh_use);
+
                 context_.set_password_callback(boost::bind(&scan_server::impl::get_password, this));
-                context_.use_certificate_chain_file("server.pem");
-                context_.use_private_key_file("server.pem", asio::ssl::context::pem);
-                context_.use_tmp_dh_file("dh512.pem");
+
+                context_.use_certificate_chain_file(op_system.get_certssl_path()); //server.pem
+
+                context_.use_private_key_file(op_system.get_certssl_path(), asio::ssl::context::pem);
+                context_.use_tmp_dh_file(op_system.get_dh512_path());
 
                 LOG(INFO)<<"Server : Initial context success.";
 
@@ -65,8 +72,8 @@ namespace internet
                 if(!deploy_scan_engine())
                     LOG(INFO)<<"Server : Scan engine deploy fail.";
 
-                set_tracethreat_ip(tracethreat_ip);
-                set_tracethreat_port(tracethreat_port);
+                set_tracethreat_ip(op_system.get_ip_tracethreat());
+                set_tracethreat_port(std::stoi(op_system.get_port_tracethreat()));
 
                 //load cryto and network security engine.
                 if(!deploy_system_engine())
@@ -300,21 +307,14 @@ namespace internet
 
     };
 
+
     scan_server::scan_server(io_service_type io_service,
-            std::string ip_addr,
-            unsigned port,
-            const char *file_path,
-            std::string tracethreat_ip,
-            int tracethreat_port)
-        : impl_(new scan_server::impl(io_service,
-                ip_addr,
-                port,
-                file_path,
-                tracethreat_ip,
-                tracethreat_port))
+            utils::options_system& op_system)
+        : impl_(new scan_server::impl(io_service, op_system))
     {
 
     }
+
 
     scan_server::~scan_server()
     {

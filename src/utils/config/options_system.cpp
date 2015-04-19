@@ -62,24 +62,56 @@ namespace utils
     }
 
 
-		std::string options_system::get_certssl_path()const
-		{
-				std::string certpath = cert_path->str();
-				boost::trim(certpath);
+		//Security file path.
+    std::string options_system::get_certssl_path()const
+    {
+        std::string certpath = cert_path->str();
+        boost::trim(certpath);
         return certpath;
+    }
+
+    std::string options_system::get_dh512_path()const
+    {
+        std::string dh512 = dh512_path->str();
+        boost::trim(dh512);
+        return dh512;
+    }
+
+    std::string options_system::get_pwd()const
+    {
+        std::string pwd = certpwd->str();
+        boost::trim(pwd);
+        return pwd;
+    }
+
+
+		//Server IP and Port
+		std::string options_system::get_ip_server()const{
+			std::string ip = ip_addr_server->str();
+			boost::trim(ip);
+			return ip; 
 		}
 
-		std::string options_system::get_dh512_path()const{
-				std::string dh512 = dh512_path->str();
-				boost::trim(dh512);
-				return dh512;
+		std::string options_system::get_port_server()const{
+			std::string port = port_server->str();
+			boost::trim(port);
+			return port;
 		}
 
-		std::string options_system::get_pwd()const{
-				std::string pwd = certpwd->str();
-				boost::trim(pwd);
-				return pwd;
+
+		//Tracethreat IP and Port
+		std::string options_system::get_ip_tracethreat()const{
+			std::string ip_tt = ip_tracethreat->str();
+			boost::trim(ip_tt);
+			return ip_tt;
 		}
+
+		std::string options_system::get_port_tracethreat()const{
+				std::string port_tt = port_tracethreat->str();
+				boost::trim(port_tt);
+				return port_tt;
+		}
+
 
     // logger main file path
     std::string options_system::get_logger_mainfile_path() const
@@ -171,7 +203,7 @@ namespace utils
             ("logger-settings,s",
                     po::value< std::vector<std::string> >()->composing(),
                     " logger settings file")
-						("cert-pem,e",
+            ("cert-pem,e",
                     po::value< std::vector<std::string> >()->composing(),
                     " ceritificate file of SSL")
             ("dh512-pem,d",
@@ -179,7 +211,22 @@ namespace utils
                     " DH512-PEM of SSL")
             ("cert-pwd,p",
                     po::value< std::vector<std::string> >()->composing(),
-                    " Password of SSL");
+                    " Password of SSL")
+						("ip-addr-server",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Server local IP")
+						("port-server",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Server local Port")
+						("ip-tracethreat",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Tracethreat-DB IP")
+						("port-tracethreat",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Tracethreat-DB Port");
+	
+
+						
 
 
 
@@ -211,11 +258,11 @@ namespace utils
     int options_system::default_condition()
     {
         std::ifstream ifs(config_file->c_str());
-				
+
         if(!ifs) {
             std::cout<< "cannot open file name : " << *config_file <<std::endl;
         } else {
-			
+
             config_file_options  = new po::options_description();
             config_file_options->add(*configure);
 
@@ -223,7 +270,7 @@ namespace utils
             notify(vm);
         }
 
-				
+
 
         if(vm.count("help")) {
             std::cout<< *visible <<std::endl;
@@ -280,11 +327,37 @@ namespace utils
             read_config(*dh512_path,vec);
         }//dh515-pem
 
-	      if(vm.count("cert-pwd")) {
+        if(vm.count("cert-pwd")) {
             std::vector<std::string> vec =  vm["cert-pwd"].as<std::vector<std::string> >();
             certpwd = new std::stringstream;
             read_config(*certpwd,vec);
         }//cert-pwd
+
+
+        if(vm.count("ip-addr-server")) {
+            std::vector<std::string> vec =  vm["ip-addr-server"].as<std::vector<std::string> >();
+            ip_addr_server = new std::stringstream;
+            read_config(*ip_addr_server,vec);
+        }//ip-addr-server
+
+        if(vm.count("port-server")) {
+            std::vector<std::string> vec =  vm["port-server"].as<std::vector<std::string> >();
+            port_server = new std::stringstream;
+            read_config(*port_server, vec);
+        }//port-server
+
+        if(vm.count("ip-tracethreat")) {
+            std::vector<std::string> vec =  vm["ip-tracethreat"].as<std::vector<std::string> >();
+            ip_tracethreat = new std::stringstream;
+            read_config(*ip_tracethreat, vec);
+        }//ip-tracethreat
+
+        if(vm.count("port-tracethreat")) {
+            std::vector<std::string> vec =  vm["port-tracethreat"].as<std::vector<std::string> >();
+            port_tracethreat = new std::stringstream;
+            read_config(*port_tracethreat, vec);
+        }//port-tracethreat
+
 
     }
 
