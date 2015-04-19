@@ -2,7 +2,7 @@
 #define CONTROLLER__SEMAPHORE_CONTROLLER_HPP_
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 Chatsiri Rattana.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -35,8 +35,6 @@
 
 namespace controller
 {
-    //work around with h_ prefix
-    namespace h_util = hnmav_util;
     //Define type class
     class Mutex
     {
@@ -71,8 +69,8 @@ namespace controller
             std::vector<boost::shared_ptr<Mutex> >   mx_ptr_vec;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

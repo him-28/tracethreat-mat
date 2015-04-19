@@ -40,7 +40,7 @@
 namespace controller
 {
     using boost::scoped_ptr;
-		namespace exceptions = hnmav_exception::controller;
+		namespace exceptions = trace_exception::controller;
     /**
      * monitor_controller implementation using the POSIX pthread library
      *

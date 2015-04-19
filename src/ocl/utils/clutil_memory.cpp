@@ -1,21 +1,14 @@
 #include <numeric>
 #include "ocl/utils/clutil_memory.hpp"
-//#include "boost/range/algorithm_ext/iota.hpp"
-
-//GPU OCL new namespace
-namespace gpuocl
-{
 
 
-}
-
-namespace hnmav_kernel
+namespace kernel
 {
 
     template<typename WorkTypes, typename ContainerT>
     memory<WorkTypes, ContainerT>::memory()
     {
-        logger_ptr = &util::clutil_logging<std::string, int>::get_instance();
+        logger_ptr = &utils::clutil_logging<std::string, int>::get_instance();
         logger     = logger_ptr->get();
     }
 
@@ -34,7 +27,7 @@ namespace hnmav_kernel
             std::vector<char>&       	binary_vec_ptr,
             std::vector<uint8_t>&    	result_vec_ptr)
     {
-        logger->write_info("### Start cl_create_buffer ###", util::format_type::type_header);
+        logger->write_info("### Start cl_create_buffer ###", utils::format_type::type_header);
         logger->write_info_test("PE File, size ", boost::lexical_cast<std::string>(binary_vec_ptr.size()));
         logger->write_info_test("Symbol size ", boost::lexical_cast<std::string>(symbol_vec_ptr.size()));
         logger->write_info_test("State  size ", boost::lexical_cast<std::string>(state_vec_ptr.size()));
@@ -42,27 +35,17 @@ namespace hnmav_kernel
 
         platdevices_info *platdevices = get_platdevices_data();
 
-        //get data from tuple by boost::tie
-        /*boost::tie(platdevices->node_symbol_vec, platdevices->node_state_vec) =  ipara.get_container();
-
-        symbol_vec = platdevices->node_symbol_vec;
-        state_vec  = platdevices->node_state_vec;
-        		binary_vec = binary_vec_ptr;
-        		*/
-
+       
         //shared ptr get vector symbol and state.
-        platdevices->node_symbol_vec = symbol_vec_ptr; // *ipara.get_symbol_shared_ptr().get();
-        platdevices->node_state_vec  = state_vec_ptr; //*ipara.get_state_shared_ptr().get();
+        platdevices->node_symbol_vec = symbol_vec_ptr; 
+        platdevices->node_state_vec  = state_vec_ptr;
         platdevices->node_binary_vec = binary_vec_ptr;
 
 				
 				//set result node. Value sets are zero.
-				std::fill(result_vec_ptr.begin(), result_vec_ptr.end(), 0);
-				//memset(&result_vec_ptr[0], 0, result_vec_ptr.size() * sizeof(result_vec_ptr[0]));
         platdevices->node_result_vec = &result_vec_ptr;
 				
-				
-					
+				//Symbol and State search	
         symbol_vec = &platdevices->node_symbol_vec;
         state_vec  = &platdevices->node_state_vec;
 
@@ -94,7 +77,7 @@ namespace hnmav_kernel
     {
         platdevices_info *plat_info = get_platdevices_data();
 
-        logger->write_info("### Start cl_build_node_buffer_object ###", util::format_type::type_header);
+        logger->write_info("### Start cl_build_node_buffer_object ###", utils::format_type::type_header);
 
         logger->write_info("   Symbol size    ",
                 lexical_cast<std::string>(plat_info->node_symbol_vec.size()));
@@ -244,7 +227,7 @@ namespace hnmav_kernel
     template<typename WorkTypes, typename ContainerT>
     bool memory<WorkTypes, ContainerT>::cl_check_buffer_size()
     {
-        logger->write_info("### Start cl_check buffer size ###",util::format_type::type_header);
+        logger->write_info("### Start cl_check buffer size ###",utils::format_type::type_header);
         platdevices_info *platdevices = get_platdevices_data();
 
         int count_mem_object = 0;

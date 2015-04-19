@@ -1,5 +1,5 @@
-#ifndef HNMAV_KERNEL_CLUTIL_MEMORY_HPP
-#define HNMAV_KERNEL_CLUTIL_MEMORY_HPP
+#ifndef KERNEL_CLUTIL_MEMORY_HPP
+#define KERNEL_CLUTIL_MEMORY_HPP
 
 /*                       Titles                                          Authors                        Date
  *-Add utility for managment memory                                      Chatsiri.rat										26/08/2012
@@ -41,13 +41,13 @@
 
 #define KERNEL_BUFFER_SIZE 6
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     //using namespace boost;
     namespace dstr   	= data_structure;
-    namespace util   	= hnmav_util;
-    namespace except  = hnmav_exception;
+    //namespace utils   	= hnmav_util;
+    namespace except  = trace_exception;
 
     //  memory internal initial, write Real Object here.
     template<typename WorkTypes,
@@ -96,8 +96,8 @@ namespace hnmav_kernel
             // cl define
             platdevices_info *platdevices;
 
-            boost::shared_ptr<util::clutil_logging<std::string, int> >    *logger_ptr;
-            util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> >    *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
             // input open cl
             std::vector<char> *symbol_vec;

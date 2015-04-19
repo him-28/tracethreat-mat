@@ -2,7 +2,7 @@
 #define UTILS_MD5_HASH_HPP
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 Chatsiri Rattana.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ namespace utils
     namespace convert
     {
 
-        uint64_t MD5Hash(const unsigned char *s, const unsigned int len);
-        uint64_t MD5Hash(const std::string& s);
+        uint64_t md5_hash(const unsigned char *s, const unsigned int len);
+        uint64_t md5_hash(const std::string& s);
 
     }
 

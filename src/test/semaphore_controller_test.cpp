@@ -19,7 +19,7 @@
 //#include "test/utils_base_timer_queue.hpp"
 
 //Stable test ac_tire and ocl class
-//#include "test/scan_pe_file_acp_test.hpp"
+#include "test/scan_pe_file_acp_test.hpp"
 
 
 //#2 -stable
@@ -33,23 +33,24 @@
 
 // Ac_tire_test & actire_concurrency_test for thread building block concurrency.
 //#include "test/ac_tire_test.hpp"
+//#include "test/actire_parallel_test.hpp"
 //#include "test/actire_concurrency_test.hpp"
 
 // AC Engine TBB
 //#include "test/tbbpostscan_pe_task_test.hpp"
-#include "test/tbbpostscan_pe_controller_test.hpp"
+//#include "test/tbbpostscan_pe_controller_test.hpp"
+//#include "test/bloomfilter_concurrency_test.hpp"
 
 
-//#include "test/actire_parallel_test.hpp"
-/*
-#include "test/clutil_platform_test.hpp"
 
-#include "test/system_exception_test.hpp"
+//#include "test/clutil_platform_test.hpp"
 
-#include "test/file_handler_test.hpp"
+//#include "test/system_exception_test.hpp"
+
+//#include "test/file_handler_test.hpp"
 
 
-#include "test/file_calculate_test.hpp"
+//#include "test/file_calculate_test.hpp"
 
 
 // Offset, Uncomment with test without
@@ -59,14 +60,14 @@
 //#include "test/pe_file_controller_test.hpp"  // PE
 
 
-*/
 
+
+//Test folly queue memory
+//#include "test/queue_shm_controller_test.hpp"
 
 //#include "test/wrapper_rules_tests.hpp"
 
-//#include "utils/config/options_system.hpp"
-//#include "utils/logger/clutil_logger.hpp"
-
+//#include "test/md5_hash_test.hpp"
 
 GTEST_API_ int main(int argc, char **argv)
 {

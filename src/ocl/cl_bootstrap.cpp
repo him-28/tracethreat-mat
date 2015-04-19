@@ -1,6 +1,6 @@
 #include "ocl/cl_bootstrap.hpp"
 
-namespace hnmav_kernel
+namespace kernel
 {
 
     template<typename UtilPlatform,
@@ -33,7 +33,7 @@ namespace hnmav_kernel
     {
         //util::options_system& op_system = util::options_system::get_instance();
         //init logger
-        logger_ptr = &util::clutil_logging<std::string, int>::get_instance();
+        logger_ptr = &utils::clutil_logging<std::string, int>::get_instance();
         logger = logger_ptr->get();
 
         //logger->write_info("Load path opencl ", *opencl_file_path);
@@ -160,8 +160,7 @@ namespace hnmav_kernel
     {
         //WorkTypes workloads;
         dstr::dstr_def::work_groupitems workloads;
-					//std::cout<<"Binary insert size : " <<  binary_vec.size() 
-					//<<", result wb size : " << result_vec.size() <<std::endl;
+
         logger->write_info_test("cl_load_system::cl_process_buffer, Symbol size",
                 boost::lexical_cast<std::string>(symbol_vec_ptr.size()));
         logger->write_info_test("cl_load_system::cl_process_buffer, State size",

@@ -1,8 +1,8 @@
-#ifndef HNMAV_EXCEPTION_SYSTEM_EXCEPTION
-#define HNMAV_EXCEPTION_SYSTEM_EXCEPTION
+#ifndef TRACE_EXCEPTION_SYSTEM_EXCEPTION
+#define TRACE_EXCEPTION_SYSTEM_EXCEPTION
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 Chatsiri Rattana.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 * limitations under the License.
 */
 
-/*  Titles			                                                     Authors	          Date
+/*  Titles			                                          Authors	         Date
+
  *-Base exception class for Hnuman system                       Chatsiri.rat      18/11/2012
  *  --option system  exception                                  Chatsiri.rat      18/11/2012
  *  --cl utility exception                                      Chatsiri.rat      26/11/2012
@@ -50,7 +51,7 @@
 // Internal code
 #include "exception/exception_code.hpp"
 
-namespace hnmav_exception
+namespace trace_exception
 {
     using namespace boost;
     using namespace error;
@@ -232,4 +233,4 @@ namespace hnmav_exception
 
 }
 
-#endif /* HNMAV_EXCEPTION_SYSTEM_EXCEPTION */
+#endif /* TRACE_EXCEPTION_SYSTEM_EXCEPTION */

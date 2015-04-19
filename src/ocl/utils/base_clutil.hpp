@@ -1,5 +1,5 @@
-#ifndef HNMAV_KERNEL_CLUTIL_HPP
-#define HNMAV_KERNEL_CLUTIL_HPP
+#ifndef KERNEL_CLUTIL_HPP
+#define KERNEL_CLUTIL_HPP
 
 /*                       Titles                                          Authors              Date
  *-interface combine with  platdevices_info( contrain cl infomation )
@@ -24,7 +24,7 @@
 //- Data structure
 #include "data_structure/vector.hpp"
 
-namespace hnmav_kernel
+namespace kernel
 {
     using namespace boost;
     namespace dstructure  = data_structure;
@@ -70,7 +70,7 @@ namespace hnmav_kernel
         std::vector<char>  				node_symbol_vec;
         std::vector<int>          node_state_vec;
         std::vector<char>  				node_binary_vec; //uint8_t
-        std::vector<uint8_t>   *   node_result_vec;
+        std::vector<uint8_t>   *  node_result_vec;
         //return symbol to host(write back)
         char       *symbol_wb;
         int        *result_wb;

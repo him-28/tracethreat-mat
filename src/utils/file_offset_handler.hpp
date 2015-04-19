@@ -2,7 +2,7 @@
 #define UTILS_FILE_OFFSET_HANDLER__HPP
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 R.Chatsiri, Inc.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -34,7 +34,8 @@
 #include <list>
 #include "sys/mman.h"
 
-#include "filetypes/pe.hpp"
+//#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 #include "utils/file_handler.hpp"
 #include "exception/system_exception.hpp"
 
@@ -43,9 +44,8 @@
 
 namespace utils
 {
-    namespace h_util = hnmav_util;
 
-    namespace file_system_excep = hnmav_exception::file_system;
+    namespace file_system_excep = trace_exception::file_system;
 
     template<typename  MAPPED_FILE = struct MAPPED_FILE_PE,
              typename MEMORY_BLOCK = struct MEMORY_BLOCK_PE>
@@ -112,6 +112,11 @@ namespace utils
                     file_offset_handler<FileType, MAPPED_FILE>& file_offset_object,
 										const char * file_sig);
 
+						bool  mapped_file(std::vector<const char*> * file_name,
+                    std::vector<MAPPED_FILE *> * mapped_vec,
+                    file_offset_handler<FileType, MAPPED_FILE>& file_offset_object);
+
+
             /**
             * @brief Ummap single file from memory.
             *
@@ -141,8 +146,8 @@ namespace utils
             //MAPPED_FILE *mapped_file_ptr;
 
             //logger
-            boost::shared_ptr<h_util::clutil_logging<std::string, int> > *logger_ptr;
-            h_util::clutil_logging<std::string, int>    *logger;
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
 
     };
 

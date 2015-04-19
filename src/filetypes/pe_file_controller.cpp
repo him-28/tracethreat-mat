@@ -1,286 +1,108 @@
 #include "filetypes/pe_file_controller.hpp"
 #include "boost/lexical_cast.hpp"
-//#include "utils/logger/format_logger.hpp"
-//#include "utils/logger/clutil_logger.hpp"
-#include "threadconcurrency/cliprescan_pe_controller.hpp"
-//#include "threadconcurrency/cliprescan_pe_task.hpp"
+#include "taskconcurrency/cliprescan_pe_controller.hpp"
 
 using namespace controller;
 
 namespace filetypes
 {
-	
+
     template<typename MAPPED_FILE>
     pe_file_controller<MAPPED_FILE>::pe_file_controller()
     {
-        //logger
-        logger_ptr = &h_util::clutil_logging<std::string, int>::get_instance();
-        logger = logger_ptr->get();
-       // logger->write_info_test("Init logger pe_file_controller");
+
     }
 
+    //utils::scan_file_code
+    /**
+    * @brief PE_file_controller::scan() for scan binary or MD5,SHA-256 and SSDeep matchs Signature file.
+    *
+    * @param mapped_file_pe Map file detail such binary and md5 of file.
+    * @param sig_shm Shared Memory(SHM)-Signature in memory.
+    * @param sig_engine Signature Engine contain in AC-Tire.
+    * @param iactire_engine_scanner  AC-Tire Engine for scanning.
+    *
+    * @return Message of Infected File detail in msg/ directory
+    */
     template<typename MAPPED_FILE>
-    std::vector<struct IMAGE_NT_HEADERS *>&
-    pe_file_controller<MAPPED_FILE>::get_pe_header(std::vector<MAPPED_FILE *> *mapped_file_vec)
-    {
-
-        logger->write_info("Intial PE header, pe_file_controller<MAPPED_FILE>::get_pe_header...");
-        logger->write_info_test("pe_file_controller<MAPPED_FILE>::get_pe_header, vector_size : ",
-                boost::lexical_cast<std::string>(mapped_file_vec->size()));
-
-        // PE Header conntained vector. Controller pointer by shared_ptr
-        boost::shared_ptr<std::vector<struct IMAGE_NT_HEADERS *> > mapped_vec_shared
-            = boost::make_shared<std::vector<struct IMAGE_NT_HEADERS * > >();
-        pe_header_vec_shared.push_back(mapped_vec_shared);
-
-        PIMAGE_DOS_HEADER dos_header;
-        PIMAGE_NT_HEADERS nt_header;
-        size_t headers_size = 0;
-        typename std::vector<MAPPED_FILE *>::iterator  iter_mf_vec;
-        MAPPED_FILE *mapped_file_ptr;
-
-        for(iter_mf_vec = mapped_file_vec->begin();
-                iter_mf_vec != mapped_file_vec->end();
-                ++iter_mf_vec) {
-            mapped_file_ptr = *iter_mf_vec;
-
-            if(*mapped_file_ptr->data < sizeof(struct IMAGE_DOS_HEADER)) {
-                logger->write_info("Mappper data < IMAGE_DOS_HEADER");
-                continue;
-            }
-
-            dos_header = (PIMAGE_DOS_HEADER)mapped_file_ptr->data;
-
-            if(dos_header->e_magic != IMAGE_DOS_SIGNATURE) {
-                logger->write_info("Mapper e_mage != IMAGE_DOS_SIGNATURE");
-                mapped_vec_shared->push_back(nt_header);
-                continue;
-            }
-
-            if(dos_header->e_lfanew < 0) {
-                logger->write_info("Mapper e_lfanew < 0");
-                mapped_vec_shared->push_back(nt_header);
-                continue;
-            }
-
-            headers_size = dos_header->e_lfanew + sizeof(nt_header->Signature) + sizeof(IMAGE_FILE_HEADER);
-
-            logger->write_info("pe_file_controller<MAPPED_FILE>::get_pe_header, Step 1) header size",
-                    boost::lexical_cast<std::string>(headers_size));
-
-            if(mapped_file_ptr->size < headers_size) {
-                logger->write_info("Mapper size < headers_size");
-                mapped_vec_shared->push_back(nt_header);
-                continue;
-            }
-
-            // completed type get header
-            nt_header = (PIMAGE_NT_HEADERS)(mapped_file_ptr->data + dos_header->e_lfanew);
-
-            headers_size += nt_header->FileHeader.SizeOfOptionalHeader;
-
-            logger->write_info("pe_file_controller<MAPPED_FILE>::get_pe_header, header size",
-                    boost::lexical_cast<std::string>(headers_size));
-
-            logger->write_info("pe_file_controller<MAPPED_FILE>::get_pe_header,  mapped_file_ptr->size",
-                    boost::lexical_cast<std::string>(mapped_file_ptr->size));
-
-            logger->write_info_test("pe_file_controller<MAPPED_FILE>::get_pe_header, Signature",
-                    boost::lexical_cast<std::string>(nt_header->Signature));
-
-            if(nt_header->Signature == IMAGE_NT_SIGNATURE &&
-                    nt_header->FileHeader.Machine == IMAGE_FILE_MACHINE_I386 &&
-                    mapped_file_ptr->size > headers_size) {
-                mapped_vec_shared->push_back(nt_header);
-
-                logger->write_info_test("pe_file_controller<MAPPED_FILE>::get_pe_header, push back completed");
-            }
-
-            //test only
-            //mapped_vec_shared->push_back(nt_header);
-
-        }
-
-        logger->write_info_test("pe_file_controller<MAPPED_FILE>::get_pe_header, return mapped_vec_shared",
-                boost::lexical_cast<std::string>(mapped_vec_shared->size()));
-
-        return *mapped_vec_shared;
-    }
-
-
-    template<typename MAPPED_FILE>
-    uint8_t  pe_file_controller<MAPPED_FILE>::retrive_offset_lite(
-            std::vector<MAPPED_FILE *>  pe_map_vec_ptr,
-            std::vector<struct IMAGE_NT_HEADERS *> pe_header)const
-    {
-        int count_offset;
-        int count_section;
-
-        PIMAGE_SECTION_HEADER section;
-        PIMAGE_NT_HEADERS  nt_header;
-        struct IMAGE_NT_HEADERS_EXT *nt_headers_ext;
-        MAPPED_FILE   *pe_map_ptr;
-
-        typename std::vector<struct IMAGE_NT_HEADERS *>::iterator iter_pe_header;
-        //calculate rva
-        uint64_t rva_block_;
-        size_t   buffer_length_;
-
-        for(iter_pe_header = pe_header.begin();
-                iter_pe_header != pe_header.end();
-                ++iter_pe_header) {
-            nt_header = *iter_pe_header;
-
-            // pe_map_vec_ptr(File mapped)  gurantee size of containing equal pe_header(Header)
-            pe_map_ptr = pe_map_vec_ptr.at(std::distance(pe_header.begin(), iter_pe_header));
-
-            rva_block_     = nt_header->OptionalHeader.AddressOfEntryPoint;
-            buffer_length_ = pe_map_ptr->size -((uint8_t *)&nt_header - pe_map_ptr->data);
-
-            nt_headers_ext = new struct IMAGE_NT_HEADERS_EXT;
-            nt_headers_ext->rva_block  = rva_block_;
-            nt_headers_ext->size_block = buffer_length_;
-
-            section = IMAGE_FIRST_SECTION(nt_header);
-            count_offset = 0;
-
-            while(count_offset < MIN(nt_header->FileHeader.NumberOfSections, 60)) {
-                if((uint8_t *)&section -
-                        (uint8_t *)&nt_header + sizeof(IMAGE_SECTION_HEADER) < pe_map_ptr->size) {
-                    if(nt_headers_ext->rva_block >= section->VirtualAddress &&
-                            nt_headers_ext->rva_block < section->VirtualAddress +
-                            section->SizeOfRawData) {
-                        uint64_t  pe_offset_start = section->PointerToRawData + \
-                                (nt_headers_ext->rva_block - section->VirtualAddress);
-                        nt_headers_ext->offset = pe_offset_start;
-                        pe_offset_vec_shared_ptr->push_back(	nt_headers_ext );
-                    }
-                }
-
-            }
-        }
-
-        if(pe_offset_vec_shared_ptr->size() == 0)
-            return 0;
-
-        return 1;
-    }
-
-
-    template<typename MAPPED_FILE>
-    struct IMAGE_NT_HEADERS_EXT&   pe_file_controller<MAPPED_FILE>::retrive_offset(
-            MAPPED_FILE  *pe_map_ptr,
-            IMAGE_NT_HEADERS *pe_header)const {
-
-        boost::shared_ptr<struct IMAGE_NT_HEADERS_EXT>
-        nth_ext_shared_ptr = boost::make_shared<struct IMAGE_NT_HEADERS_EXT>();
-
-        PIMAGE_SECTION_HEADER section;
-        //PIMAGE_NT_HEADERS  nt_header = pe_header;
-        struct IMAGE_NT_HEADERS_EXT *nt_headers_ext;
-
-        int count_offset;
-        int count_section;
-
-        section = IMAGE_FIRST_SECTION(pe_header);
-        count_offset = 0;
-
-
-        //logger->write_info_test("pe_file_controller::retrive_offset, \
-        //pe_header->OptionalHeader32.AddressOfEntryPoint",
-        //       boost::lexical_cast<std::string>(pe_header->OptionalHeader.AddressOfEntryPoint));
-
-        //calculate block
-        nth_ext_shared_ptr->rva_block  = pe_header->OptionalHeader.AddressOfEntryPoint;
-        nth_ext_shared_ptr->size_block = pe_map_ptr->size -((uint8_t *)pe_header - pe_map_ptr->data);
-
-        //printf("(RVA_BLOCK, pe_header->OptionalHeader.AddressOfEntryPoint : %d \n", \
-        //pe_header->OptionalHeader.AddressOfEntryPoint);
-
-
-        while(count_offset < MIN(pe_header->FileHeader.NumberOfSections, 60)) {
-            if((uint8_t *)section - \
-                    (uint8_t *)pe_header + sizeof(IMAGE_SECTION_HEADER) < pe_map_ptr->size) {
-                if(nth_ext_shared_ptr->rva_block >= section->VirtualAddress &&
-                        nth_ext_shared_ptr->rva_block < section->VirtualAddress + section->SizeOfRawData) {
-                    uint64_t  pe_offset_start = section->PointerToRawData +
-                            (nth_ext_shared_ptr->rva_block - section->VirtualAddress);
-
-                    logger->write_info_test("section->PointerToRawData",
-                            boost::lexical_cast<std::string>(section->PointerToRawData));
-                    logger->write_info_test("nth_ext_shared_ptr->rva_block",
-                            boost::lexical_cast<std::string>(nth_ext_shared_ptr->rva_block));
-                    logger->write_info_test("section->VirtualAddress",
-                            boost::lexical_cast<std::string>(section->VirtualAddress));
-
-                    nth_ext_shared_ptr->offset 				= pe_offset_start;
-                    nth_ext_shared_ptr->data_offset   = pe_map_ptr->data;
-                    nth_ext_shared_ptr->size   				= pe_map_ptr->size;
-
-                    logger->write_info("pe_file_controller::retrive_offset, size \n",
-                            boost::lexical_cast<std::string>(nth_ext_shared_ptr->size));
-                    logger->write_info("pe_file_controller::retrive_offset, offset \n",
-                            boost::lexical_cast<std::string>(pe_offset_start));
-
-                    return *nth_ext_shared_ptr.get();
-                }
-
-                section++;
-                count_offset++;
-            } else {
-
-                break;
-            }
-
-        }
-
-        return *nth_ext_shared_ptr.get();
-    }
-
-
-    template<typename MAPPED_FILE>
-    utils::scan_file_code pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
-            std::vector<size_t>   *state_vec,
-            std::vector<uint8_t> *file_buffer_vec)
+    typename pe_file_controller<MAPPED_FILE>::threatinfo_vec_type&
+    pe_file_controller<MAPPED_FILE>::scan(std::vector<MAPPED_FILE *> *mapped_file_pe,
+            threatinfo_vec_type         *threatinfo_vec,
+            signature_shm_type          *sig_shm,
+            signature_engine_type       *sig_engine,
+            iactire_engine_scanner_type *iactire_engine_scanner)
     {
         //PE_FILE_CONTROLLER call AC-DFS algorithms.
-        logger->write_info("Start pe_file_controller<MAPPED_FILE>::scan...",
-                hnmav_util::format_type::type_header);
+        logger->write_info("Start pe_file_controller<MAPPED_FILE>::scan actire-parallel tbb",
+                utils::format_type::type_header);
 
-        logger->write_info("PE File, size ",
-                boost::lexical_cast<std::string>(file_buffer_vec->size()));
-        logger->write_info("Symbol size ",
-                boost::lexical_cast<std::string>(symbol_vec->size()));
-        logger->write_info("State  size ",
-                boost::lexical_cast<std::string>(state_vec->size()));
-        logger->write_info("Send to pe_file_controller::scan, send symbol, state and binary to ocl",
-                hnmav_util::format_type::type_header);
-        /*
-        	std::vector<uint64_t>  result_vec;
-        //load open file kernel file
-        load_ocl_system.set_opencl_file(*this->kernel_file_path_ptr);
-        load_ocl_system.cl_load_platform();
-        load_ocl_system.cl_load_memory();
-        load_ocl_system.cl_process_buffer(*symbol_vec, *state_vec, *file_buffer_vec, result_vec);
-        load_ocl_system.cl_build_memory();
-        load_ocl_system.cl_load_commandqueue();
-        load_ocl_system.cl_process_commandqueue();
-        */
+        typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
 
-        return utils::infected_found;
+        size_t summary_file_size = 0;
+
+        //summary file size of all
+        for(iter_mapped_files = mapped_file_pe->begin();
+                iter_mapped_files != mapped_file_pe->end();
+                ++iter_mapped_files) {
+            MAPPED_FILE   *mf_pe = *iter_mapped_files;
+            summary_file_size += mf_pe->size;
+
+            logger->write_info("pe_file_controller<MAPPED_FILE>::scan, File Name : ",
+                    std::string(mf_pe->file_name));
+
+            logger->write_info("pe_file_controller<MAPPED_FILE>::scan, UUID : ",
+                    std::string(threatinfo_vec->at(iter_mapped_files - mapped_file_pe->begin())->uuid()));
+
+        }//end-for loop
+
+        f_shm_handler.set_shm_name(uuid_gen.generate());
+        f_shm_handler.initial_shm(summary_file_size);
+        f_shm_handler.initial_file_shm(mapped_file_pe);
+
+        //[x] initial step for scanning multiple file with actire-parallel.
+        //[x]Add Signature Engine to thread controller.
+        tbbpostscan_pe_col.add_sig_engine(sig_engine);
+
+        //[x]Add Search PE Engine to thread controller.
+        tbbpostscan_pe_col.add_search_engine(iactire_engine_scanner);
+
+        tbbpostscan_pe_col.init_syntbb_workload(f_shm_handler.get_map_str_shm(),
+                sig_shm,
+                f_shm_handler.get_map_file_size(),
+                mapped_file_pe,
+                threatinfo_vec);
+
+        tbbpostscan_pe_col.task_start();
+
+
+        f_shm_handler.delete_file_shm();
+
+        return tbbpostscan_pe_col.get_threatinfo();
+
     }
 
+    /**
+    * @brief Pe_file_controller::scan() overload parameter support OCL scans virus on GPU based.
+    *
+    * @param symbol_vec  Insert Symbol such as signature file.
+    * @param state_vec   State of Symbol.
+    * @param mapped_file_pe_vec  Vector contains file details.
+    * @param kernel_file_path_ptr  Kernel path such extension .ocl
+    * @param sig_shm Shared Memory (SHM) of Signature.
+    *
+    * @return Success code.
+    */
     template<typename MAPPED_FILE>
     utils::scan_file_code  pe_file_controller<MAPPED_FILE>::scan(std::vector<char> *symbol_vec,
             std::vector<size_t> *state_vec,
             std::vector<MAPPED_FILE *> *mapped_file_pe_vec,
             std::string *kernel_file_path_ptr,
-						memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> * sig_shm)
+            memory::signature_shm<struct memory::meta_sig, struct memory::meta_sig_mem> *sig_shm)
     {
 
         typename std::vector<MAPPED_FILE *>::iterator iter_mapped_files;
         uint64_t summary_file_size = 0;
-	
+
         //summary file size of all
         for(iter_mapped_files = mapped_file_pe_vec->begin();
                 iter_mapped_files != mapped_file_pe_vec->end();
@@ -293,15 +115,15 @@ namespace filetypes
         //logger->write_info("pe_file_policy::scan_file_type(), Initial file-shm size completed.");
 
 
-				//pre-scan
-				/* - Comment for test with OCL flow only.
-				int64_t timeout_scan = 1000LL;
-				controller::cliprescan_pe_controller<MAPPED_FILE>  prescan_pe;
-				prescan_pe.initial_task_size(mapped_file_pe_vec->size(), timeout_scan, mapped_file_pe_vec);
-				prescan_pe.task_start();
-				*/
+        //pre-scan
+        /* - Comment for test with OCL flow only.
+        int64_t timeout_scan = 1000LL;
+        controller::cliprescan_pe_controller<MAPPED_FILE>  prescan_pe;
+        prescan_pe.initial_task_size(mapped_file_pe_vec->size(), timeout_scan, mapped_file_pe_vec);
+        prescan_pe.task_start();
+        */
 
-				//post-scan
+        //post-scan
         f_shm_handler.initial_shm(summary_file_size);
         f_shm_handler.initial_file_shm(mapped_file_pe_vec);
 
@@ -313,7 +135,7 @@ namespace filetypes
         //send data to OCL
         tsync.init_syncocl_workload(f_shm_handler.get_map_str_shm(),
                 f_shm_handler.get_map_file_size(),
-								sig_shm);
+                sig_shm);
 
         //logger->write_info("pe_file_policy::scan_file_type(), Initial OCL workload completed.");
 
@@ -340,18 +162,6 @@ namespace filetypes
 
 
     template<typename MAPPED_FILE>
-    bool pe_file_controller<MAPPED_FILE>::convert2buffer(uint8_t   *data, size_t size)
-    {
-
-        file_buffer_vec.assign(data, data+size); //--error will be change
-
-        if(file_buffer_vec.size() == 0) return false;
-
-        return true;
-    }
-
-
-    template<typename MAPPED_FILE>
     bool pe_file_controller<MAPPED_FILE>::set_opencl_file(std::string& kernel_file_path_ptr)
     {
         if(kernel_file_path_ptr.size() == 0) return false;
@@ -366,12 +176,6 @@ namespace filetypes
         ret = buff[0] & 0xff;
         ret |= (buff[1] & 0xff) << 8;
         return ret;
-    }
-
-    template<typename MAPPED_FILE>
-    std::vector<uint8_t>& pe_file_controller<MAPPED_FILE>::get_file_buffer()
-    {
-        return file_buffer_vec;
     }
 
     template<typename MAPPED_FILE>

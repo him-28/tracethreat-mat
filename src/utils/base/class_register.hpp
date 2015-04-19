@@ -17,12 +17,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 
 /*						Titles														      Authors										Date
- *  Copyright 2014, MTSec Inc.                                                  07/02/2014
+ *  Copyright 2014, Chatsiri Rattana.                                           07/02/2014
  *  -Base register class for init opencl type.        R.Chatsiri                07/02/2014
+ *  -Base register call scanning PE, ELF and Process types
+ *                                                    R.Chatsiri                12/09/2014
  */
 
-#ifndef FILE_MEM_REGISTER__HPP
-#define FILE_MEM_REGISTER__HPP
+#ifndef CLASS_REGISTER__HPP
+#define CLASS_REGISTER__HPP
 
 #include <map>
 #include <string>
@@ -127,4 +129,4 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 #define CLASS_REGISTER_CREATE_OBJECT(register_name, entry_name_as_string) \
   GetRegistry_##register_name().CreateObject(entry_name_as_string)
 
-#endif  //FILE_MEM_REGISTER__HPP
+#endif  //CLASS_REGISTER__HPP

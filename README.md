@@ -1,50 +1,102 @@
-HNMAV-OCL Malware Analysis Tools.
-=================================
+Tracethreat Malware Analysis Tools Core Framework
+=================================================
 
--[x] Pthread struct utility synchronizes with OpenCL.
+Integrated Tools for analysis malware in real-time.
 
--[x] Scanning with TBB(Multithread and Parallelization tasks) and OpenCL.
+Core Features.
+==============
 
--[] File Structure Support file type scanning type : PE, EXE, ELF and processes.
+* High performance scanning in Thread Building Block and OpenCL mode.
 
--[] Compiler server DB signatures support ClamAV  and Yara-project signature.
+* Multithread synchronous utility synchronizes with OpenCL.
 
--[] Ansynchronous message communication between server and client.
+* File structure supports type of file such PE (Plan ELF, Processes in system).
+
+* Asynchronous protocol-buffer message communicates between server and client.
 
 
-Table of content
+####Table of content
 ============
+#####Overview
+* [Tracethreat-MAT Core Framework](#tracethreat-mat-core)
 
-* [bin] (#hnmav-bin)
+* [Tracethreat-MAT Server](#tracethreat-server)
 
-* [filetypes](#hnmav-filetypes)
+#####Core Network scanning
+* [Server message detail](#server-message-detail)
 
-* [internet](#hnmav-internet)
-
-* [memory](#hnmav-memory)
-
-* [utils](#hnmav-utils)
-
-* [data_structure](#hnmav-data_structure)
-
-* [exception](#hnmav-exception)
-
-* [ocl](#hnmav-ocl)
-
-* [test](#hnmav-test)
-
-* [threadsyncocl](#hnmav-threadsynocl)
-
-* [utils](#hnmav-utils)
+* [Client message detail](#client-message-detail)
 
 -------------------------------------------------------------------------- 
 
-<a name="hnmav-bin">Binary file execuated programs.</a>
+<a name="tracethreat-mat-core">TraceThreat-MAT Core Framework</a>
+* Fast scanning with TBB and OpenCL concept.
+* In memory scan infected file.
+* API supports PE,ELF and Process.
+* Shared memory send/received message to another module.
 
-* Hnmavocl programs run on system. 
+<a name="tracethreat-server">TraceThreat-MAT Sever</a>
+* Internet Server/Client implements with ASIO boost library.
+* Communication with Protocol Buffers(Protobuf).
+* Multiple handle user in real-time scanning.
+* Tracing infected message to analysis on database.
 
-<a name="hmanv-filetypes">File types support scanning sytem such as PE, EXE and ELF </a>
-* PE first version support PE layout file scanning.
-* EXE next version supported in future.
-* ELF next version supported in future.
-* Process supported in future.
+<a name="server-message-detail">Server message detail</a>
+
+* Communication message. 
+
+```c++
+
+package message_scan; 
+
+message RequestScan{
+...//Message Request from/to server scan file.
+}
+
+message ResponseScan{
+...//Message Response from/to server scan file.
+}
+
+```
+Protocol buffer declares package message object is message_scan which use for
+Server/Client communicate detail of infected file scanning. Most details,It's
+critical information from client such type, binary detail, status and name of file.
+Client not send only detail of file, but send IP and UUID of source to server
+because database in cluster threat source in order to separate group of 
+infected file.
+
+* Messsage detail on package.
+
+```C++
+        required RequestType  type         = 1; 
+        required bytes         uuid     = 2; 
+        required bytes      timestamp     = 3; 
+        optional bytes      key         = 4; 
+        optional bytes      iv          = 5; 
+        required bytes      ip          = 6; 
+
+        required bytes      conn_ip     = 7; 
+        required bytes      conn_uuid   = 8; 
+        
+        message GetBinaryValue{
+            optional bytes binary         = 1;   
+            optional bytes file_name      = 2;   
+            optional uint64 file_size      = 3;
+            optional EncodeType  scan_type = 4; 
+            optional FileType    file_type = 5; 
+            optional FileStatus  file_status = 6;
+            optional bytes       uuid        = 7;
+            optional bytes       ip          = 8;
+            optional bytes       machine_name = 9;
+        }
+```
+
+Type of messages are standard communicate between server/client. Programs will not 
+send sensitive data to server which message declare above are encrypted.
+
+
+
+[Update: 09:11 PM, 14/03/2015]
+
+
+

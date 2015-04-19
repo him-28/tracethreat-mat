@@ -1,5 +1,5 @@
 # debug, optimized
-AM_CXXFLAGS   = -I$(top_srcdir)/src @AM_CXXFLAGS@
+AM_CXXFLAGS   = -I$(top_srcdir)/src -std=c++11 @AM_CXXFLAGS@
 
 # Make src file 
 # libarries for control threads

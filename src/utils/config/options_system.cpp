@@ -1,11 +1,33 @@
+/*
+* Copyright 2014 Chatsiri Rattana.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles																								Authors					 Date
+ *
+ */
+
+
+
 #include "utils/config/options_system.hpp"
 
-namespace hnmav_util
+namespace utils
 {
 
-options_system *options_system::options_system_instance = NULL;
+    options_system *options_system::options_system_instance = NULL;
 
-void options_system::read_config(std::stringstream& config_type, std::vector<std::string>& configname_vec)
+    void options_system::read_config(std::stringstream& config_type, std::vector<std::string>& configname_vec)
     {
         std::copy(configname_vec.begin(),
                 configname_vec.end(),
@@ -60,6 +82,59 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
         boost::trim(dbpath);
         return dbpath;
     }
+
+
+		//Security file path.
+    std::string options_system::get_certssl_path()const
+    {
+        std::string certpath = cert_path->str();
+        boost::trim(certpath);
+        return certpath;
+    }
+
+    std::string options_system::get_dh512_path()const
+    {
+        std::string dh512 = dh512_path->str();
+        boost::trim(dh512);
+        return dh512;
+    }
+
+    std::string options_system::get_pwd()const
+    {
+        std::string pwd = certpwd->str();
+        boost::trim(pwd);
+        return pwd;
+    }
+
+
+		//Server IP and Port
+		std::string options_system::get_ip_server()const{
+			std::string ip = ip_addr_server->str();
+			boost::trim(ip);
+			return ip; 
+		}
+
+		std::string options_system::get_port_server()const{
+			std::string port = port_server->str();
+			boost::trim(port);
+			return port;
+		}
+
+
+		//Tracethreat IP and Port
+		std::string options_system::get_ip_tracethreat()const{
+			std::string ip_tt = ip_tracethreat->str();
+			boost::trim(ip_tt);
+			return ip_tt;
+		}
+
+		std::string options_system::get_port_tracethreat()const{
+				std::string port_tt = port_tracethreat->str();
+				boost::trim(port_tt);
+				return port_tt;
+		}
+
+
     // logger main file path
     std::string options_system::get_logger_mainfile_path() const
     {
@@ -108,10 +183,10 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
 
     options_system&  options_system::get_instance()
     {
-				if(options_system_instance == NULL)
-				{
-					  options_system_instance = new options_system();
+        if(options_system_instance == NULL) {
+            options_system_instance = new options_system();
         }
+
         return *options_system_instance;
     }
 
@@ -149,7 +224,34 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
                     " logger main file")
             ("logger-settings,s",
                     po::value< std::vector<std::string> >()->composing(),
-                    " logger settings file");
+                    " logger settings file")
+            ("cert-pem,e",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " ceritificate file of SSL")
+            ("dh512-pem,d",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " DH512-PEM of SSL")
+            ("cert-pwd,p",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Password of SSL")
+						("ip-addr-server",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Server local IP")
+						("port-server",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Server local Port")
+						("ip-tracethreat",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Tracethreat-DB IP")
+						("port-tracethreat",
+                    po::value< std::vector<std::string> >()->composing(),
+                    " Tracethreat-DB Port");
+	
+
+						
+
+
+
 
         } catch(std::exception ex) {
             std::cout<< "Error : " << ex.what() <<std::endl;
@@ -182,6 +284,7 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
         if(!ifs) {
             std::cout<< "cannot open file name : " << *config_file <<std::endl;
         } else {
+
             config_file_options  = new po::options_description();
             config_file_options->add(*configure);
 
@@ -189,13 +292,15 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
             notify(vm);
         }
 
+
+
         if(vm.count("help")) {
             std::cout<< *visible <<std::endl;
             return 0;
         }
 
         if(vm.count("version")) {
-            std::cout<< "HanumanAV, version releases :  0.0.1 " <<std::endl;
+            std::cout<< "Tracethreat, version releases :  0.0.1 " <<std::endl;
         }
 
         if(vm.count("db-signature-path")) {
@@ -228,6 +333,53 @@ void options_system::read_config(std::stringstream& config_type, std::vector<std
             read_config(*logger_settingsfile_path,vec);
 
         }
+
+
+        //support security path
+        if(vm.count("cert-pem")) {
+            std::vector<std::string> vec =  vm["cert-pem"].as<std::vector<std::string> >();
+            cert_path = new std::stringstream;
+            read_config(*cert_path,vec);
+
+        }
+
+        if(vm.count("dh512-pem")) {
+            std::vector<std::string> vec =  vm["dh512-pem"].as<std::vector<std::string> >();
+            dh512_path = new std::stringstream;
+            read_config(*dh512_path,vec);
+        }//dh515-pem
+
+        if(vm.count("cert-pwd")) {
+            std::vector<std::string> vec =  vm["cert-pwd"].as<std::vector<std::string> >();
+            certpwd = new std::stringstream;
+            read_config(*certpwd,vec);
+        }//cert-pwd
+
+
+        if(vm.count("ip-addr-server")) {
+            std::vector<std::string> vec =  vm["ip-addr-server"].as<std::vector<std::string> >();
+            ip_addr_server = new std::stringstream;
+            read_config(*ip_addr_server,vec);
+        }//ip-addr-server
+
+        if(vm.count("port-server")) {
+            std::vector<std::string> vec =  vm["port-server"].as<std::vector<std::string> >();
+            port_server = new std::stringstream;
+            read_config(*port_server, vec);
+        }//port-server
+
+        if(vm.count("ip-tracethreat")) {
+            std::vector<std::string> vec =  vm["ip-tracethreat"].as<std::vector<std::string> >();
+            ip_tracethreat = new std::stringstream;
+            read_config(*ip_tracethreat, vec);
+        }//ip-tracethreat
+
+        if(vm.count("port-tracethreat")) {
+            std::vector<std::string> vec =  vm["port-tracethreat"].as<std::vector<std::string> >();
+            port_tracethreat = new std::stringstream;
+            read_config(*port_tracethreat, vec);
+        }//port-tracethreat
+
 
     }
 

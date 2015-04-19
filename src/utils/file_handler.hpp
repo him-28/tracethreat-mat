@@ -1,11 +1,31 @@
-#ifndef  UTIL__FILE_HANDLER_HPP
-#define  UTIL__FILE_HANDLER_HPP
+#ifndef  UTILS_FILE_HANDLER_HPP
+#define  UTILS_FILE_HANDLER_HPP
+
+/*
+* Copyright 2014 Chatsiri Rattana.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles																								Authors					 Date
+ *
+ */
 
 #include <iostream>
 #include <fstream>
 
 #include "filetypes/binary.hpp"
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -14,24 +34,26 @@
 #include <stdexcept>
 #include <stdio.h>
 
+#include "utils/logger/clutil_logger.hpp"
 
 namespace utils
 {
 
+    //namespace utils = hnmav_util;
 
     struct common_filetype {
         typedef FILE file_ptr;
-				typedef int  file_open_ptr;
+        typedef int  file_open_ptr;
         typedef const char  const_char;
         typedef struct binary_type binary;
     };
 
-		struct common_openfile_type{
+    struct common_openfile_type {
         typedef int    file_ptr;
         typedef const char  const_char;
         typedef struct binary_type binary;
-		};
-		
+    };
+
 
     template<typename StructFileType, typename PointerType>
     struct common_stream_filetype {
@@ -56,43 +78,76 @@ namespace utils
         public:
 
             file_handler() { };
-            bool file_read();
-						bool file_read_mapped();
-            bool set_filepath(char const *file_path);
-            typename FileType::file_ptr *get_file() const;
+
+            virtual bool file_read();
+
+            virtual bool set_filepath(char const *file_path);
+
+            virtual typename FileType::file_ptr *get_file() const;
+
+            bool file_read_mapped();
+
             bool get_fdetail_create();
+
             struct stat *get_file_status();
-						typename FileType::file_open_ptr & get_popen_file();
-						bool close_file();
+
+            typename FileType::file_open_ptr& get_popen_file();
+
+            bool close_file();
+
+            /**
+            * @brief Insert directory path for get all path of file.
+            *
+            * @param dir_path  Directory path.
+            *
+            * @return True if get all path in directory success.
+            */
+            bool file_full_path(const char *dir_path);
+
+
+            /**
+            * @brief Write buffer constains in vector.
+            *
+            * @param buffer_vec  Buffer file is char type.
+            *
+            * @return Success, return true.
+            */
+            bool write_file(std::vector<char>& buffer_vec);
+
+            std::vector<std::string> get_full_path();
         private:
             typename FileType::file_ptr *p_file;
-						typename FileType::file_open_ptr p_open_file;
+            typename FileType::file_open_ptr p_open_file;
             struct stat  file_status;
             const char *file_path;
+            std::vector<std::string> file_path_vec;
+
+            boost::shared_ptr<utils::clutil_logging<std::string, int> > *logger_ptr;
+            utils::clutil_logging<std::string, int>    *logger;
+
     };
 
-    // CPP supported stream file.
-    template<typename StructFileType, typename PointerType, 
-			typename FileType = struct common_stream_filetype<StructFileType,PointerType > >
+    template<typename FileType = struct common_filetype>
     class file_stream_handler : public ifile<FileType>
     {
 
         public:
 
             file_stream_handler() { };
+
             bool file_read();
+
             bool set_filepath(char const *file_path);
 
-        	  typename FileType::file_ptr * get_file() const{
-								return const_cast<typename FileType::file_ptr *>(p2file); // pointer to file description
-						 }
-            typename FileType::s_position& get_begin() const;
-            typename FileType::s_position& get_end() const;
+		        virtual typename FileType::file_ptr *get_file() const;
+
+            bool read_all_line(std::vector<std::string> & str_line_vec);
+
         private:
-            typename FileType::s_filetype sf;
-						typename FileType::file_ptr * p2file;
             const char *file_path;
+						const char *str_line;
             std::ifstream file_stream_read;
+            std::vector<std::string>  str_line_vec;
     };
 
 

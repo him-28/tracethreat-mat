@@ -1,5 +1,25 @@
 #ifndef ERROR__THREAD_EXCEPTION_HPP
 #define ERROR__THREAD_EXCEPTION_HPP
+/*
+* Copyright 2014 Chatsiri Rattana.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/*  Titles			                                          Authors	         Date
+ *
+ */
+
 
 #include <boost/system/error_code.hpp>
 #include <boost/cerrno.hpp>
@@ -46,13 +66,13 @@ namespace error
             void error_code(ErrorCode& error)const;
             ErrorController& error_detect()const;
 
-            const char *name()const;
+            const char *name()const BOOST_NOEXCEPT;
 
             std::string message(int ev)const;
 
             std::string message_detail(int ev)const;
 
-            boost::system::error_condition default_error_condition(int ev) const;
+            boost::system::error_condition default_error_condition(int ev) const BOOST_NOEXCEPT;
 
             const char *what() const throw();
             //	~exception() throw(){ }

@@ -42,7 +42,7 @@ namespace controller
     using boost::shared_ptr;
     using boost::weak_ptr;
 
-		namespace exceptions = hnmav_exception::controller;
+		namespace exceptions = trace_exception::controller;
 
     /**
      * The POSIX thread class.

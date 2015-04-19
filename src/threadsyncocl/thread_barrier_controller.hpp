@@ -2,7 +2,7 @@
 #define  CONTROLLER_THREAD_BARRIER_CONTROLLER_HPP
 
 /*
-* Copyright 2014 MTSec, Inc.
+* Copyright 2014 Chatsiri Rattana.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@
  */
 
 #include "pthread.h"
-#include "threadsyncocl/buffer_sync.hpp"
+
+#include "taskconcurrency/buffer_sync.hpp"
 
 //
 #include "utils/logger/clutil_logger.hpp"
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 namespace controller
 {
 
-		namespace h_util = hnmav_util;
 
     template<typename BarrierThread>
     class barrier_controller;
@@ -82,8 +82,8 @@ namespace controller
             virtual bool destroy() = 0;
             //virtual BarrierThread& get_barrier() = 0;
 						//logger
-					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
-						h_util::clutil_logging<std::string, int>   * logger;
+					  boost::shared_ptr<utils::clutil_logging<std::string, int> > * logger_ptr;
+						utils::clutil_logging<std::string, int>   * logger;
 
     };
 
@@ -109,8 +109,8 @@ namespace controller
 
             //b_t::cond_wait_t p_cond_wait;
             //logger
-					  boost::shared_ptr<h_util::clutil_logging<std::string, int> > * logger_ptr;
-						h_util::clutil_logging<std::string, int>   * logger;
+					  boost::shared_ptr<utils::clutil_logging<std::string, int> > * logger_ptr;
+						utils::clutil_logging<std::string, int>   * logger;
 
     };
 

@@ -4,7 +4,7 @@ namespace error
 {
 
     template<typename ErrorController, typename ErrorCode>
-    const char *failure_handler<ErrorController, ErrorCode>::name()const
+    const char *failure_handler<ErrorController, ErrorCode>::name()const BOOST_NOEXCEPT
     {
         return "failure_handler";
     }
@@ -54,7 +54,7 @@ namespace error
 
     template<typename ErrorController, typename ErrorCode>
     boost::system::error_condition failure_handler<ErrorController, ErrorCode>::
-    default_error_condition(int ev) const
+    default_error_condition(int ev) const BOOST_NOEXCEPT
     {
         return ev == thread_notfile->value()
                 ? boost::system::error_condition(boost::system::errc::io_error,
