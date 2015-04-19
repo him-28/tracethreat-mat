@@ -8,7 +8,7 @@
 
 #include "clibasewrapper/cliwrapper/cli_scanner_wrapper.h"
 
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 //
 namespace controller

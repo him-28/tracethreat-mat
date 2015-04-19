@@ -31,7 +31,6 @@ namespace internet
         LOG(INFO)<<"Server : Start server... ";
 
         //start_read_header() : In case not initial with SSL;
-        //start_ssl_handshake();
         LOG(INFO)<<"Server : Start() : SSL handshake";
         msgs_socket.async_handshake(boost::asio::ssl::stream_base::server,
                 boost::bind(&scan_connection::handle_handshake, shared_from_this(),
@@ -205,7 +204,6 @@ namespace internet
         threatinfo_type *threatinfo;
 
         //resize
-        //threatinfo_input_vec.resize(request_ptr->set_binary_value_size());
         uint8_t *binary_temp;
 
         for(int count_msg = 0;
@@ -245,11 +243,8 @@ namespace internet
 								threatinfo->set_machine_name(msg_scan.machine_name());
 
                 //set Data
-                //s_mapped_fpe->data
-                // memcpy(s_mapped_fpe->data, msg_scan.binary().c_str(), msg_scan.binary().size());
                 s_mapped_fpe->data = new uint8_t[msg_scan.binary().size()+1];
                 memcpy(s_mapped_fpe->data, (uint8_t *)msg_scan.binary().c_str(), msg_scan.binary().size());
-                //s_mapped_fpe->data[msg_scan.binary().size()] = '\0';
                 //set size of data
                 s_mapped_fpe->size = msg_scan.binary().size();
 
@@ -344,9 +339,6 @@ namespace internet
                     msgReq.set_ip(msg_scan_result->ip());
 
                     //Wait convert function
-                    //msgReq.set_encode_sig_type(threat_info->scan_type);
-                    //msgReq.set_file_type(threat_info->file_type());
-                    
                     msgReq.set_machine_name(threat_result->machine_name());
 
                     switch(threat_result->status_result()) {
@@ -429,7 +421,6 @@ namespace internet
 
                 LOG(INFO)<<"Initial key & iv support server-sec, UUID : "<< uuid <<", IP : "<<ip_addr;
 
-                //internet::security::aes_cbc * aes;
                 aes = enc_controller_->process_crypto(*aes_external, utils::insert_key_crypto_mode);
 
                 LOG(INFO)<<"Key : " << aes->key;

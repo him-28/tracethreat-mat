@@ -25,6 +25,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "internet/logger/logging.hpp"
+#include "utils/config/options_system.hpp"
 
 namespace internet
 {
@@ -35,16 +36,20 @@ namespace internet
     {
 
         public:
-            //typedef boost::shared_ptr<asio::io_service> &  io_service_type;
-
             typedef asio::io_service&  io_service_type;
-
+						/*
             scan_server(io_service_type io_service,
                     std::string ip_addr,
                     unsigned port,
                     const char *file_path,
                     std::string tracethreat_ip,
-                    int tracethrat_port);
+                    int tracethrat_port,
+                    utils::optoins_system & op_system);
+						*/
+
+					   scan_server(io_service_type io_service,
+                    utils::options_system & op_system);
+
 
             ~scan_server();
 

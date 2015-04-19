@@ -20,7 +20,6 @@
 #include <fstream>
 #include <iterator>
 
-//#include "utils/config/options_system.cpp"
 
 // internal
 #include <exception/system_exception.hpp>
@@ -46,13 +45,26 @@ namespace utils
 
             void process_options(int ac, char *av[]);
 
+						//signature & logging path.
             std::string  get_scanfile_path()const;
             std::string  get_database_path()const;
             std::string  get_openclfile_path() const;
             std::string  get_logger_mainfile_path() const;
             std::string  get_logger_settingsfile_path() const;
             std::string&  get_config_file()const;
-						//std::string& get_dir_path()const;
+
+						//security configure.
+						std::string get_certssl_path()const;
+						std::string get_dh512_path()const;
+						std::string get_pwd()const;
+
+						//server ip, port
+						std::string get_ip_server()const;
+						std::string get_port_server()const;
+
+						//tracethreat ip,port
+						std::string get_ip_tracethreat()const;
+						std::string get_port_tracethreat()const;
 
         private:
             options_system();
@@ -62,12 +74,27 @@ namespace utils
 
             void  read_config(std::stringstream&   config_type, std::vector<std::string>&   config_name);
 
+						//system path
             std::stringstream  *scanfile_path;
             std::stringstream  *database_path;
             std::stringstream  *clfile_path;
             std::stringstream  *logger_mainfile_path;
             std::stringstream  *logger_settingsfile_path;
 
+						//security path
+						std::stringstream  *cert_path;
+						std::stringstream  *dh512_path;
+            std::stringstream  *certpwd;
+
+						//server ip, port
+						std::stringstream *ip_addr_server;
+						std::stringstream *port_server;
+
+						//tracethreat
+						std::stringstream *ip_tracethreat;
+						std::stringstream *port_tracethreat;
+
+						//configure file path
             std::string *config_file;
 
             po::variables_map vm;

@@ -138,9 +138,6 @@ namespace internet
             bool sslEnable;
 
             asio::ssl::stream<asio::ip::tcp::socket> msgs_socket;
-            //asio::ip::tcp::socket msgs_socket;
-
-            //asio::ssl::context context_;
 
             std::vector<uint8_t> msgs_read_buffer;
 
