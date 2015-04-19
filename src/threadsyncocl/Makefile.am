@@ -155,4 +155,4 @@ $(top_builddir)/src/internet/scan_server/libscan_server.a \
 $(top_builddir)/src/internet/scan_client/libscan_client.a \
 $(top_builddir)/src/internet/security/libsecurity.a \
 $(top_builddir)/src/internet/tracethreat/libtracethreat.a \
-$(top_builddir)/src/internet/msg/libmsg.a $(AM_LDFLAGS)$(AM_LDFLAGS)
+$(top_builddir)/src/internet/msg/libmsg.a $(AM_LDFLAGS)
