@@ -1,7 +1,7 @@
-AC_INIT([hnmav], [0.1], [rchatsiri@hnmav.io], [avanalysis-tools], [http://www.hnmav.io])
+AC_INIT([tracethreat-mat], [0.1], [dev@tracethreat.systems], [avanalysis-tools], [https://www.tracethreat.systems])
 
 #unique source file 
-AC_CONFIG_SRCDIR([src/bin/tsyncocl.cpp])
+AC_CONFIG_SRCDIR([src/bin/tracethreat_mat.cpp])
 
 #extra script build
 AC_CONFIG_AUX_DIR([build-aux])
@@ -17,7 +17,6 @@ AC_PROG_RANLIB
 
 #check for program
 AC_LANG([C++])
-#CFLAGS_CXX=-std=c++0x
 
 #check header file
 AC_HEADER_STDC
@@ -29,7 +28,7 @@ AC_CHECK_HEADERS([iostream])
 #m4_pattern_allow([AC_PROG_LIBTOOL])
 #AC_PROG_LIBTOOL
 
-LIBS="-lmongoclient -lgtest -lglog -lOpenCL -lrt -lclamav -lprotobuf -ldl -lfolly -lrocksdb  -lcrypto -ltracethreat_client-0.0.1 -lboost_filesystem-mt -lboost_thread-mt -lpthread -lboost_system-mt -lboost_log-mt -lboost_exception-mt -lboost_program_options-mt -lboost_timer-mt $LIBS"
+LIBS="-lmongoclient -lgtest -lglog -lOpenCL -lrt -lclamav -lprotobuf -ldl -lfolly -lrocksdb  -lcrypto -ltracethreat_client-0.0.1 -lboost_filesystem-mt -lboost_thread-mt -lpthread -lboost_system-mt -lboost_log-mt -lboost_exception-mt -lboost_program_options-mt -lboost_timer-mt -ltbb $LIBS"
 
 AC_TYPE_SIZE_T
 ##################################
@@ -46,8 +45,6 @@ AC_SUBST([AM_CFLAGS])
 
 #check library function
 AC_CONFIG_HEADERS([config.h])
-
-#AC_CONFIG_FILES([src/wrapper/Makefile])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/threadsyncocl/Makefile])
