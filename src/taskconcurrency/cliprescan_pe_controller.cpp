@@ -3,7 +3,7 @@
 //#include "utils/base/system_code.hpp"
 
 #include "taskconcurrency/cliprescan_pe_controller.hpp"
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 namespace controller
 {

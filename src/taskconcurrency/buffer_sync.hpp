@@ -16,7 +16,7 @@
 
 #include "memory/file_shm_handler.hpp"
 
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 //#define MAX_LENGTH 1024
 
 namespace controller

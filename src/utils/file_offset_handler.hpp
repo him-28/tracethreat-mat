@@ -34,7 +34,8 @@
 #include <list>
 #include "sys/mman.h"
 
-#include "filetypes/pe.hpp"
+//#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 #include "utils/file_handler.hpp"
 #include "exception/system_exception.hpp"
 

@@ -15,7 +15,7 @@
 
 #include "memory/file_shm_handler.hpp"
 
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 namespace controller
 {

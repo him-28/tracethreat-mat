@@ -15,7 +15,7 @@
 #include <list>
 
 
-#include "filetypes/pe.hpp"
+#include "filetypes/pe_template.hpp"
 
 #include "ocl/cl_bootstrap.hpp"
 
