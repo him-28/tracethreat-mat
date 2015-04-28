@@ -2,10 +2,19 @@
 *.slo
 *.lo
 *.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
 
 # Compiled Dynamic libraries
 *.so
 *.dylib
+*.dll
+
+# Fortran module files
+*.mod
 
 # Compiled Static libraries
 *.lai
@@ -68,3 +77,10 @@ src/test/test_suite
 /src/internet/test_security/test_security
 
 /src/bin/tracethreat_mat
+=======
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
